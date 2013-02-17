@@ -4,8 +4,14 @@
 *.jar
 *.war
 *.ear
+*.java~
 
+# Build Dirs #
 bin
-gen
+android/gen
 dist
 build
+
+# Idea Project #
+.idea
+*.iml

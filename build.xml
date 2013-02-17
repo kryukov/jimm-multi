@@ -32,8 +32,7 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher
     <!--  use both the slash and the backslash for separating path              -->
     <!--  components.                                                           -->
     <property file="sysdirs.properties" />
-    <property file="config/sysdirs.properties" />
-    <property name="config" value="jimm" />
+    <property name="config" value="multi" />
     <property file="config/env/${config}.properties" />
     <property file="config/build-set.properties" />
 

@@ -8,10 +8,10 @@
 
 # Build Dirs #
 bin
-android/gen
+android/gen/
 dist
 build
 
 # Idea Project #
-.idea
+.idea/
 *.iml

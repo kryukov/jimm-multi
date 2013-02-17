@@ -1,0 +1,50 @@
+60
+"Smile"      :-), :), =), =))
+"Sad"        :-(, :(, =(, =((
+"Ironic"     ;-), ;)
+"Tongue"     :-P, :P, :-p, :p
+"Boss"       8-)
+"Xa-xa"        :-D, :D, =-D, =-d, :d, =d, :-d
+"Confusion"  :-[, :[, =-[, =[
+"Angel"      O:-)
+"Shock"      =-O, =O, :-O, :O, =-o, =o, :-o, :o
+"Kiss"       :-*, :*, =-*, =*, :-{}
+"Sob"        :'(, ='(
+"Shut up"    :-X, :X, :-x, :x
+"Angry"      >:o, >=o, >:O, >=O
+"Stupid"     :-|, :|, =-|, =|
+"Suspirious" :-\, =-\, =\, :-/, =-/, =/
+"Jokingly"   *JOKINGLY*, *jokingly*
+"Devil"      ]:->, ]:>, ]=->, ]=>
+"Music"      [:-}, [:}, [=-}, [=}
+"Kissed"     *KISSED*, *kissed*
+"Illness"    :-!, :!, =-!, =!
+"Tired"      *TIRED*, *tired*
+"Stop"       *STOP*, *stop*
+"Kissing"    *KISSING*, *kissing*
+"Rose"       @}->--
+"Thumbs up"  *THUMBS UP*, *thumbs up*
+"Beer"       *DRINK*, *drink*
+"In love"    *IN LOVE*, *in love*
+"Bomb"       @=
+"Indefinite" *HELP*, *help*
+"Snooty"     \m/, \M/
+"Crazy"      %)
+"OK"         *OK*, *ok*
+"Wass up"    *WASSUP*, *wassup*
+"Sorry"      *SORRY*, *sorry*
+"Bravo"      *BRAVO*, *bravo*
+"Rofl"       *ROFL*, *rofl*, :lol:
+"Pardon"     *PARDON*, *pardon*
+"No"         *NO*, *no*
+"Crazy"      *CRAZY*, *crazy*
+"Dont know"  *DONT KNOW*, *dont know*, *DONT_KNOW*, *dont_know*
+"Dance"      *DANCE*, *dance*
+"Yahoo"      *YAHOO*, *yahoo*
+"Hi"         *HI*, *hi*
+"BYE"        *BYE*, *bye*
+"YES"        *YES*, *yes*
+";D"         ;D
+"WALL"       *WALL*, *wall*
+"WRITE"      *WRITE*, *write*
+"SCRATCH"    *SCRATCH*, *scratch*

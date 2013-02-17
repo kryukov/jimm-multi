@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Created-By: Jimm Project
+MIDlet-Name: ###MIDLET-NAME###
+MIDlet-Version: ###VERSION-JAVA###
+MIDlet-Vendor: Jimm Project
+MIDlet-Icon: icon.png
+MicroEdition-Profile: ###MIDP-PROFILE###
+MicroEdition-Configuration: CLDC-1.0
+MIDlet-Description: J2ME IM-client
+MIDlet-Info-URL: http://m.jimm.net.ru/
+MIDlet-1: ###MIDLET-NAME###,/icon.png,jimm.Jimm
+Jimm-Version: ###VERSION###
+Jimm-Date: ###DATE###
+Background: True
+FlipInsensitive: True
+Nokia-MIDlet-On-Screen-Keypad: no
+Nokia-MIDlet-Category: Application
+Nokia-MIDlet-No-Exit: true
+Nokia-UI-Enhancement: FullScreenTextBox
+LGE-MIDlet-On-Screen-Keypad: no
+LGE-MIDlet-Allowed-background: yes
+LGE-MIDlet-Exit: minimize
+Unuse-SEMC-StandbyApplication: Y
+Navi-Key-Hidden: true
+MVM-Pause-Background: false
+MVM-BGM-Support: true
+UseNativeTextButtons: false
+ReverseSoftkeys: true
+UseNativeCommands: false

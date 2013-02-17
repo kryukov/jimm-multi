@@ -1,0 +1,381 @@
+<!--
+********************************************************************************
+Jimm - Mobile Messaging - J2ME ICQ clone
+Copyright (C) 2003-05  Jimm Project
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+********************************************************************************
+File: build.xml
+Version: 0.5.2a  Date: 070118
+Author(s): Manuel Linsmayer, Andreas Rossbacher
+********************************************************************************
+-->
+
+<project name="Jimm" default="dist-all">
+
+    <!--  *******************************************************************   -->
+    <!--  CONFIGURATION SECTION - CHANGE VALUES TO REFLECT YOUR ENVIRONMENT     -->
+    <!--  *******************************************************************   -->
+    <!--  Change this to the directory where a MIDP SDK is installed. You can   -->
+    <!--  use both the slash and the backslash for separating path              -->
+    <!--  components.                                                           -->
+    <property file="sysdirs.properties" />
+    <property file="config/sysdirs.properties" />
+    <property name="config" value="jimm" />
+    <property file="config/env/${config}.properties" />
+    <property file="config/build-set.properties" />
+
+    <property name="DEFAULT/midp"      location="CHANGE ME" />
+    <property name="MIDP2/midp"        location="CHANGE ME" />
+    <property name="RIM/midp"          location="CHANGE ME" />
+    <property name="MOTOROLA/midp"     location="CHANGE ME" />
+    
+    <!--  *******************************************************************   -->
+    <!--  This property must point at the MIDP API classes and all extension    -->
+    <!--  classes required by the chosen target.                                -->
+    <property name=":" value="${path.separator}"/>
+    <property name="MIDP2/midp/lib"    location="${MIDP2/midp}/lib/cldcapi11.jar${:}${MIDP2/midp}/lib/midpapi20.jar${:}${MIDP2/midp}/lib/wma11.jar${:}${MIDP2/midp}/lib/mmapi.jar${:}${MIDP2/midp}/lib/jsr75.jar${:}res/TARGETS/MIDP2/lib/nokia.zip${:}res/TARGETS/MIDP2/lib/se-activityui.zip"/>
+    <property name="MOTOROLA/midp/lib" location="${MIDP2/midp}/lib/cldcapi10.jar${:}${MIDP2/midp}/lib/midpapi20.jar${:}${MIDP2/midp}/lib/mmapi.jar${:}res/TARGETS/MOTOROLA/lib/fileaccess.jar${:}${MIDP2/midp}/lib/jsr75.jar" />
+    
+    <!--  *******************************************************************   -->
+    <!--  Change this to the directory where ProGuard is installed. You can     -->
+    <!--  use both the slash and the backslash for separating path components.  -->
+    <property name="proguard"          value="${WTK/DIR}/proguard"    />
+    <!--  *******************************************************************   -->
+    <!--  This property must point at the ProGuard JAR file, normally found     -->
+    <!--  in the lib directory of the ProGuard distribution.                    -->
+    <property name="proguard/lib"      value="${proguard}/lib/proguard.jar"      />
+    <!--  Register Proguard task  -->
+    <taskdef name="proguard" classname="proguard.ant.ProGuardTask" classpath="${proguard/lib}" />
+    
+    <!--  *******************************************************************   -->
+    <!-- Include Ant-Contrib Tasks -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+	<classpath>
+    	    <pathelement path="util/ant-contrib/ant-contrib.jar" />
+    	</classpath>
+    </taskdef>
+    
+    <!--  *******************************************************************   -->
+    <!--  CUSTOMIZATION SECTION - CHANGE VALUES TO GET YOUR CUSTOM BUILD        -->
+    <!--  *******************************************************************   -->
+    <!--  Builds names list                                                     -->
+    <property file="builds.properties" />
+    <!--property name="skip-obfuscate" value="true"/-->
+    <!--property name="device_configuration" value="CLDC-1.1" /-->
+
+    <!--  *******************************************************************   -->
+    <!--  CHANGE NOTHING BELOW THIS LINE, UNLESS YOU KNOW WHAT YOU'RE DOING     -->
+    <!--  *******************************************************************   -->
+
+    <!--  Buildfile description   -->
+    <description>This buildfile is used to build Jimm, a native ICQ clone for Java 2 Platform Micro Edition.</description>
+
+    <!--  Set global properties for this build   -->
+    <property name="util" location="util" />
+    <property name="util/sijapp" location="${util}/sijapp" />
+    <property name="util/sijapp/lib" location="${util/sijapp}/dist/lib/sijapp.jar" />
+    <property name="util/langs" location="${util}/langs" />
+    <property name="util/langs/lib" location="${util/langs}/dist/lib/langs.jar" />
+    <property name="util/jarsize" location="${util}/jarsize" />
+    <property name="util/jarsize/lib" location="${util/jarsize}/dist/lib/jarsize.jar" />
+    <property name="util/jlft" location="${util}/jlft" />
+    <property name="util/res" location="${util}/res" />
+    <property name="util/res/lib" location="${util/res}/dist/lib/res.jar" />
+
+    <property name="build_root" location="build" />
+    <property name="dist_root" location="dist" />
+
+    <!--  Internal target: init   -->
+    <target name="init">
+    
+        <echo message="*************************************************************"/>
+        <echo message="    Building &quot;${build_name}&quot; build now... Please wait..."       />
+        <echo message="*************************************************************"/>
+        <propertycopy name="target"   from="${build_name}_target"             />
+        <propertycopy name="graphics" from="${build_name}_graphics"           />
+        <propertycopy name="sound"    from="${build_name}_sound"              />
+        <propertycopy name="modules"  from="${build_name}_modules"            />
+        <property name="build" location="${build_root}/${build_name}"         />
+        <property name="dist" location="${dist_root}/${build_name}"           />
+        <property name="src" location="src"                                   />
+        <property name="res" location="res"                                   />
+        <property name="res/target" location="${res}/TARGETS/${target}"       />
+    
+        <tstamp>
+            <format property="date" pattern="dd.MM.yyyy" timezone="GMT+00:00" />
+        </tstamp>
+        <propertycopy name="midp" from="${target}/midp"/>
+        <propertycopy name="midp/lib" from="${target}/midp/lib"/>
+        <condition property="midp_profile" value="MIDP-1.0">
+            <or>
+                <equals arg1="${target}" arg2="RIM" />
+            </or>
+        </condition>
+        <property name="midp_profile" value="MIDP-2.0"/>
+    </target>
+
+    <!--  Internal target: sijapp   -->
+    <target name="sijapp">
+        <ant dir="${util/sijapp}" inheritAll="false" />
+        <taskdef name="sijapp" classname="sijapp.SijappTask" classpath="${util/sijapp/lib}" />
+    </target>
+
+    <!--  Internal target: langs   -->
+    <target name="langs">
+        <ant dir="${util/langs}" inheritAll="false" />
+        <taskdef name="langs" classname="langs.LangsTask" classpath="${util/langs/lib}" />
+    </target>
+    
+    <!--  Internal target: res   -->
+    <target name="res">
+        <ant dir="${util/res}" inheritAll="false" />
+        <taskdef name="res" classname="res.ResTask" classpath="${util/res/lib}" />
+    </target>
+    
+    <!--  Internal target: preprocess-source   -->
+    <target name="preprocess-source" depends="init,sijapp,langs,res">
+        <mkdir dir="${build}/init/src" />
+        <sijapp srcdir="${src}" destdir="${build}/init/src">
+            <defineList prefix="protocols" list="${protocols}"/>
+            <defineList prefix="modules" list="${modules}"/>
+            <define name="device_configuration" value="${device_configuration}" />
+            <define name="target" value="${target}" />
+            <define name="client" value="${midlet/name}"/>
+            <define name="company" value="${company}"/>
+        </sijapp>
+        <replace dir="${build}/init/src" encoding="UTF-8">
+            <replacefilter token="###VERSION###" value="${version/jimm}" />
+            <replacefilter token="###VERSION-JAVA###" value="${version/java}" />
+            <replacefilter token="###DATE###" value="${date}" />
+            <replacefilter token="###TARGET###" value="${target}" />
+            <replacefilter token="###MODULES###" value="${modules}" />
+            <replacefilter token="###PROTOCOLS###" value="${protocols}"/>
+        </replace>
+
+        <mkdir dir="${build}/res" />
+        <langs languages="${lang}" inDir="${build}/init/src/lng" outDir="${build}/res" srcDir="${build}/init/src/" idealLang="EN"/>
+    </target>
+
+    <!--  Internal target: compile   -->
+    <target name="compile" depends="preprocess-source">
+        <ant dir="${util/jlft}" inheritAll="false" />
+        <mkdir dir="${build}/compile/classes" />
+        <javac includeantruntime="false" srcdir="${build}/init/src" destdir="${build}/compile/classes" bootclasspath="${midp/lib}" encoding="utf-8" target="1.1" source="1.2" debug="off" />
+    </target>
+
+    <!--  Internal target: obfuscate -->
+    <target name="obfuscate" depends="compile" unless="skip-obfuscate">
+
+        <!-- mergeinterfacesaggressively, microedition -->
+        <mkdir dir="${build}/obfuscate/classes" />
+        <proguard    note="false"
+                    defaultpackage=""
+                    usemixedcaseclassnames="off"
+                    overloadaggressively="on"
+                    obfuscate="on"
+                    optimize="on"
+                    shrink="on"
+                    allowaccessmodification="on"
+		    forceprocessing="on"
+                    optimizationpasses="5"
+                    mergeinterfacesaggressively="on"
+                    microedition="on">
+            <injar name="${build}/compile/classes" />
+            <outjar name="${build}/obfuscate/classes" />
+            <keep access="public" type="class" extends="javax.microedition.midlet.MIDlet" />
+            <libraryjar path="${midp/lib}" />
+        </proguard>
+        <!-- - ->
+        <mkdir dir="${build}/obfuscate1/classes" />
+        <proguard    note="false"
+                    defaultpackage=""
+                    usemixedcaseclassnames="false"
+                    overloadaggressively="off"
+                    obfuscate="off"
+                    optimize="on"
+                    allowaccessmodification="on">
+            <injar name="${build}/compile/classes" />
+            <outjar name="${build}/obfuscate1/classes" />
+            <keep access="public" type="class" extends="javax.microedition.midlet.MIDlet" />
+            <libraryjar path="${midp/lib}" />
+        </proguard>
+        <mkdir dir="${build}/obfuscate/classes" />
+        <proguard    note="false"
+                    defaultpackage=""
+                    usemixedcaseclassnames="false"
+                    overloadaggressively="on"
+                    obfuscate="on"
+                    optimize="on"
+                    allowaccessmodification="on">
+            <injar name="${build}/obfuscate1/classes" />
+            <outjar name="${build}/obfuscate/classes" />
+            <keep access="public" type="class" extends="javax.microedition.midlet.MIDlet" />
+            <libraryjar path="${midp/lib}" />
+        </proguard>
+        -->
+    </target>
+
+    <!--  Internal target: skip-obfuscate  -->
+    <target name="skip-obfuscate" depends="compile" if="skip-obfuscate">
+        <mkdir dir="${build}/obfuscate/classes" />
+        <copy todir="${build}/obfuscate/classes">
+            <fileset dir="${build}/compile/classes" />
+        </copy>
+    </target>
+
+    <!--  Internal target: preverify   -->
+    <target name="preverify" depends="skip-obfuscate,obfuscate">
+        <mkdir dir="${build}/preverified/classes" />
+        <exec executable="${midp}/bin/preverify">
+            <arg line="-classpath '${midp/lib}'" />
+            <arg line="-d '${build}/preverified/classes'" />
+            <arg line="'${build}/obfuscate/classes'" />
+            <arg line="-cldc" />
+        </exec>
+    </target>
+
+    <!--  Internal target: preprocess-manifest   -->
+    <target name="preprocess-manifest" depends="init">
+        <copy file="${res}/MANIFEST.MF" todir="${build}" />
+        <condition property="manifest/touch" value="MIDlet-Touch-Support: true${line.separator}" else="">
+    	    <contains string="${modules}" substring="TOUCH"/>
+        </condition>
+        <echo file="${build}/MANIFEST.MF" append="true">${manifest/touch}</echo>
+        <replace file="${build}/MANIFEST.MF" encoding="UTF-8">
+            <replacefilter token="###VERSION###" value="${version/jimm}" />
+            <replacefilter token="###MIDLET-NAME###" value="${midlet/name}" />
+            <replacefilter token="###VERSION-JAVA###" value="${version/java}" />
+            <replacefilter token="###DATE###" value="${date}" />
+            <replacefilter token="###MIDP-PROFILE###" value="${midp_profile}" />
+            <replacefilter token="###BUILD###" value="${build_name}" />
+        </replace>
+        
+    </target>
+    
+    <!--  Internal target: preprocess-resources  -->
+    <target name="preprocess-resources" depends="preprocess-source">
+        <mkdir dir="${build}/res" />
+        <res protocols="${protocols}" modules="${modules}" resType="${graphics}"
+             inDir="${res}/MODULES/" outDir="${build}/res" altResTypes="64,32,24,16,14,16,24,32,0"/>
+        <res resType="${sound}" inDir="${res}/SOUNDS/" outDir="${build}/res"/>
+        <res protocols="${protocols}" inDir="${res}/PROTOCOLS/" outDir="${build}/res"/>
+
+        <copy todir="${build}/res" flatten="true" includeEmptyDirs="false" failonerror="false">
+            <fileset dir="${res}" includes="*" excludes="MANIFEST.MF" />
+            <fileset dir="${res/target}">
+                <exclude name="lib/**" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!--  Internal target: jarsize  -->
+    <target name="jarsize">
+        <ant dir="${util/jarsize}" inheritAll="false" />
+        <taskdef name="jarsize" classname="JarSize" classpath="${util/jarsize/lib}" />
+    </target>
+    
+    <target name="zip-all">
+        <!-- Archiving to zip archives all necessary builds -->
+        <foreach list="${builds_list}"
+            target="zip"
+            param="build_name"
+            delimiter=","
+            inheritall="true"/>
+    </target>
+    
+    <target name="zip">
+            <!-- Creating archive zip-file containing files Jimm.jar and Jimm.jad -->
+        <property name="dist" location="${dist_root}/${build_name}" />
+        <zip destfile="${dist}/${midlet/jar-name}.zip"
+            basedir="${dist}"
+            includes="${midlet/jar-name}.ja?"
+            />
+    </target>
+    
+    <target name="init-android" depends="" description="">
+        <property name="protocols" location="ICQ,MRIM,JABBER,OBIMP,VKAPI" />
+        <property name="build_name" value="Android"/>
+    </target>
+    <target name="android" depends="init-android,init,preprocess-source,preprocess-resources" description="">
+	<delete dir="${build_root}/${build_name}/res/smiles"/>
+        <ant dir="android" inheritAll="false" target="my-release" />
+    </target>
+
+    <target name="dist-all">
+        <mkdir dir="${build_root}" />
+        <mkdir dir="${dist_root}" />
+        <!-- Creating file with build date in distribution root directory -->
+        <tstamp>
+            <format property="date" pattern="dd.MM.yyyy" timezone="GMT+00:00" />
+        </tstamp>
+        <echo file="${dist_root}/name.info">${midlet/jar-name}</echo>
+        <echo file="${dist_root}/all-modules.info">${ALL_DEBUG_modules}</echo>
+        <!-- Calling "dist" task for each necessary build -->
+        <foreach list="${builds_list}"
+            target="dist"
+            param="build_name"
+            delimiter=","
+            inheritall="true"/>
+    </target>
+    
+    <!--  Target: dist  -->
+    <target name="dist" depends="preverify,preprocess-manifest,preprocess-resources,jarsize" description="Generate the distribution">
+        <mkdir dir="${dist}" />
+        <jar destfile="${dist}/${midlet/jar-name}.jar" manifest="${build}/MANIFEST.MF">
+            <fileset dir="${build}/preverified/classes" />
+            <fileset dir="${build}/res" />
+        </jar>
+        <unjar src="${dist}/${midlet/jar-name}.jar" dest="${dist}">
+            <patternset includes="META-INF/MANIFEST.MF" />
+        </unjar>
+        <move file="${dist}/META-INF/MANIFEST.MF" tofile="${dist}/${midlet/jar-name}.jad" />
+        <delete dir="${dist}/META-INF" />
+
+        <jarsize jarfile="${dist}/${midlet/jar-name}.jar" jadfile="${dist}/${midlet/jar-name}.jad"/>
+        <echo file="${dist}/${midlet/jar-name}.jad" append="true">MIDlet-Jar-URL: ${midlet/jar-name}.jar${line.separator}</echo>
+
+        <echo file="${dist}/${midlet/jar-name}.info">${build_name} ${target} ${modules} ${graphics} ${sound}</echo>
+	<!-- exec executable="sleep" searchpath="true" os="Linux">
+	  <arg value="10"/>
+	</exec -->
+    </target>
+
+    <!--  Internal target: del_build  -->
+    <target name="del_build" description="Delete the build dir">
+        <delete dir="${build_root}" />
+    </target>
+
+    <!--  Internal target: del_dist  -->
+    <target name="del_dist" description="Delete the dist dir">
+        <delete dir="${dist_root}" />
+    </target>
+
+    <!--  Internal target: del_utils  -->
+    <target name="del_utils" description="Delete the utils dist and build dirs">
+        <ant dir="${util/sijapp}" inheritAll="false" target="clean" />
+        <ant dir="${util/jarsize}" inheritAll="false" target="clean" />
+        <ant dir="${util/jlft}" inheritAll="false" target="clean" />
+        <ant dir="${util/langs}" inheritAll="false" target="clean" />
+        <ant dir="${util/res}" inheritAll="false" target="clean" />
+    </target>
+
+    <!--  Target: clean without cleaning  utils -->
+    <target name="clean" description="Clean the distribution (without utils)" depends="del_build,del_dist" />
+
+    <!--  Target: clean all  -->
+    <target name="clean-all" description="Clean the distribution" depends="clean,del_utils" />
+
+</project>

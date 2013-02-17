@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="ru.net.jimm"
+      android:versionCode="45"
+      android:versionName="0.7.0"
+      android:installLocation="auto">
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true" />
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
+
+    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+        <activity android:name="JimmActivity"
+                  android:label="@string/app_name"
+                  android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="singleTask"
+                  android:clearTaskOnLaunch="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".OpenUriActivity"
+                  android:label="@string/app_name"
+                  android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="standard">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="xmpp" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".photo.CameraActivity"
+                  android:label="@string/app_name"
+                  android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="standard">
+        </activity>
+        <service android:enabled="true" android:name=".JimmService" />
+    </application>
+</manifest> 

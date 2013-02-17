@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jimm</string>
+    <string name="notifyTitle">You have new messages...</string>
+    <string name="notifyInfo">Unread messages: %d</string>
+    <string name="unreadMessages">Unread messages: %d</string>
+    <string name="offline">Offline</string>
+    <string name="connecting">Connecting</string>
+    <string name="online">Online</string>
+    <string name="takePhotoButton">OK</string>
+    <string name="xmppAccountDontFound">Jabber-account do not found</string>
+</resources>

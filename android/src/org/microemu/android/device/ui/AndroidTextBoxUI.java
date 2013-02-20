@@ -28,27 +28,18 @@ package org.microemu.android.device.ui;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 import javax.microedition.lcdui.Command;
-
-import android.text.InputFilter;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.*;
-import jimm.modules.*;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
-import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.TextBoxUI;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.inputmethod.EditorInfo;
@@ -90,7 +81,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
         editView = createEditor(activity, textBox);
         editView.setGravity(Gravity.TOP);
         editView.setScroller(new Scroller(activity));
-        editView.setMovementMethod(new ScrollingMovementMethod());
+        editView.setVerticalScrollBarEnabled(true);
 
         titleView.setId(2);
         editView.setId(3);
@@ -173,21 +164,23 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
             editor.setInputType(InputType.TYPE_CLASS_NUMBER);
         } else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.DECIMAL) {
             editor.setSingleLine(true);
-            editor.setInputType(
-                    InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            editor.setInputType(InputType.TYPE_CLASS_NUMBER
+                    | InputType.TYPE_NUMBER_FLAG_SIGNED
+                    | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         } else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.PHONENUMBER) {
             editor.setSingleLine(true);
             editor.setInputType(InputType.TYPE_CLASS_PHONE);
         } else {
             editor.setSingleLine(false);
-            editor.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-            editor.setInputType(editor.getInputType() | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+            editor.setInputType(InputType.TYPE_CLASS_TEXT
+                    | InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                    | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         }
         if ((constraints & TextField.PASSWORD) != 0) {
             editor.setTransformationMethod(PasswordTransformationMethod.getInstance());
             editor.setTypeface(Typeface.MONOSPACE);
         }
-
+        /*
         editor.addTextChangedListener(new TextWatcher() {
 
             private String previousText;
@@ -208,6 +201,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
                 }
             }
         });
+        */
         return editor;
     }
 

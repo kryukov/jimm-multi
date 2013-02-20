@@ -98,7 +98,7 @@ public class JimmActivity extends MicroEmulatorActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setVolumeControlStream(AudioManager.STREAM_NOTIFICATION);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         instance = this;
         PACKAGE_NAME = getApplicationContext().getPackageName();

@@ -27,10 +27,8 @@ import DrawControls.icons.Icon;
 import DrawControls.tree.*;
 import jimm.*;
 import jimm.chat.*;
-import jimm.comm.*;
 import jimm.forms.*;
 import jimm.modules.*;
-import jimm.ui.*;
 import jimm.ui.menu.*;
 import java.util.*;
 import jimm.ui.base.*;
@@ -287,7 +285,7 @@ public final class ContactList implements SelectListener, ContactListListener {
         int count = contactList.getModel().getProtocolCount();
         for (int i = 0; i < count; ++i) {
             Protocol p = contactList.getModel().getProtocol(i);
-            if (!"".equals(p.getPassword()) && p.getProfile().isConnected) {
+            if (!"".equals(p.getPassword()) && p.getProfile().isConnected()) {
                 p.connect();
             }
         }

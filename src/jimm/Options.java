@@ -31,7 +31,6 @@ import jimm.comm.*;
 import jimm.forms.*;
 import jimm.io.Storage;
 import protocol.*;
-import protocol.icq.*;
 import jimm.modules.*;
 import jimm.util.*;
 import java.io.*;
@@ -284,7 +283,7 @@ public class Options {
                 for (; num < s.getNumRecords(); ++num) {
                     s.setRecord(num + 1, new byte[0]);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             s.close();
         }
@@ -394,7 +393,6 @@ public class Options {
             dos.writeUTF(StringConvertor.notNull(account.xstatusTitle));
             dos.writeUTF(StringConvertor.notNull(account.xstatusDescription));
             dos.writeBoolean(account.isActive);
-            dos.writeBoolean(account.isConnected & account.isActive);
 
             byte[] hash = Util.decipherPassword(baos.toByteArray());
             baos.close();
@@ -426,9 +424,13 @@ public class Options {
             if (0 < dis.available()) {
                 p.isActive = dis.readBoolean();
             }
-            p.isConnected = false;
             if (0 < dis.available()) {
-                p.isConnected = dis.readBoolean() & p.isActive;
+                if (!dis.readBoolean()) { // isActive
+                    p.statusIndex = StatusInfo.STATUS_OFFLINE;
+                }
+            }
+            if (!p.isActive) {
+                p.statusIndex = StatusInfo.STATUS_OFFLINE;
             }
             bais.close();
         } catch (IOException ex) {

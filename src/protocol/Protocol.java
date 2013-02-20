@@ -586,8 +586,6 @@ abstract public class Protocol {
         setConnectingProgress(-1);
         closeConnection();
         if (user) {
-            profile.isConnected = false;
-            Options.saveAccount(profile);
             userCloseConnection();
         }
         /* Reset all contacts offline */
@@ -1104,8 +1102,6 @@ abstract public class Protocol {
     public final void connect() {
         isReconnect = false;
         reconnect_attempts = RECONNECT_COUNT;
-        profile.isConnected = true;
-        Options.saveAccount(profile);
         disconnect(false);
         startConnection();
         setLastStatusChangeTime();

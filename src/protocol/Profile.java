@@ -130,9 +130,12 @@ public final class Profile {
     public String xstatusTitle;
     public String xstatusDescription;
     public boolean isActive;
-    public boolean isConnected;
 
     public Profile() {
         protocolType = Profile.protocolTypes[0];
+    }
+
+    public boolean isConnected() {
+        return StatusInfo.STATUS_OFFLINE != statusIndex;
     }
 }

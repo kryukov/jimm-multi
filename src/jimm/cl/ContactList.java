@@ -25,7 +25,6 @@ package jimm.cl;
 
 import DrawControls.icons.Icon;
 import DrawControls.tree.*;
-import javax.microedition.lcdui.TextField;
 import jimm.*;
 import jimm.chat.*;
 import jimm.comm.*;
@@ -41,7 +40,7 @@ import protocol.mrim.*;
 import protocol.jabber.*;
 
 
-public final class ContactList implements TextBoxListener, SelectListener, ContactListListener {
+public final class ContactList implements SelectListener, ContactListListener {
     private static final ContactList instance = new ContactList();
     private final MenuModel mainMenu = new MenuModel();
     private MessageEditor editor;
@@ -50,7 +49,6 @@ public final class ContactList implements TextBoxListener, SelectListener, Conta
     private final StatusView statusView = new StatusView();
     private Contact currentContact;
     private Protocol activeProtocol;
-    private InputTextBox passwordTextBox;
     // #sijapp cond.if modules_FILES="true"#
     private Vector transfers = new Vector();
     // #sijapp cond.end#
@@ -463,7 +461,6 @@ public final class ContactList implements TextBoxListener, SelectListener, Conta
     }
 
     /* Static constants for menu actios */
-    private static final int MENU_CONNECT = 1;
     private static final int MENU_DISCONNECT = 2;
     private static final int MENU_DISCO = 3;
     private static final int MENU_OPTIONS = 4;
@@ -531,12 +528,14 @@ public final class ContactList implements TextBoxListener, SelectListener, Conta
             menu.addItem("disconnect", MENU_DISCONNECT);
             return;
         }
+        /*
         if (protocol.isConnected()) {
             menu.addItem("disconnect", MENU_DISCONNECT);
 
         } else {
             menu.addItem("connect", MENU_CONNECT);
         }
+        */
         menu.addItem("set_status",
                 protocol.getStatusInfo().getIcon(protocol.getProfile().statusIndex),
                 MENU_STATUS);
@@ -620,36 +619,9 @@ public final class ContactList implements TextBoxListener, SelectListener, Conta
         Jimm.getJimm().quit();
     }
 
-    /* Command listener */
-    public void textboxAction(InputTextBox box, boolean ok) {
-        if ((box == passwordTextBox) && ok) {
-            final Protocol protocol = activeProtocol;
-            protocol.setPassword(passwordTextBox.getString());
-            passwordTextBox.back();
-            if (!StringConvertor.isEmpty(protocol.getPassword())) {
-                protocol.connect();
-            }
-        }
-    }
-
     private void execCommand(int cmd) {
         final Protocol proto = activeProtocol;
         switch (cmd) {
-            case MENU_CONNECT:
-                if (proto.isEmpty()) {
-                    new AccountsForm().showAccountEditor(proto.getProfile());
-
-                } else if (StringConvertor.isEmpty(proto.getPassword())) {
-                    passwordTextBox = new InputTextBox().create("password", 32, TextField.PASSWORD);
-                    passwordTextBox.setTextBoxListener(this);
-                    passwordTextBox.show();
-
-                } else {
-                    contactList.restore();
-                    proto.connect();
-                }
-                break;
-
             case MENU_DISCONNECT:
                 proto.disconnect(true);
                 Thread.yield();

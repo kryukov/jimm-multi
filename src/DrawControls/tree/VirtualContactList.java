@@ -408,8 +408,8 @@ public final class VirtualContactList extends ScrollableArea {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected final void touchCaptionTapped(boolean icon) {
-        jimm.chat.ChatHistory.instance.showChatList(icon);
+    protected final void touchCaptionTapped(int x) {
+        jimm.chat.ChatHistory.instance.showChatList(getCaptionRegion(x) == 0);
     }
     // #sijapp cond.end#
 

@@ -26,6 +26,7 @@ import jimm.util.JLocale;
  * @author Vladimir Kryukov
  */
 public final class InputTextBox extends DisplayableEx implements CommandListener, ActionListener {
+    public static final int PASSWORD = TextField.PASSWORD;
     // #sijapp cond.if modules_SMILES is "true" #
     private Command insertEmotionCommand;
     // #sijapp cond.end#
@@ -181,7 +182,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         try {
             String[] modes = {null, "UCB_BASIC_LATIN", "UCB_CYRILLIC"};
             textBox.setInitialInputMode(modes[mode]);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -307,7 +308,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
                 str = str.substring(0, max);
             }
             textBox.insert(str, pos);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -349,7 +350,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
                     textBox.insert(text, getCaretPosition());
                     return;
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             // #sijapp cond.end #
             try {
@@ -358,7 +359,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
                 }
                 textBox.setString(text);
                 return;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         textBox.setString("");

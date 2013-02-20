@@ -269,7 +269,10 @@ public abstract class VirtualList extends CanvasEx {
         return -1;
     }
 
-    protected void touchCaptionTapped(boolean icon) {
+    protected void touchCaptionTapped(int x) {
+        if (CAPTION_REGION_BACK == getCaptionRegion(x)) {
+            back();
+        }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {
         if (isLong || NativeCanvas.getInstance().touchControl.isSecondTap) {
@@ -302,7 +305,7 @@ public abstract class VirtualList extends CanvasEx {
     protected final void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
         if (fromY < getCapHeight()) {
             if (TouchControl.DRAGGED == type) {
-                touchCaptionTapped(false);
+                touchCaptionTapped(1000);
             }
             return;
         }
@@ -314,9 +317,16 @@ public abstract class VirtualList extends CanvasEx {
         }
     }
 
+    protected static final int CAPTION_REGION_BACK = -1;
+    protected int getCaptionRegion(int x) {
+        int width = getWidth();
+        int height = getCapHeight();
+        if (x < height) return CAPTION_REGION_BACK;
+        return (width - x) / height;
+    }
     protected final void stylusTap(int x, int y, boolean longTap) {
         if (y < getCapHeight()) {
-            touchCaptionTapped(getWidth() - getCapHeight() < x);
+            touchCaptionTapped(x);
             return;
         }
         int item = getItemByCoord(y);

@@ -83,7 +83,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
             storage.open(false);
             storage.loadXStatuses(xst_titles, xst_descs);
             storage.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -111,7 +111,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
                 storage.open(true);
                 storage.saveXStatuses(xst_titles, xst_descs);
                 storage.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         protocol.setXStatus(xstatus, title, desc);

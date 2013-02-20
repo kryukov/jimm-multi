@@ -123,7 +123,7 @@ public final class Profile {
     public String password = "";
     public String nick = "";
 
-    public byte statusIndex = 1;
+    public byte statusIndex = StatusInfo.STATUS_OFFLINE;
     public String statusMessage;
 
     public byte xstatusIndex = -1;

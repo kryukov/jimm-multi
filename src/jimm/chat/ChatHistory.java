@@ -50,13 +50,10 @@ public final class ChatHistory extends ScrollableArea {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    public void touchCaptionTapped(boolean icon) {
+    public void touchCaptionTapped(int x) {
         goBack();
     }
     // #sijapp cond.end#
-
-    final public static int DEL_TYPE_ALL_EXCEPT_CUR = 1;
-    final public static int DEL_TYPE_ALL            = 2;
 
     private int getTotal() {
         return historyTable.size();
@@ -86,7 +83,7 @@ public final class ChatHistory extends ScrollableArea {
     }
     public int getPersonalUnreadMessageCount(boolean all) {
         int count = 0;
-        Chat chat = null;
+        Chat chat;
         for (int i = getTotal() - 1; 0 <= i; --i) {
             chat = chatAt(i);
             if (all || chat.isHuman() || !chat.getContact().isSingleUserContact()) {
@@ -354,7 +351,7 @@ public final class ChatHistory extends ScrollableArea {
 
             case MENU_DEL_ALL_CHATS:
                 removeAll(null);
-                return;
+                break;
         }
     }
 
@@ -362,7 +359,7 @@ public final class ChatHistory extends ScrollableArea {
         MenuModel menu = new MenuModel();
         if (0 < getSize()) {
             menu.addItem("select",                  MENU_SELECT);
-            menu.addItem("currect_contact",         MENU_DEL_CURRENT_CHAT);
+            menu.addItem("delete_chat",             MENU_DEL_CURRENT_CHAT);
             menu.addItem("all_contact_except_this", MENU_DEL_ALL_CHATS_EXCEPT_CUR);
             menu.addItem("all_contacts",            MENU_DEL_ALL_CHATS);
         }
@@ -416,7 +413,7 @@ public final class ChatHistory extends ScrollableArea {
                     s.addRecord(out.toByteArray());
                 }
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         s.close();
     }
@@ -441,7 +438,7 @@ public final class ChatHistory extends ScrollableArea {
                 }
                 protocol.addMessage(msg);
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         s.close();
         s.delete();

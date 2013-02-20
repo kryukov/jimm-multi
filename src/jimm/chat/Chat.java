@@ -107,8 +107,12 @@ public final class Chat extends ScrollableArea {
     // #sijapp cond.end#
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    public void touchCaptionTapped(boolean icon) {
-        ChatHistory.instance.showChatList(icon);
+    public void touchCaptionTapped(int x) {
+        if (CAPTION_REGION_BACK == getCaptionRegion(x)) {
+            ContactList.getInstance().activate(contact);
+        } else {
+            ChatHistory.instance.showChatList(0 == getCaptionRegion(x));
+        }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {
         if (isLong) {

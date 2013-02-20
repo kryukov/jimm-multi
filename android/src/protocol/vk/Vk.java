@@ -135,9 +135,11 @@ public class Vk extends Protocol {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    private static final byte[] statuses = {
+            StatusInfo.STATUS_ONLINE};
     @Override
     public byte[] getStatusList() {
-        return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return statuses;
     }
 
     @Override

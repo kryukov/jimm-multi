@@ -26,14 +26,10 @@
 
 package org.microemu.android.device.ui;
 
-import java.util.Collections;
-import java.util.Comparator;
-
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 
 import org.microemu.android.MicroEmulatorActivity;
-import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
 import android.view.View;
@@ -70,17 +66,11 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	public void invalidate() {
 	}
 
-	public void showNotify() {
-		activity.post(new Runnable() {
-			public void run() {
-				activity.setContentView(view);
-				view.requestFocus();
-			}
-		});
-	}
+	public abstract void showNotify();
 
 	public void hideNotify() {
 	}
+
     public Displayable getDisplayable() {
         return displayable;
     }

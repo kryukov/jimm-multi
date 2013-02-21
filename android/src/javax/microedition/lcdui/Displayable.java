@@ -77,10 +77,7 @@ public abstract class Displayable {
 
 
     public boolean isShown() {
-        if (currentDisplay == null) {
-            return false;
-        }
-        return currentDisplay.isShown(this);
+        return (null != currentDisplay) && currentDisplay.isShown(this);
     }
 
 
@@ -188,18 +185,8 @@ public abstract class Displayable {
     final void showNotify(Display d) {
         currentDisplay = d;
 
-        int w;
-        int h;
-        if (fullScreenMode) {
-            w = device.getDeviceDisplay().getFullWidth();
-        } else {
-            w = device.getDeviceDisplay().getWidth();
-        }
-        if (fullScreenMode) {
-            h = device.getDeviceDisplay().getFullHeight();
-        } else {
-            h = device.getDeviceDisplay().getHeight();
-        }
+        int w = device.getDeviceDisplay().getFullWidth();
+        int h = device.getDeviceDisplay().getFullHeight();
 
         if (width != w || height != h) {
             sizeChanged(d);
@@ -211,13 +198,8 @@ public abstract class Displayable {
     }
 
     private void updateWidthAndHeight() {
-        if (fullScreenMode) {
-            width = device.getDeviceDisplay().getFullWidth();
-            height = device.getDeviceDisplay().getFullHeight();
-        } else {
-            width = device.getDeviceDisplay().getWidth();
-            height = device.getDeviceDisplay().getHeight();
-        }
+        width = device.getDeviceDisplay().getFullWidth();
+        height = device.getDeviceDisplay().getFullHeight();
     }
 
     protected DisplayableUI lazyLoad() {

@@ -33,13 +33,10 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import jimm.Jimm;
 import org.microemu.MIDletBridge;
-import org.microemu.android.device.ui.AndroidCanvasUI;
-import org.microemu.android.device.ui.AndroidCanvasUI.CanvasView;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.EmulatorContext;
@@ -48,7 +45,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.PowerManager;
 
@@ -211,7 +207,9 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	}
 	
 	public void addDisplayRepaintListener(DisplayRepaintListener listener) {
-	    displayRepaintListeners.add(listener);
+        if ((null != listener) && !displayRepaintListeners.contains(listener)) {
+	        displayRepaintListeners.add(listener);
+        }
 	}
 
     public void removeDisplayRepaintListener(DisplayRepaintListener listener) {
@@ -223,11 +221,8 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
         rectangle.top = y;
         rectangle.right = x + width;
         rectangle.bottom = y + height;
-        for (int i = 0; i < displayRepaintListeners.size(); i++) {
-            DisplayRepaintListener l = displayRepaintListeners.get(i);
-            if (l != null) {
-                l.repaintInvoked(rectangle);    
-            }
+        for (DisplayRepaintListener l : displayRepaintListeners) {
+            l.repaintInvoked(rectangle);
         }
 	}
 	

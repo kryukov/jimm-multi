@@ -50,7 +50,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
-public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI {
+public class AndroidTextBoxUI extends AndroidDisplayableUI<TextBox> implements TextBoxUI {
 
     private EditText editView;
     private TableLayout commandGrid;
@@ -64,9 +64,6 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
             }
         });
     }
-    private TextBox getTextBox() {
-        return (TextBox) displayable;
-    }
     public void invalidate() {
         activity.post(new Runnable() {
             public void run() {
@@ -75,12 +72,11 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
         });
     }
     private LinearLayout createMainView() {
-        final TextBox textBox = getTextBox();
         titleView = new TextView(activity);
-        titleView.setText(textBox.getTitle());
+        titleView.setText(displayable.getTitle());
 
         commandGrid = new TableLayout(activity);
-        editView = createEditor(activity, textBox);
+        editView = createEditor(activity, displayable);
         editView.setGravity(Gravity.TOP);
         editView.setScroller(new Scroller(activity));
         editView.setVerticalScrollBarEnabled(true);

@@ -414,30 +414,23 @@ public class Display {
 	}
 
 	public void setCurrent(final Displayable nextDisplayable) {
-		if (nextDisplayable == current) {
+        final Displayable prevDisplayable = current;
+		if (nextDisplayable == prevDisplayable) {
 			return;
 		}
 		if (nextDisplayable != null) {
 			eventDispatcher.put(new ShowNotifyEvent(eventDispatcher, new Runnable() {
-
 				public void run() {
-					if (current != null) {
+					if (prevDisplayable != null) {
 						eventDispatcher.put(new HideNotifyEvent(eventDispatcher, new Runnable() {
-							
-							private Displayable displayable = current;
-
 							public void run() {
-								displayable.hideNotify(Display.this);
+								prevDisplayable.hideNotify(Display.this);
 							}
-							
 						}));
 					}
 
 					nextDisplayable.showNotify(Display.this);
 					Display.this.current = nextDisplayable;
-
-					setScrollUp(false);
-					setScrollDown(false);
 					nextDisplayable.repaint();
 				}
 												
@@ -499,13 +492,4 @@ public class Display {
 
 		eventDispatcher.serviceRepaints();
 	}
-
-	void setScrollDown(boolean state) {
-		DeviceFactory.getDevice().getDeviceDisplay().setScrollDown(state);
-	}
-
-	void setScrollUp(boolean state) {
-		DeviceFactory.getDevice().getDeviceDisplay().setScrollUp(state);
-	}
-
 }

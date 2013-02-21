@@ -34,18 +34,18 @@ import org.microemu.device.ui.DisplayableUI;
 
 import android.view.View;
 
-public abstract class AndroidDisplayableUI implements DisplayableUI {
+public abstract class AndroidDisplayableUI<T extends Displayable> implements DisplayableUI {
 	
 	protected MicroEmulatorActivity activity;
 	
-	protected Displayable displayable;
+	protected T displayable;
 	
 	protected View view;
 
 
 	private CommandListener commandListener = null;
 	
-	protected AndroidDisplayableUI(MicroEmulatorActivity activity, Displayable displayable) {
+	protected AndroidDisplayableUI(MicroEmulatorActivity activity, T displayable) {
 		this.activity = activity;
 		this.displayable = displayable;
 		

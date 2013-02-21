@@ -30,7 +30,6 @@ package org.microemu.device;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 public interface DeviceDisplay 
@@ -56,10 +55,6 @@ public interface DeviceDisplay
 
 	void repaint(int x, int y, int width, int height);
 
-	void setScrollDown(boolean state);
-
-	void setScrollUp(boolean state);
-	
 	Image createImage(int width, int height, boolean withAlpha, int fillColor);
 
 	Image createImage(String name) throws IOException;

@@ -33,7 +33,7 @@ import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.ui.CanvasUI;
 
-public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
+public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements CanvasUI {
 
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas);
@@ -47,19 +47,17 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     @Override
     public void hideNotify() {
         ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).removeDisplayRepaintListener((DisplayRepaintListener) view);
-
-        super.hideNotify();
     }
 
     @Override
     public void showNotify() {
-        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
 
         activity.post(new Runnable() {
             public void run() {
                 activity.setContentView(view);
                 view.requestFocus();
-                ((Canvas) displayable).repaint();
+                ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
+                displayable.repaint();
             }
         });
     }

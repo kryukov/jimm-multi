@@ -46,6 +46,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Vector;
 
 public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI {
@@ -322,13 +324,29 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
     }
 
 
-    public void addCommandUI(CommandUI cmd) {
-        super.addCommandUI(cmd);
-        initCommands();
+    private final Commands commands = new Commands();
+    public Commands getCommandsUI() {
+        synchronized (this) {
+            return new Commands(commands);
+        }
     }
+
+    public void addCommandUI(CommandUI cmd) {
+        synchronized (this) {
+            if (!commands.contains(cmd)) {
+                commands.add((AndroidCommandUI) cmd);
+            }
+            // TODO decide whether this is the best way for keeping sorted commands
+            Collections.sort(commands, commandsPriorityComparator);
+            initCommands();
+        }
+    }
+
     public void removeCommandUI(CommandUI cmd) {
-        super.removeCommandUI(cmd);
-        initCommands();
+        synchronized (this) {
+            commands.remove(cmd);
+            initCommands();
+        }
     }
 
     private void initCommands() {
@@ -402,4 +420,18 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
             return false;
         }
     }
+
+    private static Comparator<CommandUI> commandsPriorityComparator = new Comparator<CommandUI>() {
+        public int compare(CommandUI first, CommandUI second) {
+            if (first.getCommand().getPriority() == second.getCommand().getPriority()) {
+                return 0;
+            } else if (first.getCommand().getPriority() < second.getCommand().getPriority()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+
+    };
+
 }

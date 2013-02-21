@@ -54,175 +54,156 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
-import org.microemu.android.util.AndroidRepaintListener;
-
 import java.lang.reflect.Method;
 
-public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {   
-    
-    private AndroidDisplayGraphics graphics = null;   
-    
+public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
+
+    private AndroidDisplayGraphics graphics = null;
+
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas);
-       
-        
         activity.post(new Runnable() {
             public void run() {
-                view = new CanvasView(activity, AndroidCanvasUI.this);
-                view.setId(666);
+                initUI();
             }
         });
     }
-        
+    private void initUI() {
+        // GUI thread
+        view = new CanvasView(activity, AndroidCanvasUI.this);
+        view.setId(666);
+    }
+
     public void initGraphics(int width, int height, Matrix matrix) {
         if (graphics == null) {
             graphics = new AndroidDisplayGraphics();
-            ((CanvasView)view).scale = matrix;
-        }        
+            ((CanvasView) view).scale = matrix;
+        }
     }
-    
-    public View getView() {
-        return view;
-    }
-    
+
     @Override
-    public void hideNotify()
-    {
+    public void hideNotify() {
         ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).removeDisplayRepaintListener((DisplayRepaintListener) view);
-        
+
         super.hideNotify();
     }
 
     @Override
-    public void showNotify()
-    {
+    public void showNotify() {
         super.showNotify();
-        
+
         activity.post(new Runnable() {
             public void run() {
-		        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
-		        ((Canvas) displayable).repaint();
+                ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
+                ((Canvas) displayable).repaint();
             }
         });
     }
-    
-	public AndroidDisplayGraphics getGraphics() {
-		return graphics;
-	}
 
     //
     // CanvasUI
     //
-    
+
     public class CanvasView extends View implements DisplayRepaintListener {
-        
+
         private final static int FIRST_DRAG_SENSITIVITY_X = 5;
-        
+
         private final static int FIRST_DRAG_SENSITIVITY_Y = 5;
-        
+
         private AndroidCanvasUI ui;
-        
+
         private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
-        
+
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-        
+
         private Overlay overlay = null;
-        
+
         private Matrix scale = new Matrix();
 
         private AndroidKeyListener keyListener = null;
-        
+
         private int inputType = InputType.TYPE_CLASS_TEXT;
 
         public CanvasView(Context context, AndroidCanvasUI ui) {
             super(context);
-            this.ui = ui;            
+            this.ui = ui;
             setFocusable(true);
             setFocusableInTouchMode(true);
             try {
                 Method setLayerTypeMethod = getClass().getMethod("setLayerType", new Class[]{int.class, Paint.class});
                 setLayerTypeMethod.invoke(this, LAYER_TYPE_SOFTWARE, null);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
-        
-        public AndroidCanvasUI getUI() {
-            return ui;
-        }             
 
         public void flushGraphics(int x, int y, int width, int height) {
-            // TODO handle x, y, width and height
-            if (repaintListener == null) {
-                postInvalidate();
-            } else {
-                repaintListener.flushGraphics();
-            }
+            postInvalidate();
         }
 
         public void setOverlay(Overlay overlay) {
             this.overlay = overlay;
         }
-        
+
         public void setScale(float sx, float sy) {
             scale.reset();
             scale.postScale(sx, sy);
         }
 
         public void setKeyListener(AndroidKeyListener keyListener, int inputType) {
-        	this.keyListener = keyListener;
-        	this.inputType = inputType;
+            this.keyListener = keyListener;
+            this.inputType = inputType;
         }
 
         @Override
-		public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        	outAttrs.imeOptions |= EditorInfo.IME_ACTION_DONE;
-        	outAttrs.imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI;
-        	outAttrs.inputType = inputType;
-        	
-        	return new BaseInputConnection(this, false) {
+        public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+            outAttrs.imeOptions |= EditorInfo.IME_ACTION_DONE;
+            outAttrs.imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI;
+            outAttrs.inputType = inputType;
 
-				@Override
-				public boolean performEditorAction(int actionCode) {
-					if (actionCode == EditorInfo.IME_ACTION_DONE) {
-						InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-		                imm.hideSoftInputFromWindow(CanvasView.this.getWindowToken(), 0);		                
-		                return true;
-					} else {
-						return super.performEditorAction(actionCode);
-					}
-				}
+            return new BaseInputConnection(this, false) {
 
-				@Override
-				public boolean commitText(CharSequence text, int newCursorPosition) {
-					if (keyListener != null) {
-						keyListener.insert(keyListener.getCaretPosition(), text);
-					}
-					
-					return true;
-				}
+                @Override
+                public boolean performEditorAction(int actionCode) {
+                    if (actionCode == EditorInfo.IME_ACTION_DONE) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(CanvasView.this.getWindowToken(), 0);
+                        return true;
+                    } else {
+                        return super.performEditorAction(actionCode);
+                    }
+                }
 
-				@Override
-				public boolean deleteSurroundingText(int leftLength, int rightLength) {
-					if (keyListener != null) {
-						int caret = keyListener.getCaretPosition();
-						keyListener.delete(caret - leftLength, caret + rightLength);
-					}
-					
-					return true;
-				}
+                @Override
+                public boolean commitText(CharSequence text, int newCursorPosition) {
+                    if (keyListener != null) {
+                        keyListener.insert(keyListener.getCaretPosition(), text);
+                    }
 
-				@Override
-				public boolean sendKeyEvent(KeyEvent event) {
-					return super.sendKeyEvent(event);
-				}
-        		
-        	};
-		}        
-        
+                    return true;
+                }
+
+                @Override
+                public boolean deleteSurroundingText(int leftLength, int rightLength) {
+                    if (keyListener != null) {
+                        int caret = keyListener.getCaretPosition();
+                        keyListener.delete(caret - leftLength, caret + rightLength);
+                    }
+
+                    return true;
+                }
+
+                @Override
+                public boolean sendKeyEvent(KeyEvent event) {
+                    return super.sendKeyEvent(event);
+                }
+
+            };
+        }
+
         //
         // View
         //
-        
+
         @Override
         public void onDraw(android.graphics.Canvas androidCanvas) {
             super.onDraw(androidCanvas);
@@ -239,24 +220,24 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             if (overlay != null) {
                 overlay.onDraw(androidCanvas);
             }
-        }   
-        
-		@Override
-		protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-			super.onSizeChanged(w, h, oldw, oldh);
-			
-			AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-			deviceDisplay.displayRectangleWidth = w;
-			deviceDisplay.displayRectangleHeight = h;
-			MIDletAccess ma = MIDletBridge.getMIDletAccess();
-			if (ma == null) {
-				return;
-			}
-			DisplayAccess da = ma.getDisplayAccess();
-			if (da != null) {
-				da.sizeChanged();
-			}
-		}
+        }
+
+        @Override
+        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+            super.onSizeChanged(w, h, oldw, oldh);
+
+            AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
+            deviceDisplay.displayRectangleWidth = w;
+            deviceDisplay.displayRectangleHeight = h;
+            MIDletAccess ma = MIDletBridge.getMIDletAccess();
+            if (ma == null) {
+                return;
+            }
+            DisplayAccess da = ma.getDisplayAccess();
+            if (da != null) {
+                da.sizeChanged();
+            }
+        }
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
@@ -268,47 +249,38 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             int x = (int) event.getX();
             int y = (int) event.getY();
             switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN :
-                inputMethod.pointerPressed(x, y);
-                pressedX = x;
-                pressedY = y;
-                break;
-            case MotionEvent.ACTION_UP :
-                inputMethod.pointerReleased(x, y);
-                break;
-            case MotionEvent.ACTION_MOVE :
-                if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) &&  x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
-                        && y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) &&  y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
-                } else {
-                    pressedX = -FIRST_DRAG_SENSITIVITY_X;
-                    pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-                    inputMethod.pointerDragged(x, y);
-                }
-                break;
-            default:
-                return false;
+                case MotionEvent.ACTION_DOWN:
+                    inputMethod.pointerPressed(x, y);
+                    pressedX = x;
+                    pressedY = y;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    inputMethod.pointerReleased(x, y);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) && x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
+                            && y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) && y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
+                    } else {
+                        pressedX = -FIRST_DRAG_SENSITIVITY_X;
+                        pressedY = -FIRST_DRAG_SENSITIVITY_Y;
+                        inputMethod.pointerDragged(x, y);
+                    }
+                    break;
+                default:
+                    return false;
             }
-            
+
             return true;
         }
 
         //
         // DisplayRepaintListener
         //
-      
-        public void repaintInvoked(Object repaintObject)
-        {
+
+        public void repaintInvoked(Object repaintObject) {
             Rect r = (Rect) repaintObject;
             flushGraphics(r.left, r.top, r.width(), r.height());
-        }       
-        
-        private AndroidRepaintListener repaintListener;
-
-        public void setAndroidRepaintListener(AndroidRepaintListener repaintListener)
-        {
-            this.repaintListener = repaintListener;
         }
-
     }
 
 }

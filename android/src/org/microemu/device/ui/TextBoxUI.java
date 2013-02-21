@@ -37,5 +37,8 @@ public interface TextBoxUI extends DisplayableUI {
 	void insert(String text, int position);
 	
 	void delete(int offset, int length);
-	
+
+    void addCommandUI(CommandUI cmd);
+
+    void removeCommandUI(CommandUI cmd);
 }

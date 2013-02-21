@@ -21,264 +21,209 @@
  *  See the LGPL or the AL for the specific language governing permissions and
  *  limitations.
  */
- 
-package javax.microedition.lcdui;
 
-import java.util.Vector;
+package javax.microedition.lcdui;
 
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
 
-
 public abstract class Displayable {
-	Device device;
-	
-	Display currentDisplay = null;
-	
-	int width;
-	
-	int height;
-    
-	boolean fullScreenMode;
+    Device device;
+
+    Display currentDisplay = null;
+
+    int width;
+
+    int height;
+
+    boolean fullScreenMode;
 
     Ticker ticker;
 
     private DisplayableUI ui;
 
     private String title;
-    
-	private CommandListener listener = null;
 
-    
-    Displayable(String title) 
-    {
+    private CommandListener listener = null;
+
+
+    Displayable(String title) {
         this.device = DeviceFactory.getDevice();
         this.width = -1;
         this.height = -1;
         this.fullScreenMode = false;
         this.title = title;
     }
-    
-
-	public void addCommand(Command cmd) {
-		getUi().addCommandUI(cmd.ui);
-	}
 
 
-	public void removeCommand(Command cmd)
-	{
-		if (cmd != null) {
-			getUi().removeCommandUI(cmd.ui);
-		}
-	}
-    
-    
-    public int getWidth()
-    {
-    	if (width == -1) {
-    		updateWidthAndHeight();
-    	}
-    	
-    	return width;
+    public int getWidth() {
+        if (width == -1) {
+            updateWidthAndHeight();
+        }
+
+        return width;
     }
 
 
-    public int getHeight()
-    {
-    	if (height == -1) {
-    		updateWidthAndHeight();
-    	}
-    	
-    	return height;
+    public int getHeight() {
+        if (height == -1) {
+            updateWidthAndHeight();
+        }
+
+        return height;
     }
 
 
-	public boolean isShown()
-	{
-		if (currentDisplay == null) {
-			return false;
-		}
-		return currentDisplay.isShown(this);
-	}
+    public boolean isShown() {
+        if (currentDisplay == null) {
+            return false;
+        }
+        return currentDisplay.isShown(this);
+    }
 
-    
-    public Ticker getTicker() 
-    {
+
+    public Ticker getTicker() {
         return ticker;
     }
 
-    
-    public void setTicker(Ticker ticker) 
-    {
+
+    public void setTicker(Ticker ticker) {
         this.ticker = ticker;
 
         repaint();
     }
 
-    
-    public String getTitle() 
-    {
+
+    public String getTitle() {
         return title;
     }
 
-    
-    public void setTitle(String s) 
-    {
+
+    public void setTitle(String s) {
         this.title = s;
-        
+
         // TODO move to the native UI component
         getUi().invalidate();
-    }        
-    
-
-	public void setCommandListener(CommandListener l)
-	{
-		listener = l;
-		
-		getUi().setCommandListener(l);
-	}
-	
-	
-	CommandListener getCommandListener()
-	{
-		return listener;
-	}
-
-
-	Vector getCommands()
-	{
-		// in Form this is overridden to allow for the inclusion of item contained commands 
-		Vector result = new Vector();
-		Vector commandsUI = getUi().getCommandsUI();
-		for (int i = 0; i < commandsUI.size(); i++) {
-			result.addElement(((CommandUI) commandsUI.elementAt(i)).getCommand());
-		}
-		
-		return result;
-	}
-
-
-	void hideNotify()
-	{
-	}
-
-
-	final void hideNotify(Display d)
-	{		
-		getUi().hideNotify();
-
-		hideNotify();
-	}
-
-
-	void keyPressed(int keyCode)
-	{
-	}
-
-
-	void keyRepeated(int keyCode)
-	{
-	}
-
-
-	void keyReleased(int keyCode)
-	{
-	}
-
-
-	void pointerPressed(int x, int y) 
-	{
-	}
-
-	
-	void pointerReleased(int x, int y) 
-	{
-	}
-
-	
-	void pointerDragged(int x, int y) 
-	{
-	}
-
-	
-	abstract void paint(Graphics g);
-
-
-	void repaint()
-	{
-		if (currentDisplay != null) {
-			repaint(0, 0, getWidth(), getHeight());
-		}
-	}
-
-
-	void repaint(int x, int y, int width, int height)
-    {
-		if (currentDisplay != null) {
-			currentDisplay.repaint(this, x, y, width, height);
-		}
     }
-	
-	protected void sizeChanged(int w, int h)
-	{		
-	}
 
 
-	final void sizeChanged(Display d)
-	{
-		updateWidthAndHeight();
-		sizeChanged(width, height);
-	}
-	
-	
-	void showNotify()
-	{        
-	}
+    public void setCommandListener(CommandListener l) {
+        listener = l;
+
+        getUi().setCommandListener(l);
+    }
 
 
-	final void showNotify(Display d)
-	{
-		currentDisplay = d;
+    CommandListener getCommandListener() {
+        return listener;
+    }
+
+    void hideNotify() {
+    }
+
+
+    final void hideNotify(Display d) {
+        getUi().hideNotify();
+
+        hideNotify();
+    }
+
+
+    void keyPressed(int keyCode) {
+    }
+
+
+    void keyRepeated(int keyCode) {
+    }
+
+
+    void keyReleased(int keyCode) {
+    }
+
+
+    void pointerPressed(int x, int y) {
+    }
+
+
+    void pointerReleased(int x, int y) {
+    }
+
+
+    void pointerDragged(int x, int y) {
+    }
+
+
+    abstract void paint(Graphics g);
+
+
+    void repaint() {
+        if (currentDisplay != null) {
+            repaint(0, 0, getWidth(), getHeight());
+        }
+    }
+
+
+    void repaint(int x, int y, int width, int height) {
+        if (currentDisplay != null) {
+            currentDisplay.repaint(this, x, y, width, height);
+        }
+    }
+
+    protected void sizeChanged(int w, int h) {
+    }
+
+
+    final void sizeChanged(Display d) {
+        updateWidthAndHeight();
+        sizeChanged(width, height);
+    }
+
+
+    void showNotify() {
+    }
+
+
+    final void showNotify(Display d) {
+        currentDisplay = d;
 
         int w;
-    	int h;
-    	if (fullScreenMode) {
-    		w = device.getDeviceDisplay().getFullWidth();
-    	} else {
-    		w = device.getDeviceDisplay().getWidth();
-    	}
-    	if (fullScreenMode) {
-    		h = device.getDeviceDisplay().getFullHeight();
-    	} else {
-    		h = device.getDeviceDisplay().getHeight();
-    	}
-   	
-        if (width != w || height != h) {
-        	sizeChanged(d);
+        int h;
+        if (fullScreenMode) {
+            w = device.getDeviceDisplay().getFullWidth();
+        } else {
+            w = device.getDeviceDisplay().getWidth();
         }
-		
-		showNotify();
+        if (fullScreenMode) {
+            h = device.getDeviceDisplay().getFullHeight();
+        } else {
+            h = device.getDeviceDisplay().getHeight();
+        }
 
-		getUi().showNotify();
-	}
+        if (width != w || height != h) {
+            sizeChanged(d);
+        }
 
-	private void updateWidthAndHeight() 
-	{
-    	if (fullScreenMode) {
-    		width = device.getDeviceDisplay().getFullWidth();
-    		height = device.getDeviceDisplay().getFullHeight();
-    	} else {
-    		width = device.getDeviceDisplay().getWidth();
-    		height= device.getDeviceDisplay().getHeight();
-    	}
-	}
+        showNotify();
+
+        getUi().showNotify();
+    }
+
+    private void updateWidthAndHeight() {
+        if (fullScreenMode) {
+            width = device.getDeviceDisplay().getFullWidth();
+            height = device.getDeviceDisplay().getFullHeight();
+        } else {
+            width = device.getDeviceDisplay().getWidth();
+            height = device.getDeviceDisplay().getHeight();
+        }
+    }
 
     protected DisplayableUI lazyLoad() {
         return null;
     }
+
     final DisplayableUI getUi() {
         if (null == ui) {
             ui = lazyLoad();

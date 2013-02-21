@@ -50,12 +50,9 @@ import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDevice;
 import org.microemu.android.device.AndroidInputMethod;
-import org.microemu.android.device.ui.AndroidCanvasUI;
-import org.microemu.android.device.ui.AndroidCommandUI;
-import org.microemu.android.device.ui.AndroidDisplayableUI;
+import org.microemu.android.device.ui.*;
 import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
-import org.microemu.android.util.AndroidRepaintListener;
 import org.microemu.app.Common;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -151,12 +148,6 @@ public class JimmActivity extends MicroEmulatorActivity {
         isVisible = false;
         super.onPause();
         try {
-            if (contentView != null) {
-                if (contentView instanceof AndroidRepaintListener) {
-                    ((AndroidRepaintListener) contentView).onPause();
-                }
-            }
-
             if (isFinishing()) {
                 Log.i(LOG_TAG, "onPause(); with isFinishing() == true.");
                 Log.i(LOG_TAG, "Stopping service...");
@@ -377,69 +368,80 @@ public class JimmActivity extends MicroEmulatorActivity {
         return super.onTrackballEvent(event);
     }
 
+    private AndroidDisplayableUI getDisplayable() {
+        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        if (ma == null) {
+            return null;
+        }
+        final DisplayAccess da = ma.getDisplayAccess();
+        if (da == null) {
+            return null;
+        }
+        return (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
+    }
+    private Commands getCommandsUI() {
+        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        if (ma == null) {
+            return null;
+        }
+        final DisplayAccess da = ma.getDisplayAccess();
+        if (da == null) {
+            return null;
+        }
+        AndroidDisplayableUI ui = getDisplayable();
+        if (ui == null) {
+            return null;
+        }
+        if (ui instanceof AndroidTextBoxUI) {
+            return ((AndroidTextBoxUI) ui).getCommandsUI();
+        }
+        return null;
+    }
+
     @Override
     public void onBackPressed() {
         if (KeyEmulator.isMain()) {
             minimizeApp();
             return;
         }
-        MIDletAccess ma = MIDletBridge.getMIDletAccess();
-        if (ma == null) {
-            return;
-        }
-        final DisplayAccess da = ma.getDisplayAccess();
-        if (da == null) {
-            return;
-        }
-        AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
-        if (ui == null) {
-            return;
-        }
 
-        CommandUI cmd = ui.getCommandsUI().getBackCommand();
+        Commands commands = getCommandsUI();
+        if (null == commands) {
+            return;
+        }
+        CommandUI cmd = commands.getBackCommand();
         if (cmd == null) {
             return;
         }
-
+        AndroidDisplayableUI ui = getDisplayable();
         if (ui.getCommandListener() != null) {
             ignoreBackKeyUp = true;
-
-            MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(cmd.getCommand(), da.getCurrent());
+            MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(cmd.getCommand(), ui.getDisplayable());
         }
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MIDletAccess ma = MIDletBridge.getMIDletAccess();
-        if (ma == null) {
-            return false;
-        }
-        final DisplayAccess da = ma.getDisplayAccess();
-        if (da == null) {
-            return false;
-        }
-        AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
-        if (ui == null) {
+        Commands commands = getCommandsUI();
+        if (null == commands) {
+            if (Jimm.getJimm().getDisplay().getCurrentDisplay() instanceof Select) {
+                KeyEmulator.emulateKey(NativeCanvas.JIMM_BACK);
+            } else {
+                KeyEmulator.emulateKey(NativeCanvas.LEFT_SOFT);
+            }
             return false;
         }
 
         menu.clear();
         boolean result = false;
 
-        CommandUI back = ui.getCommandsUI().getBackCommand();
-        for (int i = 0; i < ui.getCommandsUI().size(); i++) {
-            AndroidCommandUI cmd = ui.getCommandsUI().get(i);
+        CommandUI back = commands.getBackCommand();
+        for (int i = 0; i < commands.size(); i++) {
+            AndroidCommandUI cmd = commands.get(i);
             if (back == cmd) continue;
             result = true;
             SubMenu item = menu.addSubMenu(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getCommand().getLabel());
             item.setIcon(cmd.getDrawable());
-        }
-        if (ui.getCommandsUI().isEmpty()) {
-            if (Jimm.getJimm().getDisplay().getCurrentDisplay() instanceof Select) {
-                KeyEmulator.emulateKey(NativeCanvas.JIMM_BACK);
-            } else {
-                KeyEmulator.emulateKey(NativeCanvas.LEFT_SOFT);
-            }
         }
         return result;
     }
@@ -449,7 +451,7 @@ public class JimmActivity extends MicroEmulatorActivity {
         try {
             final DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
             AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
-            CommandUI c = ui.getCommandsUI().get(item.getItemId() - Menu.FIRST);
+            CommandUI c = getCommandsUI().get(item.getItemId() - Menu.FIRST);
             da.commandAction(c.getCommand(), da.getCurrent());
             return true;
         } catch (Exception ignored) {
@@ -521,9 +523,6 @@ public class JimmActivity extends MicroEmulatorActivity {
         try {
             MIDletBridge.getMIDletAccess().startApp();
             if (contentView != null) {
-                if (contentView instanceof AndroidRepaintListener) {
-                    ((AndroidRepaintListener) contentView).onResume();
-                }
                 post(new Runnable() {
                     public void run() {
                         contentView.invalidate();

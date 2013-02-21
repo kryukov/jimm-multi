@@ -26,8 +26,6 @@ package javax.microedition.lcdui;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
-import org.microemu.device.InputMethodEvent;
-import org.microemu.device.InputMethodListener;
 import org.microemu.device.ui.DisplayableUI;
 import org.microemu.device.ui.TextBoxUI;
 
@@ -133,6 +131,10 @@ public class TextBox extends Screen {
 
     public int size() {
         return ((TextBoxUI) getUi()).getString().length();
+    }
+
+    public void addCommand(Command cmd) {
+        ((TextBoxUI) getUi()).addCommandUI(cmd.ui);
     }
 
     @Override

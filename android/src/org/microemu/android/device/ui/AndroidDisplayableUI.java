@@ -46,22 +46,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
 	protected View view;
 
-	private static Comparator<CommandUI> commandsPriorityComparator = new Comparator<CommandUI>() {
 
-		public int compare(CommandUI first, CommandUI second) {
-			if (first.getCommand().getPriority() == second.getCommand().getPriority()) {
-				return 0;
-			} else if (first.getCommand().getPriority() < second.getCommand().getPriority()) {
-				return -1;
-			} else {
-				return 1;
-			}
-		}
-		
-	};
-	
-	private final Commands commands = new Commands();
-	
 	private CommandListener commandListener = null;
 	
 	protected AndroidDisplayableUI(MicroEmulatorActivity activity, Displayable displayable) {
@@ -70,12 +55,6 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		
 	}
 
-	public Commands getCommandsUI() {
-        synchronized (this) {
-		    return new Commands(commands);
-        }
-	}
-	
 	public CommandListener getCommandListener() {
 		return commandListener;
 	}
@@ -83,22 +62,6 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	//
 	// DisplayableUI
 	//
-
-	public void addCommandUI(CommandUI cmd) {
-		synchronized (this) {
-			if (!commands.contains(cmd)) {
-				commands.add((AndroidCommandUI) cmd);
-			}
-			// TODO decide whether this is the best way for keeping sorted commands
-			Collections.sort(commands, commandsPriorityComparator);
-		}
-	}
-
-	public void removeCommandUI(CommandUI cmd) {
-		synchronized (this) {
-			commands.remove(cmd);
-		}
-	}
 
 	public void setCommandListener(CommandListener l) {
 		this.commandListener = l;
@@ -118,5 +81,8 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 
 	public void hideNotify() {
 	}
+    public Displayable getDisplayable() {
+        return displayable;
+    }
 
 }

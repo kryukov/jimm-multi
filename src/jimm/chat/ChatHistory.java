@@ -51,7 +51,11 @@ public final class ChatHistory extends ScrollableArea {
 
     // #sijapp cond.if modules_TOUCH is "true"#
     public void touchCaptionTapped(int x) {
-        goBack();
+        if (MyActionBar.CAPTION_REGION_MENU == x) {
+            showMenu(getMenu());
+        } else {
+            goBack();
+        }
     }
     // #sijapp cond.end#
 

@@ -44,6 +44,7 @@ public class ViewFinder extends Canvas implements Runnable {
     // Variables
     private Player player = null;
     private VideoControl videoControl = null;
+    private MyActionBar bar = new MyActionBar();
     private Par errorMessage = null;
     private byte[] data;
 
@@ -123,15 +124,17 @@ public class ViewFinder extends Canvas implements Runnable {
 
     public void paint(Graphics g) {
         gx.setGraphics(g);
-        int captionHeight = GraphicsEx.calcCaptionHeight(null, "");
-        int softBarHeight = gx.getSoftBarSize();
-        int scrWidth = getWidth();
-        int scrHeight = getHeight() - softBarHeight - captionHeight;
         String caption = (STATE_CAPTURE == state) ? "viewfinder" : "send_img";
         caption = JLocale.getString(caption);
         if (0 < useSize) {
             caption += " " + sizes[useSize];
         }
+        bar.setCaption(caption);
+
+        int captionHeight = bar.getHeight();
+        int softBarHeight = gx.getSoftBarSize();
+        int scrWidth = getWidth();
+        int scrHeight = getHeight() - softBarHeight - captionHeight;
 
         g.setColor(0xffffffff);
         g.fillRect(0, captionHeight, scrWidth, scrHeight);
@@ -150,9 +153,7 @@ public class ViewFinder extends Canvas implements Runnable {
                 g.drawString("...", scrWidth / 2 - 5, scrHeight / 2, Graphics.TOP | Graphics.LEFT);
             }
         }
-
-        gx.drawBarBack(0, captionHeight, Scheme.captionImage, getWidth());
-        gx.drawCaption(null, caption, null, captionHeight, getWidth());
+        bar.paint(gx, null, getWidth());
 
         gx.drawSoftBar((null == errorMessage) ? JLocale.getString("ok") : "",
                 "", JLocale.getString("back"),
@@ -186,7 +187,7 @@ public class ViewFinder extends Canvas implements Runnable {
         } catch (MediaException me) {
             try {
                 vControl.setDisplayFullScreen(true);
-            } catch (MediaException me2) {
+            } catch (MediaException ignored) {
             }
         }
         vControl.setVisible(true);
@@ -201,7 +202,7 @@ public class ViewFinder extends Canvas implements Runnable {
                 if (Jimm.isPhone(Jimm.PHONE_NOKIA_S40)) {
                     vControl = createPlayer("capture://image");
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             // #sijapp cond.end #
             if (null == vControl) {
@@ -260,7 +261,7 @@ public class ViewFinder extends Canvas implements Runnable {
                     videoControl.setDisplayLocation(1000, 1000);
                 }
                 // #sijapp cond.end #
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         videoControl = null;
@@ -268,11 +269,11 @@ public class ViewFinder extends Canvas implements Runnable {
         if (null != player) {
             try {
                 player.stop();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             try {
                 player.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         player = null;
@@ -284,7 +285,7 @@ public class ViewFinder extends Canvas implements Runnable {
             return videoControl.getSnapshot(type);
         } catch (SecurityException e) {
             return null;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             // #sijapp cond.if modules_DEBUGLOG is "true" #
             //DebugLog.panic("getSnapshot(" + type + ")", e);
             // #sijapp cond.end#
@@ -443,7 +444,7 @@ public class ViewFinder extends Canvas implements Runnable {
                     try {
                         listener.processPhoto(data);
                         dismiss();
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                         setError(new JimmException(191, 4));
                     }
                 }

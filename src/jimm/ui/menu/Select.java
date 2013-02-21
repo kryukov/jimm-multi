@@ -13,14 +13,10 @@ import DrawControls.icons.*;
 import javax.microedition.lcdui.*;
 import jimm.ui.base.*;
 
-import java.util.Vector;
-
 /**
  * @author vladimir
  */
 public final class Select extends CanvasEx {
-    private static final int BORDER_Y = 1;
-    private static final int BORDER_X = 2;
     private static final int ICON_INTERVAL = 2;
     private static final int WIDTH_SPACE = 6;
 
@@ -39,24 +35,23 @@ public final class Select extends CanvasEx {
     private int left;
     private int top;
     private int width;
-    private int height;
+
+    private int itemPerPage;
 
     private int itemHeight;
     private int itemWidth;
     private int iconWidth;
-    private boolean big = false;
 
-    private int calcItemPerPage() {
-        return Math.min(height / itemHeight, items.count());
+    private int getHeadSpace() {
+        return Math.max(3, itemHeight / 4);
     }
 
     protected final int[] getScroll() {
         // scroll bar
-        int visItemCount = calcItemPerPage();
         int[] scroll = GraphicsEx.makeVertScroll(
-                left + itemWidth, top, scrollerWidth + 1,
-                visItemCount * itemHeight + 1,
-                visItemCount, items.count());
+                left + itemWidth - scrollerWidth, top, scrollerWidth + 1,
+                (itemPerPage) * itemHeight + 1 + 2 * getHeadSpace(),
+                itemPerPage, items.count());
         if (null != scroll) {
             scroll[GraphicsEx.SCROLL_TOP_VALUE] = topItem;
         }
@@ -64,10 +59,11 @@ public final class Select extends CanvasEx {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    private int getItemStartY(int relativeY) {
-        return topItem * itemHeight;
+    private int getItemStartY() {
+        return topItem * itemHeight + getHeadSpace();
     }
     private int getItemByCoord(int relativeY) {
+        relativeY -= getHeadSpace();
         final int size = items.count();
         for (int i = topItem; i < size; ++i) {
             if (relativeY < itemHeight) {
@@ -80,10 +76,9 @@ public final class Select extends CanvasEx {
 
     private boolean checkRegion(int fromX, int fromY) {
         int relativeX = fromX - left;
-        int relativeY = fromY - top;
-        int itemPerPage = calcItemPerPage();
+        int relativeY = fromY - top - getHeadSpace();
         int curHeight = itemPerPage * itemHeight;
-        int curWidth = calcMenuWidth();
+        int curWidth = itemWidth;
         return (relativeX >= 0) && (relativeX < curWidth)
                 && (relativeY >= 0) && (relativeY < curHeight);
     }
@@ -95,21 +90,19 @@ public final class Select extends CanvasEx {
         if (!checkRegion(toX, toY)) {
             return;
         }
-        int posX = toX - left;
         int posY = toY - top;
         TouchControl nat = NativeCanvas.getInstance().touchControl;
 
         if (isItemsRegion(toX)) { // menu items
-            nat.prevTopY = getItemStartY(posY);
+            nat.prevTopY = getItemStartY();
             int cur = getItemByCoord(posY);
             if (-1 != cur) {
                 setSelectedItemCode(items.getItemCodeByIndex(getIndex(cur, 0)));
             }
-            return;
         }
     }
     private void setTop(int pos) {
-        int newTop = Math.max(0, Math.min(pos, items.count() - calcItemPerPage()));
+        int newTop = Math.max(0, Math.min(pos, items.count() - itemPerPage));
 
         boolean update = (newTop != topItem);
         topItem = newTop;
@@ -127,7 +120,7 @@ public final class Select extends CanvasEx {
     protected void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
         if (checkRegion(fromX, fromY) && isItemsRegion(fromX)) {
             TouchControl nat = NativeCanvas.getInstance().touchControl;
-            setTop((nat.prevTopY - toY + fromY + itemHeight / 2) / itemHeight);
+            setTop((nat.prevTopY - toY + fromY + getHeadSpace()) / itemHeight);
         }
     }
 
@@ -170,24 +163,18 @@ public final class Select extends CanvasEx {
             textWidth = Math.max(textWidth, menuFont.stringWidth(item.text));
         }
         textWidth = Math.max(getScreenWidth() * 2 / 5, textWidth);
-        itemHeight = Math.max(itemHeight + BORDER_Y, CanvasEx.minItemHeight);
+        itemHeight = Math.max(itemHeight, CanvasEx.minItemHeight);
 
         if (0 < iconWidth) {
             iconWidth = Math.max(iconWidth, itemHeight);
+        } else {
+            iconWidth = scrollerWidth - ICON_INTERVAL;
         }
 
-        int _itemWidth = textWidth + iconWidth + ICON_INTERVAL + 2 * BORDER_X;
+        int _itemWidth = textWidth + iconWidth + ICON_INTERVAL + scrollerWidth;
         itemWidth = between(_itemWidth,
                 CanvasEx.minItemWidth,
-                getScreenWidth() - (WIDTH_SPACE + scrollerWidth + 2 * BORDER_X));
-    }
-    private int calcMenuWidth() {
-        final int size = items.count();
-        int itemPerPage = calcItemPerPage();
-        if (size > itemPerPage) {
-            return itemWidth + scrollerWidth;
-        }
-        return itemWidth;
+                getScreenWidth() - (WIDTH_SPACE + scrollerWidth));
     }
 
     protected void showing() {
@@ -205,38 +192,13 @@ public final class Select extends CanvasEx {
         int screenHeight = getScreenHeight();
         int screenWidth = getScreenWidth();
 
-        height = Math.min(screenHeight - 10, itemHeight * items.count());
-        width  = between(calcMenuWidth(), screenWidth / 3, screenWidth - 2 * BORDER_X - 10);
+        itemPerPage = Math.min(screenHeight / itemHeight - 1, items.count());
+        width  = between(itemWidth, screenWidth / 3, screenWidth - 10);
         left = (screenWidth - width) / 2;
+        int height = itemHeight * itemPerPage + 2 * getHeadSpace();
         top = (screenHeight - height) / 3;
 
-        if (isFirstMenu()) {
-            left = 0;
-            top = 0;
-            height = screenHeight;
-            width = screenWidth * 8 / 10;
-
-            final int maxItemWidth = width - (scrollerWidth + 2 * BORDER_X);
-            itemWidth = width - (scrollerWidth + 2 * BORDER_X);
-            left = -maxItemWidth;
-            new Thread(new Runnable() {
-                public void run() {
-                    try { Thread.sleep(50);} catch (Exception ignored) {}
-                    left = -maxItemWidth * 70 / 100;
-                    invalidate();
-                    try { Thread.sleep(50);} catch (Exception ignored) {}
-                    left = -maxItemWidth * 50 / 100;
-                    invalidate();
-                    try { Thread.sleep(50);} catch (Exception ignored) {}
-                    left = 0;
-                    invalidate();
-                }
-            }).start();
-        }
         setSelectedItem(selectedItemIndex);
-    }
-    private boolean isFirstMenu() {
-        return big;
     }
 
     public void update() {
@@ -262,41 +224,37 @@ public final class Select extends CanvasEx {
 
     protected void paint(GraphicsEx g) {
         final int size = items.count();
-        final int itemPerPage = calcItemPerPage();
         final boolean hasScroll = (size > itemPerPage);
 
         // get top item
         final int curWidth = this.width;
-        final int curHeight = !isFirstMenu() ? itemHeight * itemPerPage + BORDER_Y : this.height;
+        final int curHeight = itemHeight * itemPerPage + 2 * getHeadSpace();
         final int currentIndex = selectedItemIndex;
 
         int y = this.top;
         int x = this.left;
-        if (isFirstMenu()) {
-            g.getGraphics().translate(width + x, 0);
-        }
         paintBack(g);
-        if (isFirstMenu()) {
-            g.getGraphics().translate(-width - x, 0);
-        }
         g.setStrokeStyle(Graphics.SOLID);
         g.fillRect(x, y, curWidth, curHeight, THEME_MENU_BACK);
         g.drawDoubleBorder(x, y, curWidth, curHeight, THEME_MENU_BORDER);
         g.setClip(x, y, curWidth + 1, curHeight + 1);
+        y += getHeadSpace();
+        paintItems(g, x, y, itemPerPage, currentIndex);
+        y -= getHeadSpace();
+        g.setClip(x, y, curWidth + 1, curHeight + 1);
         if (hasScroll) {
             g.drawVertScroll(getScroll(), THEME_MENU_BORDER);
         }
-        paintItems(g, x, y, itemPerPage, currentIndex);
     }
 
     private void paintItems(GraphicsEx g, int baseX, int baseY, int count, int currentIndex) {
         Font menuFont = GraphicsEx.menuFont;
-        final int textWidth = itemWidth - (iconWidth + ICON_INTERVAL + 2 * BORDER_X);
+        final int textWidth = itemWidth - (iconWidth + ICON_INTERVAL);
 
-        int iconX  = BORDER_X + baseX + iconWidth / 2;
-        int iconY  = BORDER_Y + baseY + (itemHeight - BORDER_Y) / 2;
-        int promtX = BORDER_X + baseX + iconWidth + ICON_INTERVAL;
-        int promtY = BORDER_Y + baseY + (itemHeight - BORDER_Y) / 2 - menuFont.getHeight() / 2;
+        int iconX  = baseX + iconWidth / 2;
+        int iconY  = baseY + itemHeight / 2;
+        int promtX = baseX + iconWidth + ICON_INTERVAL;
+        int promtY = baseY + itemHeight / 2 - menuFont.getHeight() / 2;
 
         g.setFont(menuFont);
         for (int i = topItem; count > 0; ++i, --count) {
@@ -305,19 +263,16 @@ public final class Select extends CanvasEx {
                 g.setThemeColor(THEME_MENU_SEL_BACK);
                 int capBkColor = g.getThemeColor(THEME_MENU_SEL_BACK);
                 g.fillGradRect(capBkColor, g.transformColorLight(capBkColor, -32),
-                        baseX, baseY, itemWidth - 1, itemHeight);
-                g.setThemeColor(THEME_MENU_SEL_BORDER);
-                g.drawRect(baseX, baseY, itemWidth - 1, itemHeight);
+                        baseX, baseY, itemWidth, itemHeight);
             }
             MenuItem item = items.itemAt(i);
             g.drawInCenter(item.icon, iconX, iconY);
-            g.setClip(promtX, BORDER_Y + baseY - 1, textWidth, itemHeight - BORDER_Y + 2);
+            g.setClip(promtX, baseY - 1, textWidth, itemHeight + 2);
             if (null == item.text) {
                 int posY = baseY + itemHeight / 2;
-                int posX = baseX + itemWidth;
                 g.setThemeColor(THEME_MENU_BORDER);
-                g.drawLine(baseX + 2, posY, baseX + itemWidth - 4, posY);
-                g.drawLine(baseX + 2, posY + 1, baseX + itemWidth - 4, posY + 1);
+                g.drawLine(baseX, posY, baseX + itemWidth, posY);
+                g.drawLine(baseX, posY + 1, baseX + itemWidth, posY + 1);
 
             } else if (currentIndex == i) {
                 g.setThemeColor(THEME_MENU_SEL_TEXT);
@@ -339,7 +294,6 @@ public final class Select extends CanvasEx {
         setSelectedItemCode(items.getItemCodeByIndex(getIndex(index, 0)));
 
         final int size = items.count();
-        final int itemPerPage = calcItemPerPage();
         final boolean hasScroll = (size > itemPerPage);
         if (hasScroll) {
             int newTop = topItem;
@@ -363,10 +317,10 @@ public final class Select extends CanvasEx {
         switch (keyCode) {
             case NativeCanvas.JIMM_SELECT:
                 go(getSelectedItemCode());
-                return;
+                break;
             case NativeCanvas.JIMM_BACK:
                 back();
-                return;
+                break;
         }
     }
     protected boolean hasMenu() {
@@ -397,11 +351,11 @@ public final class Select extends CanvasEx {
                 return;
             case NativeCanvas.KEY_NUM3:
             case NativeCanvas.KEY_NUM9:
-                int item = calcItemPerPage();
+                int count = itemPerPage;
                 if (NativeCanvas.KEY_NUM3 == keyCode) {
-                    item = -item;
+                    count = -count;
                 }
-                setSelectedItem(selectedItemIndex + item);
+                setSelectedItem(selectedItemIndex + count);
                 return;
         }
         switch (gameAct) {
@@ -420,7 +374,7 @@ public final class Select extends CanvasEx {
         if ((0 == selectedItemPosX) && (sleep < SLEEP_BEFORE)) return;
         Font menuFont = GraphicsEx.menuFont;
         int fullWidth = menuFont.stringWidth(items.itemAt(selectedItemIndex).text);
-        int visWidth = itemWidth - (iconWidth + ICON_INTERVAL + 2 * BORDER_X);
+        int visWidth = itemWidth - (iconWidth + ICON_INTERVAL);
         if (fullWidth <= visWidth) return;
 
         if (selectedItemPosX + visWidth > (fullWidth + EMPTY_WIDTH)) {

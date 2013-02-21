@@ -28,7 +28,7 @@ public final class GraphicsEx {
     public  static Font[] popupFontSet;
     public  static Font menuFont;
     public  static Font statusLineFont;
-    private static Font captionFont;
+    public static Font captionFont;
     private static Font softBarFont;
 
     public static final int captionOffset;
@@ -601,27 +601,6 @@ public final class GraphicsEx {
         height = Math.max(CanvasEx.minItemHeight, height + 2 + 1);
         GraphicsEx.captionHeight = Math.max(GraphicsEx.captionHeight, height);
         return height;
-    }
-    public void drawCaption(Icon[] icons, String text, Icon leftIcon, int height, int width) {
-        if (null != leftIcon) {
-            int h = Math.max(0, (height - leftIcon.getHeight()) / 2);
-            // #sijapp cond.if target is "MIDP2"#
-            width -= (0 == captionWidthFix) ? h : captionWidthFix;
-            // #sijapp cond.else#
-            width -= h;
-            // #sijapp cond.end#
-
-            width -= leftIcon.getWidth();
-            leftIcon.drawByLeftTop(gr, width, h);
-            width -= 1;
-        }
-        int x = 2;
-        // #sijapp cond.if target is "MIDP2"#
-        x += captionOffset;
-        // #sijapp cond.end#
-        gr.setFont(captionFont);
-        setThemeColor(CanvasEx.THEME_CAP_TEXT);
-        drawString(icons, text, null, x, 1, width - x, height - 2);
     }
     public void reset() {
         gr = null;

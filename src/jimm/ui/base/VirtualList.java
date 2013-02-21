@@ -22,7 +22,6 @@
  *******************************************************************************/
 
 package jimm.ui.base;
-import DrawControls.icons.Icon;
 import javax.microedition.lcdui.*;
 import jimm.ui.menu.*;
 
@@ -37,14 +36,10 @@ import jimm.ui.menu.*;
 
 public abstract class VirtualList extends CanvasEx {
     // Caption of VL
-    private Icon[] capImages;
-    private String caption;
-    private String ticker;
-
-    private static Icon messageIcon;
 
     // Index for current item of VL
     private int currItem = 0;
+    protected MyActionBar bar = new MyActionBar();
 
     // Set of fonts for quick selecting
     private Font[] fontSet;
@@ -56,15 +51,10 @@ public abstract class VirtualList extends CanvasEx {
 
     //! Create new virtual list with default values
     public VirtualList(String capt) {
+        bar.setCaption(capt);
         setCaption(capt);
         setSoftBarLabels("menu", null, "back", false);
         fontSet = GraphicsEx.chatFontSet;
-    }
-    public static void setMessageIcon(Icon icon) {
-        messageIcon = icon;
-    }
-    public static Icon getMessageIcon() {
-        return messageIcon;
     }
     protected final void setMovingPolicy(byte mp) {
         movingPolicy = mp;
@@ -92,7 +82,7 @@ public abstract class VirtualList extends CanvasEx {
 
     // returns height of draw area in pixels
     protected final int getContentHeight() {
-        return getHeight() - getCapHeight() - 1;
+        return getHeight() - bar.getHeight() - 1;
     }
 
     /** Returns height of each item in list */
@@ -230,7 +220,7 @@ public abstract class VirtualList extends CanvasEx {
     protected final int[] getScroll() {
         // scroll bar
         int[] scroll = GraphicsEx.makeVertScroll(
-                (getWidth() - scrollerWidth), getCapHeight(),
+                (getWidth() - scrollerWidth), bar.getHeight(),
                 scrollerWidth, getContentHeight() + 1,
                 getContentHeight(), getFullSize());
         if (null != scroll) {
@@ -249,7 +239,7 @@ public abstract class VirtualList extends CanvasEx {
     protected final int getItemByCoord(int y) {
         int size = getSize();
         // is pointing on data area
-        int itemY1 = getCapHeight() - get_TopOffset();
+        int itemY1 = bar.getHeight() - get_TopOffset();
         if (y < itemY1) {
             for (int i = get_Top(); 0 <= i; --i) {
                 if (itemY1 <= y) {
@@ -270,8 +260,10 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     protected void touchCaptionTapped(int x) {
-        if (CAPTION_REGION_BACK == getCaptionRegion(x)) {
+        if (MyActionBar.CAPTION_REGION_BACK == x) {
             back();
+        } else if (MyActionBar.CAPTION_REGION_MENU == x) {
+            showMenu(getMenu());
         }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {
@@ -290,7 +282,7 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     protected final void stylusPressed(int x, int y) {
-        if (y < getCapHeight()) {
+        if (y < bar.getHeight()) {
             return;
         }
         TouchControl nat = NativeCanvas.getInstance().touchControl;
@@ -303,9 +295,9 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     protected final void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
-        if (fromY < getCapHeight()) {
+        if (fromY < bar.getHeight()) {
             if (TouchControl.DRAGGED == type) {
-                touchCaptionTapped(1000);
+                bar.touchTapped(this, 1000, getWidth());
             }
             return;
         }
@@ -317,16 +309,9 @@ public abstract class VirtualList extends CanvasEx {
         }
     }
 
-    protected static final int CAPTION_REGION_BACK = -1;
-    protected int getCaptionRegion(int x) {
-        int width = getWidth();
-        int height = getCapHeight();
-        if (x < height) return CAPTION_REGION_BACK;
-        return (width - x) / height;
-    }
     protected final void stylusTap(int x, int y, boolean longTap) {
-        if (y < getCapHeight()) {
-            touchCaptionTapped(x);
+        if (y < bar.getHeight()) {
+            bar.touchTapped(this, x, getWidth());
             return;
         }
         int item = getItemByCoord(y);
@@ -337,33 +322,20 @@ public abstract class VirtualList extends CanvasEx {
     // #sijapp cond.end#
 
 
-    protected final void setCapImages(Icon[] images) {
-        capImages = images;
-    }
-
     /**
      * Set caption text for list
      */
     public final void setCaption(String capt) {
-        if ((null == caption) || !caption.equals(capt)) {
-            caption = capt;
-        }
+        bar.setCaption(capt);
     }
 
     public final String getCaption() {
-        return caption;
+        return bar.getCaption();
     }
 
     public final void setTicker(String tickerString) {
-        if ((null != tickerString) && tickerString.equals(ticker)) {
-            return;
-        }
-        ticker = tickerString;
+        bar.setTicker(tickerString);
         invalidate();
-    }
-
-    private int getCapHeight() {
-        return GraphicsEx.calcCaptionHeight(capImages, caption);
     }
 
     protected boolean isCurrentItemSelectable() {
@@ -510,15 +482,10 @@ public abstract class VirtualList extends CanvasEx {
     protected void paint(GraphicsEx g) {
         beforePaint();
 
-        int captionHeight = getCapHeight();
+        int captionHeight = bar.getHeight();
         paintContent(g, captionHeight);
 
-        g.setStrokeStyle(Graphics.SOLID);
-        g.setClip(0, 0, getWidth(), captionHeight + 1);
-        g.drawBarBack(0, captionHeight, Scheme.captionImage, getWidth());
-        drawProgress(g, getWidth(), captionHeight);
-        g.drawCaption(capImages, (null == ticker) ? caption : ticker,
-                messageIcon, captionHeight, getWidth());
+        bar.paint(g, this, getWidth());
     }
     protected void beforePaint() {
     }
@@ -531,13 +498,15 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     protected final int getClientHeight() {
-        return getScreenHeight() - getCapHeight();
+        return getScreenHeight() - bar.getHeight();
     }
 
     protected int getWidth() {
         return getScreenWidth();
     }
-
+    protected MenuModel getMenu() {
+        return null;
+    }
     public final void showMenu(MenuModel m) {
         if ((null != m) && (0 < m.count())) {
             new Select(m).show();

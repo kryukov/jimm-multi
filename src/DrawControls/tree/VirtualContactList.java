@@ -409,7 +409,11 @@ public final class VirtualContactList extends ScrollableArea {
 
     // #sijapp cond.if modules_TOUCH is "true"#
     protected final void touchCaptionTapped(int x) {
-        jimm.chat.ChatHistory.instance.showChatList(getCaptionRegion(x) == 0);
+        if (MyActionBar.CAPTION_REGION_MENU == x) {
+            clListener.activateMainMenu();
+        } else {
+            jimm.chat.ChatHistory.instance.showChatList(x == 0);
+        }
     }
     // #sijapp cond.end#
 
@@ -423,7 +427,7 @@ public final class VirtualContactList extends ScrollableArea {
         if (null != protocol) {
             protocol.getCapIcons(capIcons);
         }
-        setCapImages(capIcons);
+        bar.setImages(capIcons);
         // #sijapp cond.end #
 
         // #sijapp cond.if modules_TRAFFIC is "true" #

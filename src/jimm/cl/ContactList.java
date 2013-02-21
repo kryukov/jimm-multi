@@ -425,14 +425,14 @@ public final class ContactList implements SelectListener, ContactListListener {
         updateUnreadMessageCount();
     }
     public final void markMessages(Contact contact) {
-        if (null != VirtualList.getMessageIcon()) {
+        if (null != MyActionBar.getMessageIcon()) {
             updateUnreadMessageCount();
         }
     }
     private void updateUnreadMessageCount() {
         Icon icon = ChatHistory.instance.getUnreadMessageIcon();
-        if (icon != VirtualList.getMessageIcon()) {
-            VirtualList.setMessageIcon(icon);
+        if (icon != MyActionBar.getMessageIcon()) {
+            MyActionBar.setMessageIcon(icon);
             jimm.ui.base.NativeCanvas.getInstance().repaint();
         }
         // #sijapp cond.if modules_ANDROID is "true" #

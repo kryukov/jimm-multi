@@ -166,11 +166,18 @@ public class ProtoCanvas {
         width = w;
         height = h;
     }
-    private int getWindowHeight() {
+    public int getWindowHeight() {
+        return showSoftBar ? height - softBarHeight : height;
+    }
+    public int getWindowWidth() {
+        return width;
+    }
+    int getNextHeight(int height) {
         return showSoftBar ? height - softBarHeight : height;
     }
 
     private boolean between(int from, int to, int value) {
         return (from <= value) && (value <= to);
     }
+
 }

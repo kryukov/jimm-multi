@@ -188,7 +188,7 @@ public final class FileBrowser extends ScrollableArea implements Runnable {
 
     protected void drawEmptyItems(GraphicsEx g, int top_y) {
         if (null != errorMessage) {
-            int height = getScreenHeight() - top_y;
+            int height = getHeight() - top_y;
             errorMessage.paint(getFontSet(), g, getWidth() / 10,
                     top_y + (height - errorMessage.getHeight()) / 2,
                     0, errorMessage.getHeight());

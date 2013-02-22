@@ -62,7 +62,7 @@ public final class Chat extends ScrollableArea {
     ///////////////////////////////////////////
 
     private Parser createParser() {
-        final int width = NativeCanvas.getInstance().getMinScreenMetrics() - 3;
+        int width = NativeCanvas.getInstance().getMinScreenMetrics() - 3;
         return new Parser(getFontSet(), width);
     }
 
@@ -164,6 +164,13 @@ public final class Chat extends ScrollableArea {
                 restore();
                 return;
             }
+            // #sijapp cond.if modules_ANDROID is "true" #
+            if (true) {
+                activate();
+                NativeCanvas.getInstance().getInput().setText(initText);
+                return;
+            }
+            // #sijapp cond.end #
             MessageEditor editor = ContactList.getInstance().getMessageEditor();
             if (null != editor) {
                 editor.writeMessage(protocol, contact, initText);
@@ -634,7 +641,7 @@ public final class Chat extends ScrollableArea {
         ContactList.getInstance().setCurrentContact(contact);
         classic = Options.getBoolean(Options.OPTION_CLASSIC_CHAT);
         int h = line.getRealHeight();
-        line.setSize(getScreenHeight() - h, getWidth(), h);
+        line.setSize(getHeight() - h, getWidth(), h);
 
         setSoftBarLabels("menu", "reply", "close", false);
         setCaption(contact.getName());
@@ -651,12 +658,18 @@ public final class Chat extends ScrollableArea {
             showStatusPopup();
         }
         // #sijapp cond.if modules_ANDROID is "true" #
-        NativeCanvas.getInstance().getInput().setText("");
+        NativeCanvas.getInstance().getInput().resetText();
         NativeCanvas.getInstance().getInput().setUserMessageListener(new Runnable() {
             public void run() {
+                ChatHistory.instance.registerChat(Chat.this);
                 String text = NativeCanvas.getInstance().getInput().getText();
-                protocol.sendMessage(contact, text, true);
-                NativeCanvas.getInstance().getInput().setText("");
+                NativeCanvas.getInstance().getInput().resetText();
+                if (!contact.isSingleUserContact() && text.endsWith(", ")) {
+                    text = "";
+                }
+                if (!StringConvertor.isEmpty(text)) {
+                    protocol.sendMessage(contact, text, true);
+                }
             }
         });
         // #sijapp cond.end #
@@ -672,8 +685,8 @@ public final class Chat extends ScrollableArea {
 //        }
     }
 
-    protected int getHeight() {
-        return classic ? getScreenHeight() - line.getHeight() : getScreenHeight();
+    public int getHeight() {
+        return classic ? super.getHeight() - line.getHeight() : super.getHeight();
     }
 
     protected boolean isCurrentItemSelectable() {

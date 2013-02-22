@@ -108,9 +108,14 @@ public class NativeCanvas extends Canvas {
     }
 
     protected void sizeChanged(int w, int h) {
-        updateMetrix(w, h);
+        if ((0 == w) || (0 == h)) return;
         CanvasEx c = canvas.getCanvas();
-        if (isShown()) {
+        boolean isShown = isShown();
+        if (isShown) {
+            c.sizeChanged(canvas.getWindowWidth(), canvas.getWindowHeight(), w, canvas.getNextHeight(h));
+        }
+        updateMetrix(w, h);
+        if (isShown) {
             c.restoring();
             invalidate(c);
         }
@@ -494,6 +499,9 @@ public class NativeCanvas extends Canvas {
         return instance.getHeight();
     }
     public int getMinScreenMetrics() {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        if (true) return getWidth();
+        // #sijapp cond.end #
         return Math.min(getWidth(), getHeight());
     }
 

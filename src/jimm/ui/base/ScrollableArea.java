@@ -14,6 +14,15 @@ public abstract class ScrollableArea extends VirtualList {
     // Index of top visible item
     private int topItem = 0;
     private int topOffset = 0;
+    // #sijapp cond.if modules_TOUCH is "true"#
+    // #sijapp cond.end#
+    protected static final byte MP_ALL = 0;
+    protected static final byte MP_SELECTABLE_OLNY = 1;
+    private byte movingPolicy = MP_ALL;
+
+    protected final void setMovingPolicy(byte mp) {
+        movingPolicy = mp;
+    }
 
     protected void set_Top(int item, int offset) {
         topItem = item;
@@ -131,4 +140,149 @@ public abstract class ScrollableArea extends VirtualList {
     }
     protected abstract void drawItemData(GraphicsEx g,
             int index, int x1, int y1, int w, int h, int skip, int to);
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    private int getTopVisibleItem() {
+        int size = getSize();
+        int cur = get_Top();
+        int offset = get_TopOffset();
+        if ((cur + 1 < size) && (0 < offset)) {
+            int used = getItemHeight(cur) - offset;
+            int height = getContentHeight() - used;
+            if ((getItemHeight(cur + 1) < height) || (used < 5)) {
+                cur++;
+            }
+        }
+        return cur;
+    }
+    private int getBottomVisibleItem() {
+        int size = getSize();
+        int cur = size;
+        int offset = getContentHeight() + get_TopOffset();
+        for (int i = get_Top(); i < size; ++i) {
+            int height = getItemHeight(i);
+            if (offset < height) {
+                cur = i;
+                break;
+            }
+            offset -= height;
+        }
+        cur = (size == cur) ? size - 1 : Math.max(get_Top(), cur - 1);
+        return cur;
+    }
+    //////////////////////////////////////////////////////////////////////////////////
+
+    protected void doKeyReaction(int keyCode, int actionCode, int type) {
+        if ((KEY_REPEATED == type) || (KEY_PRESSED == type)) {
+            navigationKeyReaction(keyCode, actionCode);
+        }
+    }
+    private void navigationKeyReaction(int keyCode, int actionCode) {
+        switch (actionCode) {
+            case NativeCanvas.NAVIKEY_DOWN:
+                moveCursor(+1);
+                invalidate();
+                break;
+            case NativeCanvas.NAVIKEY_UP:
+                moveCursor(-1);
+                invalidate();
+                break;
+            case NativeCanvas.NAVIKEY_FIRE:
+                execJimmAction(NativeCanvas.JIMM_SELECT);
+                break;
+        }
+        switch (keyCode) {
+            case NativeCanvas.KEY_NUM1:
+                setTopByOffset(0);
+                setCurrentItemIndex(0);
+                invalidate();
+                break;
+
+            case NativeCanvas.KEY_NUM7:
+                setTopByOffset(getFullSize() - getContentHeight());
+                setCurrentItemIndex(getSize() - 1);
+                invalidate();
+                break;
+
+            case NativeCanvas.KEY_NUM3:
+                int top = getTopVisibleItem();
+                if (getCurrItem() == top) {
+                    setTopByOffset(getTopOffset() - getContentHeight() * 9 / 10);
+                    top = getTopVisibleItem();
+                }
+                setCurrentItemIndex(top);
+                invalidate();
+                break;
+
+            case NativeCanvas.KEY_NUM9:
+                int bottom = getBottomVisibleItem();
+                if (getCurrItem() == bottom) {
+                    setTopByOffset(getTopOffset() + getContentHeight() * 9 / 10);
+                    bottom = getBottomVisibleItem();
+                }
+                setCurrentItemIndex(bottom);
+                invalidate();
+                break;
+        }
+    }
+
+    private void moveCursor(int step) {
+        int top     = getTopOffset();
+        int visible = getContentHeight();
+        // #sijapp cond.if modules_TOUCH is "true"#
+        TouchControl nat = NativeCanvas.getInstance().touchControl;
+        if (nat.touchUsed) {
+            nat.touchUsed = false;
+            int curr = getCurrItem();
+            int current = getOffset(curr);
+            if ((current + getItemHeight(curr) < top) || (top + visible < current)) {
+                int offset = (step < 0) ? (top + visible - 1) : (top + 1);
+                setCurrentItemIndex(getItemByOffset(offset));
+                return;
+            }
+        }
+        // #sijapp cond.end#
+        int next = getCurrItem() + step;
+        if (MP_SELECTABLE_OLNY == movingPolicy) {
+            while (!isItemSelectable(next)) {
+                next += step;
+                if ((next < 0) || (getSize() <= next)) {
+                    break;
+                }
+            }
+        }
+        next = Math.max(-1, Math.min(next, getSize()));
+        if (0 < step) {
+            if (getSize() == next) {
+                int end = getFullSize() - visible;
+                if (top < end) {
+                    setTopByOffset(Math.min(end, top + visible / 3));
+                    return;
+                }
+            } else {
+                int nextOffset = getOffset(next);
+                if (top + visible < nextOffset) {
+                    setTopByOffset(top + visible / 3);
+                    return;
+                }
+            }
+        } else {
+            if (-1 == next) {
+                if (0 < top) {
+                    setTopByOffset(Math.max(0, top - visible / 3));
+                    return;
+                }
+            } else {
+                if (getOffset(next) + getItemHeight(next) < top) {
+                    setTopByOffset(top - visible / 3);
+                    return;
+                }
+            }
+        }
+        if ((next < 0) || (getSize() <= next)) {
+            return;
+        }
+        setCurrentItemIndex(next);
+    }
 }

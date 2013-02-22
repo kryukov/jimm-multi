@@ -125,6 +125,11 @@ public class MyActionBar {
     public static final int CAPTION_REGION_NEW_MESSAGE = -3;
     public static final int CAPTION_REGION_GENERAL = 1;
     protected int getCaptionRegion(VirtualList view, int x, int width) {
+        // #sijapp cond.if target is "MIDP2"#
+        x += GraphicsEx.captionOffset;
+        width -= GraphicsEx.captionOffset;
+        width -= GraphicsEx.captionWidthFix;
+        // #sijapp cond.end#
         int itemWidth = getHeight();
         if ((x < itemWidth) && !isMainView(view)) {
             return CAPTION_REGION_BACK;

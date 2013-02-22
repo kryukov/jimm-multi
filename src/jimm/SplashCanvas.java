@@ -96,7 +96,7 @@ public final class SplashCanvas extends CanvasEx {
     protected void stylusXMoving(int fromX, int fromY, int toX, int toY) {
         if (Jimm.isLocked()) {
             int region = Math.max(getProgressHeight(), minItemHeight);
-            int minY = getH() - region;
+            int minY = getHeight() - region;
             if ((fromY < minY) || (toY < minY)) {
                 poundPressTime = 0;
                 keyLock = KEY_LOCK_MSG_TIME;
@@ -104,13 +104,13 @@ public final class SplashCanvas extends CanvasEx {
                 invalidate();
                 return;
             }
-            setProgress(Math.max(fromX, toX) * 100 / getW());
+            setProgress(Math.max(fromX, toX) * 100 / getWidth());
         }
     }
 
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
         int region = Math.max(getProgressHeight(), minItemHeight);
-        int minY = getH() - region;
+        int minY = getHeight() - region;
         if ((fromY < minY) || (toY < minY)) {
             poundPressTime = 0;
             keyLock = KEY_LOCK_MSG_TIME;
@@ -120,7 +120,7 @@ public final class SplashCanvas extends CanvasEx {
         }
         int x1 = Math.min(fromX, toX);
         int x2 = Math.max(fromX, toX);
-        if ((x1 < region) && (getW() - region < x2)) {
+        if ((x1 < region) && (getWidth() - region < x2)) {
             if (Jimm.isLocked()) {
                 Jimm.unlockJimm();
                 return;
@@ -232,17 +232,9 @@ public final class SplashCanvas extends CanvasEx {
         par.paint(fontSet, g, x + 4, y + 4, 0, textHeight);
     }
 
-    private int getH() {
-        return getScreenHeight();
-    }
-
-    private int getW() {
-        return getScreenWidth();
-    }
-
     protected void paint(GraphicsEx g) {
-        final int height = getH();
-        final int width = getW();
+        final int height = getHeight();
+        final int width = getWidth();
         final int progressHeight = getProgressHeight();
         final int fontHeight = font.getHeight();
         final int otherHeight = height - progressHeight;

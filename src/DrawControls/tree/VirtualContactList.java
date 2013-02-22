@@ -583,7 +583,7 @@ public final class VirtualContactList extends ScrollableArea {
     }
     protected void drawEmptyItems(GraphicsEx g, int top_y) {
         if (null != textMessage) {
-            int height = getScreenHeight() - top_y;
+            int height = getHeight() - top_y;
             textMessage.paint(getFontSet(), g, getWidth() / 10,
                     top_y + (height - textMessage.getHeight()) / 2,
                     0, textMessage.getHeight());

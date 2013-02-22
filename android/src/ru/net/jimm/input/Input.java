@@ -6,9 +6,9 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
 
@@ -20,14 +20,14 @@ import ru.net.jimm.R;
  * @author vladimir
  */
 public class Input extends LinearLayout implements View.OnClickListener {
-    private TextView messageEditor;
+    private EditText messageEditor;
     private Runnable userMessageListener;
     public Input(Context context, AttributeSet attrs, int id) {
         super(context, attrs);
         ((Activity)getContext())
                 .getLayoutInflater()
                 .inflate(R.layout.input, this, true);
-        messageEditor = (TextView) findViewById(R.id.messageText);
+        messageEditor = (EditText) findViewById(R.id.messageText);
         messageEditor.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -53,7 +53,20 @@ public class Input extends LinearLayout implements View.OnClickListener {
         ((JimmActivity)getContext()).post(new Runnable() {
             @Override
             public void run() {
-                messageEditor.setText(text);
+                String t = null == text ? "" : text;
+                messageEditor.setText(t);
+                messageEditor.setSelection(t.length());
+                messageEditor.requestFocus();
+                InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.showSoftInput(messageEditor, 0);
+            }
+        });
+    }
+    public void resetText() {
+        ((JimmActivity)getContext()).post(new Runnable() {
+            @Override
+            public void run() {
+                messageEditor.setText("");
             }
         });
     }

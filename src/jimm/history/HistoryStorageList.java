@@ -366,8 +366,8 @@ public final class HistoryStorageList extends ScrollableArea implements
         if (null != he) {
             int progressHeight = getDefaultFont().getHeight();
             int y = (getClientHeight() - 2 * progressHeight) / 2;
-            int w = getScreenWidth();
-            g.setClip(0, 0, getScreenWidth(), getScreenHeight());
+            int w = getWidth();
+            g.setClip(0, 0, getWidth(), getHeight());
             g.setThemeColor(CanvasEx.THEME_BACKGROUND);
             g.fillRect(0, y - 1, w, progressHeight * 2 + 1);
             g.setThemeColor(CanvasEx.THEME_TEXT);

@@ -29,7 +29,7 @@ abstract public class CanvasEx extends DisplayableEx {
 
     public static final byte THEME_CHAT_INMSG           = 5;
     public static final byte THEME_CHAT_OUTMSG          = 6;
-    public static final byte THEME_CHAT_FROM_HISTORY    = 7;
+    //public static final byte THEME_CHAT_FROM_HISTORY    = 7;
 
     public static final byte THEME_CONTACT_ONLINE       = 8;
     public static final byte THEME_CONTACT_WITH_CHAT    = 9;
@@ -61,7 +61,7 @@ abstract public class CanvasEx extends DisplayableEx {
     public static final byte THEME_MENU_BORDER          = 30;
     public static final byte THEME_MENU_TEXT            = 31;
     public static final byte THEME_MENU_SEL_BACK        = 32;
-    public static final byte THEME_MENU_SEL_BORDER      = 33;
+    //public static final byte THEME_MENU_SEL_BORDER      = 33;
     public static final byte THEME_MENU_SEL_TEXT        = 34;
 
     //public static final byte THEME_POPUP_SHADOW         = 35;
@@ -123,6 +123,13 @@ abstract public class CanvasEx extends DisplayableEx {
         return Math.max(nc.getMinScreenMetrics() * zoom / 100, 6);
     }
 
+    public int getHeight() {
+        return getScreenHeight();
+    }
+
+    public int getWidth() {
+        return getScreenWidth();
+    }
     public final int getScreenWidth() {
         return NativeCanvas.getScreenWidth();
     }
@@ -178,6 +185,10 @@ abstract public class CanvasEx extends DisplayableEx {
         if (this != Jimm.getJimm().getDisplay().getCurrentDisplay()) {
             return;
         }
+        int clipX = g.getClipX();
+        int clipY = g.getClipY();
+        int clipHeight = g.getClipHeight();
+        int clipWidth = g.getClipWidth();
         try {
             Vector v = jimm.Jimm.getJimm().getDisplay().getStack();
             int from = 0;
@@ -205,7 +216,7 @@ abstract public class CanvasEx extends DisplayableEx {
             DebugLog.panic("paint back", e);
             // #sijapp cond.end #
         }
-        g.clipRect(0, 0, getScreenWidth(), getScreenHeight());
+        g.setClip(clipX, clipY, clipWidth, clipHeight);
     }
 
 
@@ -260,5 +271,8 @@ abstract public class CanvasEx extends DisplayableEx {
 
     protected boolean hasMenu() {
         return true;
+    }
+
+    protected void sizeChanged(int fromW, int fromH, int toW, int toH) {
     }
 }

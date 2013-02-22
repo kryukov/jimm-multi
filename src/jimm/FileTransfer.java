@@ -339,8 +339,8 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             public void run() {
                 try {
                     Image img = Image.createImage(image, 0, image.length);
-                    img = Util.createThumbnail(img, name_Desc.getScreenWidth(),
-                            name_Desc.getScreenHeight());
+                    img = Util.createThumbnail(img, name_Desc.getWidth(),
+                            name_Desc.getHeight());
                     name_Desc.addImage(img);
                 } catch (Throwable ignored) {
                     // IOException or OutOfMemoryError

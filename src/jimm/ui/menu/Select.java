@@ -145,7 +145,7 @@ public final class Select extends CanvasEx {
         setSoftBarLabels("select", "select", "back", false);
     }
 
-    private void calcMetrix() {
+    private void calcMetrix(int screenWidth) {
         Font menuFont = GraphicsEx.menuFont;
         itemHeight = menuFont.getHeight();
         int textWidth = 0;
@@ -162,7 +162,7 @@ public final class Select extends CanvasEx {
             }
             textWidth = Math.max(textWidth, menuFont.stringWidth(item.text));
         }
-        textWidth = Math.max(getScreenWidth() * 2 / 5, textWidth);
+        textWidth = Math.max(screenWidth * 2 / 5, textWidth);
         itemHeight = Math.max(itemHeight, CanvasEx.minItemHeight);
 
         if (0 < iconWidth) {
@@ -174,7 +174,7 @@ public final class Select extends CanvasEx {
         int _itemWidth = textWidth + iconWidth + ICON_INTERVAL + scrollerWidth;
         itemWidth = between(_itemWidth,
                 CanvasEx.minItemWidth,
-                getScreenWidth() - (WIDTH_SPACE + scrollerWidth));
+                screenWidth - (WIDTH_SPACE + scrollerWidth));
     }
 
     protected void showing() {
@@ -188,9 +188,9 @@ public final class Select extends CanvasEx {
     protected void restoring() {
         selectedItemPosX = 0;
         sleep = 0;
-        calcMetrix();
         int screenHeight = getScreenHeight();
         int screenWidth = getScreenWidth();
+        calcMetrix(screenWidth);
 
         itemPerPage = Math.min(screenHeight / itemHeight - 1, items.count());
         width  = between(itemWidth, screenWidth / 3, screenWidth - 10);

@@ -28,25 +28,54 @@ package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
 
+import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidDeviceDisplay;
-import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.ui.CanvasUI;
+import ru.net.jimm.input.Input;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements CanvasUI {
+    private CanvasView canvasView;
+    private Input input;
+    private View view;
 
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas);
         activity.post(new Runnable() {
             public void run() {
-                view = new CanvasView(activity, AndroidCanvasUI.this, 666);
+                canvasView = new CanvasView(activity, AndroidCanvasUI.this, 666);
+                input = new Input(activity, null, 2);
+                input.setVisibility(View.INVISIBLE);
+                view = createView(canvasView, input);
             }
         });
+    }
+    private View createView(CanvasView canvas, Input input) {
+        RelativeLayout all = new RelativeLayout(activity);
+        all.addView(canvas, set(create(RelativeLayout.LayoutParams.FILL_PARENT),
+                RelativeLayout.ABOVE, input.getId()));
+        all.addView(input, set(create(RelativeLayout.LayoutParams.WRAP_CONTENT),
+                RelativeLayout.ALIGN_PARENT_BOTTOM));
+        return all;
+    }
+    private RelativeLayout.LayoutParams create(int h) {
+        return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, h);
+    }
+    private RelativeLayout.LayoutParams set(RelativeLayout.LayoutParams params, int verb, int anchor) {
+        params.addRule(verb, anchor);
+        return params;
+    }
+    private RelativeLayout.LayoutParams set(RelativeLayout.LayoutParams params, int verb) {
+        params.addRule(verb);
+        return params;
     }
 
     @Override
     public void hideNotify() {
-        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).removeDisplayRepaintListener((DisplayRepaintListener) view);
+        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).removeDisplayRepaintListener(canvasView);
     }
 
     @Override
@@ -55,11 +84,26 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
         activity.post(new Runnable() {
             public void run() {
                 activity.setContentView(view);
-                view.requestFocus();
-                ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
+                canvasView.requestFocus();
+                ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener(canvasView);
                 displayable.repaint();
             }
         });
     }
 
+    public Input getInput() {
+        return input;
+    }
+
+    public void setInputVisibility(final boolean v) {
+        activity.post(new Runnable() {
+            public void run() {
+                input.setVisibility(v ? View.VISIBLE : View.GONE);
+                view.requestLayout();
+                canvasView.requestFocus();
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
+    }
 }

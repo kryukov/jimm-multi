@@ -244,17 +244,17 @@ public final class ContactList implements SelectListener, ContactListListener {
     }
 
     public void activate() {
-        contactList.setAlwaysVisibleNode(null);
-        contactList.update();
-        contactList.showTop();
+        activate(null);
     }
     public void activate(Contact c) {
-        contactList.setActiveContact(c);
+        if (null != c) {
+            contactList.setActiveContact(c);
+        }
         contactList.setAlwaysVisibleNode(c);
         contactList.update();
         contactList.showTop();
     }
-    public void activate(String message) {
+    public void activateWithMsg(String message) {
         activate();
         new Popup(contactList, message).show();
     }
@@ -270,7 +270,7 @@ public final class ContactList implements SelectListener, ContactListListener {
             new AccountsForm().showAccountEditor(null);
 
         } else {
-            contactList.showTop();
+            activate();
             ChatHistory.instance.loadUnreadMessages();
             updateUnreadMessageCount();
             autoConnect();

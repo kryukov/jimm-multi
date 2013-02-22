@@ -411,8 +411,10 @@ public final class VirtualContactList extends ScrollableArea {
     protected final void touchCaptionTapped(int x) {
         if (MyActionBar.CAPTION_REGION_MENU == x) {
             clListener.activateMainMenu();
+        } else if (MyActionBar.CAPTION_REGION_NEW_MESSAGE == x) {
+            jimm.chat.ChatHistory.instance.showChatList(true);
         } else {
-            jimm.chat.ChatHistory.instance.showChatList(x == 0);
+            jimm.chat.ChatHistory.instance.showChatList(false);
         }
     }
     // #sijapp cond.end#

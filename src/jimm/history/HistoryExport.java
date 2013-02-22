@@ -66,7 +66,7 @@ class HistoryExport implements Runnable, FileBrowserListener {
             if (ex instanceof JimmException) {
                 e = (JimmException) ex;
             }
-            ContactList.getInstance().activate(e.getMessage());
+            ContactList.getInstance().activateWithMsg(e.getMessage());
         }
     }
 

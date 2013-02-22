@@ -1160,7 +1160,7 @@ abstract public class Protocol {
         CustomLight.setLightMode(CustomLight.ACTION_ERROR);
         // #sijapp cond.end#
         Jimm.unlockJimm();
-        getContactList().activate(getUserId() + "\n" + e.getMessage());
+        getContactList().activateWithMsg(getUserId() + "\n" + e.getMessage());
     }
 
     /**

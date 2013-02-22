@@ -196,16 +196,6 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		paintDisplayable(x, y, width, height);
 	}
 
-	public void setScrollDown(boolean arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void setScrollUp(boolean arg0) {
-		// TODO Auto-generated method stub
-
-	}
-	
 	public void addDisplayRepaintListener(DisplayRepaintListener listener) {
         if ((null != listener) && !displayRepaintListeners.contains(listener)) {
 	        displayRepaintListeners.add(listener);

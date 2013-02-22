@@ -267,7 +267,7 @@ public final class MrimConnection extends ClientConnection {
                     Jimm.maximize();
                 }
                 // #sijapp cond.end #
-                ContactList.getInstance().activate(from + " (SMS):\n" + msg);
+                ContactList.getInstance().activateWithMsg(from + " (SMS):\n" + msg);
             }
             // #sijapp cond.if modules_MAGIC_EYE is "true" #
             MagicEye.addAction(mrim, fromEmail, "SMS", msg);

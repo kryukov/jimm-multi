@@ -44,6 +44,7 @@ import jimm.ui.menu.*;
 import jimm.modules.*;
 import protocol.*;
 import protocol.jabber.*;
+
 import javax.microedition.lcdui.Font;
 
 public final class Chat extends ScrollableArea {
@@ -112,8 +113,10 @@ public final class Chat extends ScrollableArea {
             ContactList.getInstance().activate(contact);
         } else if (MyActionBar.CAPTION_REGION_MENU == x) {
             showMenu(getMenu());
+        } else if (MyActionBar.CAPTION_REGION_NEW_MESSAGE == x) {
+            jimm.chat.ChatHistory.instance.showChatList(true);
         } else {
-            ChatHistory.instance.showChatList(0 == x);
+            jimm.chat.ChatHistory.instance.showChatList(false);
         }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {
@@ -647,6 +650,16 @@ public final class Chat extends ScrollableArea {
         if (showStatus) {
             showStatusPopup();
         }
+        // #sijapp cond.if modules_ANDROID is "true" #
+        NativeCanvas.getInstance().getInput().setText("");
+        NativeCanvas.getInstance().getInput().setUserMessageListener(new Runnable() {
+            public void run() {
+                String text = NativeCanvas.getInstance().getInput().getText();
+                protocol.sendMessage(contact, text, true);
+                NativeCanvas.getInstance().getInput().setText("");
+            }
+        });
+        // #sijapp cond.end #
     }
     private void showStatusPopup() {
         showStatus = false;

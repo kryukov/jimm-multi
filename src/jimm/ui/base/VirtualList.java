@@ -23,6 +23,8 @@
 
 package jimm.ui.base;
 import javax.microedition.lcdui.*;
+
+import jimm.chat.ChatHistory;
 import jimm.ui.menu.*;
 
 /**
@@ -264,6 +266,8 @@ public abstract class VirtualList extends CanvasEx {
             back();
         } else if (MyActionBar.CAPTION_REGION_MENU == x) {
             showMenu(getMenu());
+        } else if (MyActionBar.CAPTION_REGION_NEW_MESSAGE == x) {
+            ChatHistory.instance.showChatList(true);
         }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {

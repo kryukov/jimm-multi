@@ -12,10 +12,10 @@ package jimm.ui.base;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.Jimm;
+import jimm.chat.Chat;
 import jimm.comm.Util;
 import jimm.modules.*;
 import jimm.ui.*;
-import jimm.ui.menu.Select;
 
 /**
  *
@@ -26,6 +26,7 @@ public class Display {
     private Object currentScreen = null;
     private Vector stack = new Vector();
     public static final long LONG_INTERVAL = 700;
+    private DisplayableEx main;
 
     /** Creates a new instance of Display */
     public Display(Jimm jimm) {
@@ -73,6 +74,12 @@ public class Display {
         return currentScreen;
     }
     private void setCurrentDisplay(Object o) {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        try {
+            NativeCanvas.getInstance().setInputVisibility(o instanceof Chat);
+        } catch (Exception ignored) {
+        }
+        // #sijapp cond.end#
         final Object prev = currentScreen;
         currentScreen = o;
         if ((o != prev) && (null != prev)) {
@@ -131,7 +138,11 @@ public class Display {
             while (pop() != o) {
             }
         }
-        setCurrentDisplay(pop());
+        if (stack.isEmpty()) {
+            setCurrentDisplay(main);
+        } else {
+            setCurrentDisplay(pop());
+        }
     }
     public synchronized void closeMenus() {
         Object o = currentScreen;
@@ -154,7 +165,15 @@ public class Display {
         }
         setCurrentDisplay(o);
     }
-    public synchronized void showTop(Object o) {
+    public synchronized void showMain(DisplayableEx o) {
+        stack.removeAllElements();
+        main = o;
+        setCurrentDisplay(o);
+    }
+    public DisplayableEx getMain() {
+        return main;
+    }
+    public synchronized void showTop(DisplayableEx o) {
         stack.removeAllElements();
         setCurrentDisplay(o);
     }

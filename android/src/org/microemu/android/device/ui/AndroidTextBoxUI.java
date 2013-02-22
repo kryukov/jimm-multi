@@ -51,7 +51,7 @@ import java.util.Comparator;
 import java.util.Vector;
 
 public class AndroidTextBoxUI extends AndroidDisplayableUI<TextBox> implements TextBoxUI {
-
+    private View view;
     private EditText editView;
     private TableLayout commandGrid;
     private TextView titleView;

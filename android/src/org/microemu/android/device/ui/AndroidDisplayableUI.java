@@ -32,15 +32,11 @@ import javax.microedition.lcdui.Displayable;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.DisplayableUI;
 
-import android.view.View;
-
 public abstract class AndroidDisplayableUI<T extends Displayable> implements DisplayableUI {
 	
 	protected MicroEmulatorActivity activity;
 	
 	protected T displayable;
-	
-	protected View view;
 
 
 	private CommandListener commandListener = null;

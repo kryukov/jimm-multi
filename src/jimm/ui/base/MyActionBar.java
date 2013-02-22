@@ -54,15 +54,14 @@ public class MyActionBar {
         int x = 0;
         // #sijapp cond.if target is "MIDP2"#
         x += GraphicsEx.captionOffset;
+        width -= GraphicsEx.captionOffset;
         width -= GraphicsEx.captionWidthFix;
         // #sijapp cond.end#
 
+        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
         // #sijapp cond.if modules_TOUCH is "true"#
         if (null != view) {
             final int itemWidth = getHeight();
-            int capBkColor = g.getThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
-            capBkColor = g.transformColorLight(capBkColor, -128);
-            g.setColor(capBkColor);
             if (hasMenu(view)) {
                 width -= drawRight(g, menu, x + width, itemWidth, height);
             }
@@ -85,7 +84,7 @@ public class MyActionBar {
         g.setFont(GraphicsEx.captionFont);
         g.setThemeColor(CanvasEx.THEME_CAP_TEXT);
         String label = (null == ticker) ? caption : ticker;
-        g.drawString(images, label, null, x, 1, width - x, height - 2);
+        g.drawString(images, label, null, x, 1, width, height - 2);
     }
     private int drawLeft(GraphicsEx g, Icon  icon, int x, int defWidth, int height) {
         // #sijapp cond.if modules_TOUCH isnot "true"#
@@ -98,6 +97,9 @@ public class MyActionBar {
         return defWidth;
     }
     private int drawRight(GraphicsEx g, Icon  icon, int x, int defWidth, int height) {
+        if (null == icon) {
+            return 0;
+        }
         // #sijapp cond.if modules_TOUCH isnot "true"#
         defWidth = icon.getWidth();
         // #sijapp cond.end#
@@ -120,16 +122,22 @@ public class MyActionBar {
     }
     public static final int CAPTION_REGION_BACK = -1;
     public static final int CAPTION_REGION_MENU = -2;
+    public static final int CAPTION_REGION_NEW_MESSAGE = -3;
+    public static final int CAPTION_REGION_GENERAL = 1;
     protected int getCaptionRegion(VirtualList view, int x, int width) {
         int itemWidth = getHeight();
         if ((x < itemWidth) && !isMainView(view)) {
             return CAPTION_REGION_BACK;
         }
-        if ((width - itemWidth < x) && hasMenu(view)) {
+        width -= itemWidth;
+        if ((width < x) && hasMenu(view)) {
             return CAPTION_REGION_MENU;
         }
         width -= itemWidth;
-        return (width - x) / itemWidth;
+        if (width < x) {
+            return CAPTION_REGION_NEW_MESSAGE;
+        }
+        return CAPTION_REGION_GENERAL;
     }
     // #sijapp cond.end#
     private boolean hasMenu(VirtualList view) {

@@ -9,7 +9,6 @@
     <EditText
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:text="New EditText"
             android:id="@+id/messageText" android:layout_gravity="center|left" android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" android:password="false" android:layout_weight="0.87"
             />

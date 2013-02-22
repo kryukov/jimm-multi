@@ -29,7 +29,6 @@ package org.microemu.android;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.microedition.io.ConnectionNotFoundException;
 
@@ -200,10 +199,6 @@ public abstract class MicroEmulatorActivity extends Activity {
 		activityThread = Thread.currentThread();
 	}
 	
-	public View getContentView() {
-		return contentView;
-	}
-
 	@Override
 	public void setContentView(View view) {
 Log.d("AndroidCanvasUI", "set content view: " + view);
@@ -246,27 +241,12 @@ Log.d("AndroidCanvasUI", "set content view: " + view);
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		for (Iterator<ActivityResultListener> it = activityResultListeners.iterator(); it.hasNext(); ) {
-			if (it.next().onActivityResult(requestCode, resultCode, data)) {
-				return;
-			}
-		}
+        for (ActivityResultListener activityResultListener : activityResultListeners) {
+            if (activityResultListener.onActivityResult(requestCode, resultCode, data)) {
+                return;
+            }
+        }
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
-	public void setDialog(Dialog dialog) {
-		this.dialog = dialog;
-		if (dialog != null) {
-			showDialog(0);
-		} else {
-			removeDialog(0);
-		}
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		return dialog;
-	}
-	
 }

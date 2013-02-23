@@ -4,17 +4,23 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              style="@android:style/ButtonBar">
+              style="@style/InputBar"
+    android:paddingTop="5dip"
+    android:paddingLeft="4dip"
+    android:paddingRight="4dip"
+    android:paddingBottom="4dip">
 
     <EditText
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:id="@+id/messageText" android:layout_gravity="center|left" android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" android:password="false" android:layout_weight="0.87"
-            />
+            android:layout_alignParentTop="true"
+        android:layout_weight="0.87"
+        style="@style/MessageEditText" />
     <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/sendButton" android:layout_gravity="right|center_vertical"
-            android:src="@drawable/inc_msg"/>
+            android:src="@drawable/inc_msg"
+        style="@style/SendButton" />
 </LinearLayout>

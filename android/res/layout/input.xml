@@ -4,11 +4,7 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              style="@style/InputBar"
-    android:paddingTop="5dip"
-    android:paddingLeft="4dip"
-    android:paddingRight="4dip"
-    android:paddingBottom="4dip">
+              style="@style/InputBar">
 
     <EditText
             android:layout_width="fill_parent"
@@ -16,7 +12,8 @@
             android:id="@+id/messageText" android:layout_gravity="center|left" android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
         android:layout_weight="0.87"
-        style="@style/MessageEditText" />
+        style="@style/MessageEditText"
+        android:hint="@string/message_hint" />
     <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"

@@ -9,4 +9,5 @@
     <string name="online">В сети</string>
     <string name="takePhotoButton">OK</string>
     <string name="xmppAccountDontFound">Jabber-учетка не найдена</string>
+    <string name="message_hint">Введите текст сообщения</string>
 </resources>

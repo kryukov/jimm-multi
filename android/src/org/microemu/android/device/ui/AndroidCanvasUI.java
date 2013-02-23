@@ -28,9 +28,7 @@ package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
 
-import android.content.Context;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidDeviceDisplay;
@@ -98,11 +96,18 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
     public void setInputVisibility(final boolean v) {
         activity.post(new Runnable() {
             public void run() {
+                boolean prevV = (input.getVisibility() == View.VISIBLE);
                 input.setVisibility(v ? View.VISIBLE : View.GONE);
                 view.requestLayout();
-                canvasView.requestFocus();
-                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                if (v && input.hasText()) {
+                    input.showKeyboard();
+                } else {
+                    canvasView.requestFocus();
+                    if ((prevV && !v) || !input.hasText()) {
+                        input.hideKeyboard(view);
+                    }
+                }
             }
         });
     }

@@ -9,4 +9,5 @@
     <string name="online">Online</string>
     <string name="takePhotoButton">OK</string>
     <string name="xmppAccountDontFound">Jabber-account do not found</string>
+    <string name="message_hint">New Message</string>
 </resources>

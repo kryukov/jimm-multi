@@ -7,6 +7,7 @@
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingBottom">4dp</item>
         <item name="android:background">@android:drawable/bottom_bar</item>
+        <item name="android:verticalSpacing">0dp</item>
     </style>
 
     <style name="MessageEditText">
@@ -20,7 +21,8 @@
     </style>
 
     <style name="SendButton" parent="@android:Widget.Button">
-        <item name="android:padding">1dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/send_button</item>
     </style>

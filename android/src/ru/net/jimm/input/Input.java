@@ -2,7 +2,9 @@ package ru.net.jimm.input;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +31,7 @@ import ru.net.jimm.R;
 public class Input extends LinearLayout implements View.OnClickListener {
     private EditText messageEditor;
     private Runnable userMessageListener;
+    private Object owner;
     public Input(Context context, AttributeSet attrs, int id) {
         super(context, attrs);
         ((Activity)getContext())
@@ -40,7 +43,9 @@ public class Input extends LinearLayout implements View.OnClickListener {
         messageEditor.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        messageEditor.setImeOptions(EditorInfo.IME_ACTION_SEND);
         messageEditor.setOnEditorActionListener(enterListener);
+        messageEditor.addTextChangedListener(textWatcher);
 
         ImageButton sendButton = (ImageButton) findViewById(R.id.sendButton);
         sendButton.setOnClickListener(this);
@@ -69,7 +74,7 @@ public class Input extends LinearLayout implements View.OnClickListener {
     }
     private void showKeyboard(View view) {
         InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        keyboard.showSoftInput(view, 0);
+        keyboard.showSoftInput(view, InputMethodManager.SHOW_FORCED);
     }
 
     public void hideKeyboard(View view) {
@@ -99,10 +104,15 @@ public class Input extends LinearLayout implements View.OnClickListener {
                 String t = null == text ? "" : text;
                 messageEditor.setText(t);
                 messageEditor.setSelection(t.length());
-                messageEditor.requestFocus();
-                showKeyboard(messageEditor);
+                showKeyboard();
             }
         });
+    }
+    public void setOwner(Object owner) {
+        if (this.owner != owner) {
+            this.owner = owner;
+            resetText();
+        }
     }
     public void resetText() {
         ((JimmActivity)getContext()).post(new Runnable() {
@@ -116,16 +126,48 @@ public class Input extends LinearLayout implements View.OnClickListener {
         return messageEditor.getText().toString();
     }
 
-    private final TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
-        public boolean onEditorAction(TextView exampleView, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                send();
-            }
-            return true;
-        }
-    };
-
     public boolean hasText() {
         return 0 < messageEditor.getText().length();
     }
+
+    private boolean isDone(int actionId) {
+        return (EditorInfo.IME_NULL == actionId)
+                || (EditorInfo.IME_ACTION_DONE == actionId)
+                || (EditorInfo.IME_ACTION_SEND == actionId);
+    }
+    private final TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
+        public boolean onEditorAction(TextView exampleView, int actionId, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (isDone(actionId)) {
+                    send();
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+    private TextWatcher textWatcher = new TextWatcher() {
+        private String previousText;
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            previousText = s.toString();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if ((start + count <= s.length()) && (1 == count)) {
+                boolean enter = ('\n' == s.charAt(start));
+                if (enter) {
+                    messageEditor.setText(previousText);
+                    messageEditor.setSelection(start);
+                    send();
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    };
+
 }

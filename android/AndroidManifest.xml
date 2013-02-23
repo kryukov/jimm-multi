@@ -20,7 +20,9 @@
                   android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
                   android:configChanges="orientation|keyboardHidden"
                   android:launchMode="singleTask"
-                  android:clearTaskOnLaunch="true">
+                  android:clearTaskOnLaunch="true"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -657,7 +657,7 @@ public final class Chat extends ScrollableArea {
             showStatusPopup();
         }
         // #sijapp cond.if modules_ANDROID is "true" #
-        NativeCanvas.getInstance().getInput().resetText();
+        NativeCanvas.getInstance().getInput().setOwner(contact);
         NativeCanvas.getInstance().getInput().setUserMessageListener(new Runnable() {
             public void run() {
                 ChatHistory.instance.registerChat(Chat.this);

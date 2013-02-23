@@ -100,7 +100,7 @@ public final class Templates implements SelectListener, CommandListener {
                 break;
 
             case MENU_PASTE:
-                String text = JimmUI.getClipBoardText(false);
+                String text = JimmUI.getClipBoardText();
                 templates.addElement(text);
                 save();
                 refreshList();

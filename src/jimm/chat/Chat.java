@@ -399,7 +399,6 @@ public final class Chat extends ScrollableArea {
         if (accessible) {
             if (!JimmUI.isClipBoardEmpty()) {
                 menu.addItem("paste", Contact.USER_MENU_PASTE);
-                menu.addItem("quote", Contact.USER_MENU_QUOTE);
             }
         }
         contact.addChatMenuItems(menu);

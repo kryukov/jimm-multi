@@ -359,7 +359,6 @@ abstract public class Contact implements TreeNode, Sortable {
 ///////////////////////////////////////////////////////////////////////////
     public static final int USER_MENU_MESSAGE          = 1001;
     public static final int USER_MENU_PASTE            = 1002;
-    public static final int USER_MENU_QUOTE            = 1003;
 
     public static final int USER_MENU_REQU_AUTH        = 1004;
 

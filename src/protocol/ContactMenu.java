@@ -45,9 +45,8 @@ public class ContactMenu implements SelectListener {
                 protocol.getChat(contact).writeMessage(null);
                 break;
                 
-            case Contact.USER_MENU_QUOTE: /* Send plain message with quotation */
             case Contact.USER_MENU_PASTE: /* Send plain message without quotation */
-                protocol.getChat(contact).writeMessage(JimmUI.getClipBoardText(Contact.USER_MENU_QUOTE == cmd));
+                protocol.getChat(contact).writeMessage(JimmUI.getClipBoardText());
                 break;
                 
             case Contact.USER_MENU_ADD_USER:

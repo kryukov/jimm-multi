@@ -32,7 +32,6 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
     // #sijapp cond.end#
     private Command insertTemplateCommand;
     private Command pasteCommand;
-    private Command quoteCommand;
     private Command clearCommand;
 
     private Command cancelCommand;
@@ -78,7 +77,6 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
             // #sijapp cond.end#
             insertTemplateCommand = initCommand("templates", commandType, 2);
             pasteCommand          = initCommand("paste", editType, 3);
-            quoteCommand          = initCommand("quote", editType, 4);
             clearCommand          = initCommand("clear", editType, 5);
         }
         return box;
@@ -161,7 +159,6 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         // #sijapp cond.end#
         addCommand(insertTemplateCommand);
         addCommand(pasteCommand);
-        addCommand(quoteCommand);
         addCommand(clearCommand);
         addCommand(cancelCommand);
 
@@ -229,11 +226,10 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
             } else if (clearCommand == c) {
                 setString(null);
 
-            } else if ((pasteCommand == c) || (quoteCommand == c)) {
-                boolean quote = (quoteCommand == c);
+            } else if (pasteCommand == c) {
                 int pos = getCaretPosition();
-                String clip = JimmUI.getClipBoardText(quote);
-                if (quote && (2 < pos)) {
+                String clip = JimmUI.getClipBoardText();
+                if (2 < pos) {
                     String text = textBox.getString();
                     if (('\n' == text.charAt(pos - 2)) && ('\n' == text.charAt(pos - 1))) {
                         pos--;

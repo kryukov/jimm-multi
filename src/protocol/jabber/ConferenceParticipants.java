@@ -105,7 +105,7 @@ public final class ConferenceParticipants extends ScrollableArea {
         }
         switch (action) {
             case COMMAND_COPY:
-                JimmUI.setClipBoardText(getCaption(), nick);
+                JimmUI.setClipBoardText(nick);
                 restore();
                 break;
 

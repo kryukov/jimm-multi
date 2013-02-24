@@ -77,7 +77,7 @@ public class JSR75FileSystem {
     }
 
     public boolean exists() {
-        return fileConnection.exists();
+        return (null != fileConnection) && fileConnection.exists();
     }
     public OutputStream openOutputStream() throws Exception {
         if (fileConnection.exists()) {

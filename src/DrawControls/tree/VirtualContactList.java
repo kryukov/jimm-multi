@@ -141,6 +141,7 @@ public final class VirtualContactList extends ScrollableArea {
 
 
     protected void restoring() {
+        setTopByOffset(getTopOffset());
         setSoftBarLabels("menu", "context_menu", "context_menu", false);
         setFontSet(GraphicsEx.contactListFontSet);
         rebuildList = true;

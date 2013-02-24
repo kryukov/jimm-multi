@@ -17,19 +17,17 @@ public class MySoftBar extends ActiveRegion {
     private String[] softLabels = new String[3];
     private boolean directKey = false;
 
-    private static int softBarHeight = 0;
     private static String time = "";
     public MySoftBar() {
-        softBarHeight = GraphicsEx.getSoftBarSize();
     }
     static void refreshClock() {
         time = Util.getLocalDateString(Jimm.getCurrentGmtTime(), true);
-        int h = softBarHeight;
+        int h = GraphicsEx.getSoftBarSize();
         int screenHeight = NativeCanvas.getScreenHeight();
         NativeCanvas.getInstance().repaint(0, screenHeight - h, NativeCanvas.getScreenWidth(), h);
     }
     public int getHeight() {
-        return softBarHeight;
+        return GraphicsEx.getSoftBarSize();
     }
 
     public void paint(GraphicsEx graphicsEx, CanvasEx canvas, int bottom) {
@@ -39,10 +37,10 @@ public class MySoftBar extends ActiveRegion {
         if (NativeCanvas.isOldSeLike()) {
             graphicsEx.drawSoftBar(labels[1], time,
                     hasRightSoft() ? labels[0] : null,
-                    softBarHeight, w, bottom);
+                    getHeight(), w, bottom);
         } else {
             graphicsEx.drawSoftBar(labels[0], time, labels[2],
-                    softBarHeight, w, bottom);
+                    getHeight(), w, bottom);
         }
     }
     // #sijapp cond.if modules_TOUCH is "true"#

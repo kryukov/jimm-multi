@@ -637,6 +637,7 @@ public final class Chat extends ScrollableArea {
     }
 
     protected void restoring() {
+        setTopByOffset(getTopOffset());
         ContactList.getInstance().setCurrentContact(contact);
         classic = Options.getBoolean(Options.OPTION_CLASSIC_CHAT);
         int h = line.getRealHeight();

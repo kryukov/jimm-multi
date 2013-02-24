@@ -323,8 +323,4 @@ public final class SplashCanvas extends CanvasEx {
     private int getProgressHeight() {
         return Math.max(font.getHeight() * 3 / 2, minItemHeight);
     }
-
-    public boolean isSoftBarShown() {
-        return false;
-    }
 }

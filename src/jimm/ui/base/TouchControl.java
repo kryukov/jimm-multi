@@ -44,9 +44,10 @@ public class TouchControl {
 
     private int pressLimit;
 
-    private ProtoCanvas canvas = null;
+    private CanvasEx canvas = null;
+    public ActiveRegion region;
 
-    public synchronized void setCanvas(ProtoCanvas c) {
+    public synchronized void setCanvas(CanvasEx c) {
         stopKinetic();
         pressLimit = CanvasEx.minItemHeight / 2;
         canvas = c;
@@ -81,10 +82,11 @@ public class TouchControl {
         }
     }
 
-    private synchronized void _pointerPressed(ProtoCanvas c, int x, int y) {
+    private synchronized void _pointerPressed(CanvasEx c, int x, int y) {
         stopKinetic();
 
         kineticOn = true;
+        region = null;
 
         horizontalDirection = false;
         directionUnlock = true;
@@ -100,7 +102,7 @@ public class TouchControl {
         c.stylusPressed(x, y);
     }
 
-    private synchronized void _pointerReleased(ProtoCanvas c, int x, int y) {
+    private synchronized void _pointerReleased(CanvasEx c, int x, int y) {
         isDragged |= isDragged(x, y);
 
         curX = x;
@@ -111,20 +113,22 @@ public class TouchControl {
             if (horizontalDirection) {
                 kineticOn = false;
             }
-            c.stylusMoved(startX, startY, x, y, horizontalDirection, TouchControl.DRAGGED);
+            __stylusMoved(c, x, y, horizontalDirection, TouchControl.DRAGGED);
             if (kineticOn) {
                 kinetic.release(y);
                 startKinetic();
             }
 
         } else {
-            c.stylusTap(x, y, Display.isLongAction(pressTime));
+            __stylusTap(c, x, y, Display.isLongAction(pressTime));
         }
-        c.stylusReleased();
+        if (null != region) {
+            region.stylusReleased();
+        }
         pressTime = 0;
     }
 
-    private synchronized void _pointerDragged(ProtoCanvas c, int x, int y) {
+    private synchronized void _pointerDragged(CanvasEx c, int x, int y) {
         if (!isDragged) {
             isDragged = isDragged(x, y);
             if (!isDragged) {
@@ -140,15 +144,16 @@ public class TouchControl {
             curX = x;
             curY = y;
             updateDirection();
-            c.stylusMoved(startX, startY, x, y, horizontalDirection, TouchControl.DRAGGING);
+            __stylusMoved(c, x, y, horizontalDirection, TouchControl.DRAGGING);
+
         }
     }
 
     synchronized void kineticMoving(int y) {
-        ProtoCanvas c = canvas;
+        CanvasEx c = canvas;
         if (kineticOn && (null != c) && (null != kineticTask)) {
             try {
-                c.stylusMoved(startX, startY, startX, y, horizontalDirection, TouchControl.KINETIC);
+                __stylusMoved(c, startX, y, horizontalDirection, TouchControl.KINETIC);
             } catch (Exception e) {
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
                 jimm.modules.DebugLog.panic("stylusKineticMoving", e);
@@ -157,6 +162,29 @@ public class TouchControl {
         }
     }
 
+
+    private void __stylusTap(CanvasEx c, int x, int y, boolean longTap) {
+        if (null == region) {
+            c.stylusTap(startX, startY, longTap);
+        } else {
+            region.stylusTap(c, startX, startY, longTap);
+        }
+    }
+    private void __stylusMoved(CanvasEx c, int x, int y, boolean horizontalDirection, int type) {
+        if (null == region) {
+            if (horizontalDirection) {
+                if (TouchControl.DRAGGING == type) {
+                    c.stylusXMoving(startX, startY, x, y);
+                } else if (TouchControl.DRAGGED == type) {
+                    c.stylusXMoved(startX, startY, x, y);
+                }
+            } else {
+                c.stylusGeneralYMoved(startX, startY, x, y, type);
+            }
+        } else {
+            region.stylusMoved(c, startX, startY, x, y, horizontalDirection, type);
+        }
+    }
 
 
     private void startKinetic() {
@@ -183,6 +211,12 @@ public class TouchControl {
             horizontalDirection = (Math.abs(startY - curY) * 2 < Math.abs(startX - curX));
             directionUnlock = false;
         }
+    }
+
+    public void setRegion(ActiveRegion region) {
+        this.region = region;
+        kineticOn = false;
+        region.stylusPressed(canvas, startX, startY);
     }
 }
 

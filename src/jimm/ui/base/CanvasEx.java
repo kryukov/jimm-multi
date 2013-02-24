@@ -10,7 +10,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.modules.*;
-import jimm.util.JLocale;
+import jimm.ui.menu.Select;
 
 /**
  * Basic class for UI-controls.
@@ -99,9 +99,9 @@ abstract public class CanvasEx extends DisplayableEx {
     public final static int KEY_RELEASED = 3;
 
     private boolean repaintLocked = false;
-    private String[] softLabels = new String[3];
-    private boolean directKey = false;
 
+    private int _width;
+    private int _height;
 
     public static void updateUI() {
         scrollerWidth = getScrollWidth();
@@ -124,28 +124,34 @@ abstract public class CanvasEx extends DisplayableEx {
     }
 
     public int getHeight() {
-        return getScreenHeight();
+        return _height - (isSoftBarShown() ? getSoftBar().getHeight() : 0);
     }
 
     public int getWidth() {
-        return getScreenWidth();
+        return _width;
     }
-    public final int getScreenWidth() {
-        return NativeCanvas.getScreenWidth();
+    protected final void setSize(int w, int h) {
+        _width = w;
+        _height = h;
     }
-    public final int getScreenHeight() {
-        if (isSoftBarShown()) {
-            return NativeCanvas.getScreenHeight() - NativeCanvas.getInstance().getProtoCanvas().getSoftBarHeight();
-        }
-        return NativeCanvas.getScreenHeight();
-    }
-    public boolean isSoftBarShown() {
+    public final boolean isSoftBarShown() {
+        // #sijapp cond.if modules_ANDROID is "true"#
+        if (this instanceof jimm.modules.fs.FileBrowser) return true;
+        if (this instanceof jimm.ui.form.GraphForm) return true;
+        if (true) return false;
+        // #sijapp cond.end#
+        if (this instanceof SplashCanvas) return false;
         // #sijapp cond.if modules_TOUCH isnot "true"#
         if (!Options.getBoolean(Options.OPTION_SHOW_SOFTBAR)) {
             return false;
         }
         // #sijapp cond.end#
-        return true;
+        return (null != getSoftBar());
+    }
+    public final MySoftBar getSoftBar() {
+        if (this instanceof VirtualList) return ((VirtualList) this).softBar;
+        if (this instanceof Select) return ((Select) this).softBar;
+        return null;
     }
 
     /**
@@ -250,29 +256,10 @@ abstract public class CanvasEx extends DisplayableEx {
         return false;
     }
 
-    public final void setSoftBarLabels(String more, String ok, String back, boolean direct) {
-        softLabels[0] = JLocale.getString(more); // menu
-        softLabels[1] = JLocale.getString(ok);   // default
-        softLabels[2] = JLocale.getString(back); // back
-        directKey = direct;
-    }
-    final boolean isNotSwappable() {
-        return directKey;
-    }
-    final boolean hasRightSoft() {
-        return softLabels[0] != softLabels[1];
-    }
-    final boolean isSwapped() {
-        return softLabels[1] == softLabels[2];
-    }
-    final String[] getSoftLabels() {
-        return softLabels;
-    }
-
     protected boolean hasMenu() {
         return true;
     }
 
-    protected void sizeChanged(int fromW, int fromH, int toW, int toH) {
+    protected void sizeChanged(int prevW, int prevH, int w, int h) {
     }
 }

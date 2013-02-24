@@ -19,8 +19,9 @@ import jimm.modules.*;
  * @author Vladimir Kryukov
  */
 public class NativeCanvas extends Canvas {
+    private GraphicsEx graphicsEx = new GraphicsEx();
     public static final int UIUPDATE_TIME = 250;
-    private ProtoCanvas canvas = new ProtoCanvas();
+    private CanvasEx canvas = null;
     private Popup popup = null;
     private Image bDIimage = null;
 
@@ -38,19 +39,30 @@ public class NativeCanvas extends Canvas {
 
     protected void paint(Graphics g) {
         if (isDoubleBuffered()) {
-            canvas.paintAllOnGraphics(g);
+            paintAllOnGraphics(g);
 
         } else {
             try {
                 if ((null == bDIimage) || (bDIimage.getHeight() != getHeight())) {
                     bDIimage = Image.createImage(getWidth(), getHeight());
                 }
-                canvas.paintAllOnGraphics(bDIimage.getGraphics());
+                paintAllOnGraphics(bDIimage.getGraphics());
                 g.drawImage(bDIimage, 0, 0, Graphics.TOP | Graphics.LEFT);
             } catch (Throwable e) {
-                canvas.paintAllOnGraphics(g);
+                paintAllOnGraphics(g);
             }
         }
+    }
+    private void paintAllOnGraphics(Graphics g) {
+        graphicsEx.setGraphics(g);
+        try {
+            getCanvas().paint(graphicsEx);
+        } catch(Exception e) {
+            // #sijapp cond.if modules_DEBUGLOG is "true" #
+            DebugLog.panic("native", e);
+            // #sijapp cond.end #
+        }
+        graphicsEx.reset();
     }
 
     // #sijapp cond.if target="MIDP2" #
@@ -59,7 +71,7 @@ public class NativeCanvas extends Canvas {
             Jimm.wakeUp();
         }
         updateMetrix(getWidth(), getHeight());
-        canvas.getCanvas().restoring();
+        canvas.restoring();
     }
     // #sijapp cond.end #
 //    protected void hideNotify() {
@@ -87,13 +99,14 @@ public class NativeCanvas extends Canvas {
 
     public void setCanvas(CanvasEx canvasEx) {
         stopKeyRepeating();
-        canvas.setCanvas(canvasEx);
+        canvas = canvasEx;
         // #sijapp cond.if modules_TOUCH is "true"#
-        touchControl.setCanvas(canvas);
+        touchControl.setCanvas(canvasEx);
         // #sijapp cond.end#
+        canvasEx.setSize(getWidth(), getHeight());
     }
     CanvasEx getCanvas() {
-        return canvas.getCanvas();
+        return canvas;
     }
     public void setPopup(Popup p) {
         popup = p;
@@ -109,10 +122,13 @@ public class NativeCanvas extends Canvas {
 
     protected void sizeChanged(int w, int h) {
         if ((0 == w) || (0 == h)) return;
-        CanvasEx c = canvas.getCanvas();
+        CanvasEx c = canvas;
         boolean isShown = isShown();
         if (isShown) {
-            c.sizeChanged(canvas.getWindowWidth(), canvas.getWindowHeight(), w, canvas.getNextHeight(h));
+            int prevW = c.getWidth();
+            int prevH = c.getHeight();
+            c.setSize(w, h);
+            c.sizeChanged(prevW, prevH, c.getWidth(), c.getHeight());
         }
         updateMetrix(w, h);
         if (isShown) {
@@ -370,7 +386,7 @@ public class NativeCanvas extends Canvas {
     }
 
     private void doKeyReaction(int keyCode, int type) {
-        doKeyReaction(canvas.getCanvas(), keyCode, type);
+        doKeyReaction(canvas, keyCode, type);
     }
     private void doKeyReaction(CanvasEx c, int keyCode, int type) {
         int key = getKey(keyCode);
@@ -386,17 +402,18 @@ public class NativeCanvas extends Canvas {
             }
             action = qwerty2action(key, keyCode);
         } else {
-            if (isOldSeLike()) {
+            if (isOldSeLike() && (null != c.getSoftBar())) {
+                MySoftBar softBar = c.getSoftBar();
                 switch (key) {
                     case LEFT_SOFT:
-                        key = c.isSwapped() ? RIGHT_SOFT : NAVIKEY_FIRE;
-                        if (c.isNotSwappable()) {
+                        key = softBar.isSwapped() ? RIGHT_SOFT : NAVIKEY_FIRE;
+                        if (softBar.isNotSwappable()) {
                             key = LEFT_SOFT;
                         }
                         break;
                     case RIGHT_SOFT:
-                        if (c.hasRightSoft()) {
-                            key = c.isNotSwappable() ? RIGHT_SOFT : LEFT_SOFT;
+                        if (softBar.hasRightSoft()) {
+                            key = softBar.isNotSwappable() ? RIGHT_SOFT : LEFT_SOFT;
                         } else {
                             key = UNUSED_KEY;
                         }
@@ -473,13 +490,13 @@ public class NativeCanvas extends Canvas {
     }
 
     void emulateKey(CanvasEx c, int key) {
-        if (null == c) c = canvas.getCanvas();
+        if (null == c) c = canvas;
         doKeyReaction(c, key, CanvasEx.KEY_PRESSED);
         doKeyReaction(c, key, CanvasEx.KEY_RELEASED);
     }
 
     public void invalidate(CanvasEx canvasEx) {
-        if (canvas.is(canvasEx)) {
+        if (canvas == canvasEx) {
             repaint();
         }
     }
@@ -507,10 +524,6 @@ public class NativeCanvas extends Canvas {
 
     public static boolean isLongFirePress() {
         return Display.isLongAction(instance.firePressTime);
-    }
-
-    public ProtoCanvas getProtoCanvas() {
-        return canvas;
     }
 
 
@@ -556,7 +569,7 @@ public class NativeCanvas extends Canvas {
                 }
             }
             if (!Jimm.getJimm().getDisplay().isShown(nativeCanvas)
-                        || !nativeCanvas.canvas.is(canvas)) {
+                        || nativeCanvas.canvas != canvas) {
                 KeyRepeatTimer.stop();
                 return;
             }

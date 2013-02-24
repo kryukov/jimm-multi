@@ -11,7 +11,7 @@ import javax.microedition.lcdui.Graphics;
  *
  * @author vladimir
  */
-public class MyActionBar {
+public class MyActionBar extends ActiveRegion {
 
     private Icon[] images;
     private String caption;
@@ -117,8 +117,9 @@ public class MyActionBar {
     // #sijapp cond.if modules_TOUCH is "true"#
     private static final Icon back = ImageList.createImageList("/back_button.png").iconAt(0);
     private static final Icon menu = ImageList.createImageList("/menu_button.png").iconAt(0);
-    public void touchTapped(VirtualList view, int x, int width) {
-        view.touchCaptionTapped(getCaptionRegion(view, x, width));
+    protected void stylusTap(CanvasEx canvas, int x, int y, boolean longTap) {
+        VirtualList view = (VirtualList) canvas;
+        view.touchCaptionTapped(getCaptionRegion(view, x, view.getWidth()));
     }
     public static final int CAPTION_REGION_BACK = -1;
     public static final int CAPTION_REGION_MENU = -2;

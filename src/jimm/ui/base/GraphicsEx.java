@@ -329,7 +329,7 @@ public final class GraphicsEx {
             drawImage(back, 0, y, width, height);
         }
     }
-    public int getSoftBarSize() {
+    public static int getSoftBarSize() {
         if (null != Scheme.softbarImage) {
             return Scheme.softbarImage.getHeight();
         }

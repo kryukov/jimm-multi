@@ -11,7 +11,6 @@ package jimm.ui.base;
 
 import java.util.*;
 import jimm.Jimm;
-import jimm.Options;
 import jimm.cl.ContactList;
 import jimm.ui.*;
 
@@ -96,22 +95,24 @@ public class UIUpdater extends TimerTask {
         }
     }
 
+    private void refreshClock(long timestamp) {
+        this.timestamp = timestamp;
+        CanvasEx canvas = NativeCanvas.getInstance().getCanvas();
+        if ((null == canvas) || canvas.isSoftBarShown()) {
+            MySoftBar.refreshClock();
+        }
+    }
     public static void refreshClock() {
-        uiUpdater.timestamp = Jimm.getCurrentGmtTime() / 60;
-        NativeCanvas.getInstance().getProtoCanvas().refreshClock();
+        uiUpdater.refreshClock(Jimm.getCurrentGmtTime() / 60);
     }
     private void updateClock() {
-        if (0 == NativeCanvas.getInstance().getProtoCanvas().getSoftBarHeight()) {
-            return;
-        }
         CanvasEx c = NativeCanvas.getInstance().getCanvas();
         if ((null == c) || !c.isSoftBarShown()) {
             return;
         }
         long newTime = Jimm.getCurrentGmtTime() / 60;
         if (timestamp != newTime) {
-            timestamp = newTime;
-            NativeCanvas.getInstance().getProtoCanvas().refreshClock();
+            refreshClock(newTime);
         }
     }
     private void update() {

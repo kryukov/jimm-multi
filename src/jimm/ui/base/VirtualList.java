@@ -25,7 +25,6 @@ package jimm.ui.base;
 import javax.microedition.lcdui.*;
 
 import jimm.chat.ChatHistory;
-import jimm.modules.DebugLog;
 import jimm.ui.menu.*;
 
 /**
@@ -40,9 +39,11 @@ import jimm.ui.menu.*;
 public abstract class VirtualList extends CanvasEx {
     // Caption of VL
 
+
     // Index for current item of VL
     private int currItem = 0;
     protected MyActionBar bar = new MyActionBar();
+    protected MySoftBar softBar = new MySoftBar();
 
     // Set of fonts for quick selecting
     private Font[] fontSet;
@@ -53,6 +54,11 @@ public abstract class VirtualList extends CanvasEx {
         setCaption(capt);
         setSoftBarLabels("menu", null, "back", false);
         fontSet = GraphicsEx.chatFontSet;
+        setSize(NativeCanvas.getScreenWidth(), NativeCanvas.getScreenHeight());
+    }
+
+    public final void setSoftBarLabels(String more, String ok, String back, boolean direct) {
+        softBar.setSoftBarLabels(more, ok, back, direct);
     }
 
     /**
@@ -169,8 +175,18 @@ public abstract class VirtualList extends CanvasEx {
         return false;
     }
 
+    private static MyScrollBar scrollBar = new MyScrollBar();
     protected final void stylusPressed(int x, int y) {
+        if (getHeight() < y) {
+            NativeCanvas.getInstance().touchControl.setRegion(softBar);
+            return;
+        }
         if (y < bar.getHeight()) {
+            NativeCanvas.getInstance().touchControl.setRegion(bar);
+            return;
+        }
+        if (scrollBar.isScroll(this, x, y) && (0 < GraphicsEx.showScroll)) {
+            NativeCanvas.getInstance().touchControl.setRegion(scrollBar);
             return;
         }
         TouchControl nat = NativeCanvas.getInstance().touchControl;
@@ -183,12 +199,6 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     protected final void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
-        if (fromY < bar.getHeight()) {
-            if (TouchControl.DRAGGED == type) {
-                bar.touchTapped(this, 1000, getWidth());
-            }
-            return;
-        }
         int item = getItemByCoord(toY);
         if (0 <= item) {
             TouchControl nat = NativeCanvas.getInstance().touchControl;
@@ -198,10 +208,6 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     protected final void stylusTap(int x, int y, boolean longTap) {
-        if (y < bar.getHeight()) {
-            bar.touchTapped(this, x, getWidth());
-            return;
-        }
         int item = getItemByCoord(y);
         if (0 <= item) {
             touchItemTaped(item, x, longTap);
@@ -244,8 +250,8 @@ public abstract class VirtualList extends CanvasEx {
             GraphicsEx.showScroll();
         }
     }
-    protected void sizeChanged(int fromW, int fromH, int toW, int toH) {
-        int delta = fromH - toH;
+    protected void sizeChanged(int prevW, int prevH, int w, int h) {
+        int delta = prevH - h;
         setTopByOffset(getTopOffset() + delta);
     }
     private void setOptimalTopItem() {
@@ -344,11 +350,17 @@ public abstract class VirtualList extends CanvasEx {
     protected abstract int get_TopOffset();
     protected void paint(GraphicsEx g) {
         beforePaint();
+        int bottom = getHeight();
+        boolean onlySoftBar = (bottom <= g.getClipY());
+        if (!onlySoftBar) {
+            int captionHeight = bar.getHeight();
+            paintContent(g, captionHeight);
 
-        int captionHeight = bar.getHeight();
-        paintContent(g, captionHeight);
-
-        bar.paint(g, this, getWidth());
+            bar.paint(g, this, getWidth());
+        }
+        if (isSoftBarShown()) {
+            softBar.paint(g, this, getHeight());
+        }
     }
     protected void beforePaint() {
     }

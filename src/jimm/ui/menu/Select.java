@@ -41,6 +41,7 @@ public final class Select extends CanvasEx {
     private int itemHeight;
     private int itemWidth;
     private int iconWidth;
+    public MySoftBar softBar = new MySoftBar();
 
     private int getHeadSpace() {
         return Math.max(3, itemHeight / 4);
@@ -87,6 +88,10 @@ public final class Select extends CanvasEx {
     }
 
     protected void stylusPressed(int toX, int toY) {
+        if (getHeight() < toY) {
+            NativeCanvas.getInstance().touchControl.setRegion(softBar);
+            return;
+        }
         if (!checkRegion(toX, toY)) {
             return;
         }
@@ -142,7 +147,7 @@ public final class Select extends CanvasEx {
 
     public Select(MenuModel menu) {
         setModel(menu);
-        setSoftBarLabels("select", "select", "back", false);
+        softBar.setSoftBarLabels("select", "select", "back", false);
     }
 
     private void calcMetrix(int screenWidth) {
@@ -244,6 +249,9 @@ public final class Select extends CanvasEx {
         g.setClip(x, y, curWidth + 1, curHeight + 1);
         if (hasScroll) {
             g.drawVertScroll(getScroll(), THEME_MENU_BORDER);
+        }
+        if (isSoftBarShown()) {
+            softBar.paint(g, this, getHeight());
         }
     }
 
@@ -389,5 +397,15 @@ public final class Select extends CanvasEx {
 
     private void go(int code) {
         items.exec(this, code);
+    }
+
+    public final int getScreenWidth() {
+        return NativeCanvas.getScreenWidth();
+    }
+    public final int getScreenHeight() {
+        if (isSoftBarShown()) {
+            return NativeCanvas.getScreenHeight() - softBar.getHeight();
+        }
+        return NativeCanvas.getScreenHeight();
     }
 }

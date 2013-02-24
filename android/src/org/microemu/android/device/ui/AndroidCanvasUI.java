@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.device.ui.CanvasUI;
+import ru.net.jimm.R;
 import ru.net.jimm.input.Input;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements CanvasUI {
@@ -45,7 +46,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
         activity.post(new Runnable() {
             public void run() {
                 canvasView = new CanvasView(activity, AndroidCanvasUI.this, 666);
-                input = new Input(activity, null, 2);
+                input = new Input(activity, null, R.id.input_line);
                 input.setVisibility(View.INVISIBLE);
                 view = createView(canvasView, input);
             }

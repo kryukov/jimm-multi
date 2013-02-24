@@ -243,6 +243,7 @@ public class Display {
 			// TODO consider removal of DisplayAccess::paint(..)
 			if (current != null) {
 				try {
+                    g.setCanvasSize(current.getWidth(), current.getHeight());
 					current.paint(g);
 				} catch (Throwable th) {
 					th.printStackTrace();

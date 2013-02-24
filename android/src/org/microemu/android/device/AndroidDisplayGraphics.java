@@ -53,18 +53,20 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	private Canvas canvas;
 	
 	private Rect clip;
-	
+
+    protected Rect display = new Rect();
+
 	private Font font;
-	
+
 	private int strokeStyle = SOLID;
-	
+
 	public AndroidDisplayGraphics() {
 		strokePaint.setAntiAlias(true);
 		strokePaint.setStyle(Paint.Style.STROKE);
 		fillPaint.setAntiAlias(true);
 		fillPaint.setStyle(Paint.Style.FILL);
 	}
-	
+
     public AndroidDisplayGraphics(Bitmap bitmap) {
         this.canvas = new Canvas(bitmap);
         this.canvas.clipRect(0, 0, bitmap.getWidth(), bitmap.getHeight());
@@ -73,19 +75,19 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		strokePaint.setStyle(Paint.Style.STROKE);
 		fillPaint.setAntiAlias(true);
 		fillPaint.setStyle(Paint.Style.FILL);
-        
+
         reset(this.canvas);
     }
-	
+
 	public final void reset(Canvas canvas) {
 	    this.canvas = canvas;
-	    
+
 		Rect tmp = this.canvas.getClipBounds();
 		this.canvas.clipRect(tmp, Region.Op.REPLACE);
 		clip = this.canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
 	}
-	
+
 	public void clipRect(int x, int y, int width, int height) {
 		canvas.clipRect(x, y, x + width, y + height);
 		clip = canvas.getClipBounds();
@@ -151,7 +153,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         if (anchor == 0) {
             anchor = javax.microedition.lcdui.Graphics.TOP | javax.microedition.lcdui.Graphics.LEFT;
         }
-        
+
         if ((anchor & javax.microedition.lcdui.Graphics.TOP) != 0) {
             newy -= androidFont.metrics.ascent;
         } else if ((anchor & javax.microedition.lcdui.Graphics.BOTTOM) != 0) {
@@ -204,12 +206,14 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	public Font getFont() {
 		return font;
 	}
-	
+
 	public int getStrokeStyle() {
 		return strokeStyle;
 	}
 
 	public void setClip(int x, int y, int width, int height) {
+        width = Math.min(display.right, x + width) - x;
+        height = Math.min(display.bottom, y + height) - y;
 		if (x == clip.left && x + width == clip.right && y == clip.top && y + height == clip.bottom) {
 			return;
 		}
@@ -229,18 +233,18 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public void setFont(Font font) {
 		this.font = font;
-		
+
         androidFont = AndroidFontManager.getFont(font);
 
 	}
-	
+
 	public void setStrokeStyle(int style) {
 		if (style != SOLID && style != DOTTED) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		this.strokeStyle = style;
-		
+
 		if (style == SOLID) {
 			strokePaint.setPathEffect(null);
 			fillPaint.setPathEffect(null);
@@ -254,7 +258,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         canvas.translate(x, y);
 
         super.translate(x, y);
-            
+
         clip.left -= x;
         clip.right -= x;
         clip.top -= y;
@@ -275,7 +279,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
                 || (scanlength >= 0 && scanlength * (height - 1) + width - 1 >= l)) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        
+
         // MIDP allows almost any value of scanlength, drawBitmap is more strict with the stride
         if (scanlength == 0) {
         	scanlength = width;
@@ -284,7 +288,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         if (rows < height) {
         	height = rows;
         }
-        
+
        	canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, strokePaint);
 	}
 
@@ -307,5 +311,11 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 		return -1;
 	}
-	
+
+    public void setCanvasSize(int width, int height) {
+        display.top = 0;
+        display.left = 0;
+        display.bottom = height;
+        display.right = width;
+    }
 }

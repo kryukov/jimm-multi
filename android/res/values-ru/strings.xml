@@ -10,4 +10,5 @@
     <string name="takePhotoButton">OK</string>
     <string name="xmppAccountDontFound">Jabber-учетка не найдена</string>
     <string name="message_hint">Введите текст сообщения</string>
+    <string name="templates">Шаблоны</string>
 </resources>

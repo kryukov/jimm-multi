@@ -38,10 +38,15 @@ import android.provider.MediaStore;
 import android.text.ClipboardManager;
 import android.content.pm.PackageManager;
 import android.os.*;
+import android.view.*;
+import android.widget.EditText;
 import jimm.FileTransfer;
 import jimm.Jimm;
 import jimm.modules.DebugLog;
+import jimm.modules.Templates;
 import jimm.modules.photo.PhotoListener;
+import jimm.ui.ActionListener;
+import jimm.ui.base.CanvasEx;
 import jimm.ui.base.KeyEmulator;
 import jimm.ui.base.NativeCanvas;
 import jimm.ui.menu.Select;
@@ -59,18 +64,13 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.log.Logger;
 
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.SubMenu;
-import android.view.Window;
 import android.media.AudioManager;
 import android.app.NotificationManager;
 import org.microemu.android.MicroEmulatorActivity;
 import android.content.Intent;
 import android.util.Log;
 import org.microemu.cldc.file.FileSystem;
+import ru.net.jimm.input.Input;
 import ru.net.jimm.photo.CameraActivity;
 
 public class JimmActivity extends MicroEmulatorActivity {
@@ -440,18 +440,50 @@ public class JimmActivity extends MicroEmulatorActivity {
             AndroidCommandUI cmd = commands.get(i);
             if (back == cmd) continue;
             result = true;
-            SubMenu item = menu.addSubMenu(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getCommand().getLabel());
+            SubMenu item = menu.addSubMenu(Menu.NONE, i + MENU_TEXTBOX_FIRST, Menu.NONE, cmd.getCommand().getLabel());
             item.setIcon(cmd.getDrawable());
         }
         return result;
     }
-
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        DebugLog.println("context " + view.getId());
+        super.onCreateContextMenu(menu, view, menuInfo);
+        if(view.getId() == R.id.messageText) {
+            menu.add(Menu.NONE, MENU_EDITTEXT_TEMPLATES, Menu.NONE, R.string.templates);
+        }
+    }
+    private static final int MENU_EDITTEXT_FIRST = Menu.FIRST;
+    private static final int MENU_EDITTEXT_TEMPLATES = 1 + MENU_EDITTEXT_FIRST;
+    private static final int MENU_TEXTBOX_FIRST = 10 + Menu.FIRST;
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        try {
+            if (MENU_EDITTEXT_TEMPLATES == item.getItemId()) {
+                Templates.getInstance().showTemplatesList(new ActionListener() {
+                    @Override
+                    public void action(CanvasEx canvas, int cmd) {
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                final Input input = (Input) findViewById(R.id.input_line);
+                                input.insert(Templates.getInstance().getSelectedTemplate());
+                                input.showKeyboard();
+                            }
+                        });
+                    }
+                });
+                return true;
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             final DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
-            AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
-            CommandUI c = getCommandsUI().get(item.getItemId() - Menu.FIRST);
+            CommandUI c = getCommandsUI().get(item.getItemId() - MENU_TEXTBOX_FIRST);
             da.commandAction(c.getCommand(), da.getCurrent());
             return true;
         } catch (Exception ignored) {

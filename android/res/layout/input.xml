@@ -18,6 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:id="@+id/sendButton" android:layout_gravity="right|center_vertical"
-            android:src="@drawable/inc_msg"
+            android:src="@drawable/smile_button"
         style="@style/SendButton" />
 </LinearLayout>

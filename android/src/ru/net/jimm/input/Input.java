@@ -46,6 +46,7 @@ public class Input extends LinearLayout implements View.OnClickListener {
         messageEditor.setImeOptions(EditorInfo.IME_ACTION_SEND);
         messageEditor.setOnEditorActionListener(enterListener);
         messageEditor.addTextChangedListener(textWatcher);
+        ((JimmActivity)context).registerForContextMenu(messageEditor);
 
         ImageButton sendButton = (ImageButton) findViewById(R.id.sendButton);
         sendButton.setOnClickListener(this);
@@ -60,12 +61,7 @@ public class Input extends LinearLayout implements View.OnClickListener {
                 ((JimmActivity)getContext()).post(new Runnable() {
                     @Override
                     public void run() {
-                        String space = " ";
-                        String smile = space + ((Selector)canvas).getSelectedCode() + space;
-                        int start = messageEditor.getSelectionStart();
-                        int end = messageEditor.getSelectionEnd();
-                        messageEditor.getText().replace(Math.min(start, end), Math.max(start, end),
-                                smile, 0, smile.length());
+                        insert(" " + ((Selector)canvas).getSelectedCode() + " ");
                         showKeyboard();
                     }
                 });
@@ -130,6 +126,13 @@ public class Input extends LinearLayout implements View.OnClickListener {
         return 0 < messageEditor.getText().length();
     }
 
+    public void insert(String text) {
+        int start = messageEditor.getSelectionStart();
+        int end = messageEditor.getSelectionEnd();
+        messageEditor.getText().replace(Math.min(start, end), Math.max(start, end),
+                text, 0, text.length());
+    }
+
     private boolean isDone(int actionId) {
         return (EditorInfo.IME_NULL == actionId)
                 || (EditorInfo.IME_ACTION_DONE == actionId)
@@ -169,5 +172,4 @@ public class Input extends LinearLayout implements View.OnClickListener {
         public void afterTextChanged(Editable editable) {
         }
     };
-
 }

@@ -229,6 +229,9 @@ public class Graphics {
 		return -1;
 	}
 
+    public void setCanvasSize(int width, int height) {
+    }
+
 	private void implementationError() {
 		try {
 			throw new RuntimeException("Must be implemented in DisplayGraphics");

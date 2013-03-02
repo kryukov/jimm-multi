@@ -183,6 +183,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     };
     private TextWatcher textWatcher = new TextWatcher() {
         private String previousText;
+        private int lineCount = 0;
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             previousText = s.toString();
@@ -197,6 +198,10 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     messageEditor.setSelection(start);
                     send();
                 }
+            }
+            if (lineCount != messageEditor.getLineCount()) {
+                lineCount = messageEditor.getLineCount();
+                messageEditor.requestLayout();
             }
         }
 

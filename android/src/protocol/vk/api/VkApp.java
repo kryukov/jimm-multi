@@ -1,6 +1,5 @@
 package protocol.vk.api;
 
-import jimm.comm.Util;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
@@ -12,6 +11,8 @@ import android.content.Context;
 import org.json.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collection;
 
 public class VkApp {
@@ -68,7 +69,7 @@ public class VkApp {
         request(uri("messages.getDialogs", ""));
     }
     public void sendMessage(String uid, String message) {
-        request(uri("messages.send", "uid=" + Util.xmlEscape(uid) + "&message=" + Util.xmlEscape(message)));
+        request(uri("messages.send", "uid=" + escape(uid) + "&message=" + escape(message)));
     }
     public JSONObject getMessages() {
         return request(uri("messages.get", "filters=1"));
@@ -78,7 +79,7 @@ public class VkApp {
         for (Integer id : ids) {
             sb.append(id).append(",");
         }
-        request(uri("messages.markAsRead", "mids=" + Util.xmlEscape(sb.toString())));
+        request(uri("messages.markAsRead", "mids=" + escape(sb.toString())));
     }
 
     private JSONObject request(String uri) {
@@ -162,5 +163,11 @@ public class VkApp {
 
         return false;
     }
-
+    public String escape(String value) {
+        try {
+            return URLEncoder.encode(value, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
+    }
 }

@@ -24,6 +24,6 @@
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:clickable">true</item>
-        <item name="android:background">@drawable/smile_button</item>
+        <item name="android:background">@drawable/smile_button_img</item>
     </style>
 </resources>

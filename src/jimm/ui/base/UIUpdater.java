@@ -79,7 +79,8 @@ public class UIUpdater extends TimerTask {
         if (displ instanceof InputTextBox) {
             ((InputTextBox)displ).setTicker(text);
         } else if (displ instanceof VirtualList) {
-            ((VirtualList)displ).setTicker(text);
+            ((VirtualList)displ).bar.setTicker(text);
+            ((VirtualList)displ).invalidate();
         }
     }
 
@@ -140,9 +141,9 @@ public class UIUpdater extends TimerTask {
                 jimm.modules.DebugLog.panic("updateTask", e);
                 // #sijapp cond.end #
             }
-            if (0 < GraphicsEx.showScroll) {
-                GraphicsEx.showScroll--;
-                if (0 == GraphicsEx.showScroll) {
+            if (0 < MyScrollBar.showScroll) {
+                MyScrollBar.showScroll--;
+                if (0 == MyScrollBar.showScroll) {
                     current.invalidate();
                 }
             }

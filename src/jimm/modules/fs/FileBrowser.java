@@ -12,7 +12,7 @@ import jimm.ui.base.*;
 
 
 
-public final class FileBrowser extends ScrollableArea implements Runnable {
+public final class FileBrowser extends VirtualList implements Runnable {
     private final ImageList fsIcons = ImageList.createImageList("/fs.png");
     private static final int TYPE_FILE        = 1;
     private static final int TYPE_DIR         = 0;

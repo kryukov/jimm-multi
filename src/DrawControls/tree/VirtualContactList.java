@@ -38,7 +38,7 @@ import protocol.*;
  *
  * @author Vladimir Krukov
  */
-public final class VirtualContactList extends ScrollableArea {
+public final class VirtualContactList extends VirtualList {
 
     private Vector drawItems = new Vector();
     private int itemHeight = 0;
@@ -407,18 +407,6 @@ public final class VirtualContactList extends ScrollableArea {
         setCurrentNode(cItem);
         updateTree();
     }
-
-    // #sijapp cond.if modules_TOUCH is "true"#
-    protected final void touchCaptionTapped(int x) {
-        if (MyActionBar.CAPTION_REGION_MENU == x) {
-            clListener.activateMainMenu();
-        } else if (MyActionBar.CAPTION_REGION_NEW_MESSAGE == x) {
-            jimm.chat.ChatHistory.instance.showChatList(true);
-        } else {
-            jimm.chat.ChatHistory.instance.showChatList(false);
-        }
-    }
-    // #sijapp cond.end#
 
     //Updates the title of the list
     public void updateTitle() {

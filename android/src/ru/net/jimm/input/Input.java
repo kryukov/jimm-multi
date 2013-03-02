@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.modules.Emotions;
+import jimm.modules.Templates;
 import jimm.ui.ActionListener;
 import jimm.ui.Selector;
 import jimm.ui.base.CanvasEx;
@@ -28,7 +29,7 @@ import ru.net.jimm.R;
  *
  * @author vladimir
  */
-public class Input extends LinearLayout implements View.OnClickListener {
+public class Input extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
     private EditText messageEditor;
     private Runnable userMessageListener;
     private Object owner;
@@ -46,15 +47,14 @@ public class Input extends LinearLayout implements View.OnClickListener {
         messageEditor.setImeOptions(EditorInfo.IME_ACTION_SEND);
         messageEditor.setOnEditorActionListener(enterListener);
         messageEditor.addTextChangedListener(textWatcher);
-        ((JimmActivity)context).registerForContextMenu(messageEditor);
 
-        ImageButton sendButton = (ImageButton) findViewById(R.id.sendButton);
-        sendButton.setOnClickListener(this);
+        ImageButton smileButton = (ImageButton) findViewById(R.id.smileButton);
+        smileButton.setOnClickListener(this);
+        smileButton.setOnLongClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-
         Emotions.selectEmotion(new ActionListener() {
             @Override
             public void action(final CanvasEx canvas, int cmd) {
@@ -68,6 +68,25 @@ public class Input extends LinearLayout implements View.OnClickListener {
             }
         });
     }
+
+    @Override
+    public boolean onLongClick(View view) {
+        Templates.getInstance().showTemplatesList(new ActionListener() {
+            @Override
+            public void action(CanvasEx canvas, int cmd) {
+                ((JimmActivity) getContext()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Input input = (Input) findViewById(R.id.input_line);
+                        input.insert(Templates.getInstance().getSelectedTemplate());
+                        input.showKeyboard();
+                    }
+                });
+            }
+        });
+        return true;
+    }
+
     private void showKeyboard(View view) {
         InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.showSoftInput(view, InputMethodManager.SHOW_FORCED);
@@ -98,11 +117,24 @@ public class Input extends LinearLayout implements View.OnClickListener {
             @Override
             public void run() {
                 String t = null == text ? "" : text;
-                messageEditor.setText(t);
-                messageEditor.setSelection(t.length());
+                if ((0 == t.length()) || !canAdd(t)) {
+                    messageEditor.setText(t);
+                    messageEditor.setSelection(t.length());
+                } else {
+                    insert(t);
+                }
                 showKeyboard();
             }
         });
+    }
+    public boolean canAdd(String what) {
+        String text = getText();
+        if (0 == text.length()) return false;
+        // more then one comma
+        if (text.indexOf(',') != text.lastIndexOf(',')) return true;
+        // replace one post number to another
+        if (what.startsWith("#") && !text.contains(" ")) return false;
+        return !text.endsWith(", ");
     }
     public void setOwner(Object owner) {
         if (this.owner != owner) {

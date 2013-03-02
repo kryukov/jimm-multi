@@ -23,7 +23,7 @@ import jimm.util.JLocale;
  *
  * @author Vladimir Kryukov
  */
-public final class GraphForm extends ScrollableArea implements TextBoxListener, SelectListener {
+public final class GraphForm extends VirtualList implements TextBoxListener, SelectListener {
 
     private Vector controls = new Vector();
     private InputTextBox box;
@@ -72,7 +72,7 @@ public final class GraphForm extends ScrollableArea implements TextBoxListener, 
         fontSet = GraphicsEx.contactListFontSet;
         boldFont = fontSet[FONT_STYLE_BOLD];
         normalFont = fontSet[FONT_STYLE_PLAIN];
-        setMovingPolicy(MP_SELECTABLE_OLNY);
+        setMovingPolicy(MP_SELECTABLE_ONLY);
         setSoftBarLabels(ok, ok, cancel, true);
     }
 

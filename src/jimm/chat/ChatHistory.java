@@ -38,7 +38,7 @@ import jimm.io.Storage;
 import jimm.util.JLocale;
 import protocol.Contact;
 
-public final class ChatHistory extends ScrollableArea {
+public final class ChatHistory extends VirtualList {
     protected final Vector historyTable = new Vector();
     public static final ChatHistory instance = new ChatHistory();
     private final Icon[] leftIcons = new Icon[7];
@@ -48,16 +48,6 @@ public final class ChatHistory extends ScrollableArea {
         super(JLocale.getString("chats"));
         itemHeight = Math.max(minItemHeight, getDefaultFont().getHeight());
     }
-
-    // #sijapp cond.if modules_TOUCH is "true"#
-    public void touchCaptionTapped(int x) {
-        if (MyActionBar.CAPTION_REGION_MENU == x) {
-            showMenu(getMenu());
-        } else {
-            goBack();
-        }
-    }
-    // #sijapp cond.end#
 
     private int getTotal() {
         return historyTable.size();
@@ -205,6 +195,9 @@ public final class ChatHistory extends ScrollableArea {
     private void removeChat(Chat chat) {
         if (null != chat) {
             clearChat(chat);
+            if (Jimm.getJimm().getDisplay().remove(chat)) {
+                ContactList.getInstance()._setActiveContact(null);
+            }
             setCurrentItemIndex(getCurrItem());
             invalidate();
         }
@@ -317,14 +310,6 @@ public final class ChatHistory extends ScrollableArea {
     private static final int MENU_DEL_ALL_CHATS_EXCEPT_CUR = 3;
     private static final int MENU_DEL_ALL_CHATS = 4;
 
-    public void goBack() {
-        back();
-        Object o = Jimm.getJimm().getDisplay().getCurrentDisplay();
-        if ((o instanceof Chat) && (-1 == Util.getIndex(historyTable, o))) {
-            ContactList.getInstance().activate();
-        }
-    }
-
     protected void doJimmAction(int action) {
         switch (action) {
             case NativeCanvas.JIMM_SELECT:
@@ -332,7 +317,7 @@ public final class ChatHistory extends ScrollableArea {
                 return;
 
             case NativeCanvas.JIMM_BACK:
-                goBack();
+                back();
                 return;
 
             case NativeCanvas.JIMM_MENU:

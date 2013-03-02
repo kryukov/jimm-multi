@@ -244,15 +244,18 @@ public final class ContactList implements SelectListener, ContactListListener {
     }
 
     public void activate() {
-        activate(null);
+        contactList.update();
+        contactList.showMain();
     }
-    public void activate(Contact c) {
+    public void _setActiveContact(Contact c) {
         if (null != c) {
             contactList.setActiveContact(c);
         }
         contactList.setAlwaysVisibleNode(c);
-        contactList.update();
-        contactList.showTop();
+    }
+    public void activate(Contact c) {
+        _setActiveContact(c);
+        activate();
     }
     public void activateWithMsg(String message) {
         activate();

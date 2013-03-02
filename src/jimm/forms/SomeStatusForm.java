@@ -47,12 +47,15 @@ public final class SomeStatusForm implements SelectListener, TextBoxListener {
         if (connecting) {
             if (!connected) {
                 connect();
+                return;
             }
         } else {
             if (connected) {
                 disconnect();
+                return;
             }
         }
+        ContactList.getInstance().activate();
     }
     public final void show() {
         MenuModel menu = new MenuModel();

@@ -445,40 +445,9 @@ public class JimmActivity extends MicroEmulatorActivity {
         }
         return result;
     }
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        DebugLog.println("context " + view.getId());
-        super.onCreateContextMenu(menu, view, menuInfo);
-        if(view.getId() == R.id.messageText) {
-            menu.add(Menu.NONE, MENU_EDITTEXT_TEMPLATES, Menu.NONE, R.string.templates);
-        }
-    }
-    private static final int MENU_EDITTEXT_FIRST = Menu.FIRST;
-    private static final int MENU_EDITTEXT_TEMPLATES = 1 + MENU_EDITTEXT_FIRST;
+
     private static final int MENU_TEXTBOX_FIRST = 10 + Menu.FIRST;
-    @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-        try {
-            if (MENU_EDITTEXT_TEMPLATES == item.getItemId()) {
-                Templates.getInstance().showTemplatesList(new ActionListener() {
-                    @Override
-                    public void action(CanvasEx canvas, int cmd) {
-                        post(new Runnable() {
-                            @Override
-                            public void run() {
-                                final Input input = (Input) findViewById(R.id.input_line);
-                                input.insert(Templates.getInstance().getSelectedTemplate());
-                                input.showKeyboard();
-                            }
-                        });
-                    }
-                });
-                return true;
-            }
-        } catch (Exception ignored) {
-        }
-        return false;
-    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
@@ -611,10 +580,10 @@ public class JimmActivity extends MicroEmulatorActivity {
         if (1000 < Math.max(width, height)) {
             try {
                 Intent extCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (!isCallable(extCameraIntent)) throw new Exception("not found");
                 startActivityForResult(extCameraIntent, RESULT_EXTERNAL_PHOTO);
                 return;
-            } catch (Exception e) {
-                // no photo - do nothing
+            } catch (Exception ignored) {
             }
         }
         Intent cameraIntent = new Intent(this, CameraActivity.class);
@@ -629,12 +598,16 @@ public class JimmActivity extends MicroEmulatorActivity {
             Intent theIntent = new Intent(Intent.ACTION_GET_CONTENT);
             theIntent.setType("file/*");
             theIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            if (!isCallable(theIntent)) return false;
             startActivityForResult(theIntent, RESULT_EXTERNAL_FILE);
             return true;
         } catch (Exception e) {
             jimm.modules.DebugLog.panic("pickFile", e);
             return false;
         }
+    }
+    private boolean isCallable(Intent intent) {
+        return !getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -660,8 +633,7 @@ public class JimmActivity extends MicroEmulatorActivity {
             } else if (RESULT_EXTERNAL_FILE == requestCode) {
                 Uri fileUri = data.getData();
                 jimm.modules.DebugLog.println("File " + fileUri);
-                ContentResolver cr = getContentResolver();
-                InputStream is = cr.openInputStream(fileUri);
+                InputStream is = getContentResolver().openInputStream(fileUri);
                 fileTransferListener.onFileSelect(is, getFileName(fileUri));
                 fileTransferListener = null;
             }
@@ -692,7 +664,7 @@ public class JimmActivity extends MicroEmulatorActivity {
                 }
             }
         });
-        try {
+        if (!isActivityThread()) try {
             synchronized (lock) {
                 lock.wait();
             }

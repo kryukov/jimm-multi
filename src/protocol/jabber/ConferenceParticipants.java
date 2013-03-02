@@ -25,7 +25,7 @@ import protocol.*;
  *
  * @author Vladimir Krukov
  */
-public final class ConferenceParticipants extends ScrollableArea {
+public final class ConferenceParticipants extends VirtualList {
     private static ImageList affiliationIcons = ImageList.createImageList("/jabber-affiliations.png");
 
     private Jabber protocol;

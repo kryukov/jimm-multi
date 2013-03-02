@@ -34,14 +34,7 @@ public final class GraphicsEx {
     public static final int captionOffset;
     public static final int captionWidthFix;
     public static int captionHeight;
-    public static int showScroll;
 
-    public static final int VISIBLE_SCROLL_TIME = 1 * 4 /* 0.25 sec */;
-    public static final int UNLIMIT_SCROLL_TIME = 999999 * 4 /* 0.25 sec */;
-
-    public static void showScroll() {
-        showScroll = VISIBLE_SCROLL_TIME;
-    }
     public GraphicsEx() {
         if (null != Scheme.softbarImage) {
             softbarOffset = Scheme.softbarImage.getHeight() / 3;
@@ -377,62 +370,6 @@ public final class GraphicsEx {
         }
 
         gr.setClip(clipX, clipY, clipWidth, clipHeight);
-    }
-
-    public static final int SCROLL_LEFT = 0;
-    public static final int SCROLL_TOP = 1;
-    public static final int SCROLL_WIDTH = 2;
-    public static final int SCROLL_HEIGHT = 3;
-    public static final int SCROLL_VISIBLE_ITEMS = 4;
-    public static final int SCROLL_TOTAL = 5;
-    public static final int SCROLL_TOP_VALUE = 6;
-    public static int[] makeVertScroll(int left, int top,
-            int width, int height,
-            int visible, int total) {
-        int topValue = 0;
-        return new int[]{left, top, width, height, visible, total, topValue};
-    }
-
-    public void drawVertScroll(int[] scroll, byte fore) {
-        int x = scroll[SCROLL_LEFT];
-        int y = scroll[SCROLL_TOP];
-        int width = scroll[SCROLL_WIDTH];
-
-        int[] location = getScrollLocation(scroll);
-        if (null != location) {
-            location[0] += y;
-            gr.setStrokeStyle(Graphics.SOLID);
-            setThemeColor(fore);
-            gr.fillRect(x, location[0], width - 1, location[1]);
-        }
-    }
-
-    public static int[] getScrollLocation(int[] scroll) {
-        int height = scroll[SCROLL_HEIGHT];
-        int len = scroll[SCROLL_VISIBLE_ITEMS];
-        int total = scroll[SCROLL_TOTAL];
-        int pos = Math.min(total - len, scroll[SCROLL_TOP_VALUE]);
-
-        if ((0 == total) || (total <= len)) return null;
-        int minHeight = Math.max(CanvasEx.minItemHeight,
-                chatFontSet[CanvasEx.FONT_STYLE_PLAIN].getHeight());
-        int sliderSize = Math.max(minHeight, (len * height) / total);
-        int scrollerY1 = pos * (height - sliderSize) / (total - len);
-        return new int[]{scrollerY1, sliderSize};
-    }
-    public static int getScrollTopValue(int[] scroll, int delta, int prevTopValue) {
-        if (null == scroll) return 0;
-        int height = scroll[SCROLL_HEIGHT];
-        int len = scroll[SCROLL_VISIBLE_ITEMS];
-        int total = scroll[SCROLL_TOTAL];
-        int pos = Math.min(total - len, scroll[SCROLL_TOP_VALUE]);
-        if ((0 == total) || (total <= len)) return 0;
-
-        int minHeight = Math.max(CanvasEx.minItemHeight,
-                chatFontSet[CanvasEx.FONT_STYLE_PLAIN].getHeight());
-        int sliderSize = Math.max(minHeight, (len * height) / total);
-        int scrollerY1 = prevTopValue * (height - sliderSize) / (total - len);
-        return (scrollerY1 + delta) * (total - len) / (height - sliderSize);
     }
 
     public void fillRect(int x, int y, int width, int height, byte sback) {

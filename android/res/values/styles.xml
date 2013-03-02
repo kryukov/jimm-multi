@@ -20,10 +20,10 @@
         <item name="android:background">@drawable/input</item>
     </style>
 
-    <style name="SendButton" parent="@android:Widget.Button">
+    <style name="SmileButton" parent="@android:Widget.Button">
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:clickable">true</item>
-        <item name="android:background">@drawable/send_button</item>
+        <item name="android:background">@drawable/smile_button</item>
     </style>
 </resources>

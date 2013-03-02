@@ -5,7 +5,7 @@ import javax.microedition.lcdui.*;
 import jimm.ui.base.*;
 
 
-public final class Selector extends ScrollableArea {
+public final class Selector extends VirtualList {
 
     private String[] names;
     private ImageList icons;

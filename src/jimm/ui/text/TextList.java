@@ -35,7 +35,7 @@ import jimm.ui.menu.*;
  * This class store text and data of lines internally.
  * You may use it to show text with colorised lines :)
  */
-public final class TextList extends ScrollableArea {
+public final class TextList extends VirtualList {
     protected TextListModel pars;
     protected TextListController controller;
     private TextListExCommands vlCommands;

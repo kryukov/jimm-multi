@@ -49,12 +49,12 @@ public final class Select extends CanvasEx {
 
     protected final int[] getScroll() {
         // scroll bar
-        int[] scroll = GraphicsEx.makeVertScroll(
+        int[] scroll = MyScrollBar.makeVertScroll(
                 left + itemWidth - scrollerWidth, top, scrollerWidth + 1,
                 (itemPerPage) * itemHeight + 1 + 2 * getHeadSpace(),
                 itemPerPage, items.count());
         if (null != scroll) {
-            scroll[GraphicsEx.SCROLL_TOP_VALUE] = topItem;
+            scroll[MyScrollBar.SCROLL_TOP_VALUE] = topItem;
         }
         return scroll;
     }
@@ -248,7 +248,7 @@ public final class Select extends CanvasEx {
         y -= getHeadSpace();
         g.setClip(x, y, curWidth + 1, curHeight + 1);
         if (hasScroll) {
-            g.drawVertScroll(getScroll(), THEME_MENU_BORDER);
+            MyScrollBar.paint(g, this, THEME_MENU_BORDER);
         }
         if (isSoftBarShown()) {
             softBar.paint(g, this, getHeight());

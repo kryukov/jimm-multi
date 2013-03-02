@@ -15,27 +15,23 @@ import jimm.ui.text.TextList;
 import jimm.ui.text.TextListModel;
 import DrawControls.text.*;
 import java.util.*;
-import java.io.*;
 import javax.microedition.rms.*;
 import jimm.*;
 import jimm.cl.*;
 // #sijapp cond.if modules_FILES="true"#
-import jimm.modules.fs.*;
 // #sijapp cond.end#
 import jimm.ui.*;
 import jimm.ui.base.*;
 import jimm.ui.form.*;
 import jimm.ui.menu.*;
-import jimm.modules.*;
 import jimm.util.JLocale;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import jimm.comm.*;
 import jimm.ui.text.TextListController;
-import protocol.Contact;
 
 // Visual messages history list
-public final class HistoryStorageList extends ScrollableArea implements
+public final class HistoryStorageList extends VirtualList implements
         Runnable, FormListener, TextListExCommands {
 
     // list UIN
@@ -44,7 +40,8 @@ public final class HistoryStorageList extends ScrollableArea implements
     // Controls for finding text
     private GraphForm frmFind;
     private static final int tfldFind = 1000;
-    private static final int chsFind = 1010;
+    private static final int find_backwards = 1010;
+    private static final int find_case_sensitiv = 1011;
     private static final int NOT_FOUND = 1;
 
     private static final int CACHE_SIZE = 50;
@@ -136,8 +133,8 @@ public final class HistoryStorageList extends ScrollableArea implements
                 if (null == frmFind) {
                     frmFind = new GraphForm("find", "find", "back", this);
                     frmFind.addTextField(tfldFind, "text_to_find", "", 64);
-                    frmFind.addCheckBox(chsFind + 0, "find_backwards", true);
-                    frmFind.addCheckBox(chsFind + 1, "find_case_sensitiv", false);
+                    frmFind.addCheckBox(find_backwards, "find_backwards", true);
+                    frmFind.addCheckBox(find_case_sensitiv, "find_case_sensitiv", false);
                 }
                 frmFind.remove(NOT_FOUND);
                 frmFind.show();
@@ -186,7 +183,7 @@ public final class HistoryStorageList extends ScrollableArea implements
                             + JLocale.getString("hist_size") + ": " + (rs.getSize() / 1024) + "\n"
                             + JLocale.getString("hist_avail") + ": " + (rs.getSizeAvailable() / 1024) + "\n";
                     new Popup(this, sb).show();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 break;
 
@@ -250,8 +247,8 @@ public final class HistoryStorageList extends ScrollableArea implements
         // search
         String text = frmFind.getTextFieldValue(tfldFind);
         int textIndex = find(text, getCurrItem(),
-                frmFind.getCheckBoxValue(chsFind + 1),
-                frmFind.getCheckBoxValue(chsFind + 0));
+                frmFind.getCheckBoxValue(find_case_sensitiv),
+                frmFind.getCheckBoxValue(find_backwards));
 
         if (0 <= textIndex) {
             setCurrentItemIndex(textIndex);

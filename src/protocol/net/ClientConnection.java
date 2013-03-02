@@ -31,7 +31,7 @@ public abstract class ClientConnection implements Runnable {
     private long pongTime;
 
     private static final int PING_INTERVAL = 2 * 60 /* sec */;
-    private static final int PONG_TIMEOUT = 3 * 60 /* sec */;
+    private static final int PONG_TIMEOUT = 5 * 60 /* sec */;
 
 
     protected final void setPingInterval(long interval) {

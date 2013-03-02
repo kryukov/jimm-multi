@@ -20,10 +20,14 @@ public abstract class DisplayableEx {
     public final void restore() {
         Jimm.getJimm().getDisplay().restore(this);
     }
-    
+
     public final void showTop() {
         showing();
         Jimm.getJimm().getDisplay().showTop(this);
+    }
+    public final void showMain() {
+        showing();
+        Jimm.getJimm().getDisplay().showMain(this);
     }
     public final void show() {
         showing();

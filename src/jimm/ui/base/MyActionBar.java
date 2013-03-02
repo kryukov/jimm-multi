@@ -4,6 +4,8 @@ package jimm.ui.base;
 import DrawControls.icons.Icon;
 import DrawControls.icons.ImageList;
 import DrawControls.tree.VirtualContactList;
+import jimm.Jimm;
+import jimm.cl.ContactList;
 
 import javax.microedition.lcdui.Graphics;
 
@@ -119,7 +121,32 @@ public class MyActionBar extends ActiveRegion {
     private static final Icon menu = ImageList.createImageList("/menu_button.png").iconAt(0);
     protected void stylusTap(CanvasEx canvas, int x, int y, boolean longTap) {
         VirtualList view = (VirtualList) canvas;
-        view.touchCaptionTapped(getCaptionRegion(view, x, view.getWidth()));
+        int region = getCaptionRegion(view, x, view.getWidth());
+
+        if (CAPTION_REGION_BACK == region) {
+            view.back();
+
+        } else if (CAPTION_REGION_NEW_MESSAGE == region) {
+            jimm.chat.ChatHistory.instance.showChatList(true);
+
+        } else if (CAPTION_REGION_GENERAL == region) {
+            if (jimm.chat.ChatHistory.instance == canvas) {
+                jimm.chat.ChatHistory.instance.back();
+            } else {
+                jimm.chat.ChatHistory.instance.showChatList(false);
+            }
+
+        } else if (CAPTION_REGION_MENU == region) {
+            VirtualList currentDisplay = (VirtualList) canvas;
+            if (currentDisplay instanceof VirtualContactList) {
+                ContactList.getInstance().activateMainMenu();
+            } else {
+                currentDisplay.showMenu(currentDisplay.getMenu());
+            }
+
+        } else {
+            view.touchCaptionTapped(region);
+        }
     }
     public static final int CAPTION_REGION_BACK = -1;
     public static final int CAPTION_REGION_MENU = -2;

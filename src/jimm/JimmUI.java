@@ -128,6 +128,7 @@ public final class JimmUI {
 
     private static int getHotKeyOpCode(int keyCode, int type) {
         int action = Options.HOTKEY_NONE;
+        // #sijapp cond.if modules_ANDROID isnot "true" #
         switch (keyCode) {
             case Canvas.KEY_NUM0:
                 action = Options.getInt(Options.OPTION_EXT_CLKEY0);
@@ -153,6 +154,7 @@ public final class JimmUI {
                 action = Options.getInt(Options.OPTION_EXT_CLKEYCALL);
                 break;
         }
+        // #sijapp cond.end #
         return action;
     }
     public static boolean isHotKey(int keyCode, int type) {
@@ -208,7 +210,7 @@ public final class JimmUI {
 
             case Options.HOTKEY_OPEN_CHATS:
                 if (currentDisplay == ChatHistory.instance) {
-                    ChatHistory.instance.goBack();
+                    ChatHistory.instance.back();
 
                 } else {
                     ChatHistory.instance.showChatList(false);

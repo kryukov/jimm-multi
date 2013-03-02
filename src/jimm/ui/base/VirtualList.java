@@ -24,7 +24,6 @@
 package jimm.ui.base;
 import javax.microedition.lcdui.*;
 
-import jimm.chat.ChatHistory;
 import jimm.ui.menu.*;
 
 /**
@@ -38,12 +37,17 @@ import jimm.ui.menu.*;
 
 public abstract class VirtualList extends CanvasEx {
     // Caption of VL
+    private int topItem = 0;
+    private int topOffset = 0;
+    protected static final byte MP_ALL = 0;
+    protected static final byte MP_SELECTABLE_ONLY = 1;
+    private byte movingPolicy = MP_ALL;
 
 
-    // Index for current item of VL
     private int currItem = 0;
     protected MyActionBar bar = new MyActionBar();
     protected MySoftBar softBar = new MySoftBar();
+    private static MyScrollBar scrollBar = new MyScrollBar();
 
     // Set of fonts for quick selecting
     private Font[] fontSet;
@@ -57,7 +61,7 @@ public abstract class VirtualList extends CanvasEx {
         setSize(NativeCanvas.getScreenWidth(), NativeCanvas.getScreenHeight());
     }
 
-    public final void setSoftBarLabels(String more, String ok, String back, boolean direct) {
+    protected final void setSoftBarLabels(String more, String ok, String back, boolean direct) {
         softBar.setSoftBarLabels(more, ok, back, direct);
     }
 
@@ -106,17 +110,19 @@ public abstract class VirtualList extends CanvasEx {
 
 
     protected void doKeyReaction(int keyCode, int actionCode, int type) {
-        // embed.doKeyReaction
+        if ((CanvasEx.KEY_REPEATED == type) || (CanvasEx.KEY_PRESSED == type)) {
+            navigationKeyReaction(keyCode, actionCode);
+        }
     }
 
     protected final int[] getScroll() {
         // scroll bar
-        int[] scroll = GraphicsEx.makeVertScroll(
+        int[] scroll = MyScrollBar.makeVertScroll(
                 (getWidth() - scrollerWidth), bar.getHeight(),
                 scrollerWidth, getContentHeight() + 1,
                 getContentHeight(), getFullSize());
         if (null != scroll) {
-            scroll[GraphicsEx.SCROLL_TOP_VALUE] = getTopOffset();
+            scroll[MyScrollBar.SCROLL_TOP_VALUE] = getTopOffset();
         }
         return scroll;
     }
@@ -152,16 +158,14 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     protected void touchCaptionTapped(int x) {
-        if (MyActionBar.CAPTION_REGION_BACK == x) {
-            back();
-        } else if (MyActionBar.CAPTION_REGION_MENU == x) {
+        if (MyActionBar.CAPTION_REGION_MENU == x) {
             showMenu(getMenu());
-        } else if (MyActionBar.CAPTION_REGION_NEW_MESSAGE == x) {
-            ChatHistory.instance.showChatList(true);
         }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {
-        if (isLong || NativeCanvas.getInstance().touchControl.isSecondTap) {
+        if (isLong) {
+            showMenu(getMenu());
+        } else if (NativeCanvas.getInstance().touchControl.isSecondTap) {
             execJimmAction(NativeCanvas.JIMM_SELECT);
         }
     }
@@ -175,7 +179,6 @@ public abstract class VirtualList extends CanvasEx {
         return false;
     }
 
-    private static MyScrollBar scrollBar = new MyScrollBar();
     protected final void stylusPressed(int x, int y) {
         if (getHeight() < y) {
             NativeCanvas.getInstance().touchControl.setRegion(softBar);
@@ -185,7 +188,7 @@ public abstract class VirtualList extends CanvasEx {
             NativeCanvas.getInstance().touchControl.setRegion(bar);
             return;
         }
-        if (scrollBar.isScroll(this, x, y) && (0 < GraphicsEx.showScroll)) {
+        if (scrollBar.isScroll(this, x, y) && (0 < MyScrollBar.showScroll)) {
             NativeCanvas.getInstance().touchControl.setRegion(scrollBar);
             return;
         }
@@ -227,15 +230,6 @@ public abstract class VirtualList extends CanvasEx {
         return bar.getCaption();
     }
 
-    public final void setTicker(String tickerString) {
-        bar.setTicker(tickerString);
-        invalidate();
-    }
-
-    protected boolean isCurrentItemSelectable() {
-        return true;
-    }
-
     ///////////////////////////////////////////////////////////
     public final void setAllToTop() {
         setTopByOffset(0);
@@ -247,7 +241,7 @@ public abstract class VirtualList extends CanvasEx {
     private void setTop(int item, int offset) {
         set_Top(item, offset);
         if (this == NativeCanvas.getInstance().getCanvas()) {
-            GraphicsEx.showScroll();
+            MyScrollBar.showScroll();
         }
     }
     protected void sizeChanged(int prevW, int prevH, int w, int h) {
@@ -345,16 +339,16 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     ///////////////////////////////////////////////////////////
-    protected abstract void set_Top(int item, int offset);
-    protected abstract int get_Top();
-    protected abstract int get_TopOffset();
     protected void paint(GraphicsEx g) {
         beforePaint();
         int bottom = getHeight();
         boolean onlySoftBar = (bottom <= g.getClipY());
         if (!onlySoftBar) {
             int captionHeight = bar.getHeight();
-            paintContent(g, captionHeight);
+            paintContent(g, captionHeight, getWidth(), getHeight() - captionHeight);
+
+            g.setClip(0, captionHeight, getWidth(), getHeight());
+            g.drawPopup(this, captionHeight);
 
             bar.paint(g, this, getWidth());
         }
@@ -366,7 +360,6 @@ public abstract class VirtualList extends CanvasEx {
     }
     protected void drawProgress(GraphicsEx g, int width, int height) {
     }
-    protected abstract void paintContent(GraphicsEx g, int captionHeight);
 
     protected final int getClientHeight() {
         return getHeight() - bar.getHeight();
@@ -379,5 +372,264 @@ public abstract class VirtualList extends CanvasEx {
         if ((null != m) && (0 < m.count())) {
             new Select(m).show();
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    protected final void setMovingPolicy(byte mp) {
+        movingPolicy = mp;
+    }
+    byte getMovingPolicy() {
+        return movingPolicy;
+    }
+
+    protected void set_Top(int item, int offset) {
+        topItem = item;
+        topOffset = offset;
+    }
+    protected final int get_Top() {
+        return topItem;
+    }
+    protected final int get_TopOffset() {
+        return topOffset;
+    }
+
+    protected final void paintContent(GraphicsEx g, int top, int width, int height) {
+        g.setClip(0, top, width, height);
+        drawBack(g, top, width, height);
+        drawItems(g, top, width, height);
+    }
+
+    protected void drawEmptyItems(GraphicsEx g, int top_y) {
+    }
+    private void drawBack(GraphicsEx g, int top, int width, int height) {
+        // Fill background
+        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
+        g.fillRect(0, top, width, height);
+
+        g.setClip(0, top, width, height);
+        if (null != Scheme.backImage) {
+            int offset = 0;
+            if (0 < getSize()) {
+                offset = Math.max(0, Scheme.backImage.getHeight() - height)
+                        * getTopOffset() / getFullSize();
+            }
+            g.drawImage(Scheme.backImage, 0, top - offset,
+                    Graphics.LEFT | Graphics.TOP);
+        }
+    }
+
+    private void drawItems(GraphicsEx g, int top_y, int itemWidth, int height) {
+        int size = getSize();
+        int bottom = height + top_y;
+
+        if (0 == size) {
+            drawEmptyItems(g, top_y);
+            return;
+        }
+
+        boolean showCursor = false;
+        int currentY = 0;
+        int currentIndex = isCurrentItemSelectable() ? getCurrItem() : -1;
+
+        { // background
+            int offset = topOffset;
+            int y = top_y;
+            for (int i = topItem; i < size; ++i) {
+                int itemHeight = getItemHeight(i);
+                int realHeight = Math.min(itemHeight - offset, bottom - y + 1);
+                g.setClip(0, y, itemWidth, realHeight + 1);
+                g.setStrokeStyle(Graphics.SOLID);
+                if (i == currentIndex) {
+                    currentY = y - offset;
+                    if (g.notEqualsColor(CanvasEx.THEME_BACKGROUND, CanvasEx.THEME_SELECTION_BACK)) {
+                        g.setThemeColor(CanvasEx.THEME_SELECTION_BACK);
+                        g.fillRect(0, currentY, itemWidth - 1, itemHeight);
+                    }
+                    drawItemBack(g, i, 2, y - offset, itemWidth - 4, itemHeight, offset, realHeight);
+                    showCursor = true;
+                } else {
+                    drawItemBack(g, i, 2, y - offset, itemWidth - 4, itemHeight, offset, realHeight);
+                }
+                y += itemHeight - offset;
+                if (y >= bottom) break;
+                offset = 0;
+            }
+            if (0 < MyScrollBar.showScroll) {
+                g.setClip(0, top_y, itemWidth, bottom - top_y);
+                MyScrollBar.paint(g, this, CanvasEx.THEME_SCROLL_BACK);
+            }
+        }
+
+        { // Draw items
+            g.setColor(0);
+            int offset = topOffset;
+            int y = top_y;
+            for (int i = topItem; i < size; ++i) {
+                int itemHeight = getItemHeight(i);
+                int realHeight = Math.min(itemHeight, bottom - y + 1);
+                g.setClip(0, y, itemWidth, realHeight + 1);
+                g.setStrokeStyle(Graphics.SOLID);
+                drawItemData(g, i, 2, y - offset, itemWidth - 4, itemHeight, offset, realHeight);
+                y += itemHeight - offset;
+                if (y >= bottom) break;
+                offset = 0;
+            }
+        }
+        if (showCursor) {
+            int itemHeight = getItemHeight(currentIndex);
+            g.setClip(0, currentY, itemWidth, itemHeight + 1);
+            g.setThemeColor(CanvasEx.THEME_SELECTION_RECT);
+            g.setStrokeStyle(Graphics.SOLID);
+            g.drawSimpleRect(0, currentY, itemWidth - 1, itemHeight);
+        }
+    }
+
+    protected void drawItemBack(GraphicsEx g,
+                                int index, int x1, int y1, int w, int h, int skip, int to) {
+    }
+    protected abstract void drawItemData(GraphicsEx g,
+                                         int index, int x1, int y1, int w, int h, int skip, int to);
+
+    protected boolean isCurrentItemSelectable() {
+        return true;
+    }
+    //////////////////////////////////////////////////////////////////////////////////
+
+    private void navigationKeyReaction(int keyCode, int actionCode) {
+        switch (actionCode) {
+            case NativeCanvas.NAVIKEY_DOWN:
+                moveCursor(+1);
+                invalidate();
+                break;
+            case NativeCanvas.NAVIKEY_UP:
+                moveCursor(-1);
+                invalidate();
+                break;
+            case NativeCanvas.NAVIKEY_FIRE:
+                execJimmAction(NativeCanvas.JIMM_SELECT);
+                break;
+        }
+        switch (keyCode) {
+            case NativeCanvas.KEY_NUM1:
+                setTopByOffset(0);
+                setCurrentItemIndex(0);
+                invalidate();
+                break;
+
+            case NativeCanvas.KEY_NUM7:
+                setTopByOffset(getFullSize() - getContentHeight());
+                setCurrentItemIndex(getSize() - 1);
+                invalidate();
+                break;
+
+            case NativeCanvas.KEY_NUM3:
+                int top = getTopVisibleItem();
+                if (getCurrItem() == top) {
+                    setTopByOffset(getTopOffset() - getContentHeight() * 9 / 10);
+                    top = getTopVisibleItem();
+                }
+                setCurrentItemIndex(top);
+                invalidate();
+                break;
+
+            case NativeCanvas.KEY_NUM9:
+                int bottom = getBottomVisibleItem();
+                if (getCurrItem() == bottom) {
+                    setTopByOffset(getTopOffset() + getContentHeight() * 9 / 10);
+                    bottom = getBottomVisibleItem();
+                }
+                setCurrentItemIndex(bottom);
+                invalidate();
+                break;
+        }
+    }
+
+    private void moveCursor(int step) {
+        int top     = getTopOffset();
+        int visible = getContentHeight();
+        // #sijapp cond.if modules_TOUCH is "true"#
+        TouchControl nat = NativeCanvas.getInstance().touchControl;
+        if (nat.touchUsed) {
+            nat.touchUsed = false;
+            int curr = getCurrItem();
+            int current = getOffset(curr);
+            if ((current + getItemHeight(curr) < top) || (top + visible < current)) {
+                int offset = (step < 0) ? (top + visible - 1) : (top + 1);
+                setCurrentItemIndex(getItemByOffset(offset));
+                return;
+            }
+        }
+        // #sijapp cond.end#
+        int next = getCurrItem() + step;
+        if (VirtualList.MP_SELECTABLE_ONLY == getMovingPolicy()) {
+            while (!isItemSelectable(next)) {
+                next += step;
+                if ((next < 0) || (getSize() <= next)) {
+                    break;
+                }
+            }
+        }
+        next = Math.max(-1, Math.min(next, getSize()));
+        if (0 < step) {
+            if (getSize() == next) {
+                int end = getFullSize() - visible;
+                if (top < end) {
+                    setTopByOffset(Math.min(end, top + visible / 3));
+                    return;
+                }
+            } else {
+                int nextOffset = getOffset(next);
+                if (top + visible < nextOffset) {
+                    setTopByOffset(top + visible / 3);
+                    return;
+                }
+            }
+        } else {
+            if (-1 == next) {
+                if (0 < top) {
+                    setTopByOffset(Math.max(0, top - visible / 3));
+                    return;
+                }
+            } else {
+                if (getOffset(next) + getItemHeight(next) < top) {
+                    setTopByOffset(top - visible / 3);
+                    return;
+                }
+            }
+        }
+        if ((next < 0) || (getSize() <= next)) {
+            return;
+        }
+        setCurrentItemIndex(next);
+    }
+    private int getTopVisibleItem() {
+        int size = getSize();
+        int cur = get_Top();
+        int offset = get_TopOffset();
+        if ((cur + 1 < size) && (0 < offset)) {
+            int used = getItemHeight(cur) - offset;
+            int height = getContentHeight() - used;
+            if ((getItemHeight(cur + 1) < height) || (used < 5)) {
+                cur++;
+            }
+        }
+        return cur;
+    }
+    private int getBottomVisibleItem() {
+        int size = getSize();
+        int cur = size;
+        int offset = getContentHeight() + get_TopOffset();
+        for (int i = get_Top(); i < size; ++i) {
+            int height = getItemHeight(i);
+            if (offset < height) {
+                cur = i;
+                break;
+            }
+            offset -= height;
+        }
+        cur = (size == cur) ? size - 1 : Math.max(get_Top(), cur - 1);
+        return cur;
     }
 }

@@ -47,7 +47,7 @@ import protocol.jabber.*;
 
 import javax.microedition.lcdui.Font;
 
-public final class Chat extends ScrollableArea {
+public final class Chat extends VirtualList {
     private Protocol protocol;
     private Contact contact;
     private boolean writable = true;
@@ -62,8 +62,7 @@ public final class Chat extends ScrollableArea {
     ///////////////////////////////////////////
 
     private Parser createParser() {
-        int width = NativeCanvas.getInstance().getMinScreenMetrics() - 3;
-        return new Parser(getFontSet(), width);
+        return new Parser(getFontSet(), getMinScreenMetrics() - 3);
     }
 
     public final int getSize() {
@@ -108,17 +107,6 @@ public final class Chat extends ScrollableArea {
     // #sijapp cond.end#
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    public void touchCaptionTapped(int x) {
-        if (MyActionBar.CAPTION_REGION_BACK == x) {
-            ContactList.getInstance().activate(contact);
-        } else if (MyActionBar.CAPTION_REGION_MENU == x) {
-            showMenu(getMenu());
-        } else if (MyActionBar.CAPTION_REGION_NEW_MESSAGE == x) {
-            jimm.chat.ChatHistory.instance.showChatList(true);
-        } else {
-            jimm.chat.ChatHistory.instance.showChatList(false);
-        }
-    }
     protected void touchItemTaped(int item, int x, boolean isLong) {
         if (isLong) {
             showMenu(getMenu());
@@ -330,7 +318,8 @@ public final class Chat extends ScrollableArea {
                 if (0 < getSize()) {
                     restore();
                 } else {
-                    ContactList.getInstance().activate();
+                    ChatHistory.instance.unregisterChat(this);
+                    ContactList.getInstance().activate(null);
                 }
                 break;
 
@@ -476,7 +465,7 @@ public final class Chat extends ScrollableArea {
     }
 
     public void changeFileProgress(MessData mData, String caption, String text) {
-        final int width = NativeCanvas.getInstance().getMinScreenMetrics() - 3;
+        final int width = getMinScreenMetrics() - 3;
         Parser parser = new Parser(mData.par, getFontSet(), width);
         parser.addText(text, THEME_TEXT, FONT_STYLE_PLAIN);
 
@@ -657,6 +646,7 @@ public final class Chat extends ScrollableArea {
         if (showStatus) {
             showStatusPopup();
         }
+        ContactList.getInstance()._setActiveContact(contact);
         // #sijapp cond.if modules_ANDROID is "true" #
         NativeCanvas.getInstance().getInput().setOwner(contact);
         NativeCanvas.getInstance().getInput().setUserMessageListener(new Runnable() {
@@ -698,7 +688,6 @@ public final class Chat extends ScrollableArea {
         return getPar(itemIndex).getHeight() + getMessageHeaderHeight(mData);
     }
 
-    // Overrides VirtualList.drawItemData
     protected void drawItemBack(GraphicsEx g, int index, int x, int y, int w, int h, int skip, int to) {
         MessData mData = getMessageDataByIndex(index);
         byte bg;

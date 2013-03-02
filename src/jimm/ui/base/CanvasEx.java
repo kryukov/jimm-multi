@@ -39,7 +39,7 @@ abstract public class CanvasEx extends DisplayableEx {
     public static final byte THEME_SCROLL_BACK          = 12;
 
     public static final byte THEME_SELECTION_RECT       = 13;
-    public static final byte THEME_BACK                 = 14;
+    //public static final byte THEME_BACK                 = 14;
 
     public static final byte THEME_SPLASH_BACKGROUND    = 15;
     public static final byte THEME_SPLASH_LOGO_TEXT     = 16;
@@ -195,6 +195,8 @@ abstract public class CanvasEx extends DisplayableEx {
         int clipY = g.getClipY();
         int clipHeight = g.getClipHeight();
         int clipWidth = g.getClipWidth();
+        g.setThemeColor(THEME_BACKGROUND);
+        g.fillRect(clipX, clipY, clipWidth, clipHeight);
         try {
             Vector v = jimm.Jimm.getJimm().getDisplay().getStack();
             int from = 0;
@@ -211,10 +213,6 @@ abstract public class CanvasEx extends DisplayableEx {
                 Object o = v.elementAt(i);
                 if (o instanceof CanvasEx) {
                     ((CanvasEx)o).paint(g);
-
-                } else {
-                    g.setThemeColor(THEME_BACK);
-                    g.fillRect(g.getClipX(), g.getClipY(), g.getClipWidth(), g.getClipHeight());
                 }
             }
         } catch (Exception e) {
@@ -261,5 +259,12 @@ abstract public class CanvasEx extends DisplayableEx {
     }
 
     protected void sizeChanged(int prevW, int prevH, int w, int h) {
+    }
+
+    public int getMinScreenMetrics() {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        if (true) return getWidth();
+        // #sijapp cond.end #
+        return Math.min(getWidth(), getHeight());
     }
 }

@@ -100,6 +100,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         if (ru.net.jimm.JimmActivity.getInstance().pickFile(this)) {
             return;
         }
+        jimm.modules.DebugLog.panic("show file browser");
         // #sijapp cond.end #
         FileBrowser fsBrowser = new FileBrowser(false);
         fsBrowser.setListener(this);
@@ -164,7 +165,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         name_Desc = new GraphForm("name_desc", "ok", "back", this);
         name_Desc.addString("filename", filename);
         name_Desc.addTextField(descriptionField, "description", "", 255);
-        String items = "jimm.net.ru|jimm.org";
+        String items = "jimm.net.ru|www.jimm.net.ru|jimm.org";
         // #sijapp cond.if protocols_JABBER is "true" #
         if (cItem instanceof protocol.jabber.JabberContact) {
             if (cItem.isSingleUserContact() && cItem.isOnline()) {
@@ -190,7 +191,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             description = name_Desc.getTextFieldValue(descriptionField);
             sendMode = name_Desc.getSelectorValue(transferMode);
             addProgress();
-            if (name_Desc.getSelectorValue(transferMode) == 2) {
+            if (name_Desc.getSelectorValue(transferMode) == IBB_MODE) {
                 try {
                     protocol.sendFile(this, filename, description);
                 } catch (Exception ignored) {
@@ -303,11 +304,14 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             InputStream in = getFileIS();
             int size = getFileSize();
             switch (sendMode) {
-                case 0:
+                case JNR_SOCKET:
                     sendFileThroughServer(in, size);
                     break;
-                case 1:
-                    sendFileThroughWeb(in, size);
+                case JNR_HTTP:
+                    sendFileThroughWeb("files.jimm.net.ru:81", in, size);
+                    break;
+                case JO_HTTP:
+                    sendFileThroughWeb("filetransfer.jimm.org", in, size);
                     break;
             }
 
@@ -443,12 +447,11 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             throw new JimmException(194, 0);
         }
     }
-    private void sendFileThroughWeb(InputStream fis, int fsize) throws JimmException {
+    private void sendFileThroughWeb(String host, InputStream fis, int fsize) throws JimmException {
         InputStream is = null;
         OutputStream os = null;
         HttpConnection sc = null;
 
-        String host = "filetransfer.jimm.org";
         final String url = "http://" + host + "/__receive_file.php";
         try {
             sc = (HttpConnection) Connector.open(url, Connector.READ_WRITE);
@@ -550,6 +553,11 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         }
 
     }
+
+    private static final int JNR_SOCKET = 0;
+    private static final int JNR_HTTP = 1;
+    private static final int JO_HTTP = 2;
+    private static final int IBB_MODE = 3;
 
     private static final int MAX_IMAGE_SIZE = 2*1024*1024;
     private boolean isImageFile() {

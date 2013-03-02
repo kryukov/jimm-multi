@@ -203,4 +203,21 @@ public class Display {
     static boolean isLongAction(long start) {
         return start + LONG_INTERVAL < System.currentTimeMillis();
     }
+
+    public boolean remove(Chat chat) {
+        if (!stack.isEmpty() && (chat == stack.firstElement())) {
+            stack.removeElementAt(0);
+            while (!stack.isEmpty()) {
+                Object o = stack.firstElement();
+                if (o instanceof jimm.ui.menu.Select) {
+                    stack.removeElementAt(0);
+                } else {
+                    break;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

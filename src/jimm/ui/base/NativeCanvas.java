@@ -103,7 +103,7 @@ public class NativeCanvas extends Canvas {
         // #sijapp cond.if modules_TOUCH is "true"#
         touchControl.setCanvas(canvasEx);
         // #sijapp cond.end#
-        canvasEx.setSize(getWidth(), getHeight());
+        updateMetrix(getWidth(), getHeight());
     }
     CanvasEx getCanvas() {
         return canvas;
@@ -123,17 +123,13 @@ public class NativeCanvas extends Canvas {
     protected void sizeChanged(int w, int h) {
         if ((0 == w) || (0 == h)) return;
         CanvasEx c = canvas;
-        boolean isShown = isShown();
-        if (isShown) {
-            int prevW = c.getWidth();
-            int prevH = c.getHeight();
-            c.setSize(w, h);
-            c.sizeChanged(prevW, prevH, c.getWidth(), c.getHeight());
-        }
-        updateMetrix(w, h);
-        if (isShown) {
-            c.restoring();
-            invalidate(c);
+        try {
+            if (isShown()) {
+                updateMetrix(w, h);
+                c.restoring();
+                invalidate(c);
+            }
+        } catch (Exception ignored) {
         }
     }
 
@@ -507,7 +503,11 @@ public class NativeCanvas extends Canvas {
 
     private void updateMetrix(int w, int h) {
         if ((0 == w) || (0 == h)) return;
-        canvas.setSize(w, h);
+        CanvasEx c = canvas;
+        int prevW = c.getWidth();
+        int prevH = c.getHeight();
+        c.setSize(w, h);
+        c.sizeChanged(prevW, prevH, c.getWidth(), c.getHeight());
     }
     public static int getScreenWidth() {
         return instance.getWidth();

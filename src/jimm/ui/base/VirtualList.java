@@ -197,7 +197,8 @@ public abstract class VirtualList extends CanvasEx {
         int item = getItemByCoord(y);
         if (0 <= item) {
             nat.prevTopY = getTopOffset();
-            nat.isSecondTap = !touchItemPressed(item, x, y);
+            touchItemPressed(item, x, y);
+            nat.isSecondTap = true;
         }
     }
 

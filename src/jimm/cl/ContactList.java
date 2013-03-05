@@ -472,7 +472,6 @@ public final class ContactList implements SelectListener, ContactListListener {
     private static final int MENU_GROUPS = 10;
     private static final int MENU_SEND_SMS = 11;
     private static final int MENU_ABOUT = 12;
-    private static final int MENU_MINIMIZE = 13;
     private static final int MENU_SOUND = 14;
     private static final int MENU_MYSELF = 15;
     private static final int MENU_MICROBLOG = 19;
@@ -604,11 +603,6 @@ public final class ContactList implements SelectListener, ContactListListener {
         // #sijapp cond.end#
 
         mainMenu.addItem("about", MENU_ABOUT);
-        // #sijapp cond.if target is "MIDP2" #
-        if (isCollapsible()) {
-            mainMenu.addItem("minimize", MENU_MINIMIZE);
-        }
-        // #sijapp cond.end#
         mainMenu.addItem("exit", MENU_EXIT);
 
         mainMenu.setDefaultItemCode(currentCommand);
@@ -676,12 +670,6 @@ public final class ContactList implements SelectListener, ContactListListener {
 
             case MENU_GROUPS:
                 new ManageContactListForm(proto).show();
-                break;
-
-            case MENU_MINIMIZE:
-                /* Minimize Jimm (if supported) */
-                contactList.restore();
-                Jimm.minimize();
                 break;
 
             // #sijapp cond.if modules_SOUND is "true" #

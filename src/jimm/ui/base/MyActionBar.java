@@ -61,20 +61,6 @@ public class MyActionBar extends ActiveRegion {
         // #sijapp cond.end#
 
         g.setThemeColor(CanvasEx.THEME_BACKGROUND);
-        // #sijapp cond.if modules_TOUCH is "true"#
-        if (null != view) {
-            final int itemWidth = getHeight();
-            if (hasMenu(view)) {
-                width -= drawRight(g, menu, x + width, itemWidth, height);
-            }
-
-            if (!isMainView(view)) {
-                int iconWidth = drawLeft(g, back, x, itemWidth, height);
-                x += iconWidth;
-                width -= iconWidth;
-            }
-        }
-        // #sijapp cond.end#
         x += 2;
 
         Icon ic = messageIcon;
@@ -117,16 +103,11 @@ public class MyActionBar extends ActiveRegion {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    private static final Icon back = ImageList.createImageList("/back_button.png").iconAt(0);
-    private static final Icon menu = ImageList.createImageList("/menu_button.png").iconAt(0);
     protected void stylusTap(CanvasEx canvas, int x, int y, boolean longTap) {
         VirtualList view = (VirtualList) canvas;
         int region = getCaptionRegion(view, x, view.getWidth());
 
-        if (CAPTION_REGION_BACK == region) {
-            view.back();
-
-        } else if (CAPTION_REGION_NEW_MESSAGE == region) {
+        if (CAPTION_REGION_NEW_MESSAGE == region) {
             jimm.chat.ChatHistory.instance.showChatList(true);
 
         } else if (CAPTION_REGION_GENERAL == region) {
@@ -135,21 +116,8 @@ public class MyActionBar extends ActiveRegion {
             } else {
                 jimm.chat.ChatHistory.instance.showChatList(false);
             }
-
-        } else if (CAPTION_REGION_MENU == region) {
-            VirtualList currentDisplay = (VirtualList) canvas;
-            if (currentDisplay instanceof VirtualContactList) {
-                ContactList.getInstance().activateMainMenu();
-            } else {
-                currentDisplay.showMenu(currentDisplay.getMenu());
-            }
-
-        } else {
-            view.touchCaptionTapped(region);
         }
     }
-    public static final int CAPTION_REGION_BACK = -1;
-    public static final int CAPTION_REGION_MENU = -2;
     public static final int CAPTION_REGION_NEW_MESSAGE = -3;
     public static final int CAPTION_REGION_GENERAL = 1;
     protected int getCaptionRegion(VirtualList view, int x, int width) {
@@ -159,13 +127,6 @@ public class MyActionBar extends ActiveRegion {
         width -= GraphicsEx.captionWidthFix;
         // #sijapp cond.end#
         int itemWidth = getHeight();
-        if ((x < itemWidth) && !isMainView(view)) {
-            return CAPTION_REGION_BACK;
-        }
-        width -= itemWidth;
-        if ((width < x) && hasMenu(view)) {
-            return CAPTION_REGION_MENU;
-        }
         width -= itemWidth;
         if (width < x) {
             return CAPTION_REGION_NEW_MESSAGE;

@@ -157,11 +157,6 @@ public abstract class VirtualList extends CanvasEx {
         return -1;
     }
 
-    protected void touchCaptionTapped(int x) {
-        if (MyActionBar.CAPTION_REGION_MENU == x) {
-            showMenu(getMenu());
-        }
-    }
     protected void touchItemTaped(int item, int x, boolean isLong) {
         if (isLong) {
             showMenu(getMenu());

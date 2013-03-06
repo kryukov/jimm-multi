@@ -183,10 +183,6 @@ public abstract class VirtualList extends CanvasEx {
             NativeCanvas.getInstance().touchControl.setRegion(bar);
             return;
         }
-        if (scrollBar.isScroll(this, x, y) && (0 < MyScrollBar.showScroll)) {
-            NativeCanvas.getInstance().touchControl.setRegion(scrollBar);
-            return;
-        }
         TouchControl nat = NativeCanvas.getInstance().touchControl;
         nat.touchUsed = true;
         int item = getItemByCoord(y);

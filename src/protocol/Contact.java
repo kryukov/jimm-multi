@@ -274,14 +274,16 @@ abstract public class Contact implements TreeNode, Sortable {
             lIcons[0] = Message.msgIcons.iconAt(getUnreadMessageIcon());
         }
         Protocol protocol = getProtocol();
-        if (null == lIcons[0]) {
-            lIcons[0] = protocol.getStatusInfo().getIcon(getStatusIndex());
+        if (null != protocol) {
+            if (null == lIcons[0]) {
+                lIcons[0] = protocol.getStatusInfo().getIcon(getStatusIndex());
+            }
+            // #sijapp cond.if modules_XSTATUSES is "true" #
+            if (XStatusInfo.XSTATUS_NONE != getXStatusIndex()) {
+                lIcons[1] = protocol.getXStatusInfo().getIcon(getXStatusIndex());
+            }
+            // #sijapp cond.end #
         }
-        // #sijapp cond.if modules_XSTATUSES is "true" #
-        if (XStatusInfo.XSTATUS_NONE != getXStatusIndex()) {
-            lIcons[1] = protocol.getXStatusInfo().getIcon(getXStatusIndex());
-        }
-        // #sijapp cond.end #
 
         if (!isTemp() && !isAuth()) {
             lIcons[3] = authIcon.iconAt(0);
@@ -300,7 +302,8 @@ abstract public class Contact implements TreeNode, Sortable {
     }
     public final void getRightIcons(Icon[] icons) {
         // #sijapp cond.if modules_CLIENTS is "true" #
-        ClientInfo info = getProtocol().clientInfo;
+        Protocol protocol = getProtocol();
+        ClientInfo info = (null != protocol) ? protocol.clientInfo : null;
         icons[0] = (null != info) ? info.getIcon(clientIndex) : null;
         // #sijapp cond.end #
     }

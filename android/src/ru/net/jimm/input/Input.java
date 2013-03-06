@@ -2,6 +2,7 @@ package ru.net.jimm.input;
 
 import android.app.Activity;
 import android.content.Context;
+import android.inputmethodservice.KeyboardView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -51,6 +52,13 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         ImageButton smileButton = (ImageButton) findViewById(R.id.smileButton);
         smileButton.setOnClickListener(this);
         smileButton.setOnLongClickListener(this);
+        ImageButton sendButton = (ImageButton) findViewById(R.id.sendButton);
+        if (null != sendButton) sendButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                send();
+            }
+        });
     }
 
     @Override

@@ -284,8 +284,12 @@ public final class GraphicsEx {
 
     public void fillGradRect(int color1, int color2, int x, int y, int width, int height) {
         if (true) {
-            setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+            // #sijapp cond.if modules_ANDROID is "true"#
+            gr.fillGradient(x, y, width, height, color1, color2);
+            // #sijapp cond.else#
+            setColor(color1);
             fillRect(x, y, width, height);
+            // #sijapp cond.end#
             return;
         }
         int r1 = ((color1 & 0xFF0000) >> 16);

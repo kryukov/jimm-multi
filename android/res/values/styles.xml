@@ -10,20 +10,24 @@
         <item name="android:verticalSpacing">0dp</item>
     </style>
 
-    <style name="MessageEditText">
+    <style name="InputBar.Editor">
+        <item name="android:padding">0dp</item>
+        <item name="android:verticalSpacing">0dp</item>
+        <item name="android:background">@drawable/input_editor</item>
+    </style>
+    <style name="InputBar.Button" parent="@android:Widget.Button">
+        <item name="android:padding">2dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/input_button</item>
+        <item name="android:verticalSpacing">0dp</item>
+    </style>
+
+    <style name="InputBar.EditText">
         <item name="android:padding">2dp</item>
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">top</item>
-
-        <item name="android:background">@drawable/input</item>
-    </style>
-
-    <style name="SmileButton" parent="@android:Widget.Button">
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:clickable">true</item>
-        <item name="android:background">@drawable/smile_button</item>
+        <item name="android:background">@drawable/input_edittext</item>
     </style>
 </resources>

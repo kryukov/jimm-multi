@@ -163,9 +163,12 @@ public final class ChatHistory extends VirtualList {
         if (-1 == Util.getIndex(historyTable, item)) {
             historyTable.addElement(item);
             item.getContact().updateChatState(item);
-            Icon[] icons = new Icon[7];
-            item.getContact().getLeftIcons(icons);
-            itemHeight = Math.max(itemHeight, GraphicsEx.getMaxImagesHeight(icons));
+            try {
+                Icon[] icons = new Icon[7];
+                item.getContact().getLeftIcons(icons);
+                itemHeight = Math.max(itemHeight, GraphicsEx.getMaxImagesHeight(icons));
+            } catch (Exception ignored) {
+            }
         }
     }
 

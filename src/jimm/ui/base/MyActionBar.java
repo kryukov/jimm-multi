@@ -59,8 +59,6 @@ public class MyActionBar extends ActiveRegion {
         width -= GraphicsEx.captionOffset;
         width -= GraphicsEx.captionWidthFix;
         // #sijapp cond.end#
-
-        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
         x += 2;
 
         Icon ic = messageIcon;
@@ -93,7 +91,10 @@ public class MyActionBar extends ActiveRegion {
         // #sijapp cond.end#
         g.drawImage(icon, x - defWidth + (defWidth - icon.getWidth()) / 2, 0, height);
         // #sijapp cond.if modules_TOUCH is "true"#
-        g.drawLine(x - defWidth, 0, x - defWidth, height);
+        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
+        g.drawLine(x - defWidth, 0, x - defWidth, height - 2);
+        g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+        g.drawLine(x - defWidth + 1, 0, x - defWidth + 1, height - 2);
         // #sijapp cond.end#
         return defWidth;
     }

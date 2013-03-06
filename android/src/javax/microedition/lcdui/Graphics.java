@@ -240,4 +240,6 @@ public class Graphics {
 		}
 	}
 
+    public void fillGradient(int x, int y, int width, int height, int clr1, int clr2) {
+    }
 }

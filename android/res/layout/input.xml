@@ -6,18 +6,36 @@
               android:layout_height="wrap_content"
               style="@style/InputBar">
 
-    <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/messageText" android:layout_gravity="center|left" android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="0.87"
-            style="@style/MessageEditText"
-            android:hint="@string/message_hint" />
-    <ImageButton
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        style="@style/InputBar.Editor">
+
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/smileButton" android:layout_gravity="center"
+                android:src="@drawable/smile_button_img"
+                style="@style/InputBar.Button" />
+
+        <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/messageText" android:layout_gravity="center|left" android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="0.87"
+                style="@style/InputBar.EditText"
+                android:hint="@string/message_hint" />
+
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/smileButton" android:layout_gravity="right|center_vertical"
-            android:src="@drawable/smile_button_img"
-            style="@style/SmileButton" />
+            android:id="@+id/sendButton"
+            android:layout_gravity="center"
+            style="@style/InputBar.Button"
+            android:src="@drawable/smile_button_img"/>
+
+    </LinearLayout>
 </LinearLayout>

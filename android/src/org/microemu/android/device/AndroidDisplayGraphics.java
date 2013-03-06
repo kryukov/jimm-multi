@@ -29,16 +29,8 @@ package org.microemu.android.device;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
+import android.graphics.*;
 import org.microemu.log.Logger;
-
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Region;
 
 public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
@@ -305,6 +297,14 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 			int x_dest, int y_dest, int anchor) {
 		Logger.debug("copyArea");
 	}
+
+    public void fillGradient(int x, int y, int width, int height, int clr1, int clr2) {
+        if (0 == (0xFF000000 & clr1)) clr1 = 0xff000000 | clr1;
+        if (0 == (0xFF000000 & clr2)) clr2 = 0xff000000 | clr2;
+        Paint p = new Paint();
+        p.setShader(new LinearGradient(0, 0, 0, height, clr1, clr2, Shader.TileMode.MIRROR));
+        canvas.drawRect(x, y, x + width, y + height, p);
+    }
 
 	public int getDisplayColor(int color) {
 		Logger.debug("getDisplayColor");

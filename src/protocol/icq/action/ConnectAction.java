@@ -31,7 +31,6 @@ import protocol.*;
 import protocol.icq.*;
 import protocol.icq.packet.*;
 import jimm.modules.*;
-import jimm.ui.timers.*;
 
 public class ConnectAction extends IcqAction {
     // Action states
@@ -128,7 +127,7 @@ public class ConnectAction extends IcqAction {
         if (8 < password.length()) {
             this.password = password.substring(0, 8);
         }
-        md5login = true && (-1 == uin.indexOf('@'));
+        md5login = (-1 == uin.indexOf('@'));
     }
 
     private void setProgress(int progress) {

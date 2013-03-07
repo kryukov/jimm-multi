@@ -371,6 +371,8 @@ public final class Jabber extends Protocol implements FormListener {
                 return "vkmessenger.com";
             case Profile.PROTOCOL_QIP:
                 return "webim.qip.ru";
+            case Profile.PROTOCOL_ODNOKLASSNIKI:
+                return "xmpp.odnoklassniki.ru";
         }
         // #sijapp cond.end #
         if ("jabber.ru".equals(domain)) {

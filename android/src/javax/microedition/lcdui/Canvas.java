@@ -30,7 +30,6 @@ package javax.microedition.lcdui;
 import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.DisplayableUI;
-import ru.net.jimm.JimmActivity;
 import ru.net.jimm.input.Input;
 
 public abstract class Canvas extends Displayable {

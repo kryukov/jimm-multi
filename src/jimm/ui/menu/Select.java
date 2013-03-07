@@ -13,6 +13,8 @@ import DrawControls.icons.*;
 import javax.microedition.lcdui.*;
 import jimm.ui.base.*;
 
+import java.util.Vector;
+
 /**
  * @author vladimir
  */
@@ -177,9 +179,29 @@ public final class Select extends CanvasEx {
         }
 
         int _itemWidth = textWidth + iconWidth + ICON_INTERVAL + scrollerWidth;
-        itemWidth = between(_itemWidth,
-                CanvasEx.minItemWidth,
-                screenWidth - (WIDTH_SPACE + scrollerWidth));
+        int maxItemWidth = screenWidth - (WIDTH_SPACE + scrollerWidth);
+        _itemWidth = between(_itemWidth, CanvasEx.minItemWidth, maxItemWidth);
+        final int prevWidth = prevMenuWidth();
+        if (prevWidth == _itemWidth) {
+            _itemWidth += scrollerWidth - ICON_INTERVAL;
+            _itemWidth = between(_itemWidth, CanvasEx.minItemWidth, maxItemWidth);
+            if (prevWidth == _itemWidth) {
+                _itemWidth -= scrollerWidth - ICON_INTERVAL;
+                _itemWidth = between(_itemWidth, CanvasEx.minItemWidth, maxItemWidth);
+            }
+        }
+        itemWidth = _itemWidth;
+    }
+    private int prevMenuWidth() {
+        Object last = jimm.Jimm.getJimm().getDisplay().getCurrentDisplay();
+        if (this == last) {
+            Vector v = jimm.Jimm.getJimm().getDisplay().getStack();
+            last = (0 < v.size()) ? v.elementAt(v.size() - 1) : null;
+        }
+        if (last instanceof Select) {
+            return ((Select)last).itemWidth;
+        }
+        return 0;
     }
 
     protected void showing() {
@@ -275,7 +297,7 @@ public final class Select extends CanvasEx {
             }
             MenuItem item = items.itemAt(i);
             g.drawInCenter(item.icon, iconX, iconY);
-            g.setClip(promtX, baseY - 1, textWidth, itemHeight + 2);
+            g.setClip(baseX, baseY - 1, itemWidth, itemHeight + 2);
             if (null == item.text) {
                 int posY = baseY + itemHeight / 2;
                 g.setThemeColor(THEME_MENU_BORDER);

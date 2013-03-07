@@ -309,6 +309,8 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                     saveOptionBoolean(Options.OPTION_DETRANSLITERATE);
                     saveOptionSelector(Options.OPTION_INPUT_MODE);
                     saveOptionSelector(Options.OPTION_KEYBOARD);
+                    // #sijapp cond.else#
+                    saveOptionBoolean(Options.OPTION_SIMPLE_INPUT);
                     // #sijapp cond.end#
 
                     saveOptionInt(Options.OPTION_MAX_MSG_COUNT);
@@ -320,6 +322,9 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                     }
                     // #sijapp cond.end#
 
+                    // #sijapp cond.if modules_ANDROID is "true" #
+                    NativeCanvas.getInstance().getInput().updateInput();
+                    // #sijapp cond.end#
                     ContactList.getInstance().getManager().update();
                     break;
 
@@ -473,6 +478,8 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                 createSelector("keyboard_type",
                         "default" + "|" + "QWERTY" + "|" + "old_se_keys" + "|" + "no",
                         Options.OPTION_KEYBOARD);
+                // #sijapp cond.else #
+                setChecked("use_simple_input", Options.OPTION_SIMPLE_INPUT);
                 // #sijapp cond.end #
                 // #sijapp cond.if modules_TOUCH isnot "true"#
                 setChecked("show_softbar", Options.OPTION_SHOW_SOFTBAR);

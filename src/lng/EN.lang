@@ -321,6 +321,7 @@
 "update_jimm"			"Update Jimm"
 "use_history"			"Store history"
 "use_smiles"			"Show emotions"
+"use_simple_input"      "send by the Enter"
 "user_menu"			"User Menu"
 "user_statuses"			"Statuses"
 "vibration"			"Vibration"

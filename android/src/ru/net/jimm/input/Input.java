@@ -2,7 +2,6 @@ package ru.net.jimm.input;
 
 import android.app.Activity;
 import android.content.Context;
-import android.inputmethodservice.KeyboardView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -15,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import jimm.Options;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
 import jimm.ui.ActionListener;
@@ -34,31 +34,57 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     private EditText messageEditor;
     private Runnable userMessageListener;
     private Object owner;
+    private int layout = 0;
+    private boolean sendByEnter;
     public Input(Context context, AttributeSet attrs, int id) {
         super(context, attrs);
+        updateInput();
+        setId(id);
+    }
+    public void updateInput() {
+        JimmActivity activity = (JimmActivity) getContext();
+        activity.post(new Runnable() {
+            @Override
+            public void run() {
+                boolean simple = Options.getBoolean(Options.OPTION_SIMPLE_INPUT);
+                int newLayout = simple ? R.layout.input_simple : R.layout.input;
+                if (layout != newLayout) {
+                    layout = newLayout;
+                    init();
+                    requestLayout();
+                }
+            }
+        });
+    }
+    private void init() {
+        removeAllViewsInLayout();
         ((Activity)getContext())
                 .getLayoutInflater()
-                .inflate(R.layout.input, this, true);
-        setId(id);
+                .inflate(layout, this, true);
 
         messageEditor = (EditText) findViewById(R.id.messageText);
         messageEditor.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        messageEditor.setImeOptions(EditorInfo.IME_ACTION_SEND);
-        messageEditor.setOnEditorActionListener(enterListener);
-        messageEditor.addTextChangedListener(textWatcher);
 
-        ImageButton smileButton = (ImageButton) findViewById(R.id.smileButton);
+        ImageButton smileButton = (ImageButton) findViewById(R.id.input_smile_button);
         smileButton.setOnClickListener(this);
         smileButton.setOnLongClickListener(this);
-        ImageButton sendButton = (ImageButton) findViewById(R.id.sendButton);
-        if (null != sendButton) sendButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                send();
-            }
-        });
+        ImageButton sendButton = (ImageButton) findViewById(R.id.input_send_button);
+        sendByEnter = (null == sendButton);
+        if (null != sendButton) {
+            sendButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    send();
+                }
+            });
+        }
+        if (sendByEnter) {
+            messageEditor.setImeOptions(EditorInfo.IME_ACTION_SEND);
+            messageEditor.setOnEditorActionListener(enterListener);
+        }
+        messageEditor.addTextChangedListener(textWatcher);
     }
 
     @Override
@@ -180,8 +206,8 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     }
     private final TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
         public boolean onEditorAction(TextView exampleView, int actionId, KeyEvent event) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (isDone(actionId)) {
+            if (isDone(actionId)) {
+                if ((null == event) || (event.getAction() == KeyEvent.ACTION_DOWN)) {
                     send();
                     return true;
                 }
@@ -194,12 +220,14 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         private int lineCount = 0;
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            previousText = s.toString();
+            if (sendByEnter) {
+                previousText = s.toString();
+            }
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if ((start + count <= s.length()) && (1 == count)) {
+            if (sendByEnter && (start + count <= s.length()) && (1 == count)) {
                 boolean enter = ('\n' == s.charAt(start));
                 if (enter) {
                     messageEditor.setText(previousText);

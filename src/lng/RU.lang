@@ -500,6 +500,7 @@
 "update_jimm"                                   "Обновить Jimm"
 "use_history"                                "Хранить историю"
 "use_smiles"                                "Смайлики"
+"use_simple_input"                          "Отправка сообщений по энтеру"
 "user_menu"                                        "Меню контакта"
 "user_statuses"                                "Статусы"
 "vibration"                                        "Вибрация"

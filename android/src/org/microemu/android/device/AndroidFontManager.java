@@ -36,6 +36,8 @@ import org.microemu.device.FontManager;
 import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import ru.net.jimm.JimmActivity;
+import ru.net.jimm.R;
 
 public class AndroidFontManager implements FontManager
 {
@@ -75,11 +77,15 @@ public class AndroidFontManager implements FontManager
 	    		underlined = true;
 	    	}
 	    	int size = 0;
+            float fontSize = 0;
 	    	if (meFont.getSize() == Font.SIZE_SMALL) {
+                fontSize = JimmActivity.getInstance().getResources().getDimensionPixelSize(R.dimen.small_font_size);
 	    		size = MicroEmulatorActivity.config.FONT_SIZE_SMALL;
 	    	} else if (meFont.getSize() == Font.SIZE_MEDIUM) {
+                fontSize = JimmActivity.getInstance().getResources().getDimensionPixelSize(R.dimen.medium_font_size);
 	    		size = MicroEmulatorActivity.config.FONT_SIZE_MEDIUM;
 	    	} else if (meFont.getSize() == Font.SIZE_LARGE) {
+                fontSize = JimmActivity.getInstance().getResources().getDimensionPixelSize(R.dimen.large_font_size);
 	    		size = MicroEmulatorActivity.config.FONT_SIZE_LARGE;
 	    	}
 
@@ -87,12 +93,10 @@ public class AndroidFontManager implements FontManager
 	    	//	compute size relative to scaleDensity
 	    	//	to enable consistent font size ratio 
 			//	accross any device resolution/density
-	    	size *= metrics.scaledDensity;
+	    	//size *= metrics.scaledDensity;
+            //fontSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, size, metrics);
 
-	    	result = new AndroidFont(Typeface.create(family, style), TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_SP,
-                            size,
-                            metrics), underlined);
+	    	result = new AndroidFont(Typeface.create(family, style), fontSize, underlined);
 	    	fonts.put(meFont, result);
 	    }
 	    

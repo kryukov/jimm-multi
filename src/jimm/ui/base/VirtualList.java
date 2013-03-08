@@ -251,9 +251,10 @@ public abstract class VirtualList extends CanvasEx {
         int topOffset = get_TopOffset();
         if (current <= top) {
             top = current;
-            int maxTopHeight = getOffset(size) - getContentHeight();
+            final int contentHeight = getContentHeight();
+            int maxTopHeight = getOffset(size) - contentHeight;
             top = Math.min(top, getItemByOffset(maxTopHeight));
-            setTop(top, Math.max(0, getItemHeight(top) - getContentHeight()));
+            setTop(top, Math.max(0, getItemHeight(top) - contentHeight));
 
         } else {
             top = Math.min(top, size - 1);
@@ -290,7 +291,7 @@ public abstract class VirtualList extends CanvasEx {
 
     public final void setCurrentItemToTop(int index) {
         setCurrItem(index);
-        setTopByOffset(getFullSize() - getClientHeight());
+        setTopByOffset(getFullSize());
         setOptimalTopItem();
         int top = get_Top();
         if (top == getCurrItem()) {
@@ -376,14 +377,14 @@ public abstract class VirtualList extends CanvasEx {
         return movingPolicy;
     }
 
-    protected void set_Top(int item, int offset) {
+    private void set_Top(int item, int offset) {
         topItem = item;
         topOffset = offset;
     }
-    protected final int get_Top() {
+    private int get_Top() {
         return topItem;
     }
-    protected final int get_TopOffset() {
+    private int get_TopOffset() {
         return topOffset;
     }
 

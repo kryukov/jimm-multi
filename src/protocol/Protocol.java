@@ -849,6 +849,11 @@ abstract public class Protocol {
     public final void ui_changeContactStatus(Contact contact) {
         updateChatStatus(contact);
         ui_updateContact(contact);
+        // #sijapp cond.if modules_MULTI is "true" #
+        if (Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE) && !getProtocolBranch().isEmpty()) {
+            getContactList().getManager().update(contact);
+        }
+        // #sijapp cond.end #
     }
     public final void ui_updateContact(Contact contact) {
         ui_updateContactInGroup(contact, getGroup(contact));

@@ -508,7 +508,7 @@ public class Options {
         setBoolean(Options.OPTION_HISTORY,            false);
         setInt    (Options.OPTION_COLOR_SCHEME,       1);
         // #sijapp cond.if modules_ANDROID is "true" #
-        setInt    (Options.OPTION_FONT_SCHEME,        2);
+        setInt    (Options.OPTION_FONT_SCHEME,        3);
         // #sijapp cond.else #
         setInt    (Options.OPTION_FONT_SCHEME,        1);
         // #sijapp cond.end#

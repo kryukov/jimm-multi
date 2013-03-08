@@ -59,6 +59,7 @@ public final class Chat extends VirtualList {
     private Icon[] statusIcons = new Icon[7];
     private Vector messData = new Vector();
     private boolean showStatus = true;
+    private static boolean selectMode;
     ///////////////////////////////////////////
 
     private Parser createParser() {
@@ -108,9 +109,9 @@ public final class Chat extends VirtualList {
 
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void touchItemTaped(int item, int x, boolean isLong) {
-        if (isLong) {
-            showMenu(getMenu());
-        } else if (getWidth() - minItemHeight < x) {
+        if (isLong || (getWidth() - minItemHeight < x)) {
+            showMenu(getContextMenu());
+        } else if (selectMode) {
             markItem(item);
         } else {
             super.touchItemTaped(item, x, isLong);
@@ -121,7 +122,17 @@ public final class Chat extends VirtualList {
     private void markItem(int item) {
         MessData mData = getMessageDataByIndex(item);
         mData.setMarked(!mData.isMarked());
+        selectMode = hasSelectedItems();
         invalidate();
+    }
+    private boolean hasSelectedItems() {
+        for (int i = 0; i < messData.size(); ++i) {
+            MessData md = getMessageDataByIndex(i);
+            if (md.isMarked()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void updateStatusIcons() {
@@ -219,6 +230,10 @@ public final class Chat extends VirtualList {
     }
 
     void onMessageSelected() {
+        if (selectMode) {
+            markItem(getCurrItem());
+            return;
+        }
         if (contact.isSingleUserContact()) {
             if (isBlogBot()) {
                 writeMessage(getBlogPostId(getCurrentText()));
@@ -307,6 +322,10 @@ public final class Chat extends VirtualList {
                 ContactList.getInstance().gotoUrl(getCurrentText());
                 break;
 
+            case ACTION_SELECT:
+                markItem(getCurrItem());
+                break;
+
             // #sijapp cond.if modules_HISTORY is "true" #
             case ACTION_ADD_TO_HISTORY:
                 addTextToHistory();
@@ -334,26 +353,60 @@ public final class Chat extends VirtualList {
         }
     }
     private static final int ACTION_FT_CANCEL = 900;
-    private static final int ACTION_REPLY = 999;
-    private static final int ACTION_ADD_TO_HISTORY = 998;
-    private static final int ACTION_COPY_TEXT = 1024;
-    private static final int ACTION_GOTO_URL = 1033;
-    private static final int ACTION_DEL_CHAT = 1027;
+    private static final int ACTION_REPLY = 901;
+    private static final int ACTION_ADD_TO_HISTORY = 902;
+    private static final int ACTION_COPY_TEXT = 903;
+    private static final int ACTION_GOTO_URL = 904;
+    private static final int ACTION_DEL_CHAT = 905;
+    private static final int ACTION_SELECT = 906;
 
-    public MenuModel getMenu() {
-        boolean accessible = writable && (contact.isSingleUserContact() || contact.isOnline());
+    private MenuModel getContextMenu() {
         MessData md = getCurrentMsgData();
         MenuModel menu = new MenuModel();
         // #sijapp cond.if modules_FILES="true"#
         if ((null != md) && md.isFile()) {
             menu.addItem("cancel", ACTION_FT_CANCEL);
+        } else {
+            menu.addItem("select", ACTION_SELECT);
         }
+        // #sijapp cond.else#
+        menu.addItem("select", ACTION_SELECT);
+        // #sijapp cond.end#
+        if (!selectMode && (null != md) && md.isURL()) {
+            menu.addItem("goto_url", ACTION_GOTO_URL);
+        }
+        menu.addItem("copy_text", ACTION_COPY_TEXT);
+        // #sijapp cond.if modules_HISTORY is "true" #
+        if (!selectMode && !Options.getBoolean(Options.OPTION_HISTORY) && hasHistory()) {
+            menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
+        }
+        // #sijapp cond.end#
+        menu.setActionListener(new Binder(this));
+        return menu;
+    }
+    protected MenuModel getMenu() {
+        if (selectMode) {
+            MenuModel menu = new MenuModel();
+            menu.addItem("copy_text", ACTION_COPY_TEXT);
+            menu.setActionListener(new Binder(this));
+            return menu;
+        }
+        boolean accessible = writable && (contact.isSingleUserContact() || contact.isOnline());
+        MessData md = getCurrentMsgData();
+        MenuModel menu = new MenuModel();
+        // #sijapp cond.if modules_ANDROID isnot "true" #
+        // #sijapp cond.if modules_FILES="true"#
+        if ((null != md) && md.isFile()) {
+            menu.addItem("cancel", ACTION_FT_CANCEL);
+        }
+        // #sijapp cond.end#
         // #sijapp cond.end#
         if (0 < authRequestCounter) {
             menu.addItem("grant", Contact.USER_MENU_GRANT_AUTH);
             menu.addItem("deny", Contact.USER_MENU_DENY_AUTH);
         }
 
+        // #sijapp cond.if modules_ANDROID isnot "true" #
         if (contact.isSingleUserContact()) {
             if (isBlogBot()) {
                 menu.addItem("message", Contact.USER_MENU_MESSAGE);
@@ -366,12 +419,16 @@ public final class Chat extends VirtualList {
                 menu.addItem("message", Contact.USER_MENU_MESSAGE);
                 menu.addItem("reply", ACTION_REPLY);
             }
+        }
+        // #sijapp cond.end#
+        if (!contact.isSingleUserContact()) {
             menu.addItem("list_of_users", Contact.USER_MENU_USERS_LIST);
         }
-
+        // #sijapp cond.if modules_ANDROID isnot "true" #
         if ((null != md) && md.isURL()) {
             menu.addItem("goto_url", ACTION_GOTO_URL);
         }
+        // #sijapp cond.end#
 
         // #sijapp cond.if modules_FILES is "true"#
         if (accessible) {
@@ -384,7 +441,9 @@ public final class Chat extends VirtualList {
         }
         // #sijapp cond.end#
 
+        // #sijapp cond.if modules_ANDROID isnot "true" #
         menu.addItem("copy_text", ACTION_COPY_TEXT);
+        // #sijapp cond.end#
         if (accessible) {
             if (!JimmUI.isClipBoardEmpty()) {
                 menu.addItem("paste", Contact.USER_MENU_PASTE);
@@ -393,10 +452,12 @@ public final class Chat extends VirtualList {
         contact.addChatMenuItems(menu);
 
 
+        // #sijapp cond.if modules_ANDROID isnot "true" #
         // #sijapp cond.if modules_HISTORY is "true" #
         if (!Options.getBoolean(Options.OPTION_HISTORY) && hasHistory()) {
             menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
         }
+        // #sijapp cond.end#
         // #sijapp cond.end#
         if (!contact.isAuth()) {
             menu.addItem("requauth", Contact.USER_MENU_REQU_AUTH);
@@ -889,6 +950,7 @@ public final class Chat extends VirtualList {
 
 
     private void resetSelected() {
+        selectMode = false;
         for (int i = 0; i < messData.size(); ++i) {
             getMessageDataByIndex(i).setMarked(false);
         }

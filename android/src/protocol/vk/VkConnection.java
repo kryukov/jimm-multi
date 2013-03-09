@@ -26,13 +26,13 @@ public class VkConnection implements Runnable {
 
     public void login() {
         if (!api.isLogged()) {
-            api.showLoginDialog();
+            api.showLoginDialog(vk.getUserId(), vk.getPassword());
         }
 
         final ru.net.jimm.JimmActivity a = ru.net.jimm.JimmActivity.getInstance();
         a.post(new Runnable() {
             public void run() {
-                if (!api.hasAccessToken()) api.showLoginDialog();
+                if (!api.hasAccessToken()) api.showLoginDialog(vk.getUserId(), vk.getPassword());
             }
         });
         new Thread(this).start();

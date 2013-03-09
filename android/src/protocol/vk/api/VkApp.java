@@ -32,6 +32,7 @@ public class VkApp {
     public VkApp(Context context) {
         _context = context;
         _vkSess = new VkSession(_context);
+        _vkSess.resetAccessToken();
         setListener(new VkDialogListener() {
             @Override
             public void onComplete(String url) {
@@ -54,8 +55,9 @@ public class VkApp {
         _listener = listener;
     }
 
-    public void showLoginDialog() {
-        new VkDialog(_context, OAUTH_AUTHORIZE_URL, _listener).show();
+    public void showLoginDialog(String email, String password) {
+        new WebClient().oauth(OAUTH_AUTHORIZE_URL, email, password, _listener);
+        //new VkDialog(_context, OAUTH_AUTHORIZE_URL, _listener).show();
     }
 
     public JSONObject getFriends() {

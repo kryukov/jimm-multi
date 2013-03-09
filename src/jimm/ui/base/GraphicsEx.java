@@ -84,12 +84,10 @@ public final class GraphicsEx {
     private static int num2size(int num, boolean chat) {
         switch (num) {
             case 0: return 0;
-            case 1: return chat ? 0 : 1;
-            case 2: return 1;
-            case 3: return 1;
-            case 4: return 2;
+            case 1: return 1;
+            case 2: return 2;
         }
-        return 0;
+        return 1;
     }
     public static void setFontScheme(int num) {
         int[] sizes = new int[7];

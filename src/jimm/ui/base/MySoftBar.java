@@ -4,6 +4,7 @@ import jimm.Jimm;
 import jimm.comm.Util;
 import jimm.util.JLocale;
 
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
 /**
@@ -33,6 +34,20 @@ public class MySoftBar extends ActiveRegion {
     public void paint(GraphicsEx graphicsEx, CanvasEx canvas, int bottom) {
         graphicsEx.setStrokeStyle(Graphics.SOLID);
         String[] labels = getSoftLabels();
+        int w = canvas.getWidth();
+        if (NativeCanvas.isOldSeLike()) {
+            drawSoftBar(graphicsEx, labels[1], time,
+                    hasRightSoft() ? labels[0] : null,
+                    getHeight(), w, bottom);
+        } else {
+            drawSoftBar(graphicsEx, labels[0], time, labels[2],
+                    getHeight(), w, bottom);
+        }
+    }
+    public final void paint(GraphicsEx graphicsEx, Canvas canvas) {
+        graphicsEx.setStrokeStyle(Graphics.SOLID);
+        String[] labels = getSoftLabels();
+        int bottom = canvas.getHeight() - getHeight();
         int w = canvas.getWidth();
         if (NativeCanvas.isOldSeLike()) {
             drawSoftBar(graphicsEx, labels[1], time,
@@ -83,7 +98,7 @@ public class MySoftBar extends ActiveRegion {
         h -= (h - gr.softBarFont.getHeight()) / 2;
         if (null != left) {
             leftWidth = Math.min(gr.softBarFont.stringWidth(left),  halfSoftWidth);
-            gr.drawString(left,  gr.softbarOffset, y, leftWidth,  h);
+            gr.drawString(left, gr.softbarOffset, y, leftWidth, h);
         }
 
         int rightWidth = 0;

@@ -45,6 +45,7 @@ public class ViewFinder extends Canvas implements Runnable {
     private Player player = null;
     private VideoControl videoControl = null;
     private MyActionBar bar = new MyActionBar();
+    private MySoftBar softBar = new MySoftBar();
     private Par errorMessage = null;
     private byte[] data;
 
@@ -132,7 +133,7 @@ public class ViewFinder extends Canvas implements Runnable {
         bar.setCaption(caption);
 
         int captionHeight = bar.getHeight();
-        int softBarHeight = gx.getSoftBarSize();
+        int softBarHeight = softBar.getHeight();
         int scrWidth = getWidth();
         int scrHeight = getHeight() - softBarHeight - captionHeight;
 
@@ -154,10 +155,8 @@ public class ViewFinder extends Canvas implements Runnable {
             }
         }
         bar.paint(gx, null, getWidth());
-
-        gx.drawSoftBar((null == errorMessage) ? JLocale.getString("ok") : "",
-                "", JLocale.getString("back"),
-                softBarHeight, getWidth(), getHeight() - gx.getSoftBarSize());
+        softBar.setSoftBarLabels((null == errorMessage) ? JLocale.getString("ok") : "", "", JLocale.getString("back"), true);
+        softBar.paint(gx, this);
     }
 
     private VideoControl createPlayer(String url) throws IOException, MediaException {

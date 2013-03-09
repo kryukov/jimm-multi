@@ -35,11 +35,11 @@ public class MySoftBar extends ActiveRegion {
         String[] labels = getSoftLabels();
         int w = canvas.getWidth();
         if (NativeCanvas.isOldSeLike()) {
-            graphicsEx.drawSoftBar(labels[1], time,
+            drawSoftBar(graphicsEx, labels[1], time,
                     hasRightSoft() ? labels[0] : null,
                     getHeight(), w, bottom);
         } else {
-            graphicsEx.drawSoftBar(labels[0], time, labels[2],
+            drawSoftBar(graphicsEx, labels[0], time, labels[2],
                     getHeight(), w, bottom);
         }
     }
@@ -61,6 +61,49 @@ public class MySoftBar extends ActiveRegion {
     }
     // #sijapp cond.end#
 
+    private void drawSoftBar(GraphicsEx gr, String left, String middle, String right,
+                             int height, int w, int y) {
+        int h = height;
+
+        int clipX = gr.getClipX();
+        int clipY = gr.getClipY();
+        int clipHeight = gr.getClipHeight();
+        int clipWidth = gr.getClipWidth();
+        gr.setClip(0, y, w, h);
+
+        gr.drawBarBack(y, height, Scheme.softbarImage, w);
+
+        int halfSoftWidth = w / 2 - (2 + 2 * gr.softbarOffset);
+        h -= 2;
+        y++;
+        gr.setThemeColor(CanvasEx.THEME_CAP_TEXT);
+        gr.setFont(gr.softBarFont);
+
+        int leftWidth = 0;
+        h -= (h - gr.softBarFont.getHeight()) / 2;
+        if (null != left) {
+            leftWidth = Math.min(gr.softBarFont.stringWidth(left),  halfSoftWidth);
+            gr.drawString(left,  gr.softbarOffset, y, leftWidth,  h);
+        }
+
+        int rightWidth = 0;
+        if (null != right) {
+            rightWidth = Math.min(gr.softBarFont.stringWidth(right), halfSoftWidth);
+            gr.drawString(right, w - rightWidth - gr.softbarOffset, y, rightWidth, h);
+        }
+
+        int criticalWidth = halfSoftWidth - 5;
+        if ((rightWidth < criticalWidth) && (leftWidth < criticalWidth)) {
+            int middleWidth = gr.softBarFont.stringWidth(middle) + 2;
+            int start = (w - middleWidth) / 2;
+            if ((leftWidth < start) && (rightWidth < start)) {
+                gr.drawString(middle, start, y, middleWidth, h);
+            }
+
+        }
+
+        gr.setClip(clipX, clipY, clipWidth, clipHeight);
+    }
 
     public final void setSoftBarLabels(String more, String ok, String back, boolean direct) {
         softLabels[0] = JLocale.getString(more); // menu

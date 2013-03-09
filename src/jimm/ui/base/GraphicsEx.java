@@ -21,7 +21,7 @@ public final class GraphicsEx {
     private Graphics gr;
     private static int[] theme = Scheme.getScheme();
 
-    private final int softbarOffset;
+    public final int softbarOffset;
 
     public  static Font[] chatFontSet;
     public  static Font[] contactListFontSet;
@@ -29,7 +29,7 @@ public final class GraphicsEx {
     public  static Font menuFont;
     public  static Font statusLineFont;
     public static Font captionFont;
-    private static Font softBarFont;
+    public static Font softBarFont;
 
     public static final int captionOffset;
     public static final int captionWidthFix;
@@ -331,49 +331,6 @@ public final class GraphicsEx {
             return Scheme.softbarImage.getHeight();
         }
         return Math.max(CanvasEx.minItemHeight, softBarFont.getHeight() + 2);
-    }
-    public void drawSoftBar(String left, String middle, String right,
-            int height, int w, int y) {
-        int h = height;
-
-        int clipX = gr.getClipX();
-        int clipY = gr.getClipY();
-        int clipHeight = gr.getClipHeight();
-        int clipWidth = gr.getClipWidth();
-        gr.setClip(0, y, w, h);
-
-        drawBarBack(y, height, Scheme.softbarImage, w);
-
-        int halfSoftWidth = w / 2 - (2 + 2 * softbarOffset);
-        h -= 2;
-        y++;
-        setThemeColor(CanvasEx.THEME_CAP_TEXT);
-        gr.setFont(softBarFont);
-
-        int leftWidth = 0;
-        h -= (h - softBarFont.getHeight()) / 2;
-        if (null != left) {
-            leftWidth = Math.min(softBarFont.stringWidth(left),  halfSoftWidth);
-            drawString(left,  softbarOffset, y, leftWidth,  h);
-        }
-
-        int rightWidth = 0;
-        if (null != right) {
-            rightWidth = Math.min(softBarFont.stringWidth(right), halfSoftWidth);
-            drawString(right, w - rightWidth - softbarOffset, y, rightWidth, h);
-        }
-
-        int criticalWidth = halfSoftWidth - 5;
-        if ((rightWidth < criticalWidth) && (leftWidth < criticalWidth)) {
-            int middleWidth = softBarFont.stringWidth(middle) + 2;
-            int start = (w - middleWidth) / 2;
-            if ((leftWidth < start) && (rightWidth < start)) {
-                drawString(middle, start, y, middleWidth, h);
-            }
-
-        }
-
-        gr.setClip(clipX, clipY, clipWidth, clipHeight);
     }
 
     public void fillRect(int x, int y, int width, int height, byte sback) {

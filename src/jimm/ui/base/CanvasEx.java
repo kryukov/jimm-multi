@@ -138,6 +138,7 @@ abstract public class CanvasEx extends DisplayableEx {
         // #sijapp cond.if modules_ANDROID is "true"#
         if (this instanceof jimm.modules.fs.FileBrowser) return true;
         if (this instanceof jimm.ui.form.GraphForm) return true;
+        if (this instanceof DrawControls.tree.VirtualContactList) return true;
         if (true) return false;
         // #sijapp cond.end#
         if (this instanceof SplashCanvas) return false;

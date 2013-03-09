@@ -284,16 +284,17 @@ public class JimmActivity extends MicroEmulatorActivity {
         return super.onKeyUp(keyCode, event);
     }
 
-
     private boolean ignoreKey(int keyCode) {
         switch (keyCode) {
-//        case KeyEvent.KEYCODE_MENU:
-        case KeyEvent.KEYCODE_VOLUME_DOWN:
-        case KeyEvent.KEYCODE_VOLUME_UP:
-        case KeyEvent.KEYCODE_HEADSETHOOK:
-            return true;
-        default:
-            return false;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            case KeyEvent.KEYCODE_HEADSETHOOK:
+                return true;
+            case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_BACK:
+                return false;
+            default:
+                return true;
         }
     }
 

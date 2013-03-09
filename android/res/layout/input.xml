@@ -28,7 +28,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_weight="0.87"
                 style="@style/InputBar.EditText"
-                android:hint="@string/message_hint" />
+                android:hint="@string/hint_message" />
 
         <ImageButton
             android:layout_width="wrap_content"

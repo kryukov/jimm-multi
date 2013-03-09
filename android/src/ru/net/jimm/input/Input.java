@@ -2,6 +2,8 @@ package ru.net.jimm.input;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -15,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.Options;
+import jimm.chat.Chat;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
 import jimm.ui.ActionListener;
@@ -36,6 +39,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     private Object owner;
     private int layout = 0;
     private boolean sendByEnter;
+
     public Input(Context context, AttributeSet attrs, int id) {
         super(context, attrs);
         updateInput();
@@ -56,6 +60,16 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
             }
         });
     }
+
+    public void setCanvas(Object canvas) {
+        if (canvas instanceof Chat) {
+            Chat chat = (Chat) canvas;
+            String name = chat.getContact().getName();
+            messageEditor.setHint(getContext().getString(R.string.hint_message_to, name));
+        }
+
+    }
+
     private void init() {
         removeAllViewsInLayout();
         ((Activity)getContext())
@@ -111,9 +125,8 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                 ((JimmActivity) getContext()).post(new Runnable() {
                     @Override
                     public void run() {
-                        final Input input = (Input) findViewById(R.id.input_line);
-                        input.insert(Templates.getInstance().getSelectedTemplate());
-                        input.showKeyboard();
+                        insert(Templates.getInstance().getSelectedTemplate());
+                        showKeyboard();
                     }
                 });
             }
@@ -122,8 +135,11 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     }
 
     private void showKeyboard(View view) {
-        InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        keyboard.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        Configuration conf = Resources.getSystem().getConfiguration();
+        if (conf.hardKeyboardHidden != Configuration.HARDKEYBOARDHIDDEN_NO) {
+            InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            keyboard.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        }
     }
 
     public void hideKeyboard(View view) {

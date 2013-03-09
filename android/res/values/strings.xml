@@ -9,6 +9,7 @@
     <string name="online">Online</string>
     <string name="takePhotoButton">OK</string>
     <string name="xmppAccountDontFound">Jabber-account do not found</string>
-    <string name="message_hint">New Message</string>
+    <string name="hint_message">New Message</string>
+    <string name="hint_message_to">New message to %s</string>
     <string name="templates">Templates</string>
 </resources>

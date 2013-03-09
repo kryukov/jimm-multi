@@ -94,10 +94,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
         return input;
     }
 
-    public void setInputVisibility(final boolean v) {
+    public void setInputVisibility(final boolean v,final Object canvas) {
         activity.post(new Runnable() {
             public void run() {
                 boolean prevV = (input.getVisibility() == View.VISIBLE);
+                input.setCanvas(canvas);
                 input.setVisibility(v ? View.VISIBLE : View.GONE);
                 view.requestLayout();
 

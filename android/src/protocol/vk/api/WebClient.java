@@ -1,8 +1,6 @@
 package protocol.vk.api;
 
 import jimm.modules.DebugLog;
-import org.apache.http.HeaderIterator;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -18,7 +16,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +49,7 @@ public class WebClient {
                     break;
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 

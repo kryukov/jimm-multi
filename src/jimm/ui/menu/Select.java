@@ -262,8 +262,16 @@ public final class Select extends CanvasEx {
         int x = this.left;
         paintBack(g);
         g.setStrokeStyle(Graphics.SOLID);
+        // #sijapp cond.if modules_ANDROID is "true" #
+        g.setClip(x, y, curWidth, curHeight);
+        g.setThemeColor(THEME_MENU_BACK);
+        g.getGraphics().fillRoundRect(x, y, curWidth, curHeight, getHeadSpace(), getHeadSpace());
+        g.setThemeColor(THEME_MENU_BORDER);
+        g.getGraphics().drawRoundRect(x, y, curWidth, curHeight, getHeadSpace(), getHeadSpace());
+        // #sijapp cond.else #
         g.fillRect(x, y, curWidth, curHeight, THEME_MENU_BACK);
         g.drawDoubleBorder(x, y, curWidth, curHeight, THEME_MENU_BORDER);
+        // #sijapp cond.end #
         g.setClip(x, y, curWidth + 1, curHeight + 1);
         y += getHeadSpace();
         paintItems(g, x, y, itemPerPage, currentIndex);

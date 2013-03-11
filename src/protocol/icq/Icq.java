@@ -66,7 +66,7 @@ public class Icq extends Protocol {
         return "UIN";
     }
     protected void initStatusInfo() {
-        info = new StatusInfo(statusIcons, statusIconIndex);
+        info = new StatusInfo(statusIcons, statusIconIndex, statuses);
         // #sijapp cond.if modules_XSTATUSES is "true" #
         xstatusInfo = Icq.xstatus.getInfo();
         // #sijapp cond.end #
@@ -655,9 +655,6 @@ public class Icq extends Protocol {
         StatusInfo.STATUS_WORK,
         StatusInfo.STATUS_INVISIBLE,
         StatusInfo.STATUS_INVIS_ALL};
-    public byte[] getStatusList() {
-        return statuses;
-    }
 
     protected void s_sendTypingNotify(Contact to, boolean isTyping) {
         sendBeginTyping(to, isTyping);

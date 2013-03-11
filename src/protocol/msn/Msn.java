@@ -33,7 +33,7 @@ public class Msn extends Protocol {
     public Msn() {
     }
     protected void initStatusInfo() {
-        info = new StatusInfo(statusIcons, statusIcon);
+        info = new StatusInfo(statusIcons, statusIcon, new byte[0]);
     }
 
     public boolean isEmpty() {
@@ -148,10 +148,6 @@ public class Msn extends Protocol {
 
     void leaveConversation(MsnContact msnContact) {
         connection.leaveConversation(msnContact);
-    }
-
-    public byte[] getStatusList() {
-        return new byte[0];
     }
 
     protected void requestAuth(String userId) {

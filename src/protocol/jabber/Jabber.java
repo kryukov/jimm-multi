@@ -48,7 +48,7 @@ public final class Jabber extends Protocol implements FormListener {
         byte type = getProfile().protocolType;
         ImageList icons = createStatusIcons(type);
         final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
-        info = new StatusInfo(icons, statusIconIndex);
+        info = new StatusInfo(icons, statusIconIndex, statuses);
 
         // #sijapp cond.if modules_XSTATUSES is "true" #
         xstatusInfo = Jabber.xStatus.getInfo();
@@ -58,6 +58,14 @@ public final class Jabber extends Protocol implements FormListener {
         clientInfo = JabberClient.get();
         // #sijapp cond.end #
     }
+
+    private static final byte[] statuses = {
+            StatusInfo.STATUS_CHAT,
+            StatusInfo.STATUS_ONLINE,
+            StatusInfo.STATUS_AWAY,
+            StatusInfo.STATUS_XA,
+            StatusInfo.STATUS_DND};
+
 
     private ImageList createStatusIcons(byte type) {
         // #sijapp cond.if modules_MULTI is "true" #
@@ -449,16 +457,6 @@ public final class Jabber extends Protocol implements FormListener {
         if (isConnected()) {
             getConnection().saveVCard(userInfo);
         }
-    }
-    private static final byte[] statuses = {
-        StatusInfo.STATUS_CHAT,
-        StatusInfo.STATUS_ONLINE,
-        StatusInfo.STATUS_AWAY,
-        StatusInfo.STATUS_XA,
-        StatusInfo.STATUS_DND};
-
-    public byte[] getStatusList() {
-        return statuses;
     }
 
     protected void s_sendTypingNotify(Contact to, boolean isTyping) {

@@ -743,6 +743,17 @@ abstract public class Protocol {
             s_updateOnlineStatus();
         }
     }
+    public final void setStatus(int statusIndex, String msg) {
+        boolean connected = StatusInfo.STATUS_OFFLINE != profile.statusIndex;
+        boolean connecting = StatusInfo.STATUS_OFFLINE != statusIndex;
+        if (connected && !connecting) {
+            disconnect(true);
+        }
+        setOnlineStatus(statusIndex, msg);
+        if (!connected && connecting) {
+            connect();
+        }
+    }
     // #sijapp cond.if modules_XSTATUSES is "true" #
     protected abstract void s_updateXStatus();
     public final void setXStatus(int xstatus, String title, String desc) {
@@ -1190,8 +1201,6 @@ abstract public class Protocol {
     }
 
     public abstract void saveUserInfo(UserInfo info);
-
-    public abstract byte[] getStatusList();
 
     public boolean isMeVisible(Contact to) {
         return true;

@@ -56,14 +56,12 @@ public class Mrim extends Protocol {
         StatusInfo.STATUS_AWAY,
         StatusInfo.STATUS_UNDETERMINATED,
         StatusInfo.STATUS_INVISIBLE};
-    public byte[] getStatusList() {
-        return statuses;
-    }
+
     /** Creates a new instance of Mrim */
     public Mrim() {
     }
     protected void initStatusInfo() {
-        info = new StatusInfo(statusIcons, statusIconIndex);
+        info = new StatusInfo(statusIcons, statusIconIndex, statuses);
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
         microBlog = new MicroBlog(this);
         // #sijapp cond.end #

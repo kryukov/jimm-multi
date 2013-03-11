@@ -18,13 +18,19 @@ import javax.microedition.lcdui.Graphics;
  *
  * @author vladimir
  */
-public class RosterSoftBar extends MySoftBar {
+public class RosterToolBar extends MySoftBar {
     public int getHeight() {
         return GraphicsEx.getSoftBarSize();
     }
     protected void stylusTap(CanvasEx c, int x, int y, boolean longTap) {
         int _x = 0;
         int defWidth = getHeight();
+        _x += defWidth;
+        if (x < _x) {
+            MenuModel model = ContactList.getInstance().updateMainMenu(null);
+            ((VirtualContactList) c).showMenu(model);
+            return;
+        }
         ContactListModel m = ((VirtualContactList)c).getModel();
         for (int i = 0; i < m.getProtocolCount(); ++i) {
             Protocol p = m.getProtocol(i);
@@ -45,6 +51,9 @@ public class RosterSoftBar extends MySoftBar {
         g.drawBarBack(y, height, Scheme.softbarImage, width);
 
         int x = 0;
+        // general
+        x += drawLeft(g, null, x, y, height);
+        // accounts
         ContactListModel m = ((VirtualContactList)c).getModel();
         for (int i = 0; i < m.getProtocolCount(); ++i) {
             Protocol p = m.getProtocol(i);
@@ -54,8 +63,10 @@ public class RosterSoftBar extends MySoftBar {
     }
     private int drawLeft(GraphicsEx g, Icon  icon, int x, int y, int height) {
         int defWidth = getHeight();
-        g.drawImage(icon, x + (defWidth - icon.getWidth()) / 2, y, height);
-        drawSeparator(g, x + defWidth, y, height);
+        if (null != icon) {
+            g.drawImage(icon, x + (defWidth - icon.getWidth()) / 2, y, height);
+        }
+        drawSeparator(g, x + defWidth, y + 1, height);
         return defWidth;
     }
     private void drawSeparator(GraphicsEx g, int x, int y, int height) {

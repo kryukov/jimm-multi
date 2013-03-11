@@ -44,6 +44,7 @@ public final class StatusInfo {
 
     public final ImageList statusIcons;
     public final int[] statusIconIndex;
+    public final byte[] applicableStatuses;
     private static final int[] statusWidth = {29, 1, 7, 0, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14}; 
     private static final String[] statusNames = {
         "status_offline",
@@ -64,12 +65,13 @@ public final class StatusInfo {
     };
     
     /** Creates a new instance of StatusInfo */
-    public StatusInfo(ImageList statuses, int[] index) {
+    public StatusInfo(ImageList statuses, int[] index, byte[] applicableStatuses) {
         statusIcons = statuses;
         statusIconIndex = index;
         if (null == statuses.iconAt(index[StatusInfo.STATUS_NOT_IN_LIST])) {
             index[StatusInfo.STATUS_NOT_IN_LIST] = index[StatusInfo.STATUS_OFFLINE];
         }
+        this.applicableStatuses = applicableStatuses;
     }
     public String getName(byte statusIndex) {
         return JLocale.getString(statusNames[statusIndex]);

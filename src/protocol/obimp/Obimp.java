@@ -36,7 +36,7 @@ public class Obimp extends Protocol {
     public Obimp() {
     }
     protected void initStatusInfo() {
-        info = new StatusInfo(statusIcons, statusIcon);
+        info = new StatusInfo(statusIcons, statusIcon, statuses);
 
         // #sijapp cond.if modules_XSTATUSES is "true" #
         xstatusInfo = Obimp.xStatus.getInfo();
@@ -156,9 +156,6 @@ public class Obimp extends Protocol {
         StatusInfo.STATUS_WORK,
         StatusInfo.STATUS_INVISIBLE,
         StatusInfo.STATUS_INVIS_ALL};
-    public byte[] getStatusList() {
-        return statuses;
-    }
 
     protected void requestAuth(String userId) {
         connection.sendAuthRequest(userId);

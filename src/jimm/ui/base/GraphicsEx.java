@@ -74,7 +74,7 @@ public final class GraphicsEx {
     }
 
     private static int size2font(int size) {
-        switch (Math.max(0, Math.min(size, 3))) {
+        switch (Math.max(0, Math.min(size, 2))) {
             case 0: return Font.SIZE_SMALL;
             case 1: return Font.SIZE_MEDIUM;
             case 2: return Font.SIZE_LARGE;
@@ -96,6 +96,9 @@ public final class GraphicsEx {
         sizes[2] = size2font(num2size(num, true));
         sizes[3] = size2font(num2size(num, false) - 1);
         int systemSize = (num < 3) ? 0 : 1;
+        // #sijapp cond.if modules_ANDROID is "true"#
+        systemSize = num2size(num, true);
+        // #sijapp cond.end#
         sizes[4] = size2font(systemSize);
         sizes[5] = size2font(systemSize);
         sizes[6] = size2font(systemSize);

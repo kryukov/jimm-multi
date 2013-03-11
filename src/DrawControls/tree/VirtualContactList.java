@@ -73,7 +73,7 @@ public final class VirtualContactList extends VirtualList {
         model = new ContactListModel(1);
         // #sijapp cond.end #
         // #sijapp cond.if modules_TOUCH is "true"#
-        softBar = new RosterSoftBar();
+        softBar = new RosterToolBar();
         // #sijapp cond.end #
         updateOption();
     }

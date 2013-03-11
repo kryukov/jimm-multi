@@ -465,7 +465,8 @@ public final class ContactList implements SelectListener, ContactListListener {
     private static final int MENU_DISCONNECT = 2;
     private static final int MENU_DISCO = 3;
     private static final int MENU_OPTIONS = 4;
-    private static final int MENU_KEYLOCK = 6;
+    private static final int MENU_KEYLOCK = 5;
+    private static final int MENU_GLOBAL_STATUS = 6;
     private static final int MENU_STATUS = 7;
     private static final int MENU_XSTATUS = 8;
     private static final int MENU_PRIVATE_STATUS = 9;
@@ -581,15 +582,23 @@ public final class ContactList implements SelectListener, ContactListListener {
     }
     public void updateMainMenu() {
         int currentCommand = mainMenuView.getSelectedItemCode();
+        updateMainMenu(getManager().getCurrentProtocol());
+        mainMenu.setDefaultItemCode(currentCommand);
+        mainMenuView.setModel(mainMenu);
+        mainMenuView.update();
+    }
+    public MenuModel updateMainMenu(Protocol p) {
         mainMenu.clean();
         // #sijapp cond.if modules_ANDROID isnot "true" #
         mainMenu.addItem("keylock_enable",  MENU_KEYLOCK);
         // #sijapp cond.end #
-        if (0 < getManager().getModel().getProtocolCount()) {
+        if (null == p) {
+            mainMenu.addItem("set_status", null, MENU_GLOBAL_STATUS);
+        } else if (0 < getManager().getModel().getProtocolCount()) {
             // #sijapp cond.if modules_MULTI is "true" #
-            protocolMenu(mainMenu, getManager().getCurrentProtocol(), true);
+            protocolMenu(mainMenu, p, true);
             // #sijapp cond.else #
-            protocolMenu(mainMenu, getManager().getCurrentProtocol(), false);
+            protocolMenu(mainMenu, p, false);
             // #sijapp cond.end #
         }
         if (isSmsSupported()) {
@@ -604,10 +613,7 @@ public final class ContactList implements SelectListener, ContactListListener {
 
         mainMenu.addItem("about", MENU_ABOUT);
         mainMenu.addItem("exit", MENU_EXIT);
-
-        mainMenu.setDefaultItemCode(currentCommand);
-        mainMenuView.setModel(mainMenu);
-        mainMenuView.update();
+        return mainMenu;
     }
 
     private void doExit(boolean anyway) {
@@ -618,13 +624,17 @@ public final class ContactList implements SelectListener, ContactListListener {
         final Protocol proto = activeProtocol;
         switch (cmd) {
             case MENU_DISCONNECT:
-                proto.disconnect(true);
+                proto.setStatus(StatusInfo.STATUS_OFFLINE, "");
                 Thread.yield();
                 activate();
                 break;
 
             case MENU_KEYLOCK:
                 Jimm.lockJimm();
+                break;
+
+            case MENU_GLOBAL_STATUS:
+                new GlobalStatusForm().show();
                 break;
 
             case MENU_STATUS:

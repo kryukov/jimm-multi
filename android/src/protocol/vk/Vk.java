@@ -23,11 +23,14 @@ public class Vk extends Protocol {
         return "Id";
     }
 
+    private static final byte[] statuses = {
+            StatusInfo.STATUS_ONLINE};
+
     @Override
     protected void initStatusInfo() {
         ImageList icons = createStatusIcons();
         final int[] statusIconIndex = {1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
-        info = new StatusInfo(icons, statusIconIndex);
+        info = new StatusInfo(icons, statusIconIndex, statuses);
     }
     private ImageList createStatusIcons() {
         ImageList icons = ImageList.createImageList("/vk-status.png");
@@ -133,13 +136,6 @@ public class Vk extends Protocol {
     @Override
     public void saveUserInfo(UserInfo info) {
         //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    private static final byte[] statuses = {
-            StatusInfo.STATUS_ONLINE};
-    @Override
-    public byte[] getStatusList() {
-        return statuses;
     }
 
     @Override

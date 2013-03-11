@@ -196,12 +196,16 @@ public class FileSystemFileConnection implements FileConnection {
         Vector<File> ls = new Vector<File>();
         try {
             add(ls, Environment.getExternalStorageDirectory());
+            add(ls, new File("/sdcard"));
             add(ls, new File("/mnt/sdcard"));
             add(ls, getWritableDir("/mnt/ext_card"));
-            add(ls, new File("/mnt/sdcard/DCIM"));
-            add(ls, new File("/mnt/sdcard/DCIM/Camera"));
-            add(ls, new File("/mnt/sdcard/Books"));
-            add(ls, new File("/mnt/sdcard/Download"));
+            File sdcard = getCardDir();
+            if (null != sdcard) {
+                add(ls, new File(sdcard, "DCIM"));
+                add(ls, new File(sdcard, "DCIM/Camera"));
+                add(ls, new File(sdcard, "Books"));
+                add(ls, new File(sdcard, "Download"));
+            }
         } catch (Exception ignored) {
         }
         if (ls.isEmpty()) {
@@ -212,13 +216,27 @@ public class FileSystemFileConnection implements FileConnection {
         }
         return ls;
     }
+    private static File getCardDir() {
+        File ext = Environment.getExternalStorageDirectory();
+        if (isAccessible(ext)) return ext;
+        if (isAccessible(new File("/sdcard"))) return new File("/sdcard");
+        if (isAccessible(new File("/mnt/sdcard"))) return new File("/mnt/sdcard");
+        if (isAccessible(new File("/mnt/ext_card"))) return new File("/mnt/ext_card");
+        return null;
+    }
     private static File getWritableDir(String path) {
         File dir = new File(path);
         return (dir.canWrite() && dir.canRead() && dir.canExecute()) ? dir : null;
     }
 
-    private static void add(Vector<File> ls, File file) {
+    private static boolean isAccessible(File file) {
         if ((null == file) || !file.exists() || file.isHidden() || !file.isDirectory() || !file.canRead()) {
+            return false;
+        }
+        return true;
+    }
+    private static void add(Vector<File> ls, File file) {
+        if (!isAccessible(file)) {
             return;
         }
         for (File has : ls) {

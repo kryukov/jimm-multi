@@ -256,8 +256,8 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
         Options.setInt(opt, alts[form.getSelectorValue(opt)]);
     }
 
-    private static final short[] minItemMultipliers = new short[]{10, 15, 20, 30};
-    private static final String[] minItems = {"x1", "x1.5", "x2", "x3"};
+    private static final short[] minItemMultipliers = new short[]{10, 15, 20, 25, 30, 35};
+    private static final String[] minItems = {"x1", "x1.5", "x2", "x2.5", "x3", "x3.5"};
 
     /* Command listener */
     public void formAction(GraphForm form, boolean apply) {

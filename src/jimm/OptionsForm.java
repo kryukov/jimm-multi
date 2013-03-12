@@ -440,7 +440,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                 }
 
                 createSelector("fonts",
-                        "fonts_smallest" + "|" + "fonts_small" + "|" + "fonts_normal" + "|" + "fonts_large" + "|" + "fonts_largest",
+                        "fonts_small" + "|" + "fonts_normal" + "|" + "fonts_large",
                         Options.OPTION_FONT_SCHEME);
                 loadOptionInt(Options.OPTION_MIN_ITEM_SIZE, "item_height_multiplier", minItems, minItemMultipliers);
 

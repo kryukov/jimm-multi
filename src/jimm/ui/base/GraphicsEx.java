@@ -95,8 +95,8 @@ public final class GraphicsEx {
         sizes[1] = size2font(num2size(num, false));
         sizes[2] = size2font(num2size(num, true));
         sizes[3] = size2font(num2size(num, false) - 1);
-        int systemSize = (num < 3) ? 0 : 1;
-        // #sijapp cond.if modules_ANDROID is "true"#
+        int systemSize = (num < 2) ? 0 : 1;
+        // #sijapp cond.if modules_TOUCH is "true"#
         systemSize = num2size(num, true);
         // #sijapp cond.end#
         sizes[4] = size2font(systemSize);
@@ -287,11 +287,11 @@ public final class GraphicsEx {
         if (true) {
             // #sijapp cond.if modules_ANDROID is "true"#
             gr.fillGradient(x, y, width, height, color1, color2);
-            // #sijapp cond.else#
-            setColor(color1);
-            fillRect(x, y, width, height);
-            // #sijapp cond.end#
             return;
+            // // #sijapp cond.else#
+            //setColor(color1);
+            //fillRect(x, y, width, height);
+            // #sijapp cond.end#
         }
         int r1 = ((color1 & 0xFF0000) >> 16);
         int g1 = ((color1 & 0x00FF00) >> 8);

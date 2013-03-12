@@ -247,6 +247,9 @@ class KineticScrolling {
     private int fromY;
     private long startTime;
 
+    private int prevY;
+    private long prevTime;
+
     private int toY;
     private int period;
 
@@ -255,18 +258,18 @@ class KineticScrolling {
     }
 
     public void release(int y) {
-        addPoint(y, System.currentTimeMillis());
+        addPoint(y, System.currentTimeMillis(), false);
     }
 
     public void drag(int y) {
-        addPoint(y, System.currentTimeMillis());
+        addPoint(y, System.currentTimeMillis(), true);
     }
 
     public KineticScrollingTask create(TouchControl tc) {
         final int movingAfter = CanvasEx.minItemHeight / 2;
         final int time = period;
         final int way = toY - fromY;
-        if ((Math.abs(way) < movingAfter) || (time < 2)) {
+        if ((Math.abs(way) < movingAfter) || (time < 10)) {
             return null;
         }
         final int v = calcV(way, time);
@@ -294,18 +297,22 @@ class KineticScrolling {
         toY = y;
         period = 0;
     }
-    private void addPoint(int y, long now) {
-        if (toY == y) {
+    private void addPoint(int y, long now, boolean drag) {
+        if ((toY == y) && !drag) {
             return;
         }
-        boolean sameDirection = ((fromY < y) && (toY < y)) || ((y < fromY) && (y < toY));
-        int interval = (int)(now - startTime);
+        boolean sameDirection = ((fromY < y) && (toY <= y)) || ((y < fromY) && (y <= toY));
         if (sameDirection) {
-            sameDirection = (interval < 100) || (2 < Math.abs(y - toY));
+            int interval = (int)(now - prevTime);
+            sameDirection = (interval < 50) || (5 < Math.abs(y - toY));
         }
         if (sameDirection) {
+            if (drag) {
+                prevY = y;
+                prevTime = startTime;
+            }
             toY = y;
-            period = interval;
+            period = (int)(now - startTime);
         } else {
             reset(y, now);
         }

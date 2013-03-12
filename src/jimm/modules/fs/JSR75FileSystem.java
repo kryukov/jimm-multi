@@ -93,6 +93,9 @@ public class JSR75FileSystem {
         }
         return fileConnection.openOutputStream(true);
     }
+    public String getAbsolutePath() throws Exception {
+        return fileConnection.getAbsolutePath();
+    }
     // #sijapp cond.end #
 
     public InputStream openInputStream() throws Exception {

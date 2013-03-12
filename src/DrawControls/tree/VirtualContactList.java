@@ -47,9 +47,8 @@ public final class VirtualContactList extends VirtualList {
     private Icon[] rightIcons = new Icon[1];
     private int stepSize;
     private int nodeRectHeight;
-    private boolean useGroups;
     private boolean showStatusLine;
-    private boolean hideOffline;
+    private boolean useGroups;
     private ContactListModel model;
     // #sijapp cond.if modules_MULTI isnot "true" #
     private Icon[] capIcons = new Icon[2];
@@ -57,7 +56,6 @@ public final class VirtualContactList extends VirtualList {
     private Par textMessage = null;
 
     private TreeNode currentNode = null;
-    private TreeNode selectedItem = null;
     private boolean rebuildList = false;
 
     private Vector updateQueue = new Vector();
@@ -230,24 +228,10 @@ public final class VirtualContactList extends VirtualList {
 
     private void updateOption() {
         boolean groups = useGroups;
-        useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
-        hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
         stepSize = Math.max(getFontSet()[FONT_STYLE_PLAIN].getHeight() / 4, 2);
-        if (groups && !useGroups) {
-            for (int i = 0; i < model.getProtocolCount(); ++i) {
-                Protocol p = model.getProtocol(i);
-                Util.sort(p.getSortedContacts());
-            }
-        }
-    }
-    private Protocol getContactProtocol(Contact c) {
-        for (int i = 0; i < model.getProtocolCount(); ++i) {
-            if (model.getProtocol(i).inContactList(c)) {
-                return model.getProtocol(i);
-            }
-        }
-        return null;
+        useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
+        model.updateOptions();
     }
     /**
      * Build path to node int tree.
@@ -255,7 +239,7 @@ public final class VirtualContactList extends VirtualList {
     private void expandNodePath(TreeNode node) {
         if ((node instanceof Contact) && useGroups) {
             Contact c = (Contact)node;
-            Protocol p = getContactProtocol(c);
+            Protocol p = model.getContactProtocol(c);
             if (null != p) {
                 Group group = p.getGroupById(c.getGroupId());
                 if (null == group) {
@@ -266,79 +250,10 @@ public final class VirtualContactList extends VirtualList {
         }
     }
 
-    private void rebuildFlatItemsWG(Protocol p, boolean onlineOnly, Vector drawItems) {
-        Vector contacts;
-        Group g;
-        Contact c;
-        int contactCounter;
-        boolean all = !Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
-        Vector groups = p.getSortedGroups();
-        for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            g = (Group)groups.elementAt(groupIndex);
-            contactCounter = 0;
-            drawItems.addElement(g);
-            contacts = g.getContacts();
-            for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-                c = (Contact)contacts.elementAt(contactIndex);
-                if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                    if (g.isExpanded()) {
-                        drawItems.addElement(c);
-                    }
-                    contactCounter++;
-                }
-            }
-            if (onlineOnly && (0 == contactCounter)) {
-                drawItems.removeElementAt(drawItems.size() - 1);
-            }
-        }
-
-        g = p.getNotInListGroup();
-        drawItems.addElement(g);
-        contacts = g.getContacts();
-        contactCounter = 0;
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                if (g.isExpanded()) {
-                    drawItems.addElement(c);
-                }
-                contactCounter++;
-            }
-        }
-        if (0 == contactCounter) {
-            drawItems.removeElementAt(drawItems.size() - 1);
-        }
-    }
-    private void rebuildFlatItemsWOG(Protocol p, Vector drawItems) {
-        boolean all = !Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
-        Contact c;
-        Vector contacts = p.getSortedContacts();
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                drawItems.addElement(c);
-            }
-        }
-    }
 
     private void buildFlatItems(Vector items) {
         items.removeAllElements();
-        final int count = model.getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = model.getProtocol(i);
-            // #sijapp cond.if modules_MULTI is "true" #
-            ProtocolBranch root = p.getProtocolBranch();
-            items.addElement(root);
-            if (!root.isExpanded()) continue;
-            // #sijapp cond.end #
-            synchronized (p.getRosterLockObject()) {
-                if (useGroups) {
-                    rebuildFlatItemsWG(p, hideOffline, items);
-                } else {
-                    rebuildFlatItemsWOG(p, items);
-                }
-            }
-        }
+        model.buildFlatItems(items);
     }
 
     private void buildList() {
@@ -377,9 +292,6 @@ public final class VirtualContactList extends VirtualList {
             currentNode = node;
         }
     }
-    public final void setAlwaysVisibleNode(TreeNode node) {
-        selectedItem = node;
-    }
     /**
      * Expand or collapse tree node.
      * NOTE: this is not recursive operation!
@@ -394,7 +306,7 @@ public final class VirtualContactList extends VirtualList {
             return;
         }
         if (item instanceof Contact) {
-            ((Contact)item).activate(getContactProtocol((Contact)item));
+            ((Contact)item).activate(model.getContactProtocol((Contact)item));
 
         } else if (item instanceof Group) {
             Group group = (Group)item;

@@ -251,7 +251,7 @@ public final class ContactList implements SelectListener, ContactListListener {
         if (null != c) {
             contactList.setActiveContact(c);
         }
-        contactList.setAlwaysVisibleNode(c);
+        contactList.getModel().setAlwaysVisibleNode(c);
     }
     public void activate(Contact c) {
         _setActiveContact(c);

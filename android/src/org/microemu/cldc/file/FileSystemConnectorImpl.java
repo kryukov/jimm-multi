@@ -69,7 +69,7 @@ public class FileSystemConnectorImpl extends ConnectorAdapter implements Impleme
 		return con;
 	}
 
-	static Object doPrivilegedIO(PrivilegedExceptionAction action, AccessControlContext context) throws IOException {
+	static <T> T doPrivilegedIO(PrivilegedExceptionAction<T> action, AccessControlContext context) throws IOException {
 		try {
 			return AccessController.doPrivileged(action, context);
 		} catch (PrivilegedActionException e) {

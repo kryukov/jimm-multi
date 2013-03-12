@@ -99,4 +99,6 @@ public interface FileConnection extends StreamConnection {
 	public abstract String getURL();
 
 	public abstract long lastModified();
+
+    public abstract String getAbsolutePath() throws IOException;
 }

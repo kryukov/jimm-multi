@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import jimm.modules.DebugLog;
 import jimm.modules.fs.FileSystem;
 import jimm.modules.fs.JSR75FileSystem;
 import protocol.net.TcpSocket;
@@ -19,7 +20,6 @@ import java.io.InputStream;
  */
 public class SoundPlayer implements MediaPlayer.OnCompletionListener {
     private MediaPlayer androidPlayer;
-    private FileInputStream in;
 
     @Override
     public void onCompletion(MediaPlayer mp) {
@@ -31,7 +31,6 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
             androidPlayer.release();
             androidPlayer = null;
         }
-        TcpSocket.close(in);
     }
     public void play(String source, int volume) throws IOException {
         AudioManager audioManager = (AudioManager)JimmActivity.getInstance().getSystemService(Context.AUDIO_SERVICE);
@@ -45,13 +44,12 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
     private void playIt(String source, int volume) throws IOException {
         androidPlayer = new MediaPlayer();
         try {
-            in = (FileInputStream) openFile(source);
+            String in = openFile(source);
             if (null == in) {
                 AssetFileDescriptor afd = JimmActivity.getInstance().getAssets().openFd(source);
                 androidPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             } else {
-                androidPlayer.setDataSource(in.getFD());
-                TcpSocket.close(in);
+                androidPlayer.setDataSource(in);
             }
             androidPlayer.prepare();
             androidPlayer.setVolume(volume / 100f, volume / 100f);
@@ -60,12 +58,12 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
             throw e;
         }
     }
-    public static InputStream openFile(String file) {
+    public static String openFile(String file) {
         JSR75FileSystem fs = FileSystem.getInstance();
-        InputStream in = null;
+        String in = null;
         try {
             fs.openFile(FileSystem.getJimmHome() + FileSystem.RES + "/" + file);
-            in = fs.openInputStream();
+            in = fs.getAbsolutePath();
         } catch (Exception ignored) {
         }
         fs.close();

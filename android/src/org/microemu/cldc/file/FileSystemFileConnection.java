@@ -151,7 +151,7 @@ public class FileSystemFileConnection implements FileConnection {
         return null;
     }
 
-	private Object doPrivilegedIO(PrivilegedExceptionAction action) throws IOException {
+	private <T> T doPrivilegedIO(PrivilegedExceptionAction<T> action) throws IOException {
 		return FileSystemConnectorImpl.doPrivilegedIO(action, acc);
 	}
 
@@ -522,6 +522,15 @@ public class FileSystemFileConnection implements FileConnection {
 		});
 		return this.opendInputStream;
 	}
+
+    public String getAbsolutePath() throws IOException {
+        return (String) doPrivilegedIO(new PrivilegedExceptionAction<String>() {
+            public String run() throws IOException {
+                if (!file.exists()) throw new FileNotFoundException();
+                return file.getAbsolutePath();
+            }
+        });
+    }
 
 	public DataInputStream openDataInputStream() throws IOException {
 		return new DataInputStream(openInputStream());

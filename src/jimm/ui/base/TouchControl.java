@@ -41,6 +41,8 @@ public class TouchControl {
     boolean kineticOn;
     private volatile KineticScrollingTask kineticTask = null;
     private final KineticScrolling kinetic = new KineticScrolling();
+    private LongTapTask longTapTask= null;
+    private boolean lockTouch;
 
     private int pressLimit;
 
@@ -82,8 +84,21 @@ public class TouchControl {
         }
     }
 
+    public void pointerLongTap() {
+        try {
+            _pointerReleased(canvas, startX, startY);
+            lockTouch = true;
+        } catch (Exception e) {
+            // #sijapp cond.if modules_DEBUGLOG is "true" #
+            jimm.modules.DebugLog.panic("pointerLongTap", e);
+            // #sijapp cond.end #
+        }
+    }
+
+
     private synchronized void _pointerPressed(CanvasEx c, int x, int y) {
         stopKinetic();
+        lockTouch = false;
 
         kineticOn = true;
         region = null;
@@ -100,9 +115,14 @@ public class TouchControl {
         kinetic.press(y, now);
 
         c.stylusPressed(x, y);
+
+        longTapTask = new LongTapTask(this);
+        longTapTask.start(Display.LONG_INTERVAL);
     }
 
     private synchronized void _pointerReleased(CanvasEx c, int x, int y) {
+        if (lockTouch) return;
+        longTapTask.stop();
         isDragged |= isDragged(x, y);
 
         curX = x;
@@ -129,6 +149,7 @@ public class TouchControl {
     }
 
     private synchronized void _pointerDragged(CanvasEx c, int x, int y) {
+        if (lockTouch) return;
         if (!isDragged) {
             isDragged = isDragged(x, y);
             if (!isDragged) {
@@ -136,6 +157,7 @@ public class TouchControl {
             }
         }
 
+        longTapTask.stop();
         if (kineticOn) {
             kinetic.drag(y);
         }
@@ -150,6 +172,7 @@ public class TouchControl {
     }
 
     synchronized void kineticMoving(int y) {
+        if (lockTouch) return;
         CanvasEx c = canvas;
         if (kineticOn && (null != c) && (null != kineticTask)) {
             try {
@@ -325,6 +348,32 @@ class KineticScrollingTask extends TimerTask {
     }
     public void stop() {
         cancel();
+        touch = null;
+        Timer t = timer;
+        timer = null;
+        if (null != t) {
+            t.cancel();
+        }
+    }
+}
+class LongTapTask extends TimerTask {
+    private Timer timer;
+    private TouchControl touch;
+    public LongTapTask(TouchControl touch) {
+        this.touch = touch;
+        timer = new Timer();
+    }
+
+    public void start(long interval) {
+        timer.schedule(this, interval);
+    }
+    public void run() {
+        try {
+            touch.pointerLongTap();
+        } catch (Exception ignored) {
+        }
+    }
+    public void stop() {
         touch = null;
         Timer t = timer;
         timer = null;

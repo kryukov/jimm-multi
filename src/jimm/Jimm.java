@@ -78,7 +78,7 @@ public class Jimm extends MIDlet implements Runnable {
     public static final byte PHONE_SAMSUNG        = 9;
     public static final byte PHONE_ANDROID        = 10;
 
-    private static String getPhone() {
+    public static String getPhone() {
         final String platform = getSystemProperty("microedition.platform", null);
         // #sijapp cond.if target is "MIDP2" #
         if (null == platform) {

@@ -13,6 +13,7 @@ import java.util.Vector;
 import jimm.Jimm;
 import jimm.JimmException;
 import jimm.chat.message.PlainMessage;
+import jimm.comm.StringConvertor;
 import jimm.modules.*;
 import protocol.Protocol;
 
@@ -30,8 +31,8 @@ public abstract class ClientConnection implements Runnable {
     private long nextPingTime;
     private long pongTime;
 
-    private static final int PING_INTERVAL = 2 * 60 /* sec */;
-    private static final int PONG_TIMEOUT = 5 * 60 /* sec */;
+    private static final int PING_INTERVAL = 90 /* sec */;
+    private static final int PONG_TIMEOUT = 4 * 60 /* sec */;
 
 
     protected final void setPingInterval(long interval) {
@@ -42,6 +43,11 @@ public abstract class ClientConnection implements Runnable {
         return keepAliveInterv;
     }
     protected final void usePong() {
+        if (Jimm.isPhone(Jimm.PHONE_SE)) {
+            if (-1 < StringConvertor.notNull(Jimm.getPhone()).indexOf("J108i")) {
+                return;
+            }
+        }
         usePong = true;
         updateTimeout();
     }

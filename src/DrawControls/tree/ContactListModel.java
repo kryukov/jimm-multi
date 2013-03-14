@@ -29,14 +29,14 @@ import protocol.*;
 
 import java.util.Vector;
 
-public final class ContactListModel {
+public class ContactListModel {
     private final Protocol[] protocolList;
     private int count = 0;
 
-    private TreeNode selectedItem = null;
+    protected TreeNode selectedItem = null;
 
-    private boolean useGroups;
-    private boolean hideOffline;
+    protected boolean useGroups;
+    protected boolean hideOffline;
 
     public ContactListModel(int maxCount) {
         protocolList = new Protocol[maxCount];
@@ -84,7 +84,7 @@ public final class ContactListModel {
         return null;
     }
 
-    void buildFlatItems(Vector items) {
+    public void buildFlatItems(Vector items) {
         final int count = getProtocolCount();
         for (int i = 0; i < count; ++i) {
             Protocol p = getProtocol(i);
@@ -95,7 +95,7 @@ public final class ContactListModel {
             // #sijapp cond.end #
             synchronized (p.getRosterLockObject()) {
                 if (useGroups) {
-                    rebuildFlatItemsWG(p, hideOffline, items);
+                    rebuildFlatItemsWG(p, items);
                 } else {
                     rebuildFlatItemsWOG(p, items);
                 }
@@ -103,12 +103,12 @@ public final class ContactListModel {
         }
     }
 
-    private void rebuildFlatItemsWG(Protocol p, boolean onlineOnly, Vector drawItems) {
+    private void rebuildFlatItemsWG(Protocol p, Vector drawItems) {
         Vector contacts;
         Group g;
         Contact c;
         int contactCounter;
-        boolean all = !Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+        boolean all = !hideOffline;
         Vector groups = p.getSortedGroups();
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
             g = (Group)groups.elementAt(groupIndex);
@@ -124,7 +124,7 @@ public final class ContactListModel {
                     contactCounter++;
                 }
             }
-            if (onlineOnly && (0 == contactCounter)) {
+            if (hideOffline && (0 == contactCounter)) {
                 drawItems.removeElementAt(drawItems.size() - 1);
             }
         }
@@ -147,7 +147,7 @@ public final class ContactListModel {
         }
     }
     private void rebuildFlatItemsWOG(Protocol p, Vector drawItems) {
-        boolean all = !Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+        boolean all = !hideOffline;
         Contact c;
         Vector contacts = p.getSortedContacts();
         for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {

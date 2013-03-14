@@ -16,8 +16,8 @@ import protocol.StatusInfo;
  */
 public class GlobalStatusForm implements SelectListener {
     private StatusInfo getStatusInfo() {
-        ImageList icons = ImageList.createImageList("/jabber-status.png");
-        final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
+        ImageList icons = ImageList.createImageList("/global-status.png");
+        final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
         return new StatusInfo(icons, statusIconIndex, statuses);
     }
 

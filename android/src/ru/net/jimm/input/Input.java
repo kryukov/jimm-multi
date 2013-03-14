@@ -23,6 +23,7 @@ import jimm.modules.Templates;
 import jimm.ui.ActionListener;
 import jimm.ui.Selector;
 import jimm.ui.base.CanvasEx;
+import protocol.Contact;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
 
@@ -35,8 +36,8 @@ import ru.net.jimm.R;
  */
 public class Input extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
     private EditText messageEditor;
-    private Runnable userMessageListener;
-    private Object owner;
+    private MessageListener userMessageListener;
+    private Contact owner;
     private int layout = 0;
     private boolean sendByEnter;
 
@@ -154,11 +155,11 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     private void send() {
         hideKeyboard(messageEditor);
         if (null != userMessageListener) {
-            userMessageListener.run();
+            userMessageListener.send(owner, getText());
         }
     }
 
-    public void setUserMessageListener(Runnable l) {
+    public void setUserMessageListener(MessageListener l) {
         userMessageListener = l;
     }
 
@@ -186,7 +187,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         if (what.startsWith("#") && !text.contains(" ")) return false;
         return !text.endsWith(", ");
     }
-    public void setOwner(Object owner) {
+    public void setOwner(Contact owner) {
         if (this.owner != owner) {
             this.owner = owner;
             resetText();
@@ -261,4 +262,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         public void afterTextChanged(Editable editable) {
         }
     };
+    public abstract class MessageListener {
+        public abstract void send(Contact owner, String text);
+    }
 }

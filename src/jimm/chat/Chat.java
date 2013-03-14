@@ -710,10 +710,13 @@ public final class Chat extends VirtualList {
         ContactList.getInstance()._setActiveContact(contact);
         // #sijapp cond.if modules_ANDROID is "true" #
         NativeCanvas.getInstance().getInput().setOwner(contact);
-        NativeCanvas.getInstance().getInput().setUserMessageListener(new Runnable() {
-            public void run() {
+        NativeCanvas.getInstance().getInput().setUserMessageListener(
+                NativeCanvas.getInstance().getInput().new MessageListener() {
+            public void send(Contact owner, String text) {
+                if (contact != owner) {
+                    return;
+                }
                 ChatHistory.instance.registerChat(Chat.this);
-                String text = NativeCanvas.getInstance().getInput().getText();
                 NativeCanvas.getInstance().getInput().resetText();
                 if (!contact.isSingleUserContact() && text.endsWith(", ")) {
                     text = "";

@@ -43,11 +43,10 @@ public abstract class ClientConnection implements Runnable {
         return keepAliveInterv;
     }
     protected final void usePong() {
-        if (Jimm.isPhone(Jimm.PHONE_SE)) {
-            if (-1 < StringConvertor.notNull(Jimm.getPhone()).indexOf("J108i")) {
-                return;
-            }
+        if (-1 < StringConvertor.notNull(Jimm.microeditionPlatform).indexOf("EricssonJ108i")) {
+            return;
         }
+        DebugLog.println("pong " + Jimm.microeditionPlatform + " " + StringConvertor.notNull(Jimm.microeditionPlatform).indexOf("EricssonJ108i"));
         usePong = true;
         updateTimeout();
     }

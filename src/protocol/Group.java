@@ -59,6 +59,9 @@ public class Group extends TreeBranch implements Sortable {
     public final void setMode(int newMode) {
         mode = (byte)newMode;
     }
+    public final byte getMode() {
+        return mode;
+    }
     public final boolean hasMode(byte type) {
         return (mode & type) != 0;
     }

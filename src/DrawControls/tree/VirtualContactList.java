@@ -27,6 +27,8 @@ import DrawControls.icons.Icon;
 import DrawControls.text.*;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
+
+import DrawControls.tree.alloy.AlloyContactListModel;
 import jimm.*;
 import jimm.chat.*;
 import jimm.comm.*;
@@ -67,6 +69,7 @@ public final class VirtualContactList extends VirtualList {
         super("");
         // #sijapp cond.if modules_MULTI is "true" #
         model = new ContactListModel(10);
+        model = new AlloyContactListModel(10);
         // #sijapp cond.else #
         model = new ContactListModel(1);
         // #sijapp cond.end #
@@ -416,6 +419,9 @@ public final class VirtualContactList extends VirtualList {
         // #sijapp cond.if modules_MULTI is "true" #
         if (node instanceof ProtocolBranch) {
             return ((ProtocolBranch)node).getProtocol();
+        }
+        if (node instanceof Contact) {
+            return model.getContactProtocol((Contact) node);
         }
 
         Protocol last = null;

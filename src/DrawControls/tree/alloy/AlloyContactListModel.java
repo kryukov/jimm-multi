@@ -115,6 +115,15 @@ public class AlloyContactListModel extends ContactListModel {
         }
     }
 
+    public void updateGroup(Group group) {
+        group = getGroup(group);
+        if (useGroups) {
+            group.updateGroupData();
+            group.sort();
+        } else {
+            Util.sort(getProtocol(group).getSortedContacts());
+        }
+    }
 
 
 
@@ -156,6 +165,9 @@ public class AlloyContactListModel extends ContactListModel {
         return null;
     }
 
+    private Group getGroup(Group g) {
+        return getGroup(g.getName());
+    }
     private Group getGroup(String name) {
         Group g;
         for (int i = 0; i < groups.size(); ++i) {

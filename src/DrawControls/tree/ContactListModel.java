@@ -83,6 +83,14 @@ public class ContactListModel {
         }
         return null;
     }
+    protected final Protocol getProtocol(Group g) {
+        for (int i = 0; i < getProtocolCount(); ++i) {
+            if (-1 < Util.getIndex(getProtocol(i).getGroupItems(), g)) {
+                return getProtocol(i);
+            }
+        }
+        return null;
+    }
 
     public void buildFlatItems(Vector items) {
         final int count = getProtocolCount();
@@ -163,4 +171,26 @@ public class ContactListModel {
         }
     }
 
+    public void updateGroup(Group group) {
+        if (useGroups) {
+            group.updateGroupData();
+            group.sort();
+        } else {
+            Util.sort(getProtocol(group).getSortedContacts());
+        }
+    }
+
+    public void removeFromGroup(Group g, Contact c) {
+        if (g.getContacts().removeElement(c)) {
+            g.updateGroupData();
+        }
+    }
+
+    public void addToGroup(Group group, Contact contact) {
+        group.getContacts().addElement(contact);
+    }
+
+    public void updateGroupData(Group group) {
+        group.updateGroupData();
+    }
 }

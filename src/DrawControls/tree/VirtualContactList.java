@@ -180,12 +180,7 @@ public final class VirtualContactList extends VirtualList {
             while (!updateQueue.isEmpty()) {
                 Group group = (Group)updateQueue.firstElement();
                 updateQueue.removeElementAt(0);
-                if (useGroups) {
-                    group.updateGroupData();
-                    group.sort();
-                } else {
-                    Util.sort(getProtocol(group).getSortedContacts());
-                }
+                model.updateGroup(group);
             }
             rebuildList = false;
             try {
@@ -230,7 +225,6 @@ public final class VirtualContactList extends VirtualList {
     }
 
     private void updateOption() {
-        boolean groups = useGroups;
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
         stepSize = Math.max(getFontSet()[FONT_STYLE_PLAIN].getHeight() / 4, 2);
         useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);

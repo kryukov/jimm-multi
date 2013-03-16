@@ -53,7 +53,6 @@ abstract public class Protocol {
     // #sijapp cond.if modules_SERVERLISTS is "true" #
     private byte privateStatus = 0;
     // #sijapp cond.end #
-    private boolean connectedByUser = false;
 
     private final Object rosterLockObject = new Object();
     private Vector sortedContacts = new Vector();
@@ -251,7 +250,7 @@ abstract public class Protocol {
                 groupItems.addElement(item);
             }
         }
-        group.updateGroupData();
+        getContactList().getManager().getModel().updateGroupData(group);
         group.sort();
     }
 
@@ -678,7 +677,7 @@ abstract public class Protocol {
         synchronized (rosterLockObject) {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
                 for (int i = groups.size() - 1; i >= 0; --i) {
-                    ((Group)groups.elementAt(i)).updateGroupData();
+                    getContactList().getManager().getModel().updateGroupData((Group)groups.elementAt(i));
                 }
             }
         }
@@ -775,39 +774,24 @@ abstract public class Protocol {
 
     ///////////////////////////////////////////////////////////////////////////
     private void ui_removeFromAnyGroup(Contact c) {
-        Vector allGroups = getGroupItems();
-        for (int i = 0; i < allGroups.size(); ++i) {
-            Group group = (Group)allGroups.elementAt(i);
-            if (group.removeContact(c)) {
-                group.updateGroupData();
-                return;
-            }
+        Group g = getGroupById(c.getGroupId());
+        if (null == g) {
+            g = notInListGroup;
         }
-        notInListGroup.removeContact(c);
-        notInListGroup.updateGroupData();
+        getContactList().getManager().getModel().removeFromGroup(g, c);
     }
     private void ui_addContactToGroup(Contact contact, Group group) {
         ui_removeFromAnyGroup(contact);
         contact.setGroup(group);
-        if (null != group) {
-            group.addContact(contact);
-        } else {
-            notInListGroup.addContact(contact);
+        if (null == group) {
+            group = notInListGroup;
         }
-    }
-    private void ui_updateContactInGroup(Contact contact, Group group) {
-        // TODO: sort contact only if group is expanded or when group is going to be expanded
-        synchronized (rosterLockObject) {
-            if (null == group) {
-                group = notInListGroup;
-            }
-            getContactList().getManager().putIntoQueue(group);
-        }
+        getContactList().getManager().getModel().addToGroup(group, contact);
     }
     private void ui_updateGroup(Group group) {
         if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
             synchronized (rosterLockObject) {
-                group.updateGroupData();
+                getContactList().getManager().getModel().updateGroupData(group);
                 Util.sort(sortedGroups);
             }
             ui_updateCL(group);
@@ -867,7 +851,13 @@ abstract public class Protocol {
         // #sijapp cond.end #
     }
     public final void ui_updateContact(Contact contact) {
-        ui_updateContactInGroup(contact, getGroup(contact));
+        synchronized (rosterLockObject) {
+            Group group = getGroup(contact);
+            if (null == group) {
+                group = notInListGroup;
+            }
+            getContactList().getManager().putIntoQueue(group);
+        }
         ui_updateCL(contact);
     }
 

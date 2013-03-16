@@ -96,12 +96,6 @@ public class Group extends TreeBranch implements Sortable {
     public boolean isEmpty() {
         return (0 == contacts.size());
     }
-    final void addContact(Contact c) {
-        contacts.addElement(c);
-    }
-    final boolean removeContact(Contact c) {
-        return contacts.removeElement(c);
-    }
 
     public final Vector getContacts() {
         return contacts;

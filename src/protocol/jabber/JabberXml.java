@@ -1018,25 +1018,12 @@ public final class JabberXml extends ClientConnection {
         }
         userInfo.updateProfileView();
 
-        try {
-            XmlNode bs64photo = vCard.getFirstNode("PHOTO");
-            bs64photo = (null == bs64photo) ? null : bs64photo.getFirstNode("BINVAL");
-            byte[] avatarBytes = null;
-            if (null != bs64photo) {
-                avatarBytes = userInfo.isEditable()
-                        ? bs64photo.getBinValue()
-                        : bs64photo.popBinValue();
-            }
-
-            if ((null != avatarBytes) && Jimm.hasMemory(avatarBytes.length * 2)) {
-                Image avatar = Image.createImage(avatarBytes, 0, avatarBytes.length);
-                avatarBytes = null;
-                userInfo.setAvatar(avatar);
-                userInfo.updateProfileView();
-            }
-        } catch (OutOfMemoryError er) {
-        } catch (Exception e) {
+        XmlNode bs64photo = vCard.getFirstNode("PHOTO");
+        bs64photo = (null == bs64photo) ? null : bs64photo.getFirstNode("BINVAL");
+        if (null != bs64photo) {
+            new Thread(new AvatarLoader(userInfo, bs64photo)).start();
         }
+        bs64photo = null;
 
         singleUserInfo = null;
     }

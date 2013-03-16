@@ -88,6 +88,9 @@ public class ContactListModel {
             if (-1 < Util.getIndex(getProtocol(i).getGroupItems(), g)) {
                 return getProtocol(i);
             }
+            if (getProtocol(i).getNotInListGroup() == g) {
+                return getProtocol(i);
+            }
         }
         return null;
     }
@@ -192,5 +195,21 @@ public class ContactListModel {
 
     public void updateGroupData(Group group) {
         group.updateGroupData();
+    }
+
+    public void updateGroup(Protocol protocol, Group group) {
+        Vector allItems = protocol.getContactItems();
+        Vector groupItems = group.getContacts();
+        groupItems.removeAllElements();
+        int size = allItems.size();
+        int groupId = group.getId();
+        for (int i = 0; i < size; ++i) {
+            Contact item = (Contact)allItems.elementAt(i);
+            if (item.getGroupId() == groupId) {
+                groupItems.addElement(item);
+            }
+        }
+        group.updateGroupData();
+        group.sort();
     }
 }

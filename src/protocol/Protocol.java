@@ -239,19 +239,7 @@ abstract public class Protocol {
     }
     // #sijapp cond.end#
     private void updateContacts(Group group) {
-        Vector allItems = getContactItems();
-        Vector groupItems = group.getContacts();
-        groupItems.removeAllElements();
-        int size = allItems.size();
-        int groupId = group.getId();
-        for (int i = 0; i < size; ++i) {
-            Contact item = (Contact)allItems.elementAt(i);
-            if (item.getGroupId() == groupId) {
-                groupItems.addElement(item);
-            }
-        }
-        getContactList().getManager().getModel().updateGroupData(group);
-        group.sort();
+        getContactList().getManager().getModel().updateGroup(this, group);
     }
 
     /* ********************************************************************* */

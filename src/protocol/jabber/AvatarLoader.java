@@ -1,6 +1,7 @@
 package protocol.jabber;
 
 import jimm.Jimm;
+import jimm.modules.DebugLog;
 import jimm.search.UserInfo;
 
 import javax.microedition.lcdui.Image;

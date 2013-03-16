@@ -28,6 +28,8 @@ package org.microemu.android.device;
 
 import android.graphics.Bitmap;
 
+import javax.microedition.lcdui.Image;
+
 public class AndroidImmutableImage extends javax.microedition.lcdui.Image {
 
 	private Bitmap bitmap;
@@ -48,8 +50,13 @@ public class AndroidImmutableImage extends javax.microedition.lcdui.Image {
 	public int getWidth() {
 		return bitmap == null? 0: bitmap.getWidth();
 	}
-	
-	@Override
+
+    @Override
+    public Image scale(int w, int h) {
+        return new AndroidImmutableImage(Bitmap.createScaledBitmap(bitmap, w, h, false));
+    }
+
+    @Override
 	public int getHeight() {
 		return bitmap == null? 0: bitmap.getHeight();
 	}

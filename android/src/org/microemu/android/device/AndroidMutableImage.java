@@ -27,6 +27,7 @@
 package org.microemu.android.device;
 
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 import org.microemu.device.MutableImage;
 
@@ -52,7 +53,12 @@ public class AndroidMutableImage extends MutableImage {
 		return null;
 	}
 
-	@Override
+    @Override
+    public Image scale(int w, int h) {
+        return new AndroidImmutableImage(Bitmap.createScaledBitmap(bitmap, w, h, false));
+    }
+
+    @Override
 	public Graphics getGraphics() {
         AndroidDisplayGraphics displayGraphics = new AndroidDisplayGraphics(bitmap);
 		displayGraphics.setColor(0x00000000);

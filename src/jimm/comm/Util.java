@@ -940,6 +940,10 @@ public class Util {
             thumbHeight = height;
             thumbWidth = thumbHeight * sourceWidth / sourceHeight;
         }
+        // #sijapp cond.if modules_ANDROID is "true"#
+        Image scaled = image.scale(thumbWidth, thumbHeight);
+        if (null != scaled) return scaled;
+        // #sijapp cond.end#
 
         Image thumb = Image.createImage(thumbWidth, thumbHeight);
         Graphics g = thumb.getGraphics();

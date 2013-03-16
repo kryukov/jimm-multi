@@ -59,6 +59,10 @@ public class Image {
         return DeviceFactory.getDevice().getDeviceDisplay().createImage(imageData, imageOffset, imageLength);
     }
 
+    public Image scale(int w, int h) {
+        return this;
+    }
+
     public Graphics getGraphics() {
         throw new IllegalStateException("Image is immutable");
     }

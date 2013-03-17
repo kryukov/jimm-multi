@@ -94,14 +94,12 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
         return input;
     }
 
-    public void setInputVisibility(final boolean v,final Object canvas) {
+    public void setInputVisibility(final boolean v) {
         activity.post(new Runnable() {
             public void run() {
                 boolean prevV = (input.getVisibility() == View.VISIBLE);
-                input.setCanvas(canvas);
                 input.setVisibility(v ? View.VISIBLE : View.GONE);
                 view.requestLayout();
-
                 if (v && input.hasText()) {
                     input.showKeyboard();
                 } else {
@@ -109,6 +107,9 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
                     if ((prevV && !v) || !input.hasText()) {
                         input.hideKeyboard(view);
                     }
+                }
+                if (!v) {
+                    input.setOwner(null);
                 }
             }
         });

@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.Options;
-import jimm.chat.Chat;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
 import jimm.ui.ActionListener;
@@ -60,15 +59,6 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                 }
             });
         }
-    }
-
-    public void setCanvas(Object canvas) {
-        if (canvas instanceof Chat) {
-            Chat chat = (Chat) canvas;
-            String name = chat.getContact().getName();
-            messageEditor.setHint(getContext().getString(R.string.hint_message_to, name));
-        }
-
     }
 
     private void init() {
@@ -190,6 +180,16 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     public void setOwner(Contact owner) {
         if (this.owner != owner) {
             this.owner = owner;
+            String name = (null != owner) ? owner.getName() : null;
+            final String hint = (null == name)
+                    ? getContext().getString(R.string.hint_message)
+                    : getContext().getString(R.string.hint_message_to, name);
+            ((JimmActivity)getContext()).post(new Runnable() {
+                @Override
+                public void run() {
+                    messageEditor.setHint(hint);
+                }
+            });
             resetText();
         }
     }

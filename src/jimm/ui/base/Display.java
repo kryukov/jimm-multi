@@ -75,10 +75,7 @@ public class Display {
     }
     private void setCurrentDisplay(Object o) {
         // #sijapp cond.if modules_ANDROID is "true" #
-        try {
-            NativeCanvas.getInstance().setInputVisibility(o instanceof Chat, o);
-        } catch (Exception ignored) {
-        }
+        NativeCanvas.getInstance().setInputVisibility(o instanceof Chat);
         // #sijapp cond.end#
         final Object prev = currentScreen;
         currentScreen = o;

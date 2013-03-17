@@ -46,8 +46,6 @@ public class CanvasView extends View implements DisplayRepaintListener {
 
     private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
 
-    private Matrix scale = new Matrix();
-
     private AndroidKeyListener keyListener = null;
 
     private int inputType = InputType.TYPE_CLASS_TEXT;
@@ -57,18 +55,19 @@ public class CanvasView extends View implements DisplayRepaintListener {
         this.ui = ui;
         setFocusable(true);
         setFocusableInTouchMode(true);
+        /*
         try {
             Method setLayerTypeMethod = getClass().getMethod("setLayerType", new Class[]{int.class, Paint.class});
             setLayerTypeMethod.invoke(this, LAYER_TYPE_SOFTWARE, null);
         } catch (Exception ignored) {
         }
+        */
         setId(id);
     }
 
-    private void initGraphics(int width, int height, Matrix matrix) {
+    private void initGraphics(int width, int height) {
         if (graphics == null) {
             graphics = new AndroidDisplayGraphics();
-            scale = matrix;
         }
     }
 
@@ -76,11 +75,6 @@ public class CanvasView extends View implements DisplayRepaintListener {
         postInvalidate();
     }
 
-
-    public void setScale(float sx, float sy) {
-        scale.reset();
-        scale.postScale(sx, sy);
-    }
 
     public void setKeyListener(AndroidKeyListener keyListener, int inputType) {
         this.keyListener = keyListener;
@@ -144,12 +138,9 @@ public class CanvasView extends View implements DisplayRepaintListener {
         if (ma == null) {
             return;
         }
-        initGraphics(androidCanvas.getWidth(), androidCanvas.getHeight(), androidCanvas.getMatrix());
+        initGraphics(androidCanvas.getWidth(), androidCanvas.getHeight());
         graphics.reset(androidCanvas);
-//            graphics.setClip(0, 0, view.getWidth(), view.getHeight());
-        androidCanvas.setMatrix(scale);
         ma.getDisplayAccess().paint(graphics);
-//            androidCanvas.drawBitmap(bitmap, scale, null);
     }
 
     @Override

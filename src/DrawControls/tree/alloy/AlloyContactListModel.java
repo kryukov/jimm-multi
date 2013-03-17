@@ -115,13 +115,16 @@ public class AlloyContactListModel extends ContactListModel {
         }
     }
 
-    public void updateGroup(Group group) {
-        group = getGroup(group);
+    public void updateGroup(Group g) {
         if (useGroups) {
+            Group group = getGroup(g);
+            if (null == group) {
+                group = createGroup(g);
+            }
             group.updateGroupData();
             group.sort();
         } else {
-            Util.sort(getProtocol(group).getSortedContacts());
+            Util.sort(getProtocol(g).getSortedContacts());
         }
     }
 
@@ -149,10 +152,14 @@ public class AlloyContactListModel extends ContactListModel {
                 group.getContacts().removeAllElements();
                 return;
             }
-            group = new Group(g.getName());
-            group.setMode(g.getMode());
-            groups.addElement(group);
+            group = createGroup(g);
         }
+    }
+    private Group createGroup(Group g) {
+        Group group = new Group(g.getName());
+        group.setMode(g.getMode());
+        groups.addElement(group);
+        return group;
     }
     private Group getGroup(Vector groups, String name) {
         Group g;

@@ -36,8 +36,8 @@ import ru.net.jimm.R;
  */
 public class Input extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
     private EditText messageEditor;
-    private MessageListener userMessageListener;
-    private Contact owner;
+    private volatile MessageListener userMessageListener;
+    private volatile Contact owner;
     private int layout = 0;
     private boolean sendByEnter;
 
@@ -47,19 +47,19 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         setId(id);
     }
     public void updateInput() {
-        JimmActivity activity = (JimmActivity) getContext();
-        activity.post(new Runnable() {
-            @Override
-            public void run() {
-                boolean simple = Options.getBoolean(Options.OPTION_SIMPLE_INPUT);
-                int newLayout = simple ? R.layout.input_simple : R.layout.input;
-                if (layout != newLayout) {
+        boolean simple = Options.getBoolean(Options.OPTION_SIMPLE_INPUT);
+        final int newLayout = simple ? R.layout.input_simple : R.layout.input;
+        if (layout != newLayout) {
+            JimmActivity activity = (JimmActivity) getContext();
+            activity.post(new Runnable() {
+                @Override
+                public void run() {
                     layout = newLayout;
                     init();
                     requestLayout();
                 }
-            }
-        });
+            });
+        }
     }
 
     public void setCanvas(Object canvas) {

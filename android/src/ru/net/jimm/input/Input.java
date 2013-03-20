@@ -17,12 +17,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.Options;
+import jimm.chat.Chat;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
 import jimm.ui.ActionListener;
 import jimm.ui.Selector;
 import jimm.ui.base.CanvasEx;
-import protocol.Contact;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
 
@@ -35,8 +35,7 @@ import ru.net.jimm.R;
  */
 public class Input extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
     private EditText messageEditor;
-    private volatile MessageListener userMessageListener;
-    private volatile Contact owner;
+    private volatile Chat owner;
     private int layout = 0;
     private boolean sendByEnter;
 
@@ -144,13 +143,9 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
 
     private void send() {
         hideKeyboard(messageEditor);
-        if (null != userMessageListener) {
-            userMessageListener.send(owner, getText());
+        if (null != owner) {
+            owner.sendMessage(getText());
         }
-    }
-
-    public void setUserMessageListener(MessageListener l) {
-        userMessageListener = l;
     }
 
     public void setText(final String text) {
@@ -177,10 +172,10 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         if (what.startsWith("#") && !text.contains(" ")) return false;
         return !text.endsWith(", ");
     }
-    public void setOwner(Contact owner) {
+    public void setOwner(Chat owner) {
         if (this.owner != owner) {
             this.owner = owner;
-            String name = (null != owner) ? owner.getName() : null;
+            String name = (null != owner) ? owner.getContact().getName() : null;
             final String hint = (null == name)
                     ? getContext().getString(R.string.hint_message)
                     : getContext().getString(R.string.hint_message_to, name);
@@ -262,7 +257,4 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         public void afterTextChanged(Editable editable) {
         }
     };
-    public abstract class MessageListener {
-        public abstract void send(Contact owner, String text);
-    }
 }

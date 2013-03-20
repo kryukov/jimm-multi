@@ -108,9 +108,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
                         input.hideKeyboard(view);
                     }
                 }
-                if (!v) {
-                    input.setOwner(null);
-                }
             }
         });
     }

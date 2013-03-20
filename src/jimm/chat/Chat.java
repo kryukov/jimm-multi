@@ -709,25 +709,21 @@ public final class Chat extends VirtualList {
         }
         ContactList.getInstance()._setActiveContact(contact);
         // #sijapp cond.if modules_ANDROID is "true" #
-        NativeCanvas.getInstance().getInput().setOwner(contact);
-        NativeCanvas.getInstance().getInput().setUserMessageListener(
-                NativeCanvas.getInstance().getInput().new MessageListener() {
-            public void send(Contact owner, String text) {
-                if (contact != owner) {
-                    return;
-                }
-                ChatHistory.instance.registerChat(Chat.this);
-                NativeCanvas.getInstance().getInput().resetText();
-                if (!contact.isSingleUserContact() && text.endsWith(", ")) {
-                    text = "";
-                }
-                if (!StringConvertor.isEmpty(text)) {
-                    protocol.sendMessage(contact, text, true);
-                }
-            }
-        });
+        NativeCanvas.getInstance().getInput().setOwner(this);
         // #sijapp cond.end #
     }
+    // #sijapp cond.if modules_ANDROID is "true" #
+    public void sendMessage(String message) {
+        ChatHistory.instance.registerChat(Chat.this);
+        NativeCanvas.getInstance().getInput().resetText();
+        if (!contact.isSingleUserContact() && message.endsWith(", ")) {
+            message = "";
+        }
+        if (!StringConvertor.isEmpty(message)) {
+            protocol.sendMessage(contact, message, true);
+        }
+    }
+    // #sijapp cond.end #
     private void showStatusPopup() {
         showStatus = false;
 //        String status = contact.getStatusText();

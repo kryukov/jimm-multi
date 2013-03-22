@@ -69,9 +69,7 @@ public final class VirtualContactList extends VirtualList {
         super("");
         // #sijapp cond.if modules_MULTI is "true" #
         model = new ContactListModel(10);
-        // #sijapp cond.if modules_TOUCH is "true" #
         model = new AlloyContactListModel(10);
-        // #sijapp cond.end #
         // #sijapp cond.else #
         model = new ContactListModel(1);
         // #sijapp cond.end #

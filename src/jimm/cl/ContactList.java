@@ -585,7 +585,11 @@ public final class ContactList implements SelectListener, ContactListListener {
     }
     public void updateMainMenu() {
         int currentCommand = mainMenuView.getSelectedItemCode();
-        updateMainMenu(null);//getManager().getCurrentProtocol());
+        // #sijapp cond.if modules_MULTI is "true" #
+        updateMainMenu(null);
+        // #sijapp cond.else #
+        updateMainMenu(getManager().getCurrentProtocol());
+        // #sijapp cond.end #
         mainMenu.setDefaultItemCode(currentCommand);
         mainMenuView.setModel(mainMenu);
         mainMenuView.update();

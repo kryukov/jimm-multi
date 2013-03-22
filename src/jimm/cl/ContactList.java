@@ -467,16 +467,19 @@ public final class ContactList implements SelectListener, ContactListListener {
     private static final int MENU_OPTIONS = 4;
     private static final int MENU_KEYLOCK = 5;
     private static final int MENU_GLOBAL_STATUS = 6;
-    private static final int MENU_STATUS = 7;
-    private static final int MENU_XSTATUS = 8;
-    private static final int MENU_PRIVATE_STATUS = 9;
-    private static final int MENU_GROUPS = 10;
-    private static final int MENU_SEND_SMS = 11;
-    private static final int MENU_ABOUT = 12;
+    private static final int MENU_ACCOUNTS = 7;
+    private static final int MENU_STATUS = 8;
+    private static final int MENU_XSTATUS = 9;
+    private static final int MENU_PRIVATE_STATUS = 10;
+    private static final int MENU_GROUPS = 11;
+    private static final int MENU_SEND_SMS = 12;
+    private static final int MENU_ABOUT = 13;
     private static final int MENU_SOUND = 14;
     private static final int MENU_MYSELF = 15;
     private static final int MENU_MICROBLOG = 19;
     private static final int MENU_EXIT = 21;
+
+    private static final int MENU_FIRST_ACCOUNT = 100;
 
     /////////////////////////////////////////////////////////////////
 
@@ -582,7 +585,7 @@ public final class ContactList implements SelectListener, ContactListListener {
     }
     public void updateMainMenu() {
         int currentCommand = mainMenuView.getSelectedItemCode();
-        updateMainMenu(getManager().getCurrentProtocol());
+        updateMainMenu(null);//getManager().getCurrentProtocol());
         mainMenu.setDefaultItemCode(currentCommand);
         mainMenuView.setModel(mainMenu);
         mainMenuView.update();
@@ -593,7 +596,10 @@ public final class ContactList implements SelectListener, ContactListListener {
         mainMenu.addItem("keylock_enable",  MENU_KEYLOCK);
         // #sijapp cond.end #
         if (null == p) {
+            // #sijapp cond.if modules_MULTI is "true" #
             mainMenu.addItem("set_status", null, MENU_GLOBAL_STATUS);
+            mainMenu.addItem("accounts", null, MENU_ACCOUNTS);
+            // #sijapp cond.end #
         } else if (0 < getManager().getModel().getProtocolCount()) {
             // #sijapp cond.if modules_MULTI is "true" #
             protocolMenu(mainMenu, p, true);
@@ -615,12 +621,31 @@ public final class ContactList implements SelectListener, ContactListListener {
         mainMenu.addItem("exit", MENU_EXIT);
         return mainMenu;
     }
+    // #sijapp cond.if modules_MULTI is "true" #
+    private void showAccounts() {
+        MenuModel m = new MenuModel();
+        m.setActionListener(this);
+        int count = contactList.getModel().getProtocolCount();
+        for (int i = 0; i < count; ++i) {
+            Protocol p = contactList.getModel().getProtocol(i);
+            m.addRawItem(p.getUserId(), p.getStatusInfo().getIcon(p.getProfile().statusIndex),
+                    MENU_FIRST_ACCOUNT + i);
+        }
+        contactList.showMenu(m);
+    }
+    // #sijapp cond.end #
 
     private void doExit(boolean anyway) {
         Jimm.getJimm().quit();
     }
 
     private void execCommand(int cmd) {
+        if (MENU_FIRST_ACCOUNT <= cmd) {
+            Protocol p = contactList.getModel().getProtocol(cmd - MENU_FIRST_ACCOUNT);
+            MenuModel model = ContactList.getInstance().getContextMenu(p, p.getProtocolBranch());
+            contactList.showMenu(model);
+            return;
+        }
         final Protocol proto = activeProtocol;
         switch (cmd) {
             case MENU_DISCONNECT:
@@ -633,9 +658,15 @@ public final class ContactList implements SelectListener, ContactListListener {
                 Jimm.lockJimm();
                 break;
 
+            // #sijapp cond.if modules_MULTI is "true" #
             case MENU_GLOBAL_STATUS:
                 new GlobalStatusForm().show();
                 break;
+
+            case MENU_ACCOUNTS:
+                showAccounts();
+                break;
+            // #sijapp cond.end #
 
             case MENU_STATUS:
                 new SomeStatusForm(proto).show();

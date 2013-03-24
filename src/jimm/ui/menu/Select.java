@@ -171,22 +171,23 @@ public final class Select extends CanvasEx {
         }
         textWidth = Math.max(screenWidth * 2 / 5, textWidth);
         itemHeight = Math.max(itemHeight, CanvasEx.minItemHeight);
+        int emptySpaceWidth = Math.max(scrollerWidth, CanvasEx.minItemHeight / 3);
 
         if (0 < iconWidth) {
             iconWidth = Math.max(iconWidth, itemHeight);
         } else {
-            iconWidth = scrollerWidth - ICON_INTERVAL;
+            iconWidth = emptySpaceWidth - ICON_INTERVAL;
         }
 
-        int _itemWidth = textWidth + iconWidth + ICON_INTERVAL + scrollerWidth;
-        int maxItemWidth = screenWidth - (WIDTH_SPACE + scrollerWidth);
+        int _itemWidth = textWidth + iconWidth + ICON_INTERVAL + emptySpaceWidth;
+        int maxItemWidth = screenWidth - (WIDTH_SPACE + emptySpaceWidth);
         _itemWidth = between(_itemWidth, CanvasEx.minItemWidth, maxItemWidth);
         final int prevWidth = prevMenuWidth();
         if (prevWidth == _itemWidth) {
-            _itemWidth += scrollerWidth - ICON_INTERVAL;
+            _itemWidth += emptySpaceWidth - ICON_INTERVAL;
             _itemWidth = between(_itemWidth, CanvasEx.minItemWidth, maxItemWidth);
             if (prevWidth == _itemWidth) {
-                _itemWidth -= scrollerWidth - ICON_INTERVAL;
+                _itemWidth -= emptySpaceWidth - ICON_INTERVAL;
                 _itemWidth = between(_itemWidth, CanvasEx.minItemWidth, maxItemWidth);
             }
         }

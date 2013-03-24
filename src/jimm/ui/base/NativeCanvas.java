@@ -454,7 +454,7 @@ public class NativeCanvas extends Canvas {
         }
         return 0;
     }
-    private void doKeyReaction(CanvasEx c, int keyCode, int action, int type) {
+    private void doKeyReaction(final CanvasEx c, final int keyCode, final int action, int type) {
         try {
             if (ignoreKeys) {
                 if (CanvasEx.KEY_PRESSED != type) {
@@ -474,8 +474,33 @@ public class NativeCanvas extends Canvas {
                 }
                 return;
             }
-            if ((NativeCanvas.NAVIKEY_FIRE == action) && (CanvasEx.KEY_PRESSED == type)) {
-                firePressTime = System.currentTimeMillis();
+            if (NativeCanvas.NAVIKEY_FIRE == action) {
+                if (CanvasEx.KEY_PRESSED == type) {
+                    firePressTime = System.currentTimeMillis();
+                }
+                if ('5' != keyCode) {
+                    if (CanvasEx.KEY_PRESSED == type) {
+                        TimerTask task = new TimerTask() {
+                            public void run() {
+                                firePressTime = 0;
+                                c.doKeyReaction(keyCode, action, CanvasEx.KEY_RELEASED);
+                            }
+                        };
+                        longFilePressTask = task;
+                        Timer t = new Timer();
+                        t.schedule(task, Display.LONG_INTERVAL);
+                    }
+                    if (isLongFirePress()) {
+                        return;
+                    }
+                    if (CanvasEx.KEY_RELEASED == type) {
+                        TimerTask task = longFilePressTask;
+                        longFilePressTask = null;
+                        if (null != task) {
+                            task.cancel();
+                        }
+                    }
+                }
             }
             c.doKeyReaction(keyCode, action, type);
         } catch (Exception e) {
@@ -484,6 +509,7 @@ public class NativeCanvas extends Canvas {
             // #sijapp cond.end #
         }
     }
+    private TimerTask longFilePressTask = null;
 
     void emulateKey(CanvasEx c, int key) {
         if (null == c) c = canvas;

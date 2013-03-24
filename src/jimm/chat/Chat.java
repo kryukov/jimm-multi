@@ -277,12 +277,14 @@ public final class Chat extends VirtualList {
             if (CanvasEx.KEY_RELEASED != type) {
                 return;
             }
-            if (NativeCanvas.isLongFirePress()) {
-                markItem(getCurrItem());
-            } else if ('5' == keyCode) {
+            if ('5' == keyCode) {
                 execJimmAction(NativeCanvas.JIMM_SELECT);
             } else {
-                writeMessage(null);
+                if (NativeCanvas.isLongFirePress()) {
+                    markItem(getCurrItem());
+                } else {
+                    writeMessage(null);
+                }
             }
             return;
         }

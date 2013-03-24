@@ -119,7 +119,7 @@ abstract public class CanvasEx extends DisplayableEx {
     }
     private static int getScrollWidth() {
         NativeCanvas nc = NativeCanvas.getInstance();
-        int zoom = nc.hasPointerEvents() ? 5 : 2;
+        int zoom = 2;//nc.hasPointerEvents() ? 5 : 2;
         return Math.max(nc.getMinScreenMetrics() * zoom / 100, 6);
     }
 

@@ -6,6 +6,7 @@ import DrawControls.icons.Icon;
 import DrawControls.tree.ContactListModel;
 import DrawControls.tree.VirtualContactList;
 import jimm.cl.ContactList;
+import jimm.cl.GlobalStatusForm;
 import jimm.ui.menu.MenuModel;
 import protocol.Protocol;
 
@@ -52,7 +53,7 @@ public class RosterToolBar extends MySoftBar {
 
         int x = 0;
         // general
-        x += drawLeft(g, null, x, y, height);
+        x += drawLeft(g, GlobalStatusForm.getGlobalStatusIcon(), x, y, height);
         // accounts
         ContactListModel m = ((VirtualContactList)c).getModel();
         for (int i = 0; i < m.getProtocolCount(); ++i) {

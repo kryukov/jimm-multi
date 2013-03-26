@@ -601,7 +601,7 @@ public final class ContactList implements SelectListener, ContactListListener {
         // #sijapp cond.end #
         if (null == p) {
             // #sijapp cond.if modules_MULTI is "true" #
-            mainMenu.addItem("set_status", null, MENU_GLOBAL_STATUS);
+            mainMenu.addItem("set_status", GlobalStatusForm.getGlobalStatusIcon(), MENU_GLOBAL_STATUS);
             mainMenu.addItem("accounts", null, MENU_ACCOUNTS);
             // #sijapp cond.end #
         } else if (0 < getManager().getModel().getProtocolCount()) {

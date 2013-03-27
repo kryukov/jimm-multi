@@ -647,7 +647,12 @@ public final class Chat extends VirtualList {
             message.setVisibleIcon(par, mData);
         }
         synchronized (this) {
-            boolean atTheEnd = (getFullSize() - getTopOffset() <= getContentHeight());
+            boolean atTheEnd;
+            try {
+                atTheEnd = (getFullSize() - getTopOffset() <= getContentHeight());
+            } catch (Exception ignored) {
+                atTheEnd = true;
+            }
             lock();
             messData.addElement(mData);
 

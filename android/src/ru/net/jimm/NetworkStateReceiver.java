@@ -28,21 +28,23 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         return isNetworkAvailable;
     }
 
-    public void  updateNetworkState(Context context) {
+    public boolean updateNetworkState(Context context) {
         String networkType = getConnectionType(context);
-        if (modeNotChanged(networkType)) return;
+        if (modeNotChanged(networkType)) return false;
         previousNetworkType = networkType;
         isNetworkAvailable = (null != networkType);
+        return true;
     }
 
     @Override
     public void onReceive(Context context, Intent networkIntent) {
         try {
-            updateNetworkState(context);
-            if (null == MIDletBridge.getCurrentMIDlet()) return;
-            resetConnections();
-            if (isNetworkAvailable) {
-                restoreConnections();
+            if (updateNetworkState(context)) {
+                if (null == MIDletBridge.getCurrentMIDlet()) return;
+                resetConnections();
+                if (isNetworkAvailable) {
+                    restoreConnections();
+                }
             }
         } catch (Exception ignored) {
         }

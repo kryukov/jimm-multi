@@ -589,7 +589,7 @@ public final class VirtualContactList extends VirtualList {
         Font statusFont = GraphicsEx.statusLineFont;
         int statusHeight = statusFont.getHeight();
 
-        y += (h - contactFont.getHeight() + statusHeight) / 2;
+        y += (h - (contactFont.getHeight() + statusHeight)) / 2;
 
         g.setFont(contactFont);
         g.drawString(c.getName(), x, y, Graphics.LEFT + Graphics.TOP);

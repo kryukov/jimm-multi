@@ -1148,8 +1148,8 @@ abstract public class Protocol {
                 return;
             }
         }
-
         disconnect(false);
+        setOnlineStatus(StatusInfo.STATUS_OFFLINE, null);
         showException(e);
     }
 

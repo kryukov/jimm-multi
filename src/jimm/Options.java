@@ -210,6 +210,7 @@ public class Options {
     public static final int OPTION_BLOG_NOTIFY         = 180;   /* boolean */
     public static final int OPTION_RECREATE_TEXTBOX    = 181;   /* boolean */
     public static final int OPTION_SIMPLE_INPUT        = 182;   /* boolean */
+    public static final int OPTION_USER_ACCOUNTS       = 183;   /* boolean */
 
     //Hotkey Actions
     public static final int HOTKEY_NONE      =  0;

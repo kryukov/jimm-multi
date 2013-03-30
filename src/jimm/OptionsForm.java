@@ -290,6 +290,9 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                     // #sijapp cond.end#
 
                     saveOptionBoolean(Options.OPTION_USER_GROUPS);
+                    // #sijapp cond.if modules_MULTI is "true" #
+                    saveOptionBoolean(Options.OPTION_USER_ACCOUNTS);
+                    // #sijapp cond.end#
                     saveOptionBoolean(Options.OPTION_CL_HIDE_OFFLINE);
                     saveOptionBoolean(Options.OPTION_SAVE_TEMP_CONTACT);
                     saveOptionBoolean(Options.OPTION_SORT_UP_WITH_MSG);
@@ -447,6 +450,9 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
 
                 form.addString("contact_list", null);
                 setChecked("show_user_groups", Options.OPTION_USER_GROUPS);
+                // #sijapp cond.if modules_MULTI is "true" #
+                setChecked("show_user_accounts", Options.OPTION_USER_ACCOUNTS);
+                // #sijapp cond.end#
                 setChecked("hide_offline", Options.OPTION_CL_HIDE_OFFLINE);
                 setChecked("save_temp_contacts", Options.OPTION_SAVE_TEMP_CONTACT);
                 setChecked("show_status_line", Options.OPTION_SHOW_STATUS_LINE);

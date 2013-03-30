@@ -68,8 +68,11 @@ public final class VirtualContactList extends VirtualList {
     public VirtualContactList() {
         super("");
         // #sijapp cond.if modules_MULTI is "true" #
-        model = new ContactListModel(10);
-        model = new AlloyContactListModel(10);
+        if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
+            model = new ContactListModel(10);
+        } else {
+            model = new AlloyContactListModel(10);
+        }
         // #sijapp cond.else #
         model = new ContactListModel(1);
         // #sijapp cond.end #
@@ -218,6 +221,21 @@ public final class VirtualContactList extends VirtualList {
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
         stepSize = Math.max(getFontSet()[FONT_STYLE_PLAIN].getHeight() / 4, 2);
         useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
+        // #sijapp cond.if modules_MULTI is "true" #
+        boolean oldUseAccounts = !(model instanceof AlloyContactListModel);
+        boolean useAccounts = Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
+        if (oldUseAccounts != useAccounts) {
+            ContactListModel oldModel = model;
+            if (useAccounts) {
+                model = new ContactListModel(10);
+            } else {
+                model = new AlloyContactListModel(10);
+            }
+            for (int i = 0; i < oldModel.getProtocolCount(); ++i) {
+                model.addProtocol(oldModel.getProtocol(i));
+            }
+        }
+        // #sijapp cond.end#
         model.updateOptions();
     }
     /**

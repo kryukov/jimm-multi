@@ -1,6 +1,7 @@
 package DrawControls.tree.alloy;
 
 import DrawControls.tree.ContactListModel;
+import DrawControls.tree.TreeBranch;
 import jimm.comm.Util;
 import jimm.util.JLocale;
 import protocol.Contact;
@@ -197,4 +198,7 @@ public class AlloyContactListModel extends ContactListModel {
         }
     }
 
+    public TreeBranch getGroupNode(Group group) {
+        return getGroup(group);
+    }
 }

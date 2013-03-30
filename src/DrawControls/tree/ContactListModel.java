@@ -212,4 +212,8 @@ public class ContactListModel {
         group.updateGroupData();
         group.sort();
     }
+
+    public TreeBranch getGroupNode(Group group) {
+        return group;
+    }
 }

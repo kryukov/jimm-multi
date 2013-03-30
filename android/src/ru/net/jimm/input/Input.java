@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import jimm.Jimm;
 import jimm.Options;
 import jimm.chat.Chat;
 import jimm.modules.Emotions;
@@ -143,7 +144,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
 
     private void send() {
         hideKeyboard(messageEditor);
-        if (null != owner) {
+        if (Jimm.getJimm().getDisplay().getCurrentDisplay() == owner) {
             owner.sendMessage(getText());
         }
     }

@@ -351,8 +351,6 @@ public abstract class VirtualList extends CanvasEx {
     }
     protected void beforePaint() {
     }
-    protected void drawProgress(GraphicsEx g, int width, int height) {
-    }
 
     protected final int getClientHeight() {
         return getHeight() - bar.getHeight();

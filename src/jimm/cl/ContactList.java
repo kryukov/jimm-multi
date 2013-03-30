@@ -29,7 +29,6 @@ import DrawControls.tree.alloy.AlloyContactListModel;
 import jimm.*;
 import jimm.chat.*;
 import jimm.forms.*;
-import jimm.modules.*;
 import jimm.ui.menu.*;
 import java.util.*;
 import jimm.ui.base.*;
@@ -39,15 +38,13 @@ import protocol.mrim.*;
 import protocol.jabber.*;
 
 
-public final class ContactList implements SelectListener, ContactListListener {
+public final class ContactList implements ContactListListener {
     private static final ContactList instance = new ContactList();
-    private final MenuModel mainMenu = new MenuModel();
+    private final ProtocolMenu mainMenu = new ProtocolMenu(null);
     private MessageEditor editor;
-    private Select mainMenuView;
     private VirtualContactList contactList;
     private final StatusView statusView = new StatusView();
     private Contact currentContact;
-    private Protocol activeProtocol;
     // #sijapp cond.if modules_FILES="true"#
     private Vector transfers = new Vector();
     // #sijapp cond.end#
@@ -57,8 +54,6 @@ public final class ContactList implements SelectListener, ContactListListener {
     public void initUI() {
         contactList = new VirtualContactList();
         contactList.setCLListener(this);
-        mainMenu.setActionListener(this);
-        mainMenuView = new Select(mainMenu);
     }
     public void initMessageEditor() {
         editor = new MessageEditor();
@@ -268,9 +263,9 @@ public final class ContactList implements SelectListener, ContactListListener {
             updateUnreadMessageCount();
             contactList.update();
             updateMainMenu();
-            mainMenu.setDefaultItemCode(MENU_STATUS);
+            mainMenu.setDefaultItemCode(ProtocolMenu.MENU_STATUS);
             Jimm.getJimm().getDisplay().pushWindow(contactList);
-            Jimm.getJimm().getDisplay().pushWindow(mainMenuView);
+            Jimm.getJimm().getDisplay().pushWindow(mainMenu.getView());
             new AccountsForm().showAccountEditor(null);
 
         } else {
@@ -462,27 +457,6 @@ public final class ContactList implements SelectListener, ContactListListener {
         return statusView;
     }
 
-    /* Static constants for menu actios */
-    private static final int MENU_DISCONNECT = 2;
-    private static final int MENU_DISCO = 3;
-    private static final int MENU_OPTIONS = 4;
-    private static final int MENU_KEYLOCK = 5;
-    private static final int MENU_GLOBAL_STATUS = 6;
-    private static final int MENU_ACCOUNTS = 7;
-    private static final int MENU_STATUS = 8;
-    private static final int MENU_XSTATUS = 9;
-    private static final int MENU_PRIVATE_STATUS = 10;
-    private static final int MENU_GROUPS = 11;
-    private static final int MENU_SEND_SMS = 12;
-    private static final int MENU_ABOUT = 13;
-    private static final int MENU_SOUND = 14;
-    private static final int MENU_MYSELF = 15;
-    private static final int MENU_MICROBLOG = 19;
-    private static final int MENU_NON = 20;
-    private static final int MENU_EXIT = 21;
-
-    private static final int MENU_FIRST_ACCOUNT = 100;
-
     /////////////////////////////////////////////////////////////////
 
     /** ************************************************************************* */
@@ -492,258 +466,35 @@ public final class ContactList implements SelectListener, ContactListListener {
         // #sijapp cond.end #
         return Jimm.isPhone(Jimm.PHONE_SE) || Jimm.isPhone(Jimm.PHONE_NOKIA_S60);
     }
-    private boolean isSmsSupported() {
-        // #sijapp cond.if protocols_MRIM is "true" #
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            if ((p instanceof Mrim) && p.isConnected()) {
-                return true;
-            }
-        }
-        // #sijapp cond.end #
-        // #sijapp cond.if target is "MIDP2" #
-        // #sijapp cond.if modules_FILES="true"#
-        if (!isCollapsible()) {
-            return true;
-        }
-        // #sijapp cond.end #
-        // #sijapp cond.end #
-        return false;
-    }
 
 
     /* Builds the main menu (visual list) */
     public void activateMainMenu() {
         updateMainMenu();
-        mainMenu.setDefaultItemCode(MENU_STATUS);
-        mainMenuView.show();
+        mainMenu.setDefaultItemCode(ProtocolMenu.MENU_STATUS);
+        mainMenu.getView().show();
     }
 
-    // #sijapp cond.if modules_XSTATUSES is "true" #
-    private int getXStatusCount(Protocol protocol) {
-        if (null != protocol.getXStatusInfo()) {
-            return protocol.getXStatusInfo().getXStatusCount();
-        }
-        return 0;
-    }
-    // #sijapp cond.end #
-    public void protocolMenu(MenuModel menu, Protocol protocol, boolean main) {
-        activeProtocol = protocol;
-        if (getManager().getModel() instanceof AlloyContactListModel) {
-            int id = protocol.isConnected() && protocol.hasVCardEditor() && !main ? MENU_MYSELF : MENU_NON;
-            menu.addRawItem(protocol.getUserId(), null, id);
-        }
-        if (protocol.isConnecting()) {
-            menu.addItem("disconnect", MENU_DISCONNECT);
-            return;
-        }
-        /*
-        if (protocol.isConnected()) {
-            menu.addItem("disconnect", MENU_DISCONNECT);
-
-        } else {
-            menu.addItem("connect", MENU_CONNECT);
-        }
-        */
-        menu.addItem("set_status",
-                protocol.getStatusInfo().getIcon(protocol.getProfile().statusIndex),
-                MENU_STATUS);
-        // #sijapp cond.if modules_XSTATUSES is "true" #
-        if (0 < getXStatusCount(protocol)) {
-            Icon icon = protocol.getXStatusInfo().getIcon(protocol.getProfile().xstatusIndex);
-            menu.addItem("set_xstatus", icon, MENU_XSTATUS);
-        }
-        // #sijapp cond.end #
-        // #sijapp cond.if protocols_ICQ is "true" #
-        if (protocol instanceof Icq) {
-            // #sijapp cond.if modules_SERVERLISTS is "true" #
-            menu.addItem("private_status", PrivateStatusForm.getIcon(protocol),
-                    MENU_PRIVATE_STATUS);
-            // #sijapp cond.end #
-        }
-        // #sijapp cond.end #
-        if (protocol.isConnected()) {
-            // #sijapp cond.if protocols_JABBER is "true" #
-            if (protocol instanceof Jabber) {
-                if (((Jabber)protocol).hasS2S()) {
-                    menu.addItem("service_discovery", MENU_DISCO);
-                }
-            }
-            // #sijapp cond.end #
-            if (!main) {
-                menu.addItem("manage_contact_list", MENU_GROUPS);
-                if (protocol.hasVCardEditor()) {
-                    menu.addItem("myself", MENU_MYSELF);
-                }
-            }
-            // #sijapp cond.if protocols_MRIM is "true" #
-            // #sijapp cond.if modules_MAGIC_EYE is "true" #
-            if (protocol instanceof Mrim) {
-                menu.addItem("microblog",
-                        ((Mrim) protocol).getMicroBlog().getIcon(), MENU_MICROBLOG);
-            }
-            // #sijapp cond.end #
-            // #sijapp cond.end #
-        }
-    }
     public void updateMainMenu() {
-        int currentCommand = mainMenuView.getSelectedItemCode();
+        int currentCommand = mainMenu.getSelectedItemCode();
         // #sijapp cond.if modules_MULTI is "true" #
-        updateMainMenu(null);
+        if (ContactList.getInstance().getManager().getModel() instanceof AlloyContactListModel) {
+            mainMenu.setProtocol(null);
+            System.out.println("m null");
+        } else {
+            mainMenu.setProtocol(getManager().getCurrentProtocol());
+            System.out.println("m "  + getManager().getCurrentProtocol());
+        }
         // #sijapp cond.else #
-        updateMainMenu(getManager().getCurrentProtocol());
+        mainMenu.setProtocol(getManager().getCurrentProtocol());
+        System.out.println("s "  + getManager().getCurrentProtocol());
         // #sijapp cond.end #
+        mainMenu.updateMainMenu();
+        Select menuView = mainMenu.getView();
         mainMenu.setDefaultItemCode(currentCommand);
-        mainMenuView.setModel(mainMenu);
-        mainMenuView.update();
-    }
-    public MenuModel updateMainMenu(Protocol p) {
-        mainMenu.clean();
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        mainMenu.addItem("keylock_enable",  MENU_KEYLOCK);
-        // #sijapp cond.end #
-        if (null == p) {
-            // #sijapp cond.if modules_MULTI is "true" #
-            mainMenu.addItem("set_status", GlobalStatusForm.getGlobalStatusIcon(), MENU_GLOBAL_STATUS);
-            mainMenu.addItem("accounts", null, MENU_ACCOUNTS);
-            // #sijapp cond.end #
-        } else if (0 < getManager().getModel().getProtocolCount()) {
-            // #sijapp cond.if modules_MULTI is "true" #
-            protocolMenu(mainMenu, p, true);
-            // #sijapp cond.else #
-            protocolMenu(mainMenu, p, false);
-            // #sijapp cond.end #
-        }
-        if (isSmsSupported()) {
-            mainMenu.addItem("send_sms", MENU_SEND_SMS);
-        }
-        mainMenu.addItem("options_lng", MENU_OPTIONS);
-
-        // #sijapp cond.if modules_SOUND is "true" #
-        boolean isSilent = Options.getBoolean(Options.OPTION_SILENT_MODE);
-        mainMenu.addItem(isSilent ? "#sound_on" : "#sound_off", MENU_SOUND);
-        // #sijapp cond.end#
-
-        mainMenu.addItem("about", MENU_ABOUT);
-        mainMenu.addItem("exit", MENU_EXIT);
-        return mainMenu;
-    }
-    // #sijapp cond.if modules_MULTI is "true" #
-    private void showAccounts() {
-        MenuModel m = new MenuModel();
-        m.setActionListener(this);
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            m.addRawItem(p.getUserId(), p.getStatusInfo().getIcon(p.getProfile().statusIndex),
-                    MENU_FIRST_ACCOUNT + i);
-        }
-        contactList.showMenu(m);
-    }
-    // #sijapp cond.end #
-
-    private void doExit(boolean anyway) {
-        Jimm.getJimm().quit();
+        menuView.update();
     }
 
-    private void execCommand(int cmd) {
-        if (MENU_FIRST_ACCOUNT <= cmd) {
-            Protocol p = contactList.getModel().getProtocol(cmd - MENU_FIRST_ACCOUNT);
-            MenuModel model = ContactList.getInstance().getContextMenu(p, p.getProtocolBranch());
-            contactList.showMenu(model);
-            return;
-        }
-        final Protocol proto = activeProtocol;
-        switch (cmd) {
-            case MENU_DISCONNECT:
-                proto.setStatus(StatusInfo.STATUS_OFFLINE, "");
-                Thread.yield();
-                activate();
-                break;
-
-            case MENU_KEYLOCK:
-                Jimm.lockJimm();
-                break;
-
-            // #sijapp cond.if modules_MULTI is "true" #
-            case MENU_GLOBAL_STATUS:
-                new GlobalStatusForm().show();
-                break;
-
-            case MENU_ACCOUNTS:
-                showAccounts();
-                break;
-            // #sijapp cond.end #
-
-            case MENU_STATUS:
-                new SomeStatusForm(proto).show();
-                break;
-
-                // #sijapp cond.if modules_XSTATUSES is "true" #
-            case MENU_XSTATUS:
-                new SomeXStatusForm(proto).show();
-                break;
-                // #sijapp cond.end #
-
-                // #sijapp cond.if protocols_ICQ is "true" #
-                // #sijapp cond.if modules_SERVERLISTS is "true" #
-            case MENU_PRIVATE_STATUS:
-                new PrivateStatusForm(proto).show();
-                break;
-                // #sijapp cond.end #
-                // #sijapp cond.end #
-
-                // #sijapp cond.if protocols_JABBER is "true" #
-            case MENU_DISCO:
-                ((Jabber)proto).getServiceDiscovery().showIt();
-                break;
-                // #sijapp cond.end #
-
-                // #sijapp cond.if protocols_MRIM is "true" #
-                // #sijapp cond.if modules_MAGIC_EYE is "true" #
-            case MENU_MICROBLOG:
-                ((Mrim)proto).getMicroBlog().activate();
-                updateMainMenu();
-                break;
-                // #sijapp cond.end #
-                // #sijapp cond.end #
-
-            case MENU_OPTIONS:
-                new OptionsForm().show();
-                break;
-
-            case MENU_ABOUT:
-                new SysTextList().makeAbout().show();
-                break;
-
-            case MENU_GROUPS:
-                new ManageContactListForm(proto).show();
-                break;
-
-            // #sijapp cond.if modules_SOUND is "true" #
-            case MENU_SOUND:
-                Notify.getSound().changeSoundMode(false);
-                updateMainMenu();
-                break;
-            // #sijapp cond.end#
-
-            case MENU_MYSELF:
-                proto.showUserInfo(proto.createTempContact(proto.getUserId(), proto.getNick()));
-                break;
-
-            case MENU_SEND_SMS:
-                new SmsForm(null, null).show();
-                break;
-
-            case MENU_EXIT:
-                doExit(false);
-                break;
-        }
-    }
-    public void select(Select select, MenuModel model, int cmd) {
-        execCommand(cmd);
-    }
     public final MenuModel getContextMenu(Protocol p, TreeNode node) {
         if (node instanceof Contact) {
             return new ContactMenu(p, (Contact) node).getContextMenu();
@@ -755,11 +506,10 @@ public final class ContactList implements SelectListener, ContactListListener {
             return null;
         }
         // #sijapp cond.if modules_MULTI is "true" #
-        if (node instanceof ProtocolBranch) {
-            MenuModel protocolMenu = new MenuModel();
-            protocolMenu(protocolMenu, p, false);
-            protocolMenu.setActionListener(this);
-            return protocolMenu;
+        if ((node instanceof ProtocolBranch) || (null == node)) {
+            ProtocolMenu menu = new ProtocolMenu(p);
+            menu.protocolMenu(false);
+            return menu.getModel();
         }
         // #sijapp cond.end #
         return null;

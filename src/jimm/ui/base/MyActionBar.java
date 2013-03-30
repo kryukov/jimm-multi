@@ -3,9 +3,11 @@ package jimm.ui.base;
 
 import DrawControls.icons.Icon;
 import DrawControls.icons.ImageList;
+import DrawControls.tree.ContactListModel;
 import DrawControls.tree.VirtualContactList;
 import jimm.Jimm;
 import jimm.cl.ContactList;
+import protocol.Protocol;
 
 import javax.microedition.lcdui.Graphics;
 
@@ -49,10 +51,6 @@ public class MyActionBar extends ActiveRegion {
         g.setClip(0, 0, width, height + 1);
         g.drawBarBack(0, height, Scheme.captionImage, width);
 
-        if (null != view) {
-            view.drawProgress(g, width, height);
-        }
-
         int x = 0;
         // #sijapp cond.if target is "MIDP2"#
         x += GraphicsEx.captionOffset;
@@ -69,6 +67,24 @@ public class MyActionBar extends ActiveRegion {
 
         g.setFont(GraphicsEx.captionFont);
         g.setThemeColor(CanvasEx.THEME_CAP_TEXT);
+        // #sijapp cond.if modules_TOUCH isnot "true"#
+        if (view instanceof VirtualContactList) {
+            int progress = 0;
+            int maxProgress = 0;
+            ContactListModel m = ((VirtualContactList)view).getModel();
+            for (int i = 0; i < m.getProtocolCount(); ++i) {
+                Protocol p = m.getProtocol(i);
+                if (p.isConnecting()) {
+                    progress += p.getConnectingProgress();
+                    maxProgress += 100;
+                }
+            }
+            if (0 < maxProgress) {
+                progress = width * progress / maxProgress;
+                g.fillRect(0, height - CanvasEx.scrollerWidth / 2, progress, CanvasEx.scrollerWidth / 2);
+            }
+        }
+        // #sijapp cond.end#
         String label = (null == ticker) ? caption : ticker;
         g.drawString(images, label, null, x, 1, width, height - 2);
     }

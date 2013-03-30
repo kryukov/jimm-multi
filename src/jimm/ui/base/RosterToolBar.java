@@ -28,8 +28,7 @@ public class RosterToolBar extends MySoftBar {
         int defWidth = getHeight();
         _x += defWidth;
         if (x < _x) {
-            MenuModel model = ContactList.getInstance().updateMainMenu(null);
-            ((VirtualContactList) c).showMenu(model);
+            ContactList.getInstance().activateMainMenu();
             return;
         }
         ContactListModel m = ((VirtualContactList)c).getModel();
@@ -37,7 +36,7 @@ public class RosterToolBar extends MySoftBar {
             Protocol p = m.getProtocol(i);
             _x += defWidth;
             if (x < _x) {
-                MenuModel model = ContactList.getInstance().getContextMenu(p, p.getProtocolBranch());
+                MenuModel model = ContactList.getInstance().getContextMenu(p, null);
                 ((VirtualContactList) c).showMenu(model);
                 return;
             }
@@ -52,6 +51,7 @@ public class RosterToolBar extends MySoftBar {
         g.drawBarBack(y, height, Scheme.softbarImage, width);
 
         int x = 0;
+        // #sijapp cond.if modules_MULTI is "true" #
         // general
         x += drawLeft(g, GlobalStatusForm.getGlobalStatusIcon(), x, y, height);
         // accounts
@@ -59,16 +59,32 @@ public class RosterToolBar extends MySoftBar {
         for (int i = 0; i < m.getProtocolCount(); ++i) {
             Protocol p = m.getProtocol(i);
             Icon icon = p.getStatusInfo().getIcon(p.getProfile().statusIndex);
+            if (p.isConnecting()) {
+                int progress = getIconWidth() * p.getConnectingProgress() / 100;
+                g.setThemeColor(CanvasEx.THEME_CAP_TEXT);
+                g.fillRect(x, y + height - CanvasEx.scrollerWidth, progress, CanvasEx.scrollerWidth);
+            }
             x += drawLeft(g, icon, x, y, height);
         }
+        // #sijapp cond.else #
+        Protocol p = ((VirtualContactList)c).getModel().getProtocol(0);
+        Icon icon = p.getStatusInfo().getIcon(p.getProfile().statusIndex);
+        x += drawLeft(g, icon, x, y, height);
+        // #sijapp cond.end #
+    }
+    private int getIconWidth() {
+        return getHeight();
+    }
+    private int getSeparatorWidth() {
+        return 2;
     }
     private int drawLeft(GraphicsEx g, Icon  icon, int x, int y, int height) {
-        int defWidth = getHeight();
+        int defWidth = getIconWidth();
         if (null != icon) {
             g.drawImage(icon, x + (defWidth - icon.getWidth()) / 2, y, height);
         }
         drawSeparator(g, x + defWidth, y + 1, height);
-        return defWidth;
+        return defWidth + getSeparatorWidth();
     }
     private void drawSeparator(GraphicsEx g, int x, int y, int height) {
         g.setThemeColor(CanvasEx.THEME_BACKGROUND);

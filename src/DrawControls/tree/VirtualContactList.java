@@ -106,16 +106,6 @@ public final class VirtualContactList extends VirtualList {
         }
     }
 
-    // #sijapp cond.if modules_MULTI isnot "true" #
-    protected final void drawProgress(GraphicsEx g, int width, int height) {
-        if (0 < model.getProtocolCount()) {
-            int x = width * model.getProtocol(0).getConnectingProgress() / 100;
-            g.setThemeColor(THEME_BACKGROUND);
-            g.fillRect(x, 0, width - x, height - 1);
-        }
-    }
-    // #sijapp cond.end #
-
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
         if (getWidth() / 2 < Math.abs(fromX - toX)) {

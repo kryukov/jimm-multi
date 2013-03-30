@@ -480,14 +480,11 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.if modules_MULTI is "true" #
         if (ContactList.getInstance().getManager().getModel() instanceof AlloyContactListModel) {
             mainMenu.setProtocol(null);
-            System.out.println("m null");
         } else {
             mainMenu.setProtocol(getManager().getCurrentProtocol());
-            System.out.println("m "  + getManager().getCurrentProtocol());
         }
         // #sijapp cond.else #
         mainMenu.setProtocol(getManager().getCurrentProtocol());
-        System.out.println("s "  + getManager().getCurrentProtocol());
         // #sijapp cond.end #
         mainMenu.updateMainMenu();
         Select menuView = mainMenu.getView();

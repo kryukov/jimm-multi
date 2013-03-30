@@ -2,11 +2,8 @@ package jimm.ui.base;
 
 
 import DrawControls.icons.Icon;
-import DrawControls.icons.ImageList;
 import DrawControls.tree.ContactListModel;
 import DrawControls.tree.VirtualContactList;
-import jimm.Jimm;
-import jimm.cl.ContactList;
 import protocol.Protocol;
 
 import javax.microedition.lcdui.Graphics;

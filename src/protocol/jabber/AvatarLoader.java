@@ -1,5 +1,6 @@
 package protocol.jabber;
 
+// #sijapp cond.if protocols_JABBER is "true" #
 import jimm.Jimm;
 import jimm.modules.DebugLog;
 import jimm.search.UserInfo;
@@ -40,3 +41,4 @@ public class AvatarLoader implements Runnable {
         }
     }
 }
+// #sijapp cond.end #

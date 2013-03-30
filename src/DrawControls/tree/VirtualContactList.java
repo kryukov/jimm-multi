@@ -562,10 +562,10 @@ public final class VirtualContactList extends VirtualList {
 
         Contact c = (Contact)node;
         g.setThemeColor(c.getTextTheme());
-        g.setFont(getFontSet()[c.hasChat() ? FONT_STYLE_BOLD : FONT_STYLE_PLAIN]);
         if (showStatusLine) {
             drawContact(g, c, x, y1, w + x1 - x, h);
         } else {
+            g.setFont(getFontSet()[c.hasChat() ? FONT_STYLE_BOLD : FONT_STYLE_PLAIN]);
             g.drawString(leftIcons, c.getName(), rightIcons, x, y1, w + x1 - x, h);
         }
     }
@@ -585,13 +585,18 @@ public final class VirtualContactList extends VirtualList {
         x += lWidth;
         g.setClip(x, y, w, h);
 
+        Font contactFont = getFontSet()[c.hasChat() ? FONT_STYLE_BOLD : FONT_STYLE_PLAIN];
+        Font statusFont = GraphicsEx.statusLineFont;
+        int statusHeight = statusFont.getHeight();
+
+        y += (h - contactFont.getHeight() + statusHeight) / 2;
+
+        g.setFont(contactFont);
         g.drawString(c.getName(), x, y, Graphics.LEFT + Graphics.TOP);
 
-        Font f = GraphicsEx.statusLineFont;
-        g.setFont(f);
+        g.setFont(statusFont);
         g.setThemeColor(THEME_CONTACT_STATUS);
-        int fh = f.getHeight();
-        g.drawString(getStatusMessage(c), x, y + fh, Graphics.LEFT + Graphics.TOP);
+        g.drawString(getStatusMessage(c), x, y + statusHeight, Graphics.LEFT + Graphics.TOP);
     }
     private String getStatusMessage(Contact contact) {
         String message;

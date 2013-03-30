@@ -156,6 +156,10 @@ abstract public class Protocol {
     }
     protected abstract void initStatusInfo();
 
+    public boolean hasVCardEditor() {
+        return true;
+    }
+
     private Icon getCurrentStatusIcon() {
         if (isConnected() && !isConnecting()) {
             return getStatusInfo().getIcon(getProfile().statusIndex);

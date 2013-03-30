@@ -25,6 +25,7 @@ package jimm.cl;
 
 import DrawControls.icons.Icon;
 import DrawControls.tree.*;
+import DrawControls.tree.alloy.AlloyContactListModel;
 import jimm.*;
 import jimm.chat.*;
 import jimm.forms.*;
@@ -477,6 +478,7 @@ public final class ContactList implements SelectListener, ContactListListener {
     private static final int MENU_SOUND = 14;
     private static final int MENU_MYSELF = 15;
     private static final int MENU_MICROBLOG = 19;
+    private static final int MENU_NON = 20;
     private static final int MENU_EXIT = 21;
 
     private static final int MENU_FIRST_ACCOUNT = 100;
@@ -528,6 +530,10 @@ public final class ContactList implements SelectListener, ContactListListener {
     // #sijapp cond.end #
     public void protocolMenu(MenuModel menu, Protocol protocol, boolean main) {
         activeProtocol = protocol;
+        if (getManager().getModel() instanceof AlloyContactListModel) {
+            int id = protocol.isConnected() && protocol.hasVCardEditor() && !main ? MENU_MYSELF : MENU_NON;
+            menu.addRawItem(protocol.getUserId(), null, id);
+        }
         if (protocol.isConnecting()) {
             menu.addItem("disconnect", MENU_DISCONNECT);
             return;
@@ -558,10 +564,8 @@ public final class ContactList implements SelectListener, ContactListListener {
         }
         // #sijapp cond.end #
         if (protocol.isConnected()) {
-            boolean hasVCard = true;
             // #sijapp cond.if protocols_JABBER is "true" #
             if (protocol instanceof Jabber) {
-                hasVCard = ((Jabber)protocol).hasVCardEditor();
                 if (((Jabber)protocol).hasS2S()) {
                     menu.addItem("service_discovery", MENU_DISCO);
                 }
@@ -569,7 +573,7 @@ public final class ContactList implements SelectListener, ContactListListener {
             // #sijapp cond.end #
             if (!main) {
                 menu.addItem("manage_contact_list", MENU_GROUPS);
-                if (hasVCard) {
+                if (protocol.hasVCardEditor()) {
                     menu.addItem("myself", MENU_MYSELF);
                 }
             }

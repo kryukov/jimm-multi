@@ -181,7 +181,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
             form.addSelector(GROUP, "group", list, def);
 
         } else {
-            form.addString("no_groups_available");
+            form.addString(JLocale.getString("no_groups_available"));
         }
     }
 
@@ -269,7 +269,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
                     ContactList.getInstance().activate();
 
                 } else if (isExist) {
-                    form.addString("group_already_exist");
+                    form.addString(JLocale.getString("group_already_exist"));
 
                 } else {
                     protocol.renameGroup(g, newGroupName);

@@ -355,7 +355,11 @@ public final class Select extends CanvasEx {
     protected void doJimmAction(int keyCode) {
         switch (keyCode) {
             case NativeCanvas.JIMM_SELECT:
+                // #sijapp cond.if modules_ANDROID is "true" #
+                back();
+                // #sijapp cond.else #
                 go(getSelectedItemCode());
+                // #sijapp cond.end #
                 break;
             case NativeCanvas.JIMM_BACK:
                 back();

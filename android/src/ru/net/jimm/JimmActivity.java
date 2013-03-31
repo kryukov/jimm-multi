@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -39,14 +38,10 @@ import android.text.ClipboardManager;
 import android.content.pm.PackageManager;
 import android.os.*;
 import android.view.*;
-import android.widget.EditText;
 import jimm.FileTransfer;
 import jimm.Jimm;
 import jimm.modules.DebugLog;
-import jimm.modules.Templates;
 import jimm.modules.photo.PhotoListener;
-import jimm.ui.ActionListener;
-import jimm.ui.base.CanvasEx;
 import jimm.ui.base.KeyEmulator;
 import jimm.ui.base.NativeCanvas;
 import jimm.ui.menu.Select;
@@ -70,7 +65,6 @@ import org.microemu.android.MicroEmulatorActivity;
 import android.content.Intent;
 import android.util.Log;
 import org.microemu.cldc.file.FileSystem;
-import ru.net.jimm.input.Input;
 import ru.net.jimm.photo.CameraActivity;
 
 public class JimmActivity extends MicroEmulatorActivity {

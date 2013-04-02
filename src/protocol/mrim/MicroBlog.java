@@ -179,7 +179,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
                     String uin = (String)emails.elementAt(item);
                     list.showMenu(ContactList.getInstance().getContextMenu(mrim,
                             mrim.createTempContact(uin)));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 break;
         }

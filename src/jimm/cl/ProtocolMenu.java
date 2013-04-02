@@ -45,15 +45,29 @@ public class ProtocolMenu implements SelectListener {
 
     private static final int MENU_FIRST_ACCOUNT = 100;
     private Protocol activeProtocol;
+    private boolean isMain;
     private MenuModel menu = new MenuModel();
     private Select menuView = new Select(null);
 
-    public ProtocolMenu(Protocol p) {
+    public ProtocolMenu(Protocol p, boolean main) {
         activeProtocol = p;
         menuView.setModel(menu);
+        this.isMain = main;
     }
 
-    public MenuModel updateMainMenu() {
+    public void updateMenu() {
+        if (isMain) {
+            updateMainMenu();
+        } else {
+            menu.clean();
+            // #sijapp cond.if modules_MULTI is "true" #
+            protocolMenu(true);
+            // #sijapp cond.else #
+            protocolMenu(false);
+            // #sijapp cond.end #
+        }
+    }
+    private MenuModel updateMainMenu() {
         Protocol p = activeProtocol;
         menu.clean();
         // #sijapp cond.if modules_ANDROID isnot "true" #
@@ -245,7 +259,7 @@ public class ProtocolMenu implements SelectListener {
             // #sijapp cond.if modules_MAGIC_EYE is "true" #
             case MENU_MICROBLOG:
                 ((Mrim)proto).getMicroBlog().activate();
-                updateMainMenu();
+                updateMenu();
                 menuView.update();
                 break;
             // #sijapp cond.end #
@@ -266,7 +280,7 @@ public class ProtocolMenu implements SelectListener {
             // #sijapp cond.if modules_SOUND is "true" #
             case MENU_SOUND:
                 Notify.getSound().changeSoundMode(false);
-                updateMainMenu();
+                updateMenu();
                 menuView.update();
                 break;
             // #sijapp cond.end#

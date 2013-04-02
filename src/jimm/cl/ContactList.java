@@ -40,7 +40,7 @@ import protocol.jabber.*;
 
 public final class ContactList implements ContactListListener {
     private static final ContactList instance = new ContactList();
-    private final ProtocolMenu mainMenu = new ProtocolMenu(null);
+    private final ProtocolMenu mainMenu = new ProtocolMenu(null, true);
     private MessageEditor editor;
     private VirtualContactList contactList;
     private final StatusView statusView = new StatusView();
@@ -486,7 +486,7 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.else #
         mainMenu.setProtocol(getManager().getCurrentProtocol());
         // #sijapp cond.end #
-        mainMenu.updateMainMenu();
+        mainMenu.updateMenu();
         Select menuView = mainMenu.getView();
         mainMenu.setDefaultItemCode(currentCommand);
         menuView.update();
@@ -504,7 +504,7 @@ public final class ContactList implements ContactListListener {
         }
         // #sijapp cond.if modules_MULTI is "true" #
         if ((node instanceof ProtocolBranch) || (null == node)) {
-            ProtocolMenu menu = new ProtocolMenu(p);
+            ProtocolMenu menu = new ProtocolMenu(p, false);
             menu.protocolMenu(false);
             return menu.getModel();
         }

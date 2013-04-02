@@ -505,7 +505,7 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.if modules_MULTI is "true" #
         if ((node instanceof ProtocolBranch) || (null == node)) {
             ProtocolMenu menu = new ProtocolMenu(p, false);
-            menu.protocolMenu(false);
+            menu.updateMenu();
             return menu.getModel();
         }
         // #sijapp cond.end #

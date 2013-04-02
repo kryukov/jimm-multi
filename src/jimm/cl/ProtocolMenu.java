@@ -60,11 +60,7 @@ public class ProtocolMenu implements SelectListener {
             updateMainMenu();
         } else {
             menu.clean();
-            // #sijapp cond.if modules_MULTI is "true" #
-            protocolMenu(true);
-            // #sijapp cond.else #
             protocolMenu(false);
-            // #sijapp cond.end #
         }
     }
     private MenuModel updateMainMenu() {
@@ -114,7 +110,7 @@ public class ProtocolMenu implements SelectListener {
     }
     // #sijapp cond.end #
 
-    public void protocolMenu(boolean main) {
+    private void protocolMenu(boolean main) {
         Protocol protocol = activeProtocol;
         if (ContactList.getInstance().getManager().getModel() instanceof AlloyContactListModel) {
             int id = protocol.isConnected() && protocol.hasVCardEditor() && !main ? MENU_MYSELF : MENU_NON;

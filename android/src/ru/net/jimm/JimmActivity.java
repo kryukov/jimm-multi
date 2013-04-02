@@ -190,6 +190,7 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     @Override
     protected void onDestroy() {
+        Jimm.getJimm().quit();
         Log.i(LOG_TAG, "onDestroy();");
         super.onDestroy();
     }

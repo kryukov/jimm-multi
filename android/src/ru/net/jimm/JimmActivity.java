@@ -91,6 +91,8 @@ public class JimmActivity extends MicroEmulatorActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+        clipboard.setActivity(this);
+
         instance = this;
         PACKAGE_NAME = getApplicationContext().getPackageName();
 
@@ -628,7 +630,6 @@ public class JimmActivity extends MicroEmulatorActivity {
 
             } else if (RESULT_EXTERNAL_FILE == requestCode) {
                 Uri fileUri = data.getData();
-                jimm.modules.DebugLog.println("File " + fileUri);
                 InputStream is = getContentResolver().openInputStream(fileUri);
                 fileTransferListener.onFileSelect(is, getFileName(fileUri));
                 fileTransferListener = null;
@@ -642,46 +643,9 @@ public class JimmActivity extends MicroEmulatorActivity {
         serviceConnection.send(Message.obtain(null, JimmService.UPDATE_APP_ICON));
     }
 
-    private final Object lock = new Object();
-    public String getFromClipboard() {
-        final AtomicReference<String> text = new AtomicReference<String>();
-        text.set(null);
-        runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    text.set(clipboard.hasText() ? clipboard.getText().toString() : null);
-                    synchronized (lock) {
-                        lock.notify();
-                    }
-                } catch (Throwable e) {
-                    jimm.modules.DebugLog.panic("get clipboard", e);
-                    // do nothing
-                }
-            }
-        });
-        if (!isActivityThread()) try {
-            synchronized (lock) {
-                lock.wait();
-            }
-            //Thread.sleep(100);
-        } catch (Exception ignored) {
-        }
-        return text.get();
-    }
-
-    public void putToClipboard(final String label, final String text) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    clipboard.setText(text);
-                } catch (Throwable e) {
-                    jimm.modules.DebugLog.panic("set clipboard", e);
-                    // do nothing
-                }
-            }
-        });
+    private final Clipboard clipboard = new Clipboard();
+    public Clipboard getClipboard() {
+        return clipboard;
     }
 
     private final JimmServiceConnection serviceConnection = new JimmServiceConnection();

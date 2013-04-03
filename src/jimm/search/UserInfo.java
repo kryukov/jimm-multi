@@ -294,7 +294,7 @@ public class UserInfo implements
                 vf.setPhotoListener(this);
                 vf.show();
                 // #sijapp cond.else #
-                ru.net.jimm.JimmActivity.getInstance().startCamera(this, 640, 480);
+                ru.net.jimm.JimmActivity.getInstance().externalApi.startCamera(this, 640, 480);
                 // #sijapp cond.end #
                 break;
 

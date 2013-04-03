@@ -62,7 +62,7 @@ public final class JimmUI {
     }
     public static String getClipBoardText(boolean quote) {
         // #sijapp cond.if modules_ANDROID is "true" #
-        String androidClipboard = ru.net.jimm.JimmActivity.getInstance().getClipboard().get();
+        String androidClipboard = ru.net.jimm.JimmActivity.getInstance().clipboard.get();
         if (!StringConvertor.isEmpty(androidClipboard) && !androidClipboard.equals(clipBoardText)) {
             clipBoardText = androidClipboard;
             clipBoardHeader = "mobile";
@@ -90,7 +90,7 @@ public final class JimmUI {
         clipBoardHeader   = header;
         clipBoardIncoming = true;
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().getClipboard().put(clipBoardText);
+        ru.net.jimm.JimmActivity.getInstance().clipboard.put(clipBoardText);
         // #sijapp cond.end #
     }
     public static void setClipBoardText(String text) {
@@ -98,7 +98,7 @@ public final class JimmUI {
         clipBoardHeader   = null;
         clipBoardIncoming = true;
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().getClipboard().put(clipBoardText);
+        ru.net.jimm.JimmActivity.getInstance().clipboard.put(clipBoardText);
         // #sijapp cond.end #
     }
 
@@ -107,7 +107,7 @@ public final class JimmUI {
         clipBoardHeader   = null;//from + ' ' + date;
         clipBoardIncoming = incoming;
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().getClipboard().put(clipBoardText);
+        ru.net.jimm.JimmActivity.getInstance().clipboard.put(clipBoardText);
         // #sijapp cond.end #
     }
 

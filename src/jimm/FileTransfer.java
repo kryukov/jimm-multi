@@ -97,7 +97,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     // Start the file transfer procedure depening on the ft type
     public void startFileTransfer() {
         // #sijapp cond.if modules_ANDROID is "true" #
-        if (ru.net.jimm.JimmActivity.getInstance().pickFile(this)) {
+        if (ru.net.jimm.JimmActivity.getInstance().externalApi.pickFile(this)) {
             return;
         }
         jimm.modules.DebugLog.panic("show file browser");
@@ -116,7 +116,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         vf.setPhotoListener(this);
         vf.show();
         // #sijapp cond.else #
-        ru.net.jimm.JimmActivity.getInstance().startCamera(this, 1024, 768);
+        ru.net.jimm.JimmActivity.getInstance().externalApi.startCamera(this, 1024, 768);
         // #sijapp cond.end #
     }
 

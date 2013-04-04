@@ -190,7 +190,7 @@
 "saturday"                                        "Суббота"
 "sunday"                                        "Воскресенье"
 "about"                                                "О программе"
-"about_info"                                "Jimm - Мобильный IM-клиент.\n\nВерсия ###VERSION### от ###DATE###.\nМодули: ###MODULES###\n\nCайт проекта: http://m.jimm.net.ru/"
+"about_info"                                "Jimm - Мобильный IM-клиент.\n\nВерсия ###VERSION### от ###DATE###.\nМодули: ###MODULES###\n\nCайт проекта: http://jimm.net.ru/"
 "absence"                                        "Отсутствие"
 "accounts"                                      "Учетные записи"
 "add_from_fs"                                   "Загрузить файл"

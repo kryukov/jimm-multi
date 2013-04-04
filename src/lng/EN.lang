@@ -11,7 +11,7 @@
 
 //General strings
 "about"				"About"
-"about_info"			"Jimm Is Mobile Messenger.\n\nBuild: ###VERSION### from ###DATE###.\nModules: ###MODULES###\n\nProject site: http://m.jimm.net.ru/"
+"about_info"			"Jimm Is Mobile Messenger.\n\nBuild: ###VERSION### from ###DATE###.\nModules: ###MODULES###\n\nProject site: http://jimm.net.ru/"
 "absence"			"Absence"
 "accounts"          "Accounts"
 "add_from_fs"                   "Add from FS"

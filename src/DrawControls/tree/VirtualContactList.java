@@ -72,10 +72,10 @@ public final class VirtualContactList extends VirtualList {
             model = new ContactListModel(10);
         } else {
             model = new AlloyContactListModel(10);
-            // #sijapp cond.if modules_TOUCH is "true"#
-            softBar = new RosterToolBar();
-            // #sijapp cond.end #
         }
+        // #sijapp cond.if modules_TOUCH is "true"#
+        softBar = new RosterToolBar();
+        // #sijapp cond.end #
         // #sijapp cond.else #
         model = new ContactListModel(1);
         // #sijapp cond.end #
@@ -228,14 +228,8 @@ public final class VirtualContactList extends VirtualList {
             ContactListModel oldModel = model;
             if (useAccounts) {
                 model = new ContactListModel(10);
-                // #sijapp cond.if modules_TOUCH is "true"#
-                softBar = new MySoftBar();
-                // #sijapp cond.end #
             } else {
                 model = new AlloyContactListModel(10);
-                // #sijapp cond.if modules_TOUCH is "true"#
-                softBar = new RosterToolBar();
-                // #sijapp cond.end #
             }
             for (int i = 0; i < oldModel.getProtocolCount(); ++i) {
                 model.addProtocol(oldModel.getProtocol(i));

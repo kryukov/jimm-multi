@@ -60,7 +60,7 @@ public class ProtocolMenu implements SelectListener {
             updateMainMenu();
         } else {
             menu.clean();
-            protocolMenu(false);
+            protocolMenu();
         }
     }
     private MenuModel updateMainMenu() {
@@ -75,11 +75,7 @@ public class ProtocolMenu implements SelectListener {
             menu.addItem("accounts", null, MENU_ACCOUNTS);
             // #sijapp cond.end #
         } else if (0 < ContactList.getInstance().getManager().getModel().getProtocolCount()) {
-            // #sijapp cond.if modules_MULTI is "true" #
-            protocolMenu(true);
-            // #sijapp cond.else #
-            protocolMenu(false);
-            // #sijapp cond.end #
+            protocolMenu();
         }
         if (isSmsSupported()) {
             menu.addItem("send_sms", MENU_SEND_SMS);
@@ -110,12 +106,12 @@ public class ProtocolMenu implements SelectListener {
     }
     // #sijapp cond.end #
 
-    private void protocolMenu(boolean main) {
+    private void protocolMenu() {
         Protocol protocol = activeProtocol;
-        if (ContactList.getInstance().getManager().getModel() instanceof AlloyContactListModel) {
-            int id = protocol.isConnected() && protocol.hasVCardEditor() && !main ? MENU_MYSELF : MENU_NON;
-            menu.addRawItem(protocol.getUserId(), null, id);
-        }
+        // #sijapp cond.if modules_MULTI is "true" #
+        int id = protocol.isConnected() && protocol.hasVCardEditor() ? MENU_MYSELF : MENU_NON;
+        menu.addRawItem(protocol.getUserId(), null, id);
+        // #sijapp cond.end #
         if (protocol.isConnecting()) {
             menu.addItem("disconnect", MENU_DISCONNECT);
             return;
@@ -153,11 +149,9 @@ public class ProtocolMenu implements SelectListener {
                 }
             }
             // #sijapp cond.end #
-            if (!main) {
-                menu.addItem("manage_contact_list", MENU_GROUPS);
-                if (protocol.hasVCardEditor()) {
-                    menu.addItem("myself", MENU_MYSELF);
-                }
+            menu.addItem("manage_contact_list", MENU_GROUPS);
+            if (protocol.hasVCardEditor()) {
+                menu.addItem("myself", MENU_MYSELF);
             }
             // #sijapp cond.if protocols_MRIM is "true" #
             // #sijapp cond.if modules_MAGIC_EYE is "true" #

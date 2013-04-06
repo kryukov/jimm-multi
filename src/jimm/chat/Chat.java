@@ -742,10 +742,6 @@ public final class Chat extends VirtualList {
 //        }
     }
 
-    public int getHeight() {
-        return classic ? super.getHeight() - line.getHeight() : super.getHeight();
-    }
-
     protected boolean isCurrentItemSelectable() {
         return true;
     }

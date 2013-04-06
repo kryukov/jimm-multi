@@ -139,7 +139,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI<TextBox> implements T
             @Override
             public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
                 InputConnection connection = super.onCreateInputConnection(outAttrs);
-                showNotify();
+                //showNotify();
                 return connection;
             }
             @Override
@@ -218,6 +218,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI<TextBox> implements T
                 activity.setContentView(view);
                 view.requestLayout();
                 view.requestFocus();
+                turnKeyboard(editView, true);
                 //getInputMethodManager().hideSoftInputFromWindow(editView.getWindowToken(),
                 //        InputMethodManager.HIDE_IMPLICIT_ONLY | InputMethodManager.HIDE_NOT_ALWAYS);
                 //turnKeyboard(editView, true);

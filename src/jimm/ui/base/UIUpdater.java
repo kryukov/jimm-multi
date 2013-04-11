@@ -101,6 +101,7 @@ public class UIUpdater extends TimerTask {
         CanvasEx canvas = NativeCanvas.getInstance().getCanvas();
         if ((null == canvas) || canvas.isSoftBarShown()) {
             MySoftBar.refreshClock();
+            MyActionBar.refreshClock();
         }
     }
     public static void refreshClock() {

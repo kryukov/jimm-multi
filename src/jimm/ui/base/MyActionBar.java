@@ -4,6 +4,8 @@ package jimm.ui.base;
 import DrawControls.icons.Icon;
 import DrawControls.tree.ContactListModel;
 import DrawControls.tree.VirtualContactList;
+import jimm.Jimm;
+import jimm.comm.Util;
 import protocol.Protocol;
 
 import javax.microedition.lcdui.Graphics;
@@ -18,6 +20,18 @@ public class MyActionBar extends ActiveRegion {
     private String caption;
     private String ticker;
     private static Icon messageIcon;
+
+    private static String time = "";
+
+    static void refreshClock() {
+        // #sijapp cond.if modules_ANDROID isnot "true"#
+        // #sijapp cond.if modules_TOUCH is "true"#
+        time = Util.getLocalDateString(Jimm.getCurrentGmtTime(), true);
+        int h = GraphicsEx.getSoftBarSize();
+        NativeCanvas.getInstance().repaint(0, 0, NativeCanvas.getScreenWidth(), h);
+        // #sijapp cond.end#
+        // #sijapp cond.end#
+    }
 
     public static void setMessageIcon(Icon messageIcon) {
         MyActionBar.messageIcon = messageIcon;
@@ -55,6 +69,17 @@ public class MyActionBar extends ActiveRegion {
         width -= GraphicsEx.captionWidthFix;
         // #sijapp cond.end#
         x += 2;
+
+        // #sijapp cond.if modules_ANDROID isnot "true"#
+        // #sijapp cond.if modules_TOUCH is "true"#
+        g.setFont(GraphicsEx.softBarFont);
+        g.setThemeColor(CanvasEx.THEME_CAP_TEXT);
+        int timeWidth = GraphicsEx.softBarFont.stringWidth(time);
+        width -= (timeWidth + 5);
+        g.drawString(null, time, null, x + width + 3, 1, timeWidth, height - 2);
+        drawSeparator(g, x + width, 0, height - 2);
+        // #sijapp cond.end#
+        // #sijapp cond.end#
 
         Icon ic = messageIcon;
         if (null != ic) {
@@ -104,12 +129,15 @@ public class MyActionBar extends ActiveRegion {
         // #sijapp cond.end#
         g.drawImage(icon, x - defWidth + (defWidth - icon.getWidth()) / 2, 0, height);
         // #sijapp cond.if modules_TOUCH is "true"#
-        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
-        g.drawLine(x - defWidth, 0, x - defWidth, height - 2);
-        g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
-        g.drawLine(x - defWidth + 1, 0, x - defWidth + 1, height - 2);
+        drawSeparator(g, x - defWidth, 0, height - 2);
         // #sijapp cond.end#
         return defWidth;
+    }
+    private void drawSeparator(GraphicsEx g, int x, int y, int height) {
+        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
+        g.drawLine(x, y, x, y + height);
+        g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+        g.drawLine(x + 1, y, x + 1, y + height);
     }
 
     public void setTicker(String ticker) {
@@ -139,6 +167,12 @@ public class MyActionBar extends ActiveRegion {
         x += GraphicsEx.captionOffset;
         width -= GraphicsEx.captionOffset;
         width -= GraphicsEx.captionWidthFix;
+        // #sijapp cond.end#
+        // #sijapp cond.if modules_ANDROID isnot "true"#
+        // #sijapp cond.if modules_TOUCH is "true"#
+        int timeWidth = GraphicsEx.softBarFont.stringWidth(time);
+        width -= (timeWidth + 4);
+        // #sijapp cond.end#
         // #sijapp cond.end#
         int itemWidth = getHeight();
         width -= itemWidth;

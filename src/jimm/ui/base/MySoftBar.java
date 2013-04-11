@@ -22,10 +22,12 @@ public class MySoftBar extends ActiveRegion {
     public MySoftBar() {
     }
     static void refreshClock() {
+        // #sijapp cond.if (modules_ANDROID is "true") or (modules_TOUCH isnot "true")#
         time = Util.getLocalDateString(Jimm.getCurrentGmtTime(), true);
         int h = GraphicsEx.getSoftBarSize();
         int screenHeight = NativeCanvas.getScreenHeight();
         NativeCanvas.getInstance().repaint(0, screenHeight - h, NativeCanvas.getScreenWidth(), h);
+        // #sijapp cond.end#
     }
     public int getHeight() {
         return GraphicsEx.getSoftBarSize();
@@ -108,15 +110,15 @@ public class MySoftBar extends ActiveRegion {
         }
 
         int criticalWidth = halfSoftWidth - 5;
+        // #sijapp cond.if (modules_ANDROID is "true") or (modules_TOUCH isnot "true")#
         if ((rightWidth < criticalWidth) && (leftWidth < criticalWidth)) {
             int middleWidth = gr.softBarFont.stringWidth(middle) + 2;
             int start = (w - middleWidth) / 2;
             if ((leftWidth < start) && (rightWidth < start)) {
                 gr.drawString(middle, start, y, middleWidth, h);
             }
-
         }
-
+        // #sijapp cond.end#
         gr.setClip(clipX, clipY, clipWidth, clipHeight);
     }
 

@@ -139,7 +139,7 @@ abstract public class CanvasEx extends DisplayableEx {
         if (this instanceof jimm.modules.fs.FileBrowser) return true;
         if (this instanceof jimm.ui.form.GraphForm) return true;
         if (this instanceof DrawControls.tree.VirtualContactList) {
-            return !Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
+            return true;//!Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
         }
         if (true) return false;
         // #sijapp cond.end#

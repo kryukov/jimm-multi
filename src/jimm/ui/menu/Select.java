@@ -104,7 +104,7 @@ public final class Select extends CanvasEx {
             nat.prevTopY = getItemStartY();
             int cur = getItemByCoord(posY);
             if (-1 != cur) {
-                setSelectedItemCode(items.getItemCodeByIndex(getIndex(cur, 0)));
+                setSelectedItemIndex(cur);
             }
         }
     }
@@ -137,7 +137,7 @@ public final class Select extends CanvasEx {
                 int posY = y - this.top;
                 int cur = getItemByCoord(posY);
                 if (-1 != cur) {
-                    setSelectedItemCode(items.getItemCodeByIndex(getIndex(cur, 0)));
+                    setSelectedItemIndex(getIndex(cur, 0));
                     go(items.itemAt(cur).code);
                 }
             }
@@ -226,7 +226,8 @@ public final class Select extends CanvasEx {
         int height = itemHeight * itemPerPage + 2 * getHeadSpace();
         top = (screenHeight - height) / 3;
 
-        setSelectedItem(selectedItemIndex);
+        setSelectedItemIndex(selectedItemIndex);
+        relocateTop();
     }
 
     public void update() {
@@ -239,14 +240,6 @@ public final class Select extends CanvasEx {
     }
     public int getSelectedItemCode() {
         return items.getItemCodeByIndex(selectedItemIndex);
-    }
-    private void setSelectedItemCode(int itemCode) {
-        if (getSelectedItemCode() != itemCode) {
-            selectedItemIndex = items.getIndexByItemCode(itemCode);
-            selectedItemPosX = 0;
-            sleep = 0;
-            invalidate();
-        }
     }
 
 
@@ -329,11 +322,19 @@ public final class Select extends CanvasEx {
     private int getIndex(int currentIndex, int moveTo) {
         return Math.max(Math.min(currentIndex + moveTo, items.count() - 1), 0);
     }
-    private void setSelectedItem(int index) {
-        setSelectedItemCode(items.getItemCodeByIndex(getIndex(index, 0)));
-
+    private void setSelectedItemIndex(int index) {
+        index = getIndex(index, 0);
+        if (index != selectedItemIndex) {
+            selectedItemIndex = index;
+            selectedItemPosX = 0;
+            sleep = 0;
+            invalidate();
+        }
+    }
+    private void relocateTop() {
         final int size = items.count();
         final boolean hasScroll = (size > itemPerPage);
+        int oldTop = topItem;
         if (hasScroll) {
             int newTop = topItem;
             newTop = Math.max(newTop, getIndex(selectedItemIndex, 1 + 1 - itemPerPage));
@@ -343,12 +344,15 @@ public final class Select extends CanvasEx {
         } else {
             topItem = 0;
         }
-
-        invalidate();
+        if (oldTop != topItem) {
+            invalidate();
+        }
     }
+
     private void nextPrevItem(boolean next) {
         final int size = items.count();
-        setSelectedItem((selectedItemIndex + (next ? 1 : size - 1)) % size);
+        setSelectedItemIndex((selectedItemIndex + (next ? 1 : size - 1)) % size);
+        relocateTop();
     }
 
 
@@ -387,10 +391,12 @@ public final class Select extends CanvasEx {
                 execJimmAction(NativeCanvas.JIMM_BACK);
                 return;
             case NativeCanvas.KEY_NUM1:
-                setSelectedItem(0);
+                setSelectedItemIndex(0);
+                relocateTop();
                 return;
             case NativeCanvas.KEY_NUM7:
-                setSelectedItem(items.count() - 1);
+                setSelectedItemIndex(items.count() - 1);
+                relocateTop();
                 return;
             case NativeCanvas.KEY_NUM3:
             case NativeCanvas.KEY_NUM9:
@@ -398,7 +404,8 @@ public final class Select extends CanvasEx {
                 if (NativeCanvas.KEY_NUM3 == keyCode) {
                     count = -count;
                 }
-                setSelectedItem(selectedItemIndex + count);
+                setSelectedItemIndex(selectedItemIndex + count);
+                relocateTop();
                 return;
         }
         switch (gameAct) {

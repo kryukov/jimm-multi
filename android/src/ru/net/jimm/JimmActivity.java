@@ -387,6 +387,7 @@ public class JimmActivity extends MicroEmulatorActivity {
         return null;
     }
 
+    @Override
     public void onBackPressed() {
         if (KeyEmulator.isMain()) {
             minimizeApp();

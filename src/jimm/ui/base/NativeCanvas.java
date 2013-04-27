@@ -39,6 +39,9 @@ public class NativeCanvas extends Canvas {
     private boolean ignoreKeys = false;
 
     private NativeCanvas() {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        minScreenMetrics = Math.min(getWidth(), getHeight());
+        // #sijapp cond.end #
     }
 
     protected void paint(Graphics g) {

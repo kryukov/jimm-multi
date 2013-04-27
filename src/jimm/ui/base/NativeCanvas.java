@@ -12,6 +12,7 @@ import java.util.*;
 import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.cl.ContactList;
+import jimm.comm.StringConvertor;
 import jimm.modules.*;
 
 /**
@@ -24,6 +25,9 @@ public class NativeCanvas extends Canvas {
     private CanvasEx canvas = null;
     private Popup popup = null;
     private Image bDIimage = null;
+    // #sijapp cond.if modules_ANDROID is "true" #
+    private int minScreenMetrics;
+    // #sijapp cond.end #
 
     private static NativeCanvas instance = new NativeCanvas();
     // #sijapp cond.if modules_TOUCH is "true"#
@@ -532,9 +536,13 @@ public class NativeCanvas extends Canvas {
         CanvasEx c = canvas;
         int prevW = c.getWidth();
         int prevH = c.getHeight();
+        // #sijapp cond.if modules_ANDROID is "true" #
+        minScreenMetrics = Math.max(minScreenMetrics, Math.min(w, h));
+        // #sijapp cond.end #
         c.setSize(w, h);
         c.sizeChanged(prevW, prevH, c.getWidth(), c.getHeight());
     }
+
     public static int getScreenWidth() {
         return instance.getWidth();
     }
@@ -543,7 +551,11 @@ public class NativeCanvas extends Canvas {
     }
     public int getMinScreenMetrics() {
         // #sijapp cond.if modules_ANDROID is "true" #
-        if (true) return getWidth();
+        String supports = System.getProperty("device.accelerometer");
+        if (StringConvertor.isEmpty(supports)) {
+            return getWidth();
+        }
+        if (true) return minScreenMetrics;
         // #sijapp cond.end #
         return Math.min(getWidth(), getHeight());
     }

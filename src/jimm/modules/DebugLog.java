@@ -243,6 +243,7 @@ public final class DebugLog implements SelectListener {
         //protocol.icq.ClientDetector.g();
     }
     public static void dumpProperties() {
+        println("Accelerometer: " + System.getProperty("device.accelerometer"));
         println("RamFree: "   + System.getProperty("com.nokia.memoryramfree"));
         println("Network: "   + System.getProperty("com.nokia.mid.networkid"));
         //println("Avaliable: " + System.getProperty("com.nokia.mid.networkavailability"));

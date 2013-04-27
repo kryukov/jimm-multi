@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import jimm.FileTransfer;
+import jimm.history.HistoryStorage;
 import jimm.modules.photo.PhotoListener;
 import ru.net.jimm.photo.CameraActivity;
 
@@ -119,5 +120,13 @@ public class ExternalApi {
         } catch (Exception ignored) {
         }
         return uri.toString();
+    }
+
+    public void showHistory(HistoryStorage history) {
+        String historyFilePath = history.getAndroidStorage().getTextFile();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse("file://" + historyFilePath);
+        intent.setDataAndType(uri, "text/plain");
+        activity.startActivity(intent);
     }
 }

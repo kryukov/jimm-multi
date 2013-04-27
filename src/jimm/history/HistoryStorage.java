@@ -65,6 +65,11 @@ public class HistoryStorage {
     public Contact getContact() {
         return contact;
     }
+    // #sijapp cond.if modules_ANDROID is "true" #
+    public AndroidHistoryStorage getAndroidStorage() {
+        return androidStorage;
+    }
+    // #sijapp cond.end #
 
     public static HistoryStorage getHistory(Contact contact) {
         return new HistoryStorage(contact);
@@ -166,14 +171,15 @@ public class HistoryStorage {
 
     // Returns full data of stored message
     public CachedRecord getRecord(int recNo) {
+        CachedRecord result;
         // #sijapp cond.if modules_ANDROID is "true" #
-        return androidStorage.getRecord(recNo);
+        result = androidStorage.getRecord(recNo);
         // #sijapp cond.else #
         if (null == historyStore) {
             openHistory(false);
         }
-        CachedRecord result = new CachedRecord();
         try {
+            result = new CachedRecord();
             byte[] data = historyStore.getRecord(recNo + 1);
             ByteArrayInputStream bais = new ByteArrayInputStream(data);
             DataInputStream dis = new DataInputStream(bais);
@@ -188,8 +194,8 @@ public class HistoryStorage {
             result.text = "";
             result.date = "";
         }
-        return result;
         // #sijapp cond.end #
+        return result;
     }
 
     // Clears messages history for Contact

@@ -15,6 +15,7 @@ import jimm.cl.ContactList;
 import jimm.forms.ManageContactListForm;
 import jimm.history.*;
 import jimm.ui.menu.*;
+import ru.net.jimm.JimmActivity;
 
 /**
  *
@@ -142,7 +143,11 @@ public class ContactMenu implements SelectListener {
             } else {
                 history = HistoryStorage.getHistory(contact);
             }
+            // #sijapp cond.if modules_ANDROID is "true" #
+            JimmActivity.getInstance().externalApi.showHistory(history);
+            // #sijapp cond.else #
             new HistoryStorageList(history).show();
+            // #sijapp cond.end #
         }
     }
     // #sijapp cond.end#

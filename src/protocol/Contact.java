@@ -15,6 +15,7 @@ import jimm.*;
 import jimm.chat.*;
 import jimm.chat.message.*;
 import jimm.cl.ContactList;
+import jimm.history.*;
 import jimm.ui.base.*;
 import jimm.ui.menu.*;
 import jimm.comm.*;
@@ -423,13 +424,18 @@ abstract public class Contact implements TreeNode, Sortable {
         menu.addItem("info", USER_MENU_USER_INFO);
         menu.addItem("manage", USER_MANAGE_CONTACT);
 
-        // #sijapp cond.if modules_ANDROID isnot "true" #
         // #sijapp cond.if modules_HISTORY is "true" #
         if (!isTemp()) {
-            menu.addItem("history", Contact.USER_MENU_HISTORY);
+            // #sijapp cond.if modules_ANDROID is "true" #
+            HistoryStorage history = HistoryStorage.getHistory(this);
+            if (null != history.getAndroidStorage().getTextFile()) {
+            // #sijapp cond.end#
+                menu.addItem("history", Contact.USER_MENU_HISTORY);
+            // #sijapp cond.if modules_ANDROID is "true" #
+            }
+            // #sijapp cond.end#
         }
         // #sijapp cond.end#
-        // #sijapp cond.end #
         if (protocol.isConnected()) {
             menu.addItem("user_statuses", USER_MENU_STATUSES);
         }

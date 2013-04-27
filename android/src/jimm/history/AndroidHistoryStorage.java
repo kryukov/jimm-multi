@@ -5,6 +5,7 @@ import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import ru.net.jimm.config.HomeDirectory;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
@@ -87,6 +88,14 @@ public class AndroidHistoryStorage {
 
     private jimm.modules.fs.JSR75FileSystem getFile() {
         return HomeDirectory.getFile(jimm.modules.fs.FileSystem.HISTORY + "/" + historyStorage.getUniqueUserId() + ".txt");
+    }
+
+    public String getTextFile() {
+        try {
+            return getFile().exists() ? getFile().getAbsolutePath() : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private byte[] readLast(jimm.modules.fs.JSR75FileSystem fs, int read) throws Exception {

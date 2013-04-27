@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	<!-- Internal target: compile -->
 	<target name="compile">
 		<mkdir dir="${build}/classes"/>
-		<javac includeantruntime="false" srcdir="${src}"
+		<javac includeantruntime="true" srcdir="${src}"
 			destdir="${build}/classes" classpath="${ant.core.lib}">
 		</javac>
 	</target>

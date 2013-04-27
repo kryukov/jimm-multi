@@ -26,20 +26,13 @@
 package ru.net.jimm;
 
 import java.io.*;
-import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.content.pm.PackageManager;
 import android.os.*;
 import android.view.*;
-import jimm.FileTransfer;
 import jimm.Jimm;
 import jimm.modules.DebugLog;
-import jimm.modules.photo.PhotoListener;
 import jimm.ui.base.KeyEmulator;
 import jimm.ui.base.NativeCanvas;
 import jimm.ui.menu.Select;
@@ -63,7 +56,6 @@ import org.microemu.android.MicroEmulatorActivity;
 import android.content.Intent;
 import android.util.Log;
 import org.microemu.cldc.file.FileSystem;
-import ru.net.jimm.photo.CameraActivity;
 
 public class JimmActivity extends MicroEmulatorActivity {
 
@@ -395,7 +387,6 @@ public class JimmActivity extends MicroEmulatorActivity {
         return null;
     }
 
-    @Override
     public void onBackPressed() {
         if (KeyEmulator.isMain()) {
             minimizeApp();
@@ -483,18 +474,7 @@ public class JimmActivity extends MicroEmulatorActivity {
             common.setRecordStoreManager(new AndroidRecordStoreManager(this));
             common.setDevice(new AndroidDevice(emulatorContext, this));
 
-            System.setProperty("microedition.platform", "microemu-android");
-            System.setProperty("microedition.configuration", "CLDC-1.1");
-            System.setProperty("microedition.profiles", "MIDP-2.0");
-            System.setProperty("microedition.locale", Locale.getDefault().toString());
-            System.setProperty("device.manufacturer", android.os.Build.BRAND);
-            System.setProperty("device.model", android.os.Build.MODEL);
-            System.setProperty("device.software.version", android.os.Build.VERSION.RELEASE);
-
-            // photo
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                System.setProperty("video.snapshot.encodings", "yes");
-            }
+            Environment.setup(this);
 
             /* JSR-75 */
             FileSystem fs = new FileSystem();

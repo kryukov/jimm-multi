@@ -84,6 +84,7 @@ public class JimmActivity extends MicroEmulatorActivity {
 
         clipboard.setActivity(this);
         externalApi.setActivity(this);
+        addActivityResultListener(externalApi);
 
         instance = this;
         PACKAGE_NAME = getApplicationContext().getPackageName();
@@ -546,12 +547,6 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     public boolean isNetworkAvailable() {
         return networkStateReceiver.isNetworkAvailable();
-    }
-
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        externalApi.onActivityResult(requestCode, resultCode, data);
     }
 
     public void updateAppIcon() {

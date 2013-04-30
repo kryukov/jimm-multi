@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import jimm.FileTransfer;
 import jimm.history.HistoryStorage;
 import jimm.modules.photo.PhotoListener;
+import org.microemu.android.util.ActivityResultListener;
 import ru.net.jimm.photo.CameraActivity;
 
 import java.io.InputStream;
@@ -19,7 +20,7 @@ import java.io.InputStream;
  *
  * @author vladimir
  */
-public class ExternalApi {
+public class ExternalApi implements ActivityResultListener {
     private JimmActivity activity;
 
     public void setActivity(JimmActivity activity) {
@@ -70,34 +71,38 @@ public class ExternalApi {
         activity.startActivityForResult(intent, code);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         jimm.modules.DebugLog.println("result " + requestCode + " " + resultCode + " " + data);
-        if (null == data) return;
-        if (JimmActivity.RESULT_OK != resultCode) return;
+        if (null == data) return false;
+        if (JimmActivity.RESULT_OK != resultCode) return false;
         try {
             if (RESULT_PHOTO == requestCode) {
-                if (null == photoListener) return;
+                if (null == photoListener) return false;
                 photoListener.processPhoto(data.getByteArrayExtra("photo"));
                 photoListener = null;
+                return true;
 
             } else if (RESULT_EXTERNAL_PHOTO == requestCode) {
-                if (null == photoListener) return;
+                if (null == photoListener) return false;
                 Uri uriImage = data.getData();
                 InputStream in = activity.getContentResolver().openInputStream(uriImage);
                 byte[] img = new byte[in.available()];
                 in.read(img);
                 photoListener.processPhoto(img);
                 photoListener = null;
+                return true;
 
             } else if (RESULT_EXTERNAL_FILE == requestCode) {
                 Uri fileUri = data.getData();
                 InputStream is = activity.getContentResolver().openInputStream(fileUri);
                 fileTransferListener.onFileSelect(is, getFileName(fileUri));
                 fileTransferListener = null;
+                return true;
             }
         } catch (Throwable ignored) {
             jimm.modules.DebugLog.panic("activity", ignored);
         }
+        return false;
     }
 
     private String getFileName(Uri fileUri) {

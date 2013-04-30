@@ -240,7 +240,7 @@ Log.d("AndroidCanvasUI", "set content view: " + view);
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected final void onActivityResult(int requestCode, int resultCode, Intent data) {
         for (ActivityResultListener activityResultListener : activityResultListeners) {
             if (activityResultListener.onActivityResult(requestCode, resultCode, data)) {
                 return;

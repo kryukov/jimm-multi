@@ -32,7 +32,6 @@ import android.app.KeyguardManager;
 import android.os.*;
 import android.view.*;
 import jimm.Jimm;
-import jimm.modules.DebugLog;
 import jimm.ui.base.KeyEmulator;
 import jimm.ui.base.NativeCanvas;
 import jimm.ui.menu.Select;
@@ -69,6 +68,8 @@ public class JimmActivity extends MicroEmulatorActivity {
     private static JimmActivity instance;
 
     private NetworkStateReceiver networkStateReceiver = new NetworkStateReceiver();
+
+    private boolean ignoreBackKeyUp = false;
 
     public static JimmActivity getInstance() {
         return instance;
@@ -201,7 +202,7 @@ public class JimmActivity extends MicroEmulatorActivity {
         super.onStop();
     }
 
-    private boolean ignoreBackKeyUp = false;
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -221,7 +222,6 @@ public class JimmActivity extends MicroEmulatorActivity {
             if (ignoreKey(keyCode)) {
                 return super.onKeyDown(keyCode, event);
             }
-            DebugLog.println("commands keyCode " + keyCode);
             if (!KeyEmulator.isMain() || (KeyEvent.KEYCODE_BACK != keyCode)) {
                 Device device = DeviceFactory.getDevice();
                 ((AndroidInputMethod) device.getInputMethod()).buttonPressed(event);
@@ -263,10 +263,11 @@ public class JimmActivity extends MicroEmulatorActivity {
                 return super.onKeyUp(keyCode, event);
             }
 
-            Device device = DeviceFactory.getDevice();
-            ((AndroidInputMethod) device.getInputMethod()).buttonReleased(event);
-
-            return true;
+            if (!KeyEmulator.isMain() || (KeyEvent.KEYCODE_BACK != keyCode)) {
+                Device device = DeviceFactory.getDevice();
+                ((AndroidInputMethod) device.getInputMethod()).buttonReleased(event);
+                return true;
+            }
         }
 
         return super.onKeyUp(keyCode, event);

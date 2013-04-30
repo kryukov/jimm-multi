@@ -32,6 +32,8 @@ import java.util.ArrayList;
 
 import javax.microedition.io.ConnectionNotFoundException;
 
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import jimm.modules.DebugLog;
 import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
@@ -40,13 +42,14 @@ import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.android.device.ui.AndroidDisplayableUI;
 import org.microemu.android.util.ActivityResultListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
-import org.microemu.log.Logger;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -249,4 +252,69 @@ Log.d("AndroidCanvasUI", "set content view: " + view);
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+
+    @Override
+    public boolean onTrackballEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            MIDletAccess ma = MIDletBridge.getMIDletAccess();
+            if (ma == null) {
+                return false;
+            }
+            final DisplayAccess da = ma.getDisplayAccess();
+            if (da == null) {
+                return false;
+            }
+            AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
+            if (ui instanceof AndroidCanvasUI) {
+                float x = event.getX();
+                float y = event.getY();
+                if ((x > 0 && accumulatedTrackballX < 0) || (x < 0 && accumulatedTrackballX > 0)) {
+                    accumulatedTrackballX = 0;
+                }
+                if ((y > 0 && accumulatedTrackballY < 0) || (y < 0 && accumulatedTrackballY > 0)) {
+                    accumulatedTrackballY = 0;
+                }
+                if (accumulatedTrackballX + x > TRACKBALL_THRESHOLD) {
+                    accumulatedTrackballX -= TRACKBALL_THRESHOLD;
+                    KEY_RIGHT_DOWN_EVENT.dispatch(this);
+                    KEY_RIGHT_UP_EVENT.dispatch(this);
+                } else if (accumulatedTrackballX + x < -TRACKBALL_THRESHOLD) {
+                    accumulatedTrackballX += TRACKBALL_THRESHOLD;
+                    KEY_LEFT_DOWN_EVENT.dispatch(this);
+                    KEY_LEFT_UP_EVENT.dispatch(this);
+                }
+                if (accumulatedTrackballY + y > TRACKBALL_THRESHOLD) {
+                    accumulatedTrackballY -= TRACKBALL_THRESHOLD;
+                    KEY_DOWN_DOWN_EVENT.dispatch(this);
+                    KEY_DOWN_UP_EVENT.dispatch(this);
+                } else if (accumulatedTrackballY + y < -TRACKBALL_THRESHOLD) {
+                    accumulatedTrackballY += TRACKBALL_THRESHOLD;
+                    KEY_UP_DOWN_EVENT.dispatch(this);
+                    KEY_UP_UP_EVENT.dispatch(this);
+                }
+                accumulatedTrackballX += x;
+                accumulatedTrackballY += y;
+
+                return true;
+            }
+        }
+
+        return super.onTrackballEvent(event);
+    }
+
+    private final static KeyEvent KEY_RIGHT_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT);
+    private final static KeyEvent KEY_RIGHT_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT);
+    private final static KeyEvent KEY_LEFT_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT);
+    private final static KeyEvent KEY_LEFT_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT);
+    private final static KeyEvent KEY_DOWN_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN);
+    private final static KeyEvent KEY_DOWN_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN);
+    private final static KeyEvent KEY_UP_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP);
+    private final static KeyEvent KEY_UP_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP);
+
+    private final static float TRACKBALL_THRESHOLD = 1.0f;
+
+    private float accumulatedTrackballX = 0;
+
+    private float accumulatedTrackballY = 0;
+
 }

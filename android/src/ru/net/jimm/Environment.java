@@ -6,7 +6,12 @@ import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.provider.Settings;
+import org.microemu.android.util.AndroidLoggerAppender;
+import org.microemu.log.Logger;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Locale;
 
 /**
@@ -17,6 +22,47 @@ import java.util.Locale;
  * @author vladimir
  */
 public class Environment {
+    public static void initLogger() {
+        Logger.removeAllAppenders();
+        Logger.setLocationEnabled(false);
+        Logger.addAppender(new AndroidLoggerAppender());
+
+        System.setOut(new PrintStream(new OutputStream() {
+
+            StringBuffer line = new StringBuffer();
+
+            @Override
+            public void write(int oneByte) throws IOException {
+                if (((char) oneByte) == '\n') {
+                    Logger.debug(line.toString());
+                    if (line.length() > 0) {
+                        line.delete(0, line.length() - 1);
+                    }
+                } else {
+                    line.append((char) oneByte);
+                }
+            }
+
+        }));
+
+        System.setErr(new PrintStream(new OutputStream() {
+
+            StringBuffer line = new StringBuffer();
+
+            @Override
+            public void write(int oneByte) throws IOException {
+                if (((char) oneByte) == '\n') {
+                    Logger.debug(line.toString());
+                    if (line.length() > 0) {
+                        line.delete(0, line.length() - 1);
+                    }
+                } else {
+                    line.append((char) oneByte);
+                }
+            }
+
+        }));
+    }
     public static void setup(Activity activity) {
         System.setProperty("microedition.platform", "microemu-android");
         System.setProperty("microedition.configuration", "CLDC-1.1");

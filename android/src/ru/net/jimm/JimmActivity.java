@@ -89,45 +89,7 @@ public class JimmActivity extends MicroEmulatorActivity {
         instance = this;
         PACKAGE_NAME = getApplicationContext().getPackageName();
 
-        Logger.removeAllAppenders();
-        Logger.setLocationEnabled(false);
-        Logger.addAppender(new AndroidLoggerAppender());
-
-        System.setOut(new PrintStream(new OutputStream() {
-
-            StringBuffer line = new StringBuffer();
-
-            @Override
-            public void write(int oneByte) throws IOException {
-                if (((char) oneByte) == '\n') {
-                    Logger.debug(line.toString());
-                    if (line.length() > 0) {
-                        line.delete(0, line.length() - 1);
-                    }
-                } else {
-                    line.append((char) oneByte);
-                }
-            }
-
-        }));
-
-        System.setErr(new PrintStream(new OutputStream() {
-
-            StringBuffer line = new StringBuffer();
-
-            @Override
-            public void write(int oneByte) throws IOException {
-                if (((char) oneByte) == '\n') {
-                    Logger.debug(line.toString());
-                    if (line.length() > 0) {
-                        line.delete(0, line.length() - 1);
-                    }
-                } else {
-                    line.append((char) oneByte);
-                }
-            }
-
-        }));
+        Environment.initLogger();
 
         MIDletInit();
     }

@@ -48,15 +48,7 @@ public class AndroidInputMethod extends InputMethod {
 	public void buttonPressed(int keyCode) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			if (repeatModeKeyCode == keyCode) {
-				MIDletAccess ma = MIDletBridge.getMIDletAccess();
-				if (ma == null) {
-					return;
-				}
-				DisplayAccess da = ma.getDisplayAccess();
-				if (da == null) {
-					return;
-				}
-				da.keyRepeated(keyCode);
+                getDisplayAccess().keyRepeated(keyCode);
 				return;
 			} else {
 				repeatModeKeyCode = keyCode;
@@ -75,49 +67,30 @@ public class AndroidInputMethod extends InputMethod {
 			repeatModeKeyCode = Integer.MAX_VALUE;
 		}
 		
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return;
-		}
-
-		DisplayAccess da = ma.getDisplayAccess();
-		if (da == null) {
-			return;
-		}
-
-		da.keyReleased(keyCode);
+        getDisplayAccess().keyReleased(keyCode);
 	}
 	
 	public void pointerPressed(int x, int y) {		
 		if (DeviceFactory.getDevice().hasPointerEvents()) {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().pointerPressed(x, y);
+			getDisplayAccess().pointerPressed(x, y);
 		}
 	}
 
 	public void pointerReleased(int x, int y) {
 		if (DeviceFactory.getDevice().hasPointerEvents()) {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().pointerReleased(x, y);
+			getDisplayAccess().pointerReleased(x, y);
 		}
 	}
 
 	public void pointerDragged(int x, int y) {
 		if (DeviceFactory.getDevice().hasPointerMotionEvents()) {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().pointerDragged(x, y);
+			getDisplayAccess().pointerDragged(x, y);
 		}
 	}
 
 	protected boolean fireInputMethodListener(int keyCode) {
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return false;
-		}
-		DisplayAccess da = ma.getDisplayAccess();
-		if (da == null) {
-			return false;
-		}
-
 		if (inputMethodListener == null) {
-			da.keyPressed(keyCode);
+            getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}
 // TODO
@@ -438,4 +411,8 @@ public class AndroidInputMethod extends InputMethod {
 		return keyName;
 	}
 
+    private DisplayAccess getDisplayAccess() {
+        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        return (null == ma) ? null : ma.getDisplayAccess();
+    }
 }

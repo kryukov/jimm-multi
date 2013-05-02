@@ -178,8 +178,8 @@ public class HistoryStorage {
         if (null == historyStore) {
             openHistory(false);
         }
+        result = new CachedRecord();
         try {
-            result = new CachedRecord();
             byte[] data = historyStore.getRecord(recNo + 1);
             ByteArrayInputStream bais = new ByteArrayInputStream(data);
             DataInputStream dis = new DataInputStream(bais);

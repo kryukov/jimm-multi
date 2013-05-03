@@ -101,11 +101,11 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     @Override
                     public void run() {
                         insert(" " + ((Selector)canvas).getSelectedCode() + " ");
+                        showKeyboard();
                     }
                 });
             }
         });
-        showKeyboard();
     }
 
     @Override
@@ -117,11 +117,11 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     @Override
                     public void run() {
                         insert(Templates.getInstance().getSelectedTemplate());
+                        showKeyboard();
                     }
                 });
             }
         });
-        showKeyboard();
         return true;
     }
 

@@ -1122,7 +1122,7 @@ public final class Chat extends VirtualList {
     }
 
     MessData getUnreadMessage(int num) {
-        int index = messData.size() - getUnreadMessageCount() - num;
+        int index = messData.size() - getUnreadMessageCount() + num;
         return (MessData) messData.elementAt(index);
     }
 }

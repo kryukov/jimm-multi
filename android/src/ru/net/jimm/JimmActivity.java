@@ -170,11 +170,7 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        AndroidDisplayableUI ui = getDisplayable();
-        if (ui == null) {
-            return false;
-        }
-        if (ui instanceof AndroidCanvasUI) {
+        if (getDisplayable() instanceof AndroidCanvasUI) {
             if (ignoreKey(keyCode)) {
                 return super.onKeyDown(keyCode, event);
             }
@@ -202,12 +198,7 @@ public class JimmActivity extends MicroEmulatorActivity {
             ignoreBackKeyUp = false;
             return true;
         }
-        AndroidDisplayableUI ui = getDisplayable();
-        if (ui == null) {
-            return false;
-        }
-
-        if (ui instanceof AndroidCanvasUI) {
+        if (getDisplayable() instanceof AndroidCanvasUI) {
             if (ignoreKey(keyCode)) {
                 return super.onKeyUp(keyCode, event);
             }

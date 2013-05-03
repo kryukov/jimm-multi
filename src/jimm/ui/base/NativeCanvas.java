@@ -282,6 +282,7 @@ public class NativeCanvas extends Canvas {
     }
 
     protected void keyPressed(int keyCode) {
+        ignoreKeys = false;
         // #sijapp cond.if modules_LIGHT is "true" #
         CustomLight.setLightMode(CustomLight.ACTION_KEY_PRESS);
         // #sijapp cond.end#
@@ -392,6 +393,9 @@ public class NativeCanvas extends Canvas {
         doKeyReaction(canvas, keyCode, type);
     }
     private void doKeyReaction(CanvasEx c, int keyCode, int type) {
+        if (ignoreKeys) {
+            return;
+        }
         int key = getKey(keyCode);
         int action;
         if (1 == Options.getInt(Options.OPTION_KEYBOARD)) {
@@ -464,10 +468,7 @@ public class NativeCanvas extends Canvas {
     private void doKeyReaction(final CanvasEx c, final int keyCode, final int action, int type) {
         try {
             if (ignoreKeys) {
-                if (CanvasEx.KEY_PRESSED != type) {
-                    return;
-                }
-                ignoreKeys = false;
+                return;
             }
             int jimmAction = mapToJimmAction(c, keyCode);
             if (0 < jimmAction) {
@@ -520,6 +521,7 @@ public class NativeCanvas extends Canvas {
 
     void emulateKey(CanvasEx c, int key) {
         if (null == c) c = canvas;
+        ignoreKeys = false;
         doKeyReaction(c, key, CanvasEx.KEY_PRESSED);
         doKeyReaction(c, key, CanvasEx.KEY_RELEASED);
     }

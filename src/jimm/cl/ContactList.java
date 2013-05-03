@@ -25,7 +25,6 @@ package jimm.cl;
 
 import DrawControls.icons.Icon;
 import DrawControls.tree.*;
-import DrawControls.tree.alloy.AlloyContactListModel;
 import jimm.*;
 import jimm.chat.*;
 import jimm.forms.*;

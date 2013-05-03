@@ -101,11 +101,11 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     @Override
                     public void run() {
                         insert(" " + ((Selector)canvas).getSelectedCode() + " ");
-                        showKeyboard();
                     }
                 });
             }
         });
+        showKeyboard();
     }
 
     @Override
@@ -117,11 +117,11 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     @Override
                     public void run() {
                         insert(Templates.getInstance().getSelectedTemplate());
-                        showKeyboard();
                     }
                 });
             }
         });
+        showKeyboard();
         return true;
     }
 
@@ -129,7 +129,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         Configuration conf = Resources.getSystem().getConfiguration();
         if (conf.hardKeyboardHidden != Configuration.HARDKEYBOARDHIDDEN_NO) {
             InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            keyboard.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+            keyboard.showSoftInput(view, InputMethodManager.SHOW_FORCED | InputMethodManager.SHOW_IMPLICIT);
         }
     }
 
@@ -138,8 +138,18 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
     public void showKeyboard() {
-        messageEditor.requestFocus();
-        showKeyboard(messageEditor);
+        ((JimmActivity)getContext()).post(new Runnable() {
+            @Override
+            public void run() {
+                messageEditor.requestFocus();
+            }
+        });
+        ((JimmActivity)getContext()).post(new Runnable() {
+            @Override
+            public void run() {
+                showKeyboard(messageEditor);
+            }
+        });
     }
 
     private void send() {
@@ -160,9 +170,9 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                 } else {
                     insert(t);
                 }
-                showKeyboard();
             }
         });
+        showKeyboard();
     }
     public boolean canAdd(String what) {
         String text = getText();

@@ -52,9 +52,6 @@ import android.content.Intent;
 import android.util.Log;
 import org.microemu.cldc.file.FileSystem;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class JimmActivity extends MicroEmulatorActivity {
 
     public static final String LOG_TAG = "JimmActivity";
@@ -70,7 +67,7 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     private boolean ignoreBackKeyUp = false;
 
-    private boolean isFirstBack = true;
+//    private boolean isFirstBack = true;
 
     public static JimmActivity getInstance() {
         return instance;
@@ -177,7 +174,7 @@ public class JimmActivity extends MicroEmulatorActivity {
             if (!KeyEmulator.isMain() || (KeyEvent.KEYCODE_BACK != keyCode)) {
                 Device device = DeviceFactory.getDevice();
                 ((AndroidInputMethod) device.getInputMethod()).buttonPressed(event);
-                isFirstBack = true;
+//                isFirstBack = true;
                 return true;
             }
         }
@@ -252,16 +249,16 @@ public class JimmActivity extends MicroEmulatorActivity {
     @Override
     public void onBackPressed() {
         if (KeyEmulator.isMain()) {
-            if (isFirstBack) {
-                isFirstBack = false;
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        isFirstBack = true;
-                    }
-                }, 1000);
-                return;
-            }
+//            if (isFirstBack) {
+//                isFirstBack = false;
+//                new Timer().schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        isFirstBack = true;
+//                    }
+//                }, 1000);
+//                return;
+//            }
             minimizeApp();
             return;
         }

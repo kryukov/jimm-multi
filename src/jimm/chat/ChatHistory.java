@@ -428,7 +428,7 @@ public final class ChatHistory extends VirtualList {
                 if (!StringConvertor.isEmpty(nick)) {
                     msg.setName(nick);
                 }
-                protocol.addMessage(msg);
+                protocol.addMessage(msg, true);
             }
         } catch (Exception ignored) {
         }

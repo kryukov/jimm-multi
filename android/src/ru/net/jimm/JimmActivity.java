@@ -385,14 +385,14 @@ public class JimmActivity extends MicroEmulatorActivity {
         try {
             startService(new Intent(this, JimmService.class));
             registerReceiver(networkStateReceiver, networkStateReceiver.getFilter());
-            bindService(new Intent(this, JimmService.class), serviceConnection, BIND_AUTO_CREATE);
+            bindService(new Intent(this, JimmService.class), service, BIND_AUTO_CREATE);
         } catch (Exception e) {
             error(e);
         }
     }
     public void notifyMIDletDestroyed() {
         try {
-            unbindService(serviceConnection);
+            unbindService(service);
         } catch (Exception e) {
             // do nothing
         }
@@ -416,13 +416,9 @@ public class JimmActivity extends MicroEmulatorActivity {
         return networkStateReceiver.isNetworkAvailable();
     }
 
-    public void updateAppIcon() {
-        serviceConnection.send(Message.obtain(null, JimmService.UPDATE_APP_ICON));
-    }
-
     public final ExternalApi externalApi = new ExternalApi();
 
     public final Clipboard clipboard = new Clipboard();
 
-    private final JimmServiceConnection serviceConnection = new JimmServiceConnection();
+    public final JimmServiceConnection service = new JimmServiceConnection();
 }

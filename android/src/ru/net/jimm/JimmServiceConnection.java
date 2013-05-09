@@ -25,11 +25,17 @@ public class JimmServiceConnection implements ServiceConnection {
         mService = null;
     }
 
-    public void send(Message msg) {
+    private void send(Message msg) {
         try {
             mService.send(msg);
         } catch (Exception e) {
             // do nothing
         }
+    }
+    public void updateAppIcon(int personalUnread, int allUnread) {
+        send(Message.obtain(null, JimmService.UPDATE_APP_ICON));
+    }
+    public void updateConnectionState() {
+        send(Message.obtain(null, JimmService.UPDATE_CONNECTION_STATUS));
     }
 }

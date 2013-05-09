@@ -4,11 +4,9 @@ package ru.net.jimm;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
+import android.os.*;
 import android.util.Log;
 import jimm.chat.ChatHistory;
 import jimm.cl.ContactList;
@@ -19,17 +17,24 @@ public class JimmService extends Service {
 
     private static final String LOG_TAG = "JimmService";
 
-    private final Messenger messenger = new Messenger(new IncomingHandler());
+    private final Messenger messenger = new Messenger(new Handler(new IncomingMessageHandler()));
     private MusicReceiver musicReceiver;
     private Tray tray = null;
+    private PowerManager.WakeLock wakeLock;
 
     public static final int UPDATE_APP_ICON = 1;
+    public static final int UPDATE_CONNECTION_STATUS = 2;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i(LOG_TAG, "onStart();");
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, LOG_TAG);
+        if (null != wakeLock) {
+            wakeLock.acquire();
+        }
 
         tray = new Tray(this);
         //Foreground Service
@@ -43,6 +48,7 @@ public class JimmService extends Service {
     @Override
     public void onDestroy() {
         Log.i(LOG_TAG, "onDestroy();");
+        if (wakeLock.isHeld()) wakeLock.release();
         //this.unregisterReceiver(musicReceiver);
         tray.stopForegroundCompat(R.string.app_name);
     }
@@ -90,17 +96,26 @@ public class JimmService extends Service {
         return notification;
     }
 
-    private class IncomingHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
+    private boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case UPDATE_CONNECTION_STATUS:
+                tray.startForegroundCompat(R.string.app_name, getNotification());
+                break;
+            case UPDATE_APP_ICON:
+                tray.startForegroundCompat(R.string.app_name, getNotification());
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private class IncomingMessageHandler implements Handler.Callback {
+        public boolean handleMessage(Message msg) {
             try {
-                switch (msg.what) {
-                    case UPDATE_APP_ICON:
-                        tray.startForegroundCompat(R.string.app_name, getNotification());
-                        break;
-                }
+                return JimmService.this.handleMessage(msg);
             } catch (Exception e) {
-                // unknown error
+                return false;
             }
         }
     }

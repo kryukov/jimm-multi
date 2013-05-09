@@ -434,13 +434,15 @@ public final class ContactList implements ContactListListener {
             jimm.ui.base.NativeCanvas.getInstance().repaint();
         }
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().updateAppIcon();
+        int unread = ChatHistory.instance.getPersonalUnreadMessageCount(false);
+        int allUnread = ChatHistory.instance.getPersonalUnreadMessageCount(true);
+        ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon(unread, allUnread);
         // #sijapp cond.end #
     }
 
     public void updateConnectionStatus() {
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().updateAppIcon();
+        ru.net.jimm.JimmActivity.getInstance().service.updateConnectionState();
         // #sijapp cond.end #
     }
 

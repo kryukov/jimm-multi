@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.*;
 import android.util.Log;
 import jimm.chat.ChatHistory;
@@ -17,7 +18,7 @@ public class JimmService extends Service {
 
     private static final String LOG_TAG = "JimmService";
 
-    private final Messenger messenger = new Messenger(new Handler(new IncomingMessageHandler()));
+    private final Binder localBinder = new LocalBinder();
     private MusicReceiver musicReceiver;
     private Tray tray = null;
     private PowerManager.WakeLock wakeLock;
@@ -55,7 +56,7 @@ public class JimmService extends Service {
 
     @Override
     public IBinder onBind(Intent arg0) {
-        return messenger.getBinder();
+        return localBinder;
     }
 
     private Notification getNotification() {
@@ -96,7 +97,7 @@ public class JimmService extends Service {
         return notification;
     }
 
-    private boolean handleMessage(Message msg) {
+    public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case UPDATE_CONNECTION_STATUS:
                 tray.startForegroundCompat(R.string.app_name, getNotification());
@@ -110,13 +111,21 @@ public class JimmService extends Service {
         return true;
     }
 
-    private class IncomingMessageHandler implements Handler.Callback {
-        public boolean handleMessage(Message msg) {
-            try {
-                return JimmService.this.handleMessage(msg);
-            } catch (Exception e) {
-                return false;
-            }
+    /**
+     * Class for clients to access.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with
+     * IPC.
+     */
+    public class LocalBinder extends Binder {
+        public JimmService getService() {
+            return JimmService.this;
         }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // We want this service to continue running until it is explicitly
+        // stopped, so return sticky.
+        return START_STICKY;
     }
 }

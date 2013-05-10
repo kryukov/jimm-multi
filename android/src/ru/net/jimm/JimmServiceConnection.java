@@ -14,25 +14,25 @@ import android.os.Messenger;
  * @author vladimir
  */
 public class JimmServiceConnection implements ServiceConnection {
-    private Messenger mService = null;
+    private JimmService jimmService = null;
 
     public void onServiceConnected(ComponentName className, IBinder service) {
-        mService = new Messenger(service);
+        jimmService = ((JimmService.LocalBinder)service).getService();
     }
 
     public void onServiceDisconnected(ComponentName className) {
         // This is called when the connection with the service has been unexpectedly disconnected - process crashed.
-        mService = null;
+        jimmService = null;
     }
 
     private void send(Message msg) {
         try {
-            mService.send(msg);
+            jimmService.handleMessage(msg);
         } catch (Exception e) {
             // do nothing
         }
     }
-    public void updateAppIcon(int personalUnread, int allUnread) {
+    public void updateAppIcon() {
         send(Message.obtain(null, JimmService.UPDATE_APP_ICON));
     }
     public void updateConnectionState() {

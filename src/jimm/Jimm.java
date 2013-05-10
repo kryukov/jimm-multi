@@ -408,7 +408,7 @@ public class Jimm extends MIDlet implements Runnable {
         }
         // #sijapp cond.end#
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon(0, 0);
+        ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon();
         // #sijapp cond.end #
     }
 

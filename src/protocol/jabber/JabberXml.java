@@ -140,8 +140,12 @@ public final class JabberXml extends ClientConnection {
     }
 
     public String getCaps() {
+        String caps = "http://jimm.net.ru/caps";
+        // #sijapp cond.if modules_ANDROID is "true" #
+        caps += "#android";
+        // #sijapp cond.end #
         return "<c xmlns='http://jabber.org/protocol/caps'"
-                + " node='http://jimm.net.ru/caps' ver='"
+                + " node='" + caps + "' ver='"
                 + Util.xmlEscape(verHash)
                 + "' hash='md5'/>";
     }
@@ -342,7 +346,6 @@ public final class JabberXml extends ClientConnection {
 
     protected final void connect() throws JimmException {
         connect = true;
-        setProgress(0);
         // #sijapp cond.if modules_MULTI is "true" #
         //if (Profile.PROTOCOL_VK == getJabber().getProfile().protocolType) {
         //    connectToVK();

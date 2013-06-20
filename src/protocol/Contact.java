@@ -9,7 +9,7 @@
 
 package protocol;
 
-import DrawControls.tree.*;
+import DrawControls.roster.*;
 import DrawControls.icons.*;
 import jimm.*;
 import jimm.chat.*;

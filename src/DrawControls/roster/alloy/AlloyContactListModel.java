@@ -1,7 +1,7 @@
-package DrawControls.tree.alloy;
+package DrawControls.roster.alloy;
 
-import DrawControls.tree.ContactListModel;
-import DrawControls.tree.TreeBranch;
+import DrawControls.roster.ContactListModel;
+import DrawControls.roster.GroupBranch;
 import jimm.comm.Util;
 import jimm.util.JLocale;
 import protocol.Contact;
@@ -22,14 +22,13 @@ public class AlloyContactListModel extends ContactListModel {
     private Vector contacts = new Vector();
     private Vector prevGroups = new Vector();
     private Vector prevContacts = new Vector();
-    private Group notInListGroup;
+    private GroupBranch notInListGroup;
 
     public AlloyContactListModel(int maxCount) {
         super(maxCount);
         // Not In List Group
-        notInListGroup = new Group(JLocale.getString("group_not_in_list"));
+        notInListGroup = new GroupBranch(JLocale.getString("group_not_in_list"));
         notInListGroup.setMode(Group.MODE_NONE);
-        notInListGroup.setGroupId(Group.NOT_IN_GROUP);
     }
 
     public void buildFlatItems(Vector items) {
@@ -44,9 +43,11 @@ public class AlloyContactListModel extends ContactListModel {
         }
         // prepare
         if (useGroups) {
+            GroupBranch groupBranch;
             for (int i = 0; i < groups.size(); ++i) {
-                ((Group)groups.elementAt(i)).updateGroupData();
-                ((Group)groups.elementAt(i)).sort();
+                groupBranch = ((GroupBranch)groups.elementAt(i));
+                groupBranch.updateGroupData();
+                groupBranch.sort();
             }
             Util.sort(groups);
         } else {
@@ -63,13 +64,13 @@ public class AlloyContactListModel extends ContactListModel {
 
     private void rebuildFlatItemsWG(Vector drawItems) {
         Vector contacts;
-        Group g;
+        GroupBranch g;
         Contact c;
         int contactCounter;
         boolean all = !hideOffline;
         Vector groups = this.groups;
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            g = (Group)groups.elementAt(groupIndex);
+            g = (GroupBranch)groups.elementAt(groupIndex);
             contactCounter = 0;
             drawItems.addElement(g);
             contacts = g.getContacts();
@@ -118,7 +119,7 @@ public class AlloyContactListModel extends ContactListModel {
 
     public void updateGroup(Group g) {
         if (useGroups) {
-            Group group = getGroup(g);
+            GroupBranch group = getGroupNode(g);
             if (null == group) {
                 group = createGroup(g);
             }
@@ -145,9 +146,9 @@ public class AlloyContactListModel extends ContactListModel {
     }
 
     private void putGroup(Group g) {
-        Group group = getGroup(g.getName());
+        GroupBranch group = getGroupNode(g);
         if (null == group) {
-            group = getGroup(prevGroups, g.getName());
+            group = getGroupNode(prevGroups, g.getName());
             if (null != group) {
                 groups.addElement(group);
                 group.getContacts().removeAllElements();
@@ -156,30 +157,17 @@ public class AlloyContactListModel extends ContactListModel {
             group = createGroup(g);
         }
     }
-    private Group createGroup(Group g) {
-        Group group = new Group(g.getName());
+    private GroupBranch createGroup(Group g) {
+        GroupBranch group = new GroupBranch(g.getName());
         group.setMode(g.getMode());
         groups.addElement(group);
         return group;
     }
-    private Group getGroup(Vector groups, String name) {
-        Group g;
-        for (int i = 0; i < groups.size(); ++i) {
-            g = (Group) groups.elementAt(i);
-            if (name.equals(g.getName())) {
-                return g;
-            }
-        }
-        return null;
-    }
 
-    private Group getGroup(Group g) {
-        return getGroup(g.getName());
-    }
-    private Group getGroup(String name) {
-        Group g;
+    private GroupBranch getGroup(String name) {
+        GroupBranch g;
         for (int i = 0; i < groups.size(); ++i) {
-            g = (Group) groups.elementAt(i);
+            g = (GroupBranch) groups.elementAt(i);
             if (name.equals(g.getName())) {
                 return g;
             }
@@ -191,14 +179,24 @@ public class AlloyContactListModel extends ContactListModel {
         if (-1 == Util.getIndex(contacts, contact)) {
             contacts.addElement(contact);
             if (Group.NOT_IN_GROUP != contact.getGroupId()) {
-                getGroup(p.getGroupById(contact.getGroupId()).getName()).getContacts().addElement(contact);
+                getGroupNode(p.getGroupById(contact.getGroupId())).getContacts().addElement(contact);
             } else {
                 notInListGroup.getContacts().addElement(contact);
             }
         }
     }
 
-    public TreeBranch getGroupNode(Group group) {
-        return getGroup(group);
+    private GroupBranch getGroupNode(Vector groups, String name) {
+        GroupBranch g;
+        for (int i = 0; i < groups.size(); ++i) {
+            g = (GroupBranch) groups.elementAt(i);
+            if (name.equals(g.getName())) {
+                return g;
+            }
+        }
+        return null;
+    }
+    public GroupBranch getGroupNode(Group group) {
+        return getGroup(group.getName());
     }
 }

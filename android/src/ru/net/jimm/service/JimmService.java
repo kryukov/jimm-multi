@@ -1,4 +1,4 @@
-package ru.net.jimm;
+package ru.net.jimm.service;
 
 
 import android.app.Notification;
@@ -6,12 +6,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.os.*;
 import android.util.Log;
 import jimm.chat.ChatHistory;
 import jimm.cl.ContactList;
 import org.bombusmod.scrobbler.MusicReceiver;
+import ru.net.jimm.JimmActivity;
+import ru.net.jimm.R;
+import ru.net.jimm.Tray;
 
 public class JimmService extends Service {
     public static final String ACTION_FOREGROUND = "FOREGROUND";
@@ -21,21 +23,16 @@ public class JimmService extends Service {
     private final Binder localBinder = new LocalBinder();
     private MusicReceiver musicReceiver;
     private Tray tray = null;
-    private PowerManager.WakeLock wakeLock;
+    private WakeControl wakeLock;
 
     public static final int UPDATE_APP_ICON = 1;
     public static final int UPDATE_CONNECTION_STATUS = 2;
-
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i(LOG_TAG, "onStart();");
-        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, LOG_TAG);
-        if (null != wakeLock) {
-            wakeLock.acquire();
-        }
+        wakeLock = new WakeControl(this);
 
         tray = new Tray(this);
         //Foreground Service
@@ -46,10 +43,12 @@ public class JimmService extends Service {
         //scrobbling finished
     }
 
+
+
     @Override
     public void onDestroy() {
         Log.i(LOG_TAG, "onDestroy();");
-        if (wakeLock.isHeld()) wakeLock.release();
+        wakeLock.release();
         //this.unregisterReceiver(musicReceiver);
         tray.stopForegroundCompat(R.string.app_name);
     }
@@ -101,6 +100,7 @@ public class JimmService extends Service {
         switch (msg.what) {
             case UPDATE_CONNECTION_STATUS:
                 tray.startForegroundCompat(R.string.app_name, getNotification());
+                wakeLock.updateLock();
                 break;
             case UPDATE_APP_ICON:
                 tray.startForegroundCompat(R.string.app_name, getNotification());

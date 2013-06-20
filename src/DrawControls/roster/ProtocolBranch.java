@@ -8,7 +8,7 @@
  */
 
 // #sijapp cond.if modules_MULTI is "true" #
-package DrawControls.tree;
+package DrawControls.roster;
 
 import DrawControls.icons.Icon;
 import java.util.Vector;
@@ -21,6 +21,7 @@ import protocol.*;
  * @author Vladimir Kryukov
  */
 public class ProtocolBranch extends TreeBranch {
+    private Vector groups = new Vector();
     private Protocol protocol;
     public ProtocolBranch(Protocol p) {
         protocol = p;
@@ -56,7 +57,7 @@ public class ProtocolBranch extends TreeBranch {
     public void sort() {
         synchronized (protocol.getRosterLockObject()) {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                Util.sort(protocol.getSortedGroups());
+                Util.sort(groups);
             } else {
                 Util.sort(protocol.getSortedContacts());
             }
@@ -69,6 +70,24 @@ public class ProtocolBranch extends TreeBranch {
         if (!isExpanded()) {
             rightIcons[0] = ChatHistory.instance.getUnreadMessageIcon(protocol);
         }
+    }
+
+    public GroupBranch getGroupNode(Group group) {
+        String name = group.getName();
+        GroupBranch g;
+        for (int i = 0; i < groups.size(); ++i) {
+            g = (GroupBranch) groups.elementAt(i);
+            if (name.equals(g.getName())) {
+                return g;
+            }
+        }
+        return addGroup(group);
+    }
+    private GroupBranch addGroup(Group g) {
+        GroupBranch group = new GroupBranch(g.getName());
+        group.setMode(g.getMode());
+        groups.addElement(group);
+        return group;
     }
 }
 // #sijapp cond.end #

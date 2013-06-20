@@ -21,14 +21,14 @@
  Author(s): Artyomov Denis, Vladimir Kryukov
  *******************************************************************************/
 
-package DrawControls.tree;
+package DrawControls.roster;
 
 import DrawControls.icons.Icon;
 import DrawControls.text.*;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 
-import DrawControls.tree.alloy.AlloyContactListModel;
+import DrawControls.roster.alloy.AlloyContactListModel;
 import jimm.*;
 import jimm.chat.*;
 import jimm.comm.*;
@@ -69,7 +69,7 @@ public final class VirtualContactList extends VirtualList {
         super("");
         // #sijapp cond.if modules_MULTI is "true" #
         if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
-            model = new ContactListModel(10);
+            model = new DifferentContactListModel(10);
         } else {
             model = new AlloyContactListModel(10);
         }
@@ -77,7 +77,7 @@ public final class VirtualContactList extends VirtualList {
         softBar = new RosterToolBar();
         // #sijapp cond.end #
         // #sijapp cond.else #
-        model = new ContactListModel(1);
+        model = new DifferentContactListModel(1);
         // #sijapp cond.end #
         updateOption();
     }
@@ -143,11 +143,13 @@ public final class VirtualContactList extends VirtualList {
         setFontSet(GraphicsEx.contactListFontSet);
         rebuildList = true;
     }
-    public void update(TreeNode node) {
-        // TODO: update contact only if group and protocol is expanded
+    public void update(Group node) {
         // TODO: update group only if protocol is expanded
-        rebuildList = true;
-        //invalidate();
+        update();
+    }
+    public void update(Contact node) {
+        // TODO: update contact only if group and protocol is expanded
+         update();
     }
     public final void update() {
         rebuildList = true;
@@ -227,7 +229,7 @@ public final class VirtualContactList extends VirtualList {
         if (oldUseAccounts != useAccounts) {
             ContactListModel oldModel = model;
             if (useAccounts) {
-                model = new ContactListModel(10);
+                model = new DifferentContactListModel(10);
             } else {
                 model = new AlloyContactListModel(10);
             }
@@ -313,8 +315,8 @@ public final class VirtualContactList extends VirtualList {
         if (item instanceof Contact) {
             ((Contact)item).activate(model.getContactProtocol((Contact)item));
 
-        } else if (item instanceof Group) {
-            Group group = (Group)item;
+        } else if (item instanceof GroupBranch) {
+            GroupBranch group = (GroupBranch)item;
             setExpandFlag(group, !group.isExpanded());
 
         } else if (item instanceof TreeBranch) {
@@ -542,11 +544,11 @@ public final class VirtualContactList extends VirtualList {
         }
         // #sijapp cond.end #
         if (useGroups) {
-            if (node instanceof Group) {
+            if (node instanceof GroupBranch) {
                 g.setThemeColor(CanvasEx.THEME_GROUP);
                 g.setFont(getFontSet()[FONT_STYLE_PLAIN]);
 
-                drawNodeRect(g, (TreeBranch)node, x, y1, y1 + h);
+                drawNodeRect(g, (GroupBranch)node, x, y1, y1 + h);
                 x += nodeRectHeight + 2;
                 g.drawString(leftIcons, node.getText(), rightIcons, x, y1, w + x1 - x, h);
                 return;

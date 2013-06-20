@@ -46,6 +46,6 @@
                   android:configChanges="orientation|keyboardHidden"
                   android:launchMode="standard">
         </activity>
-        <service android:enabled="true" android:name=".JimmService" />
+        <service android:enabled="true" android:name=".service.JimmService" />
     </application>
 </manifest> 

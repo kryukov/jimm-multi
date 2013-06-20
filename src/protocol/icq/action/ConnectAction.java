@@ -750,9 +750,6 @@ public class ConnectAction extends IcqAction {
         setProgress(getProgress());
     }
 
-    public void initProgressBar() {
-        setProgress(0);
-    }
     // Returns a number between 0 and 100 (inclusive) which indicates the current progress
 
     private int getProgress() {

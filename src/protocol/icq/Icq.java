@@ -225,9 +225,6 @@ public class Icq extends Protocol {
     protected void startConnection() {
         connection = new IcqNetWorking();
         connection.initNet(this);
-        ConnectAction act = new ConnectAction(this);
-        connection.requestAction(act);
-        act.initProgressBar();
         connection.start();
     }
 

@@ -328,7 +328,6 @@ public class ObimpConnection extends ClientConnection {
     protected void connect() throws JimmException {
         connect = true;
         setPingInterval(3 * 60);
-        obimp.setConnectingProgress(0);
         String server = obimp.getServer();
         String account = obimp.getUserId();
         String password = obimp.getPassword();

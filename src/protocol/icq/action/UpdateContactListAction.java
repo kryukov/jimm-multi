@@ -389,7 +389,7 @@ public class UpdateContactListAction extends IcqAction {
         stream.writeWordBE(1); // Type (Group)
 
         /* Contact items */
-        Vector items = gItem.getContacts();
+        Vector items = gItem.getContacts(getIcq());
         int size = items.size();
         if (size != 0) {
             /* Length of the additional data */

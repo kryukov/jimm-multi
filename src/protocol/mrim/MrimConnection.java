@@ -124,8 +124,6 @@ public final class MrimConnection extends ClientConnection {
     }
 
     protected void connect() throws JimmException {
-        setProgress(0);
-
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         DebugLog.println("go");
         // #sijapp cond.end#

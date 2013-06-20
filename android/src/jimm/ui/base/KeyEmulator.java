@@ -1,8 +1,7 @@
 package jimm.ui.base;
 
-import DrawControls.tree.VirtualContactList;
+import DrawControls.roster.VirtualContactList;
 import jimm.Jimm;
-import jimm.cl.ContactList;
 
 /**
  * Created with IntelliJ IDEA.

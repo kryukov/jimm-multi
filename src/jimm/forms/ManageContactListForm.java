@@ -95,7 +95,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
             if (group.hasMode(Group.MODE_EDITABLE)) {
                 manageCL.addItem("rename_group", RENAME_GROUP);
             }
-            if (group.getContacts().isEmpty() && group.hasMode(Group.MODE_REMOVABLE)) {
+            if (group.isEmpty(protocol) && group.hasMode(Group.MODE_REMOVABLE)) {
                 manageCL.addItem("del_group", DEL_GROUP);
             }
         } else {
@@ -161,7 +161,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         for (int i = 0; i < all.size(); ++i) {
             Group g = (Group)all.elementAt(i);
             if (g.hasMode(mode)) {
-                if ((Group.MODE_REMOVABLE == mode) && !g.isEmpty()) continue;
+                if ((Group.MODE_REMOVABLE == mode) && !g.isEmpty(protocol)) continue;
                 groups.addElement(g);
             }
         }

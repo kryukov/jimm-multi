@@ -383,9 +383,9 @@ public class JimmActivity extends MicroEmulatorActivity {
     }
     private void startService() {
         try {
-            startService(new Intent(this, JimmService.class));
+            startService(new Intent(this, ru.net.jimm.service.JimmService.class));
             registerReceiver(networkStateReceiver, networkStateReceiver.getFilter());
-            bindService(new Intent(this, JimmService.class), service, BIND_AUTO_CREATE);
+            bindService(new Intent(this, ru.net.jimm.service.JimmService.class), service, BIND_AUTO_CREATE);
         } catch (Exception e) {
             error(e);
         }
@@ -401,7 +401,7 @@ public class JimmActivity extends MicroEmulatorActivity {
         } catch (Exception e) {
             // do nothing
         }
-        stopService(new Intent(this, JimmService.class));
+        stopService(new Intent(this, ru.net.jimm.service.JimmService.class));
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
     }
 

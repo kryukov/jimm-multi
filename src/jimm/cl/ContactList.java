@@ -24,7 +24,7 @@
 package jimm.cl;
 
 import DrawControls.icons.Icon;
-import DrawControls.tree.*;
+import DrawControls.roster.*;
 import jimm.*;
 import jimm.chat.*;
 import jimm.forms.*;
@@ -359,14 +359,15 @@ public final class ContactList implements ContactListListener {
     }
 
     public void collapseAll() {
-        int count = contactList.getModel().getProtocolCount();
+        ContactListModel model = contactList.getModel();
+        int count = model.getProtocolCount();
         for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
+            Protocol p = model.getProtocol(i);
             Vector groups = p.getGroupItems();
             for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-                ((TreeBranch)groups.elementAt(groupIndex)).setExpandFlag(false);
+                model.getGroupNode((Group)groups.elementAt(groupIndex)).setExpandFlag(false);
             }
-            p.getNotInListGroup().setExpandFlag(false);
+            model.getGroupNode(p.getNotInListGroup()).setExpandFlag(false);
         }
         contactList.setAllToTop();
         contactList.update();

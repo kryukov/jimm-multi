@@ -2,7 +2,7 @@ package jimm.cl;
 
 import DrawControls.icons.Icon;
 import DrawControls.icons.ImageList;
-import DrawControls.tree.ContactListModel;
+import DrawControls.roster.ContactListModel;
 import jimm.ui.menu.MenuModel;
 import jimm.ui.menu.Select;
 import jimm.ui.menu.SelectListener;

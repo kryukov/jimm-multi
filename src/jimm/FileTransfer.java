@@ -165,7 +165,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         name_Desc = new GraphForm("name_desc", "ok", "back", this);
         name_Desc.addString("filename", filename);
         name_Desc.addTextField(descriptionField, "description", "", 255);
-        String items = "jimm.net.ru|www.jimm.net.ru|jimm.org";
+        String items = "jimm.net.ru|www.jimm.net.ru|jimm.org|hetzner|www.hetzner";
         // #sijapp cond.if protocols_JABBER is "true" #
         if (cItem instanceof protocol.jabber.JabberContact) {
             if (cItem.isSingleUserContact() && cItem.isOnline()) {
@@ -305,10 +305,16 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             int size = getFileSize();
             switch (sendMode) {
                 case JNR_SOCKET:
-                    sendFileThroughServer(in, size);
+                    sendFileThroughServer("socket://files.jimm.net.ru:2000", in, size);
                     break;
                 case JNR_HTTP:
                     sendFileThroughWeb("files.jimm.net.ru:81", in, size);
+                    break;
+                case P4U_SOCKET:
+                    sendFileThroughServer("socket://s1.pic4u.ru:2000", in, size);
+                    break;
+                case P4U_HTTP:
+                    sendFileThroughWeb("s1.pic4u.ru:81", in, size);
                     break;
                 case JO_HTTP:
                     sendFileThroughWeb("filetransfer.jimm.org", in, size);
@@ -376,10 +382,10 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         // #sijapp cond.end #
         return client;
     }
-    private void sendFileThroughServer(InputStream fis, int fileSize) throws JimmException {
+    private void sendFileThroughServer(String server, InputStream fis, int fileSize) throws JimmException {
         TcpSocket socket = new TcpSocket();
         try {
-            socket.connectTo("socket://files.jimm.net.ru:2000");
+            socket.connectTo(server);
 
             final int version = 1;
             Util header = new Util();
@@ -557,7 +563,9 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     private static final int JNR_SOCKET = 0;
     private static final int JNR_HTTP = 1;
     private static final int JO_HTTP = 2;
-    private static final int IBB_MODE = 3;
+    private static final int P4U_SOCKET = 3;
+    private static final int P4U_HTTP = 4;
+    private static final int IBB_MODE = 5;
 
     private static final int MAX_IMAGE_SIZE = 2*1024*1024;
     private boolean isImageFile() {

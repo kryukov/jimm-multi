@@ -9,8 +9,10 @@
 
 package protocol;
 
-import DrawControls.tree.*;
+import DrawControls.roster.*;
 import DrawControls.icons.Icon;
+
+import java.util.Hashtable;
 import java.util.Vector;
 import jimm.chat.ChatHistory;
 import jimm.comm.Sortable;
@@ -20,29 +22,26 @@ import jimm.comm.Util;
  *
  * @author vladimir
  */
-public class Group extends TreeBranch implements Sortable {
-    private String name;
-    private final Vector contacts = new Vector();
-    private byte mode;
-    private String caption = null;
-    private int groupId;
-
-    public static final int NOT_IN_GROUP = -1;
-
+public class Group {//extends GroupBranch {
     public static final byte MODE_NONE         = 0x00;
     public static final byte MODE_REMOVABLE    = 0x01;
     public static final byte MODE_EDITABLE     = 0x02;
     public static final byte MODE_NEW_CONTACTS = 0x04;
     public static final byte MODE_FULL_ACCESS  = 0x0F;
 
-    public static final byte MODE_TOP          = 0x10;
-    public static final byte MODE_BOTTOM       = 0x20;
-    public static final byte MODE_BOTTOM2      = 0x40;
+    public static final byte MODE_TOP          = GroupBranch.MODE_TOP;
+    public static final byte MODE_BOTTOM       = GroupBranch.MODE_BOTTOM;
+    public static final byte MODE_BOTTOM2      = GroupBranch.MODE_BOTTOM2;
+
+    private String name;
+    private int groupId;
+    private byte mode;
+
+    public static final int NOT_IN_GROUP = -1;
 
     /** Creates a new instance of Group */
     public Group(String name) {
         setName(name);
-        caption = name;
         setMode(Group.MODE_FULL_ACCESS);
     }
 
@@ -56,6 +55,14 @@ public class Group extends TreeBranch implements Sortable {
         this.name = name;
     }
 
+    public final int getId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
     public final void setMode(int newMode) {
         mode = (byte)newMode;
     }
@@ -66,63 +73,27 @@ public class Group extends TreeBranch implements Sortable {
         return (mode & type) != 0;
     }
 
-    public int getNodeWeight() {
-        if (hasMode(MODE_TOP)) return -4;
-        if (hasMode(MODE_BOTTOM)) return -2;
-        if (hasMode(MODE_BOTTOM2)) return -1;
-        //if (!hasMode(MODE_EDITABLE)) return -2;
-        //if (!hasMode(MODE_REMOVABLE)) return -1;
-        return -3;
-    }
-
-    public final int getId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
-
-    public final void getLeftIcons(Icon[] icons) {
-    }
-
-    public final void getRightIcons(Icon[] rightIcons) {
-        if (isExpanded()) {
-            return;
-        }
-        rightIcons[0] = ChatHistory.instance.getUnreadMessageIcon(getContacts());
-    }
-
-    public boolean isEmpty() {
-        return (0 == contacts.size());
-    }
-
-    public final Vector getContacts() {
-        return contacts;
-    }
-
-    // Calculates online/total values for group
-    public final void updateGroupData() {
-        int onlineCount = 0;
-        int total = contacts.size();
-        for (int i = 0; i < total; ++i) {
-            Contact item = (Contact)contacts.elementAt(i);
-            if (item.isOnline()) {
-                onlineCount++;
+    public Vector getContacts(Protocol p) {
+        Contact c;
+        Vector result = new Vector();
+        Vector contacts = p.getContactItems();
+        for (int i = 0; i < contacts.size(); ++i) {
+            c = (Contact) contacts.elementAt(i);
+            if (c.getGroupId() == groupId) {
+                result.addElement(c);
             }
         }
-        caption = getName();
-        if (0 < total) {
-            caption += " (" + onlineCount + "/" + total + ")";
-        }
+        return result;
     }
-    public final String getText() {
-        return caption;
-    }
-    public final void sort() {
-        if (isExpanded()) {
-            Util.sort(contacts);
+
+    public boolean isEmpty(Protocol p) {
+        Vector contacts = p.getContactItems();
+        for (int i = 0; i < contacts.size(); ++i) {
+            if (((Contact) contacts.elementAt(i)).getGroupId() == groupId) {
+                return false;
+            }
         }
+        return true;
     }
 }
 

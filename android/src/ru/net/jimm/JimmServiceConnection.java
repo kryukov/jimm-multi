@@ -4,7 +4,7 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Messenger;
+import ru.net.jimm.service.JimmService;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +17,7 @@ public class JimmServiceConnection implements ServiceConnection {
     private JimmService jimmService = null;
 
     public void onServiceConnected(ComponentName className, IBinder service) {
-        jimmService = ((JimmService.LocalBinder)service).getService();
+        jimmService = ((ru.net.jimm.service.JimmService.LocalBinder)service).getService();
     }
 
     public void onServiceDisconnected(ComponentName className) {

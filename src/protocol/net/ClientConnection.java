@@ -63,6 +63,7 @@ public abstract class ClientConnection implements Runnable {
         initPingValues();
         JimmException exception = null;
         try {
+            getProtocol().setConnectingProgress(0);
             connect();
 
             while (isConnected()) {

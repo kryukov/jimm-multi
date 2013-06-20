@@ -486,7 +486,7 @@ public class NativeCanvas extends Canvas {
                 if (CanvasEx.KEY_PRESSED == type) {
                     firePressTime = System.currentTimeMillis();
                 }
-                if ('5' != keyCode) {
+                if ('5' == keyCode) {
                     if (CanvasEx.KEY_PRESSED == type) {
                         TimerTask task = new TimerTask() {
                             public void run() {

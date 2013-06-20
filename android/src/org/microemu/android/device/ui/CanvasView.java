@@ -53,15 +53,8 @@ public class CanvasView extends View implements DisplayRepaintListener {
     public CanvasView(Context context, AndroidCanvasUI ui, int id) {
         super(context);
         this.ui = ui;
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        /*
-        try {
-            Method setLayerTypeMethod = getClass().getMethod("setLayerType", new Class[]{int.class, Paint.class});
-            setLayerTypeMethod.invoke(this, LAYER_TYPE_SOFTWARE, null);
-        } catch (Exception ignored) {
-        }
-        */
+        setFocusable(false);
+        setFocusableInTouchMode(false);
         setId(id);
     }
 

@@ -12,6 +12,7 @@ package protocol.icq;
 import jimm.comm.Util;
 import jimm.ui.timers.*;
 import protocol.Protocol;
+import protocol.icq.action.ConnectAction;
 import protocol.icq.action.IcqAction;
 import protocol.net.*;
 import protocol.icq.packet.*;
@@ -156,6 +157,7 @@ public final class IcqNetWorking extends ClientConnection {
             new GetVersion(GetVersion.TYPE_SHADOW).get();
         }
         // login
+        requestAction(new ConnectAction(icq));
         queue.processActions();
     }
 

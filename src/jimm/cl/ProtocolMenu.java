@@ -1,7 +1,6 @@
 package jimm.cl;
 
 import DrawControls.icons.Icon;
-import DrawControls.tree.alloy.AlloyContactListModel;
 import jimm.Jimm;
 import jimm.Options;
 import jimm.OptionsForm;

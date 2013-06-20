@@ -3,8 +3,8 @@ package jimm.ui.base;
 // #sijapp cond.if modules_TOUCH is "true"#
 
 import DrawControls.icons.Icon;
-import DrawControls.tree.ContactListModel;
-import DrawControls.tree.VirtualContactList;
+import DrawControls.roster.ContactListModel;
+import DrawControls.roster.VirtualContactList;
 import jimm.cl.ContactList;
 import jimm.cl.GlobalStatusForm;
 import jimm.ui.menu.MenuModel;
@@ -60,7 +60,7 @@ public class RosterToolBar extends MySoftBar {
             Protocol p = m.getProtocol(i);
             Icon icon = p.getStatusInfo().getIcon(p.getProfile().statusIndex);
             if (p.isConnecting()) {
-                int progress = getIconWidth() * p.getConnectingProgress() / 100;
+                int progress = Math.min(2, getIconWidth() * p.getConnectingProgress() / 100);
                 g.setThemeColor(CanvasEx.THEME_CAP_TEXT);
                 g.fillRect(x, y + height - CanvasEx.scrollerWidth, progress, CanvasEx.scrollerWidth);
             }
@@ -72,12 +72,15 @@ public class RosterToolBar extends MySoftBar {
         x += drawLeft(g, icon, x, y, height);
         // #sijapp cond.end #
     }
+
     private int getIconWidth() {
         return getHeight();
     }
+
     private int getSeparatorWidth() {
         return 2;
     }
+
     private int drawLeft(GraphicsEx g, Icon  icon, int x, int y, int height) {
         int defWidth = getIconWidth();
         if (null != icon) {

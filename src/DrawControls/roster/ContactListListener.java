@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package DrawControls.tree;
+package DrawControls.roster;
 
 import jimm.ui.menu.MenuModel;
 import protocol.*;

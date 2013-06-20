@@ -2,8 +2,8 @@ package jimm.ui.base;
 
 
 import DrawControls.icons.Icon;
-import DrawControls.tree.ContactListModel;
-import DrawControls.tree.VirtualContactList;
+import DrawControls.roster.ContactListModel;
+import DrawControls.roster.VirtualContactList;
 import jimm.Jimm;
 import jimm.comm.Util;
 import protocol.Protocol;

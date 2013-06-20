@@ -16,21 +16,46 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  ********************************************************************************
- * File: src/DrawControls/TreeNode.java
+ * File: src/DrawControls/TreeBranch.java
  * Version: ###VERSION###  Date: ###DATE###
- * Author(s): Artyomov Denis, Vladimir Kryukov
+ * Author(s): Vladimir Kryukov
  *******************************************************************************/
+/*
+ * TreeBranch.java
+ *
+ * Created on 7 Февраль 2008 г., 16:34
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
 
+package DrawControls.roster;
 
-package DrawControls.tree;
+/**
+ *
+ * @author vladimir
+ */
+public abstract class TreeBranch implements TreeNode {
+	
+    public TreeBranch() {
+    }
 
-import DrawControls.icons.Icon;
+    private boolean expanded = false;
 
-//! Tree node
-/*! This class is used to handle tree nodes (adding, deleting, moveing...) */
-public interface TreeNode {
-    String getText();
-    void getLeftIcons(Icon[] icons);
-    void getRightIcons(Icon[] icons);
+    public final boolean isExpanded() {
+        return expanded;
+    }
+    /**
+     * Expand or collapse tree node.
+     * 
+     * NOTE: this is not recursive operation!
+     */
+    public final void setExpandFlag(boolean value) {
+        expanded = value;
+        sort();
+    }
+
+    public void sort() {
+    }
+    public abstract boolean isEmpty();
 }
-

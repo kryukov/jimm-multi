@@ -10,7 +10,7 @@
 package protocol;
 
 import DrawControls.icons.*;
-import DrawControls.tree.*;
+import DrawControls.roster.*;
 import java.io.*;
 import java.util.Vector;
 import javax.microedition.rms.*;
@@ -219,7 +219,6 @@ abstract public class Protocol {
                 updateContacts(g);
                 sortedGroups.addElement(g);
             }
-            Util.sort(sortedGroups);
             updateContacts(notInListGroup);
         }
         getContactList().getManager().update();
@@ -231,7 +230,7 @@ abstract public class Protocol {
             updateContacts(group);
 
             updateContacts(notInListGroup);
-            Vector groupItems = group.getContacts();
+            Vector groupItems = group.getContacts(this);
             for (int i = 0; i < groupItems.size(); ++i) {
                 if (-1 == Util.getIndex(sortedContacts, groupItems.elementAt(i))) {
                     sortedContacts.addElement(groupItems.elementAt(i));
@@ -252,11 +251,14 @@ abstract public class Protocol {
         if (100 == percent) {
             reconnect_attempts = RECONNECT_COUNT;
             getContactList().updateConnectionStatus();
+        } else if (0 == percent) {
+            getContactList().updateConnectionStatus();
         }
         getContactList().getManager().invalidate();
     }
     public final boolean isConnecting() {
-        return 100 != progress;
+        return (100 != progress)
+                || ((StatusInfo.STATUS_OFFLINE != profile.statusIndex) && !isConnected());
     }
     public final byte getConnectingProgress() {
         return progress;
@@ -471,7 +473,7 @@ abstract public class Protocol {
         String name = dis.readUTF();
         Group group = createGroup(name);
         group.setGroupId(groupId);
-        group.setExpandFlag(dis.readBoolean());
+        dis.readBoolean();//group.setExpandFlag(dis.readBoolean());
         return group;
     }
     protected void loadProtocolData(byte[] data) throws Exception {
@@ -489,7 +491,7 @@ abstract public class Protocol {
     protected void saveGroup(DataOutputStream out, Group group) throws Exception {
         out.writeInt(group.getId());
         out.writeUTF(group.getName());
-        out.writeBoolean(group.isExpanded());
+        out.writeBoolean(false);//out.writeBoolean(group.isExpanded());
     }
 
     /* ********************************************************************* */
@@ -784,7 +786,6 @@ abstract public class Protocol {
         if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
             synchronized (rosterLockObject) {
                 getContactList().getManager().getModel().updateGroupData(group);
-                Util.sort(sortedGroups);
             }
             ui_updateCL(group);
         }
@@ -793,27 +794,12 @@ abstract public class Protocol {
         return notInListGroup;
     }
     private void ui_updateCL(Contact c) {
-        // #sijapp cond.if modules_MULTI is "true" #
-        if (!getProtocolBranch().isExpanded()) return;
-        // #sijapp cond.end #
         getContactList().getManager().update(c);
     }
     private void ui_updateCL(Group g) {
-        // #sijapp cond.if modules_MULTI is "true" #
-        if (!getProtocolBranch().isExpanded()) return;
-        // #sijapp cond.end #
         getContactList().getManager().update(g);
     }
 
-    // #sijapp cond.if modules_MULTI is "true" #
-    private ProtocolBranch branch;
-    public final ProtocolBranch getProtocolBranch() {
-        if (null == branch) {
-            branch = new ProtocolBranch(this);
-        }
-        return branch;
-    }
-    // #sijapp cond.end #
     ///////////////////////////////////////////////////////////////////////////
     public final Vector getSortedContacts() {
         return sortedContacts;
@@ -836,11 +822,6 @@ abstract public class Protocol {
     public final void ui_changeContactStatus(Contact contact) {
         updateChatStatus(contact);
         ui_updateContact(contact);
-        // #sijapp cond.if modules_MULTI is "true" #
-        if (Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE) && !getProtocolBranch().isEmpty()) {
-            getContactList().getManager().update(contact);
-        }
-        // #sijapp cond.end #
     }
     public final void ui_updateContact(Contact contact) {
         synchronized (rosterLockObject) {
@@ -1174,9 +1155,6 @@ abstract public class Protocol {
         profile = null;
         contacts = null;
         groups = null;
-        // #sijapp cond.if modules_MULTI is "true" #
-        branch = null;
-        // #sijapp cond.end #
     }
 
     public void autoDenyAuth(String uin) {

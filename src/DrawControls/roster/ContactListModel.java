@@ -21,7 +21,7 @@
  Author(s): Artyomov Denis, Vladimir Kryukov
  *******************************************************************************/
 
-package DrawControls.tree;
+package DrawControls.roster;
 
 import jimm.Options;
 import jimm.comm.Util;
@@ -29,7 +29,7 @@ import protocol.*;
 
 import java.util.Vector;
 
-public class ContactListModel {
+public abstract class ContactListModel {
     private final Protocol[] protocolList;
     private int count = 0;
 
@@ -84,6 +84,7 @@ public class ContactListModel {
         return null;
     }
     protected final Protocol getProtocol(Group g) {
+        // #sijapp cond.if modules_MULTI is "true" #
         for (int i = 0; i < getProtocolCount(); ++i) {
             if (-1 < Util.getIndex(getProtocol(i).getGroupItems(), g)) {
                 return getProtocol(i);
@@ -92,82 +93,13 @@ public class ContactListModel {
                 return getProtocol(i);
             }
         }
+        // #sijapp cond.else #
+        if (true) return getProtocol(0);
+        // #sijapp cond.end #
         return null;
     }
 
-    public void buildFlatItems(Vector items) {
-        final int count = getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = getProtocol(i);
-            // #sijapp cond.if modules_MULTI is "true" #
-            ProtocolBranch root = p.getProtocolBranch();
-            items.addElement(root);
-            if (!root.isExpanded()) continue;
-            // #sijapp cond.end #
-            synchronized (p.getRosterLockObject()) {
-                if (useGroups) {
-                    rebuildFlatItemsWG(p, items);
-                } else {
-                    rebuildFlatItemsWOG(p, items);
-                }
-            }
-        }
-    }
-
-    private void rebuildFlatItemsWG(Protocol p, Vector drawItems) {
-        Vector contacts;
-        Group g;
-        Contact c;
-        int contactCounter;
-        boolean all = !hideOffline;
-        Vector groups = p.getSortedGroups();
-        for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            g = (Group)groups.elementAt(groupIndex);
-            contactCounter = 0;
-            drawItems.addElement(g);
-            contacts = g.getContacts();
-            for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-                c = (Contact)contacts.elementAt(contactIndex);
-                if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                    if (g.isExpanded()) {
-                        drawItems.addElement(c);
-                    }
-                    contactCounter++;
-                }
-            }
-            if (hideOffline && (0 == contactCounter)) {
-                drawItems.removeElementAt(drawItems.size() - 1);
-            }
-        }
-
-        g = p.getNotInListGroup();
-        drawItems.addElement(g);
-        contacts = g.getContacts();
-        contactCounter = 0;
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                if (g.isExpanded()) {
-                    drawItems.addElement(c);
-                }
-                contactCounter++;
-            }
-        }
-        if (0 == contactCounter) {
-            drawItems.removeElementAt(drawItems.size() - 1);
-        }
-    }
-    private void rebuildFlatItemsWOG(Protocol p, Vector drawItems) {
-        boolean all = !hideOffline;
-        Contact c;
-        Vector contacts = p.getSortedContacts();
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                drawItems.addElement(c);
-            }
-        }
-    }
+    public abstract void buildFlatItems(Vector items);
     private void sort() {
         for (int i = 0; i < getProtocolCount(); ++i) {
             Util.sort(getProtocol(i).getSortedContacts());
@@ -176,30 +108,36 @@ public class ContactListModel {
 
     public void updateGroup(Group group) {
         if (useGroups) {
-            group.updateGroupData();
-            group.sort();
+            GroupBranch groupBranch = getGroupNode(group);
+            groupBranch.updateGroupData();
+            groupBranch.sort();
         } else {
             Util.sort(getProtocol(group).getSortedContacts());
         }
     }
 
-    public void removeFromGroup(Group g, Contact c) {
-        if (g.getContacts().removeElement(c)) {
-            g.updateGroupData();
+    public void removeFromGroup(Group group, Contact c) {
+        GroupBranch groupBranch = getGroupNode(group);
+        if (groupBranch.getContacts().removeElement(c)) {
+            groupBranch.updateGroupData();
         }
     }
 
     public void addToGroup(Group group, Contact contact) {
-        group.getContacts().addElement(contact);
+        getGroupNode(group).getContacts().addElement(contact);
     }
 
     public void updateGroupData(Group group) {
-        group.updateGroupData();
+        GroupBranch groupBranch = getGroupNode(group);
+        if (null == groupBranch) return;
+        groupBranch.updateGroupData();
     }
 
     public void updateGroup(Protocol protocol, Group group) {
         Vector allItems = protocol.getContactItems();
-        Vector groupItems = group.getContacts();
+        GroupBranch groupBranch = getGroupNode(group);
+        if (null == groupBranch) return;
+        Vector groupItems = groupBranch.getContacts();
         groupItems.removeAllElements();
         int size = allItems.size();
         int groupId = group.getId();
@@ -209,11 +147,9 @@ public class ContactListModel {
                 groupItems.addElement(item);
             }
         }
-        group.updateGroupData();
-        group.sort();
+        groupBranch.updateGroupData();
+        groupBranch.sort();
     }
 
-    public TreeBranch getGroupNode(Group group) {
-        return group;
-    }
+    public abstract GroupBranch getGroupNode(Group group);
 }

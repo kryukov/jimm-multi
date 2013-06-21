@@ -1,6 +1,5 @@
 package DrawControls.roster;
 
-import jimm.comm.Util;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
@@ -16,10 +15,6 @@ import java.util.Vector;
  * @author vladimir
  */
 public class DifferentContactListModel extends ContactListModel {
-    public DifferentContactListModel(int count) {
-        super(count);
-    }
-
     public void buildFlatItems(Vector items) {
         final int count = getProtocolCount();
         for (int i = 0; i < count; ++i) {
@@ -31,21 +26,22 @@ public class DifferentContactListModel extends ContactListModel {
             // #sijapp cond.end #
             synchronized (p.getRosterLockObject()) {
                 if (useGroups) {
-                    rebuildFlatItemsWG(p, items);
+                    rebuildFlatItemsWG(root, items);
                 } else {
-                    rebuildFlatItemsWOG(p, items);
+                    rebuildFlatItemsWOG(root, items);
                 }
             }
         }
     }
 
-    private void rebuildFlatItemsWG(Protocol p, Vector drawItems) {
+    private void rebuildFlatItemsWG(ProtocolBranch p, Vector drawItems) {
         Vector contacts;
         Contact c;
         GroupBranch groupBranch;
         int contactCounter;
         boolean all = !hideOffline;
-        Vector groups = p.getSortedGroups();
+        p.sort();
+        Vector groups = p.getGroups();
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
             groupBranch = getGroupNode((Group)groups.elementAt(groupIndex));
             contactCounter = 0;
@@ -65,7 +61,7 @@ public class DifferentContactListModel extends ContactListModel {
             }
         }
 
-        groupBranch = getGroupNode((Group)p.getNotInListGroup());
+        groupBranch = p.getNotInListGroup();
         drawItems.addElement(groupBranch);
         contacts = groupBranch.getContacts();
         contactCounter = 0;
@@ -82,16 +78,40 @@ public class DifferentContactListModel extends ContactListModel {
             drawItems.removeElementAt(drawItems.size() - 1);
         }
     }
-    private void rebuildFlatItemsWOG(Protocol p, Vector drawItems) {
+    private void rebuildFlatItemsWOG(ProtocolBranch p, Vector drawItems) {
         boolean all = !hideOffline;
         Contact c;
-        Vector contacts = p.getSortedContacts();
+        Vector contacts = p.getProtocol().getSortedContacts();
         for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
             c = (Contact)contacts.elementAt(contactIndex);
             if (all || c.isVisibleInContactList() || (c == selectedItem)) {
                 drawItems.addElement(c);
             }
         }
+    }
+
+    public void updateGroup(Protocol protocol, Group group) {
+        addGroup(protocol, group);
+    }
+    public void removeGroup(Protocol protocol, Group group) {
+        getProtocolNode(protocol).removeGroup(group);
+    }
+    public void addGroup(Protocol protocol, Group group) {
+        Vector allItems = protocol.getContactItems();
+        GroupBranch groupBranch = getGroupNode(group);
+        if (null == groupBranch) return;
+        Vector groupItems = groupBranch.getContacts();
+        groupItems.removeAllElements();
+        int size = allItems.size();
+        int groupId = group.getId();
+        for (int i = 0; i < size; ++i) {
+            Contact item = (Contact)allItems.elementAt(i);
+            if (item.getGroupId() == groupId) {
+                groupItems.addElement(item);
+            }
+        }
+        groupBranch.updateGroupData();
+        groupBranch.sort();
     }
 
     public GroupBranch getGroupNode(Group group) {

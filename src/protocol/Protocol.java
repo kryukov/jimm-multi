@@ -177,9 +177,7 @@ abstract public class Protocol {
 
     public final void sort() {
         synchronized (rosterLockObject) {
-            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                Util.sort(getSortedGroups());
-            } else {
+            if (!Options.getBoolean(Options.OPTION_USER_GROUPS)) {
                 Util.sort(getSortedContacts());
             }
         }
@@ -217,7 +215,6 @@ abstract public class Protocol {
             for (int i = 0; i < groups.size(); ++i) {
                 Group g = (Group)groups.elementAt(i);
                 updateContacts(g);
-                sortedGroups.addElement(g);
             }
             updateContacts(notInListGroup);
         }
@@ -553,20 +550,41 @@ abstract public class Protocol {
     abstract protected void s_removeGroup(Group group);
     public final void removeGroup(Group group) {
         s_removeGroup(group);
-        cl_removeGroup(group);
+        groups.removeElement(group);
+        synchronized (rosterLockObject) {
+            getContactList().getManager().getModel().removeGroup(this, group);
+            getContactList().getManager().update(group);
+        }
         needSave();
     }
     abstract protected void s_renameGroup(Group group, String name);
     public final void renameGroup(Group group, String name) {
+        synchronized (rosterLockObject) {
+            getContactList().getManager().getModel().removeGroup(this, group);
+        }
         s_renameGroup(group, name);
         group.setName(name);
-        cl_renameGroup(group);
+        synchronized (rosterLockObject) {
+            getContactList().getManager().getModel().addGroup(this, group);
+            getContactList().getManager().getModel().updateGroupData(group);
+            getContactList().getManager().update(group);
+        }
         needSave();
     }
     abstract protected void s_addGroup(Group group);
     public final void addGroup(Group group) {
         s_addGroup(group);
-        cl_addGroup(group);
+        // #sijapp cond.if modules_DEBUGLOG is "true" #
+        if (-1 != Util.getIndex(groups, group)) {
+            DebugLog.panic("Group '" + group.getName() + "' already added");
+        }
+        // #sijapp cond.end #
+        groups.addElement(group);
+        synchronized (rosterLockObject) {
+            getContactList().getManager().getModel().addGroup(this, group);
+            getContactList().getManager().getModel().updateGroupData(group);
+            getContactList().getManager().update(group);
+        }
         needSave();
     }
 
@@ -805,10 +823,6 @@ abstract public class Protocol {
         return sortedContacts;
     }
 
-    public final Vector getSortedGroups() {
-        return sortedGroups;
-    }
-
     public final Object getRosterLockObject() {
         return rosterLockObject;
     }
@@ -868,29 +882,6 @@ abstract public class Protocol {
             ui_removeFromAnyGroup(contact);
         }
         ui_updateCL(contact);
-    }
-
-    private void cl_addGroup(Group group) {
-        // #sijapp cond.if modules_DEBUGLOG is "true" #
-        if (-1 != Util.getIndex(groups, group)) {
-            DebugLog.panic("Group '" + group.getName() + "' already added");
-        }
-        // #sijapp cond.end #
-        groups.addElement(group);
-        synchronized (rosterLockObject) {
-            sortedGroups.addElement(group);
-            ui_updateGroup(group);
-        }
-    }
-    private void cl_renameGroup(Group group) {
-        ui_updateGroup(group);
-    }
-    private void cl_removeGroup(Group group) {
-        groups.removeElement(group);
-        synchronized (rosterLockObject) {
-            sortedGroups.removeElement(group);
-        }
-        ui_updateCL(group);
     }
 
     public final void addLocalContact(Contact contact) {

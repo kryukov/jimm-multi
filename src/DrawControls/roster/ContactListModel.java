@@ -30,39 +30,28 @@ import protocol.*;
 import java.util.Vector;
 
 public abstract class ContactListModel {
-    private final Protocol[] protocolList;
-    private int count = 0;
+    private final Vector protocolList = new Vector();
 
     protected TreeNode selectedItem = null;
 
     protected boolean useGroups;
     protected boolean hideOffline;
 
-    public ContactListModel(int maxCount) {
-        protocolList = new Protocol[maxCount];
-    }
-
     public void removeAllProtocols() {
-        count = 0;
-        for (int i = 0; i < protocolList.length; ++i) {
-            protocolList[i] = null;
-        }
+        protocolList.removeAllElements();
     }
     public void addProtocol(Protocol prot) {
-        if ((count < protocolList.length) && (null != prot)) {
-            protocolList[count] = prot;
-            count++;
-        }
+        protocolList.addElement(prot);
     }
     public final void setAlwaysVisibleNode(TreeNode node) {
         selectedItem = node;
     }
 
     public final Protocol getProtocol(int accountIndex) {
-        return protocolList[accountIndex];
+        return (Protocol) protocolList.elementAt(accountIndex);
     }
     public final int getProtocolCount() {
-        return count;
+        return protocolList.size();
     }
 
 
@@ -109,6 +98,7 @@ public abstract class ContactListModel {
     public void updateGroup(Group group) {
         if (useGroups) {
             GroupBranch groupBranch = getGroupNode(group);
+            if (null == groupBranch) return;
             groupBranch.updateGroupData();
             groupBranch.sort();
         } else {
@@ -128,28 +118,12 @@ public abstract class ContactListModel {
     }
 
     public void updateGroupData(Group group) {
-        GroupBranch groupBranch = getGroupNode(group);
-        if (null == groupBranch) return;
-        groupBranch.updateGroupData();
+        getGroupNode(group).updateGroupData();
     }
 
-    public void updateGroup(Protocol protocol, Group group) {
-        Vector allItems = protocol.getContactItems();
-        GroupBranch groupBranch = getGroupNode(group);
-        if (null == groupBranch) return;
-        Vector groupItems = groupBranch.getContacts();
-        groupItems.removeAllElements();
-        int size = allItems.size();
-        int groupId = group.getId();
-        for (int i = 0; i < size; ++i) {
-            Contact item = (Contact)allItems.elementAt(i);
-            if (item.getGroupId() == groupId) {
-                groupItems.addElement(item);
-            }
-        }
-        groupBranch.updateGroupData();
-        groupBranch.sort();
-    }
+    public abstract void updateGroup(Protocol protocol, Group group);
+    public abstract void addGroup(Protocol protocol, Group group);
+    public abstract void removeGroup(Protocol protocol, Group group);
 
     public abstract GroupBranch getGroupNode(Group group);
 }

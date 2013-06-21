@@ -21,7 +21,6 @@ import protocol.*;
  * @author Vladimir Kryukov
  */
 public class ProtocolBranch extends TreeBranch {
-    private Vector groups = new Vector();
     private Protocol protocol;
     public ProtocolBranch(Protocol p) {
         protocol = p;
@@ -57,7 +56,7 @@ public class ProtocolBranch extends TreeBranch {
     public void sort() {
         synchronized (protocol.getRosterLockObject()) {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                Util.sort(groups);
+                Util.sort(items);
             } else {
                 Util.sort(protocol.getSortedContacts());
             }
@@ -75,8 +74,8 @@ public class ProtocolBranch extends TreeBranch {
     public GroupBranch getGroupNode(Group group) {
         String name = group.getName();
         GroupBranch g;
-        for (int i = 0; i < groups.size(); ++i) {
-            g = (GroupBranch) groups.elementAt(i);
+        for (int i = 0; i < items.size(); ++i) {
+            g = (GroupBranch) items.elementAt(i);
             if (name.equals(g.getName())) {
                 return g;
             }
@@ -86,8 +85,21 @@ public class ProtocolBranch extends TreeBranch {
     private GroupBranch addGroup(Group g) {
         GroupBranch group = new GroupBranch(g.getName());
         group.setMode(g.getMode());
-        groups.addElement(group);
+        items.addElement(group);
         return group;
+    }
+
+    public void removeGroup(Group group) {
+        items.removeElement(getGroupNode(group));
+    }
+
+
+    public GroupBranch getNotInListGroup() {
+        return getGroupNode((Group) protocol.getNotInListGroup());
+    }
+
+    public Vector getGroups() {
+        return items;
     }
 }
 // #sijapp cond.end #

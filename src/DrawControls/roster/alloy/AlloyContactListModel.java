@@ -20,27 +20,15 @@ import java.util.Vector;
 public class AlloyContactListModel extends ContactListModel {
     private Vector groups = new Vector();
     private Vector contacts = new Vector();
-    private Vector prevGroups = new Vector();
-    private Vector prevContacts = new Vector();
     private GroupBranch notInListGroup;
 
-    public AlloyContactListModel(int maxCount) {
-        super(maxCount);
+    public AlloyContactListModel() {
         // Not In List Group
         notInListGroup = new GroupBranch(JLocale.getString("group_not_in_list"));
         notInListGroup.setMode(Group.MODE_NONE);
     }
 
     public void buildFlatItems(Vector items) {
-        // init
-        prevContacts = contacts;
-        prevGroups = groups;
-        groups = new Vector();
-        contacts = new Vector();
-        notInListGroup.getContacts().removeAllElements();
-        for (int i = 0; i < getProtocolCount(); ++i) {
-            putProtocol(getProtocol(i));
-        }
         // prepare
         if (useGroups) {
             GroupBranch groupBranch;
@@ -130,33 +118,52 @@ public class AlloyContactListModel extends ContactListModel {
         }
     }
 
-
-
-
-
-    private void putProtocol(Protocol p) {
-        Vector gs = p.getGroupItems();
-        for (int i = 0; i < gs.size(); ++i) {
-            putGroup((Group) gs.elementAt(i));
-        }
-        Vector cs = p.getContactItems();
-        for (int i = 0; i < cs.size(); ++i) {
-            putContact(p, (Contact) cs.elementAt(i));
-        }
-    }
-
-    private void putGroup(Group g) {
-        GroupBranch group = getGroupNode(g);
-        if (null == group) {
-            group = getGroupNode(prevGroups, g.getName());
-            if (null != group) {
-                groups.addElement(group);
-                group.getContacts().removeAllElements();
-                return;
+    public void removeGroup(Protocol protocol, Group group) {
+        boolean used = false;
+        for (int i = 0; i < getProtocolCount(); ++i) {
+            Protocol p = getProtocol(i);
+            if (null != p.getGroup(group.getName())) {
+                used = true;
+                break;
             }
-            group = createGroup(g);
+        }
+        if (used) {
+            updateGroupContent(getGroupNode(group));
+        } else {
+            groups.removeElement(getGroupNode(group));
+        }
+
+    }
+    public void addGroup(Protocol protocol, Group group) {
+        updateGroupContent(getGroupNode(group));
+    }
+    public void updateGroup(Protocol protocol, Group group) {
+        GroupBranch groupBranch = getGroupNode(group);
+        updateGroupContent(groupBranch);
+        groupBranch.updateGroupData();
+        groupBranch.sort();
+    }
+    private void updateGroupContent(GroupBranch groupBranch) {
+        boolean notInList = groupBranch == notInListGroup;
+        groupBranch.getContacts().removeAllElements();
+        for (int i = 0; i < getProtocolCount(); ++i) {
+            Protocol p = getProtocol(i);
+            Group g = notInList ? p.getNotInListGroup() : p.getGroup(groupBranch.getName());
+            if (null == g) continue;
+            int id = g.getId();
+            Vector contacts = p.getContactItems();
+            for (int j = 0; j < contacts.size(); ++j) {
+                Contact c = (Contact) contacts.elementAt(j);
+                if (id == c.getGroupId()) {
+                    groupBranch.getContacts().addElement(c);
+                }
+            }
         }
     }
+
+
+
+
     private GroupBranch createGroup(Group g) {
         GroupBranch group = new GroupBranch(g.getName());
         group.setMode(g.getMode());
@@ -171,6 +178,9 @@ public class AlloyContactListModel extends ContactListModel {
             if (name.equals(g.getName())) {
                 return g;
             }
+        }
+        if (name.equals(notInListGroup.getName())) {
+            return notInListGroup;
         }
         return null;
     }
@@ -197,6 +207,10 @@ public class AlloyContactListModel extends ContactListModel {
         return null;
     }
     public GroupBranch getGroupNode(Group group) {
-        return getGroup(group.getName());
+        GroupBranch groupBranch = getGroup(group.getName());
+        if (null == groupBranch) {
+            groupBranch = createGroup(group);
+        }
+        return groupBranch;
     }
 }

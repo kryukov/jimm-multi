@@ -3,7 +3,6 @@ package DrawControls.roster;
 import DrawControls.icons.Icon;
 import jimm.chat.ChatHistory;
 import jimm.comm.Sortable;
-import jimm.comm.Util;
 import protocol.Contact;
 
 import java.util.Vector;
@@ -20,7 +19,6 @@ public class GroupBranch extends TreeBranch implements Sortable {
     public static final byte MODE_BOTTOM       = 0x20;
     public static final byte MODE_BOTTOM2      = 0x40;
 
-    protected final Vector contacts = new Vector();
     private String caption = null;
     private String name;
     private byte mode;
@@ -32,9 +30,9 @@ public class GroupBranch extends TreeBranch implements Sortable {
     // Calculates online/total values for group
     public final void updateGroupData() {
         int onlineCount = 0;
-        int total = contacts.size();
+        int total = items.size();
         for (int i = 0; i < total; ++i) {
-            Contact item = (Contact)contacts.elementAt(i);
+            Contact item = (Contact)items.elementAt(i);
             if (item.isOnline()) {
                 onlineCount++;
             }
@@ -46,11 +44,6 @@ public class GroupBranch extends TreeBranch implements Sortable {
     }
     public final String getText() {
         return caption;
-    }
-    public final void sort() {
-        if (isExpanded()) {
-            Util.sort(contacts);
-        }
     }
 
     public final void setMode(int newMode) {
@@ -94,10 +87,10 @@ public class GroupBranch extends TreeBranch implements Sortable {
 
 
     public final Vector getContacts() {
-        return contacts;
+        return items;
     }
 
     public final boolean isEmpty() {
-        return (0 == contacts.size());
+        return (0 == items.size());
     }
 }

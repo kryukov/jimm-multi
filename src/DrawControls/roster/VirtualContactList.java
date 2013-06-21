@@ -69,15 +69,15 @@ public final class VirtualContactList extends VirtualList {
         super("");
         // #sijapp cond.if modules_MULTI is "true" #
         if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
-            model = new DifferentContactListModel(10);
+            model = new DifferentContactListModel();
         } else {
-            model = new AlloyContactListModel(10);
+            model = new AlloyContactListModel();
         }
         // #sijapp cond.if modules_TOUCH is "true"#
         softBar = new RosterToolBar();
         // #sijapp cond.end #
         // #sijapp cond.else #
-        model = new DifferentContactListModel(1);
+        model = new DifferentContactListModel();
         // #sijapp cond.end #
         updateOption();
     }
@@ -229,9 +229,9 @@ public final class VirtualContactList extends VirtualList {
         if (oldUseAccounts != useAccounts) {
             ContactListModel oldModel = model;
             if (useAccounts) {
-                model = new DifferentContactListModel(10);
+                model = new DifferentContactListModel();
             } else {
-                model = new AlloyContactListModel(10);
+                model = new AlloyContactListModel();
             }
             for (int i = 0; i < oldModel.getProtocolCount(); ++i) {
                 model.addProtocol(oldModel.getProtocol(i));

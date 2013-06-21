@@ -31,12 +31,17 @@
 
 package DrawControls.roster;
 
+import jimm.comm.Util;
+
+import java.util.Vector;
+
 /**
  *
  * @author vladimir
  */
 public abstract class TreeBranch implements TreeNode {
-	
+    protected final Vector items = new Vector();
+
     public TreeBranch() {
     }
 
@@ -52,10 +57,13 @@ public abstract class TreeBranch implements TreeNode {
      */
     public final void setExpandFlag(boolean value) {
         expanded = value;
-        sort();
+        if (expanded) sort();
     }
 
     public void sort() {
+        if (isExpanded()) {
+            Util.sort(items);
+        }
     }
     public abstract boolean isEmpty();
 }

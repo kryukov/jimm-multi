@@ -55,8 +55,6 @@ abstract public class Protocol {
     // #sijapp cond.end #
 
     private final Object rosterLockObject = new Object();
-    private Vector sortedContacts = new Vector();
-    private Vector sortedGroups = new Vector();
     private Group notInListGroup;
 
     private Vector autoGrand = new Vector();
@@ -175,14 +173,6 @@ abstract public class Protocol {
         // #sijapp cond.end #
     }
 
-    public final void sort() {
-        synchronized (rosterLockObject) {
-            if (!Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                Util.sort(getSortedContacts());
-            }
-        }
-    }
-
     public final void setContactListStub() {
         synchronized (rosterLockObject) {
             contacts = new Vector();
@@ -207,11 +197,6 @@ abstract public class Protocol {
         ChatHistory.instance.restoreContactsWithChat(this);
 
         synchronized (rosterLockObject) {
-            sortedContacts = new Vector();
-            for (int i = 0; i < contacts.size(); ++i) {
-                sortedContacts.addElement(contacts.elementAt(i));
-            }
-            sortedGroups = new Vector();
             for (int i = 0; i < groups.size(); ++i) {
                 Group g = (Group)groups.elementAt(i);
                 updateContacts(g);
@@ -225,14 +210,7 @@ abstract public class Protocol {
     public final void setContactListAddition(Group group) {
         synchronized (rosterLockObject) {
             updateContacts(group);
-
             updateContacts(notInListGroup);
-            Vector groupItems = group.getContacts(this);
-            for (int i = 0; i < groupItems.size(); ++i) {
-                if (-1 == Util.getIndex(sortedContacts, groupItems.elementAt(i))) {
-                    sortedContacts.addElement(groupItems.elementAt(i));
-                }
-            }
         }
         getContactList().getManager().update();
         needSave();
@@ -819,10 +797,6 @@ abstract public class Protocol {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    public final Vector getSortedContacts() {
-        return sortedContacts;
-    }
-
     public final Object getRosterLockObject() {
         return rosterLockObject;
     }
@@ -858,9 +832,6 @@ abstract public class Protocol {
             contacts.addElement(contact);
         }
         synchronized (rosterLockObject) {
-            if (hasnt) {
-                sortedContacts.addElement(contact);
-            }
             ui_addContactToGroup(contact, g);
         }
         ui_updateContact(contact);
@@ -878,7 +849,6 @@ abstract public class Protocol {
     private void cl_removeContact(Contact contact) {
         contacts.removeElement(contact);
         synchronized (rosterLockObject) {
-            sortedContacts.removeElement(contact);
             ui_removeFromAnyGroup(contact);
         }
         ui_updateCL(contact);
@@ -1141,8 +1111,6 @@ abstract public class Protocol {
         userCloseConnection();
         ChatHistory.instance.unregisterChats(this);
         safeSave();
-        sortedContacts = null;
-        sortedGroups = null;
         profile = null;
         contacts = null;
         groups = null;

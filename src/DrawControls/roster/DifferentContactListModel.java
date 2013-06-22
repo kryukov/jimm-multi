@@ -81,7 +81,7 @@ public class DifferentContactListModel extends ContactListModel {
     private void rebuildFlatItemsWOG(ProtocolBranch p, Vector drawItems) {
         boolean all = !hideOffline;
         Contact c;
-        Vector contacts = p.getProtocol().getSortedContacts();
+        Vector contacts = p.getSortedContacts();
         for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
             c = (Contact)contacts.elementAt(contactIndex);
             if (all || c.isVisibleInContactList() || (c == selectedItem)) {
@@ -90,6 +90,16 @@ public class DifferentContactListModel extends ContactListModel {
         }
     }
 
+    public void updateGroupOrder(Protocol protocol, Group group) {
+        if (useGroups) {
+            GroupBranch groupBranch = getGroupNode(group);
+            if (null == groupBranch) return;
+            groupBranch.updateGroupData();
+            groupBranch.sort();
+        } else {
+            getProtocolNode(protocol).sort();
+        }
+    }
     public void updateGroup(Protocol protocol, Group group) {
         addGroup(protocol, group);
     }

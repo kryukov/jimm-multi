@@ -105,7 +105,7 @@ public class AlloyContactListModel extends ContactListModel {
         }
     }
 
-    public void updateGroup(Group g) {
+    public void updateGroupOrder(Protocol protocol, Group g) {
         if (useGroups) {
             GroupBranch group = getGroupNode(g);
             if (null == group) {
@@ -114,7 +114,7 @@ public class AlloyContactListModel extends ContactListModel {
             group.updateGroupData();
             group.sort();
         } else {
-            Util.sort(getProtocol(g).getSortedContacts());
+            Util.sort(contacts);
         }
     }
 

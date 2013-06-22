@@ -22,12 +22,11 @@ import protocol.*;
  */
 public class ProtocolBranch extends TreeBranch {
     private Protocol protocol;
+    private Vector sortedContacts = new Vector();
+
     public ProtocolBranch(Protocol p) {
         protocol = p;
         setExpandFlag(false);
-    }
-    public boolean isProtocol(Protocol p) {
-        return protocol == p;
     }
     public Protocol getProtocol() {
         return protocol;
@@ -58,7 +57,7 @@ public class ProtocolBranch extends TreeBranch {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
                 Util.sort(items);
             } else {
-                Util.sort(protocol.getSortedContacts());
+                Util.sort(getSortedContacts());
             }
         }
     }
@@ -100,6 +99,9 @@ public class ProtocolBranch extends TreeBranch {
 
     public Vector getGroups() {
         return items;
+    }
+    public final Vector getSortedContacts() {
+        return sortedContacts;
     }
 }
 // #sijapp cond.end #

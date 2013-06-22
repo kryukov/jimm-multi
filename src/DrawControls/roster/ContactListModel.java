@@ -59,9 +59,6 @@ public abstract class ContactListModel {
         boolean groups = useGroups;
         useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
         hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
-        if (groups && !useGroups) {
-            sort();
-        }
     }
 
     Protocol getContactProtocol(Contact c) {
@@ -89,22 +86,14 @@ public abstract class ContactListModel {
     }
 
     public abstract void buildFlatItems(Vector items);
-    private void sort() {
-        for (int i = 0; i < getProtocolCount(); ++i) {
-            Util.sort(getProtocol(i).getSortedContacts());
-        }
-    }
 
-    public void updateGroup(Group group) {
-        if (useGroups) {
-            GroupBranch groupBranch = getGroupNode(group);
-            if (null == groupBranch) return;
-            groupBranch.updateGroupData();
-            groupBranch.sort();
-        } else {
-            Util.sort(getProtocol(group).getSortedContacts());
-        }
+    /**
+     * @deprecated
+     */
+    public final void updateGroup(Group group) {
+        updateGroupOrder(getProtocol(group), group);
     }
+    public abstract void updateGroupOrder(Protocol protocol, Group group);
 
     public void removeFromGroup(Group group, Contact c) {
         GroupBranch groupBranch = getGroupNode(group);

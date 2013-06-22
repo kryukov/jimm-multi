@@ -17,12 +17,11 @@ import java.util.Vector;
  *
  * @author vladimir
  */
-public class AlloyContactListModel extends ContactListModel {
+public class GroupContactModel extends ContactListModel {
     private Vector groups = new Vector();
-    private Vector contacts = new Vector();
     private GroupBranch notInListGroup;
 
-    public AlloyContactListModel() {
+    public GroupContactModel() {
         // Not In List Group
         notInListGroup = new GroupBranch(JLocale.getString("group_not_in_list"));
         notInListGroup.setMode(Group.MODE_NONE);
@@ -30,23 +29,15 @@ public class AlloyContactListModel extends ContactListModel {
 
     public void buildFlatItems(Vector items) {
         // prepare
-        if (useGroups) {
-            GroupBranch groupBranch;
-            for (int i = 0; i < groups.size(); ++i) {
-                groupBranch = ((GroupBranch)groups.elementAt(i));
-                groupBranch.updateGroupData();
-                groupBranch.sort();
-            }
-            Util.sort(groups);
-        } else {
-            Util.sort(contacts);
+        GroupBranch groupBranch;
+        for (int i = 0; i < groups.size(); ++i) {
+            groupBranch = ((GroupBranch)groups.elementAt(i));
+            groupBranch.updateGroupData();
+            groupBranch.sort();
         }
+        Util.sort(groups);
         // build
-        if (useGroups) {
-            rebuildFlatItemsWG(items);
-        } else {
-            rebuildFlatItemsWOG(items);
-        }
+        rebuildFlatItemsWG(items);
     }
 
 
@@ -93,29 +84,14 @@ public class AlloyContactListModel extends ContactListModel {
             drawItems.removeElementAt(drawItems.size() - 1);
         }
     }
-    private void rebuildFlatItemsWOG(Vector drawItems) {
-        boolean all = !hideOffline;
-        Contact c;
-        Vector contacts = this.contacts;
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                drawItems.addElement(c);
-            }
-        }
-    }
 
     public void updateGroupOrder(Protocol protocol, Group g) {
-        if (useGroups) {
-            GroupBranch group = getGroupNode(g);
-            if (null == group) {
-                group = createGroup(g);
-            }
-            group.updateGroupData();
-            group.sort();
-        } else {
-            Util.sort(contacts);
+        GroupBranch group = getGroupNode(g);
+        if (null == group) {
+            group = createGroup(g);
         }
+        group.updateGroupData();
+        group.sort();
     }
 
     public void removeGroup(Protocol protocol, Group group) {
@@ -196,16 +172,10 @@ public class AlloyContactListModel extends ContactListModel {
 
     public void addProtocol(Protocol prot) {
         super.addProtocol(prot);
-        if (useGroups) {
-            Vector inGroups = prot.getGroupItems();
-            for (int i = 0; i < inGroups.size(); ++i) {
-                addGroup(prot, (Group) inGroups.elementAt(i));
-            }
-            addGroup(prot, prot.getNotInListGroup());
-        } else {
-            Vector inContacts = prot.getContactItems();
-            contacts.addAll(inContacts);
-            Util.sort(contacts);
+        Vector inGroups = prot.getGroupItems();
+        for (int i = 0; i < inGroups.size(); ++i) {
+            addGroup(prot, (Group) inGroups.elementAt(i));
         }
+        addGroup(prot, prot.getNotInListGroup());
     }
 }

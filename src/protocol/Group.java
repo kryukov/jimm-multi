@@ -10,13 +10,7 @@
 package protocol;
 
 import DrawControls.roster.*;
-import DrawControls.icons.Icon;
-
-import java.util.Hashtable;
 import java.util.Vector;
-import jimm.chat.ChatHistory;
-import jimm.comm.Sortable;
-import jimm.comm.Util;
 
 /**
  *
@@ -73,10 +67,10 @@ public class Group {//extends GroupBranch {
         return (mode & type) != 0;
     }
 
-    public Vector getContacts(Protocol p) {
+    public Contacts getContacts(Protocol p) {
         Contact c;
-        Vector result = new Vector();
-        Vector contacts = p.getContactItems();
+        Contacts result = new Contacts();
+        Contacts contacts = p.getContactItems();
         for (int i = 0; i < contacts.size(); ++i) {
             c = (Contact) contacts.elementAt(i);
             if (c.getGroupId() == groupId) {

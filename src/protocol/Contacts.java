@@ -11,6 +11,7 @@ import java.util.Vector;
  */
 public class Contacts extends Vector {
     public boolean add(Contact c) {
-        return super.add(c);
+        super.addElement(c);
+        return true;
     }
 }

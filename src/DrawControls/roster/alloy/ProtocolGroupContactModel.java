@@ -1,5 +1,8 @@
-package DrawControls.roster;
+package DrawControls.roster.alloy;
 
+import DrawControls.roster.ContactListModel;
+import DrawControls.roster.GroupBranch;
+import DrawControls.roster.ProtocolBranch;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
@@ -14,7 +17,7 @@ import java.util.Vector;
  *
  * @author vladimir
  */
-public class DifferentContactListModel extends ContactListModel {
+public class ProtocolGroupContactModel extends ContactListModel {
     private Hashtable protos = new Hashtable();
 
     public void buildFlatItems(Vector items) {

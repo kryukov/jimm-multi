@@ -79,13 +79,7 @@ public class ProtocolBranch extends TreeBranch {
                 return g;
             }
         }
-        return addGroup(group);
-    }
-    private GroupBranch addGroup(Group g) {
-        GroupBranch group = new GroupBranch(g.getName());
-        group.setMode(g.getMode());
-        items.addElement(group);
-        return group;
+        return null;
     }
 
     public void removeGroup(Group group) {

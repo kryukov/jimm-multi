@@ -56,7 +56,6 @@ public abstract class ContactListModel {
 
 
     void updateOptions() {
-        boolean groups = useGroups;
         useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
         hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
     }
@@ -108,6 +107,12 @@ public abstract class ContactListModel {
 
     public void updateGroupData(Group group) {
         getGroupNode(group).updateGroupData();
+    }
+
+    protected GroupBranch createGroup(Group g) {
+        GroupBranch group = new GroupBranch(g.getName());
+        group.setMode(g.getMode());
+        return group;
     }
 
     public abstract void updateGroup(Protocol protocol, Group group);

@@ -15,6 +15,8 @@ import java.util.Vector;
  * @author vladimir
  */
 public class DifferentContactListModel extends ContactListModel {
+    private Hashtable protos = new Hashtable();
+
     public void buildFlatItems(Vector items) {
         final int count = getProtocolCount();
         for (int i = 0; i < count; ++i) {
@@ -107,35 +109,47 @@ public class DifferentContactListModel extends ContactListModel {
         getProtocolNode(protocol).removeGroup(group);
     }
     public void addGroup(Protocol protocol, Group group) {
-        Vector allItems = protocol.getContactItems();
         GroupBranch groupBranch = getGroupNode(group);
-        if (null == groupBranch) return;
+        if (null == groupBranch) {
+            groupBranch = createGroup(group);
+            getProtocolNode(protocol).getGroups().addElement(groupBranch);
+        }
         Vector groupItems = groupBranch.getContacts();
         groupItems.removeAllElements();
-        int size = allItems.size();
-        int groupId = group.getId();
-        for (int i = 0; i < size; ++i) {
-            Contact item = (Contact)allItems.elementAt(i);
-            if (item.getGroupId() == groupId) {
-                groupItems.addElement(item);
-            }
-        }
+        groupItems.addAll(group.getContacts(protocol));
         groupBranch.updateGroupData();
         groupBranch.sort();
     }
 
     public GroupBranch getGroupNode(Group group) {
-        return getProtocolNode(getProtocol(group)).getGroupNode(group);
+        GroupBranch groupBranch = getProtocolNode(getProtocol(group)).getGroupNode(group);
+        if (null == groupBranch) {
+            groupBranch = createGroup(group);
+            getProtocolNode(getProtocol(group)).getGroups().addElement(groupBranch);
+        }
+        return groupBranch;
     }
     // #sijapp cond.if modules_MULTI is "true" #
     public ProtocolBranch getProtocolNode(Protocol p) {
-        ProtocolBranch protocolBranch = (ProtocolBranch) protos.get(p);
-        if (null == protocolBranch) {
-            protocolBranch = new ProtocolBranch(p);
-            protos.put(p, protocolBranch);
-        }
-        return protocolBranch;
+        return (ProtocolBranch) protos.get(p);
     }
     // #sijapp cond.end #
-    private Hashtable protos = new Hashtable();
+
+    public void addProtocol(Protocol prot) {
+        super.addProtocol(prot);
+        ProtocolBranch protocolBranch = new ProtocolBranch(prot);
+        protos.put(prot, protocolBranch);
+        if (useGroups) {
+            Vector inGroups = prot.getGroupItems();
+            for (int i = 0; i < inGroups.size(); ++i) {
+                addGroup(prot, (Group) inGroups.elementAt(i));
+            }
+            addGroup(prot, prot.getNotInListGroup());
+        } else {
+            Vector inContacts = prot.getContactItems();
+            Vector outContacts = protocolBranch.getSortedContacts();
+            outContacts.addAll(inContacts);
+            protocolBranch.sort();
+        }
+    }
 }

@@ -135,7 +135,14 @@ public class AlloyContactListModel extends ContactListModel {
 
     }
     public void addGroup(Protocol protocol, Group group) {
-        updateGroupContent(getGroupNode(group));
+        GroupBranch gb = getGroupNode(group);
+        if (null == gb) {
+            gb = createGroup(group);
+            groups.addElement(gb);
+        }
+        gb.getContacts().addAll(group.getContacts(protocol));
+        gb.updateGroupData();
+        gb.sort();
     }
     public void updateGroup(Protocol protocol, Group group) {
         GroupBranch groupBranch = getGroupNode(group);
@@ -164,13 +171,6 @@ public class AlloyContactListModel extends ContactListModel {
 
 
 
-    private GroupBranch createGroup(Group g) {
-        GroupBranch group = new GroupBranch(g.getName());
-        group.setMode(g.getMode());
-        groups.addElement(group);
-        return group;
-    }
-
     private GroupBranch getGroup(String name) {
         GroupBranch g;
         for (int i = 0; i < groups.size(); ++i) {
@@ -189,7 +189,23 @@ public class AlloyContactListModel extends ContactListModel {
         GroupBranch groupBranch = getGroup(group.getName());
         if (null == groupBranch) {
             groupBranch = createGroup(group);
+            groups.addElement(groupBranch);
         }
         return groupBranch;
+    }
+
+    public void addProtocol(Protocol prot) {
+        super.addProtocol(prot);
+        if (useGroups) {
+            Vector inGroups = prot.getGroupItems();
+            for (int i = 0; i < inGroups.size(); ++i) {
+                addGroup(prot, (Group) inGroups.elementAt(i));
+            }
+            addGroup(prot, prot.getNotInListGroup());
+        } else {
+            Vector inContacts = prot.getContactItems();
+            contacts.addAll(inContacts);
+            Util.sort(contacts);
+        }
     }
 }

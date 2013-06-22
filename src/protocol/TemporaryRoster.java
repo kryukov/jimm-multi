@@ -21,10 +21,10 @@ import protocol.mrim.*;
 public class TemporaryRoster {
     private Protocol protocol;
     private Vector oldGroups;
-    private Vector oldContacts;
+    private Contacts oldContacts;
     private Contact[] existContacts;
     private Vector groups = new Vector();
-    private Vector contacts = new Vector();
+    private Contacts contacts = new Contacts();
     
     /** Creates a new instance of TemporaryRoster */
     public TemporaryRoster(Protocol protocol) {
@@ -58,7 +58,7 @@ public class TemporaryRoster {
         groups = oldGroups;
         contacts = oldContacts;
         oldGroups = new Vector();
-        oldContacts = new Vector();
+        oldContacts = new Contacts();
         existContacts = new Contact[0];
     }
     public Group makeGroup(String name) {
@@ -83,8 +83,8 @@ public class TemporaryRoster {
         return g;
     }
     
-    public final Vector mergeContacts() {
-        Vector newContacts = contacts;
+    public final Contacts mergeContacts() {
+        Contacts newContacts = contacts;
         boolean sync = Options.getBoolean(Options.OPTION_SAVE_TEMP_CONTACT);
         sync |= protocol.isReconnect();
         if (sync) {

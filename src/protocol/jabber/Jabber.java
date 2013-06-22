@@ -401,7 +401,7 @@ public final class Jabber extends Protocol implements FormListener {
         if ("livejournal.com".equals(domain)) {
             return "livejournal.com";
         }
-        if ("api.com".equals(domain)) {
+        if ("vk.com".equals(domain)) {
             return "vkmessenger.com";
         }
         if ("vkontakte.ru".equals(domain)) {

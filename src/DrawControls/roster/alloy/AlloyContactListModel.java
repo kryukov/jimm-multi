@@ -185,27 +185,6 @@ public class AlloyContactListModel extends ContactListModel {
         return null;
     }
 
-    private void putContact(Protocol p, Contact contact) {
-        if (-1 == Util.getIndex(contacts, contact)) {
-            contacts.addElement(contact);
-            if (Group.NOT_IN_GROUP != contact.getGroupId()) {
-                getGroupNode(p.getGroupById(contact.getGroupId())).getContacts().addElement(contact);
-            } else {
-                notInListGroup.getContacts().addElement(contact);
-            }
-        }
-    }
-
-    private GroupBranch getGroupNode(Vector groups, String name) {
-        GroupBranch g;
-        for (int i = 0; i < groups.size(); ++i) {
-            g = (GroupBranch) groups.elementAt(i);
-            if (name.equals(g.getName())) {
-                return g;
-            }
-        }
-        return null;
-    }
     public GroupBranch getGroupNode(Group group) {
         GroupBranch groupBranch = getGroup(group.getName());
         if (null == groupBranch) {

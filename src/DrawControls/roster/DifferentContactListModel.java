@@ -43,7 +43,7 @@ public class DifferentContactListModel extends ContactListModel {
         p.sort();
         Vector groups = p.getGroups();
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            groupBranch = getGroupNode((Group)groups.elementAt(groupIndex));
+            groupBranch = (GroupBranch) groups.elementAt(groupIndex);
             contactCounter = 0;
             drawItems.addElement(groupBranch);
             contacts = groupBranch.getContacts();

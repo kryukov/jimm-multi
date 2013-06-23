@@ -113,6 +113,33 @@ public abstract class ContactListModel {
         group.setMode(g.getMode());
         return group;
     }
+    protected final void rebuildGroup(GroupBranch g, boolean show, Vector drawItems) {
+        if (show || isNotEmpty(g.getContacts())) {
+            drawItems.addElement(g);
+            if (g.isExpanded()) {
+                rebuildContacts(g.getContacts(), drawItems);
+            }
+        }
+    }
+    private boolean isNotEmpty(Vector contacts) {
+        Contact c;
+        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
+            c = (Contact)contacts.elementAt(contactIndex);
+            if (!hideOffline || c.isVisibleInContactList() || (c == selectedItem)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    protected final void rebuildContacts(Vector contacts, Vector drawItems) {
+        Contact c;
+        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
+            c = (Contact)contacts.elementAt(contactIndex);
+            if (!hideOffline || c.isVisibleInContactList() || (c == selectedItem)) {
+                drawItems.addElement(c);
+            }
+        }
+    }
 
     public abstract void updateGroup(Protocol protocol, Group group);
     public abstract void addGroup(Protocol protocol, Group group);

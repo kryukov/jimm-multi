@@ -3,7 +3,6 @@ package DrawControls.roster.models;
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
 import DrawControls.roster.ProtocolBranch;
-import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
 
@@ -36,48 +35,11 @@ public class ProtocolGroupContactModel extends ContactListModel {
     }
 
     private void rebuildFlatItemsWG(ProtocolBranch p, Vector drawItems) {
-        Vector contacts;
-        Contact c;
-        GroupBranch groupBranch;
-        int contactCounter;
-        boolean all = !hideOffline;
-        p.sort();
         Vector groups = p.getGroups();
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            groupBranch = (GroupBranch) groups.elementAt(groupIndex);
-            contactCounter = 0;
-            drawItems.addElement(groupBranch);
-            contacts = groupBranch.getContacts();
-            for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-                c = (Contact)contacts.elementAt(contactIndex);
-                if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                    if (groupBranch.isExpanded()) {
-                        drawItems.addElement(c);
-                    }
-                    contactCounter++;
-                }
-            }
-            if (hideOffline && (0 == contactCounter)) {
-                drawItems.removeElementAt(drawItems.size() - 1);
-            }
+            rebuildGroup((GroupBranch)groups.elementAt(groupIndex), !hideOffline, drawItems);
         }
-
-        groupBranch = p.getNotInListGroup();
-        drawItems.addElement(groupBranch);
-        contacts = groupBranch.getContacts();
-        contactCounter = 0;
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                if (groupBranch.isExpanded()) {
-                    drawItems.addElement(c);
-                }
-                contactCounter++;
-            }
-        }
-        if (0 == contactCounter) {
-            drawItems.removeElementAt(drawItems.size() - 1);
-        }
+        rebuildGroup(p.getNotInListGroup(), true, drawItems);
     }
 
     public void updateGroupOrder(Protocol protocol, Group group) {

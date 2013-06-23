@@ -30,18 +30,7 @@ public class ProtocolContactModel extends ContactListModel {
             if (!root.isExpanded()) continue;
             // #sijapp cond.end #
             synchronized (p.getRosterLockObject()) {
-                rebuildFlatItemsWOG(root, items);
-            }
-        }
-    }
-    private void rebuildFlatItemsWOG(ProtocolBranch p, Vector drawItems) {
-        boolean all = !hideOffline;
-        Contact c;
-        Vector contacts = p.getSortedContacts();
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                drawItems.addElement(c);
+                rebuildContacts(root.getSortedContacts(), items);
             }
         }
     }

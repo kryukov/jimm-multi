@@ -27,18 +27,7 @@ public class ContactModel extends ContactListModel {
         // prepare
         Util.sort(contacts);
         // build
-        rebuildFlatItemsWOG(items);
-    }
-    private void rebuildFlatItemsWOG(Vector drawItems) {
-        boolean all = !hideOffline;
-        Contact c;
-        Vector contacts = this.contacts;
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                drawItems.addElement(c);
-            }
-        }
+        rebuildContacts(contacts, items);
     }
 
     public void updateGroupOrder(Protocol protocol, Group g) {

@@ -42,47 +42,11 @@ public class GroupContactModel extends ContactListModel {
 
 
     private void rebuildFlatItemsWG(Vector drawItems) {
-        Vector contacts;
-        GroupBranch g;
-        Contact c;
-        int contactCounter;
-        boolean all = !hideOffline;
         Vector groups = this.groups;
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            g = (GroupBranch)groups.elementAt(groupIndex);
-            contactCounter = 0;
-            drawItems.addElement(g);
-            contacts = g.getContacts();
-            for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-                c = (Contact)contacts.elementAt(contactIndex);
-                if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                    if (g.isExpanded()) {
-                        drawItems.addElement(c);
-                    }
-                    contactCounter++;
-                }
-            }
-            if (hideOffline && (0 == contactCounter)) {
-                drawItems.removeElementAt(drawItems.size() - 1);
-            }
+            rebuildGroup((GroupBranch)groups.elementAt(groupIndex), !hideOffline, drawItems);
         }
-
-        g = notInListGroup;
-        drawItems.addElement(g);
-        contacts = g.getContacts();
-        contactCounter = 0;
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                if (g.isExpanded()) {
-                    drawItems.addElement(c);
-                }
-                contactCounter++;
-            }
-        }
-        if (0 == contactCounter) {
-            drawItems.removeElementAt(drawItems.size() - 1);
-        }
+        rebuildGroup(notInListGroup, true, drawItems);
     }
 
     public void updateGroupOrder(Protocol protocol, Group g) {

@@ -15,6 +15,7 @@ import java.util.Vector;
 import jimm.Options;
 import jimm.chat.ChatHistory;
 import jimm.comm.Util;
+import jimm.util.JLocale;
 import protocol.*;
 /**
  *
@@ -23,10 +24,14 @@ import protocol.*;
 public class ProtocolBranch extends TreeBranch {
     private Protocol protocol;
     private Vector sortedContacts = new Vector();
+    private GroupBranch notInListGroup;
 
     public ProtocolBranch(Protocol p) {
         protocol = p;
         setExpandFlag(false);
+        // Not In List Group
+        notInListGroup = new GroupBranch(JLocale.getString("group_not_in_list"));
+        notInListGroup.setMode(Group.MODE_NONE);
     }
     public Protocol getProtocol() {
         return protocol;
@@ -57,7 +62,7 @@ public class ProtocolBranch extends TreeBranch {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
                 Util.sort(items);
             } else {
-                Util.sort(getSortedContacts());
+                Util.sort(sortedContacts);
             }
         }
     }
@@ -79,6 +84,9 @@ public class ProtocolBranch extends TreeBranch {
                 return g;
             }
         }
+        if (name.equals(notInListGroup.getName())) {
+            return notInListGroup;
+        }
         return null;
     }
 
@@ -88,7 +96,7 @@ public class ProtocolBranch extends TreeBranch {
 
 
     public GroupBranch getNotInListGroup() {
-        return getGroupNode((Group) protocol.getNotInListGroup());
+        return notInListGroup;
     }
 
     public Vector getGroups() {

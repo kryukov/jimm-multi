@@ -1,4 +1,4 @@
-package DrawControls.roster.alloy;
+package DrawControls.roster.models;
 
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
@@ -30,11 +30,7 @@ public class ProtocolGroupContactModel extends ContactListModel {
             if (!root.isExpanded()) continue;
             // #sijapp cond.end #
             synchronized (p.getRosterLockObject()) {
-                if (useGroups) {
-                    rebuildFlatItemsWG(root, items);
-                } else {
-                    rebuildFlatItemsWOG(root, items);
-                }
+                rebuildFlatItemsWG(root, items);
             }
         }
     }
@@ -83,27 +79,12 @@ public class ProtocolGroupContactModel extends ContactListModel {
             drawItems.removeElementAt(drawItems.size() - 1);
         }
     }
-    private void rebuildFlatItemsWOG(ProtocolBranch p, Vector drawItems) {
-        boolean all = !hideOffline;
-        Contact c;
-        Vector contacts = p.getSortedContacts();
-        for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
-            c = (Contact)contacts.elementAt(contactIndex);
-            if (all || c.isVisibleInContactList() || (c == selectedItem)) {
-                drawItems.addElement(c);
-            }
-        }
-    }
 
     public void updateGroupOrder(Protocol protocol, Group group) {
-        if (useGroups) {
-            GroupBranch groupBranch = getGroupNode(group);
-            if (null == groupBranch) return;
-            groupBranch.updateGroupData();
-            groupBranch.sort();
-        } else {
-            getProtocolNode(protocol).sort();
-        }
+        GroupBranch groupBranch = getGroupNode(group);
+        if (null == groupBranch) return;
+        groupBranch.updateGroupData();
+        groupBranch.sort();
     }
     public void updateGroup(Protocol protocol, Group group) {
         addGroup(protocol, group);
@@ -142,17 +123,10 @@ public class ProtocolGroupContactModel extends ContactListModel {
         super.addProtocol(prot);
         ProtocolBranch protocolBranch = new ProtocolBranch(prot);
         protos.put(prot, protocolBranch);
-        if (useGroups) {
-            Vector inGroups = prot.getGroupItems();
-            for (int i = 0; i < inGroups.size(); ++i) {
-                addGroup(prot, (Group) inGroups.elementAt(i));
-            }
-            addGroup(prot, prot.getNotInListGroup());
-        } else {
-            Vector inContacts = prot.getContactItems();
-            Vector outContacts = protocolBranch.getSortedContacts();
-            outContacts.addAll(inContacts);
-            protocolBranch.sort();
+        Vector inGroups = prot.getGroupItems();
+        for (int i = 0; i < inGroups.size(); ++i) {
+            addGroup(prot, (Group) inGroups.elementAt(i));
         }
+        addGroup(prot, prot.getNotInListGroup());
     }
 }

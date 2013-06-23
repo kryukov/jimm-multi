@@ -1,4 +1,4 @@
-package DrawControls.roster.alloy;
+package DrawControls.roster.models;
 
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;

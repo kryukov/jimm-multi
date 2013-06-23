@@ -24,9 +24,10 @@
 package DrawControls.roster;
 
 import DrawControls.icons.Icon;
-import DrawControls.roster.alloy.ContactModel;
-import DrawControls.roster.alloy.GroupContactModel;
-import DrawControls.roster.alloy.ProtocolGroupContactModel;
+import DrawControls.roster.models.ContactModel;
+import DrawControls.roster.models.GroupContactModel;
+import DrawControls.roster.models.ProtocolContactModel;
+import DrawControls.roster.models.ProtocolGroupContactModel;
 import DrawControls.text.*;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
@@ -71,17 +72,27 @@ public final class VirtualContactList extends VirtualList {
         super("");
         // #sijapp cond.if modules_MULTI is "true" #
         if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
-            model = new ProtocolGroupContactModel();
-        } else if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-            model = new GroupContactModel();
+            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+                model = new ProtocolGroupContactModel();
+            } else {
+                model = new ProtocolContactModel();
+            }
         } else {
-            model = new ContactModel();
+            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+                model = new GroupContactModel();
+            } else {
+                model = new ContactModel();
+            }
         }
         // #sijapp cond.if modules_TOUCH is "true"#
         softBar = new RosterToolBar();
         // #sijapp cond.end #
         // #sijapp cond.else #
-        model = new ProtocolGroupContactModel();
+        if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+            model = new ProtocolGroupContactModel();
+        } else {
+            model = new ProtocolContactModel();
+        }
         // #sijapp cond.end #
         updateOption();
     }
@@ -235,12 +246,18 @@ public final class VirtualContactList extends VirtualList {
         changeModel |= oldUserGroups != useGroups;
         if (changeModel) {
             ContactListModel oldModel = model;
-            if (useAccounts) {
-                model = new ProtocolGroupContactModel();
-            } else if (useGroups) {
-                model = new GroupContactModel();
+            if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
+                if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+                    model = new ProtocolGroupContactModel();
+                } else {
+                    model = new ProtocolContactModel();
+                }
             } else {
-                model = new ContactModel();
+                if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+                    model = new GroupContactModel();
+                } else {
+                    model = new ContactModel();
+                }
             }
             for (int i = 0; i < oldModel.getProtocolCount(); ++i) {
                 model.addProtocol(oldModel.getProtocol(i));
@@ -248,7 +265,11 @@ public final class VirtualContactList extends VirtualList {
         }
         // #sijapp cond.else#
         ContactListModel oldModel = model;
-        model = new ProtocolGroupContactModel();
+        if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+            model = new ProtocolGroupContactModel();
+        } else {
+            model = new ProtocolContactModel();
+        }
         model.addProtocol(oldModel.getProtocol(0));
         // #sijapp cond.end#
         model.updateOptions();

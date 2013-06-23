@@ -34,7 +34,6 @@ public abstract class ContactListModel {
 
     protected TreeNode selectedItem = null;
 
-    protected boolean useGroups;
     protected boolean hideOffline;
 
     public void removeAllProtocols() {
@@ -56,7 +55,6 @@ public abstract class ContactListModel {
 
 
     void updateOptions() {
-        useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
         hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
     }
 
@@ -102,7 +100,8 @@ public abstract class ContactListModel {
     }
 
     public void addToGroup(Group group, Contact contact) {
-        getGroupNode(group).getContacts().addElement(contact);
+        GroupBranch gb = getGroupNode(group);
+        gb.getContacts().addElement(contact);
     }
 
     public void updateGroupData(Group group) {

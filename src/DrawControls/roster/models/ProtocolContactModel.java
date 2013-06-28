@@ -3,6 +3,7 @@ package DrawControls.roster.models;
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
 import DrawControls.roster.ProtocolBranch;
+import DrawControls.roster.Updater;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
@@ -35,29 +36,27 @@ public class ProtocolContactModel extends ContactListModel {
         }
     }
 
-    public void updateGroupOrder(Protocol protocol, Group group) {
-        getProtocolNode(protocol).sort();
-    }
-    public void updateGroup(Protocol protocol, Group group) {
+    public void updateGroupOrder(Updater.Update u) {
+        getProtocolNode(u.protocol).sort();
     }
     public void removeGroup(Protocol protocol, Group group) {
     }
     public void addGroup(Protocol protocol, Group group) {
     }
-    public void addToGroup(Group group, Contact contact) {
-        ProtocolBranch pb = getProtocolNode(getProtocol(group));
+    public void addToGroup(Protocol protocol, Group group, Contact contact) {
+        ProtocolBranch pb = getProtocolNode(protocol);
         pb.getSortedContacts().addElement(contact);
         pb.sort();
     }
-    public void updateGroupData(Group group) {
+    public void updateGroupData(Protocol protocol, Group group) {
     }
 
-    public void removeFromGroup(Group group, Contact c) {
-        ProtocolBranch pb = getProtocolNode(getProtocol(group));
+    public void removeFromGroup(Protocol protocol, Group group, Contact c) {
+        ProtocolBranch pb = getProtocolNode(protocol);
         pb.getSortedContacts().removeElement(c);
     }
 
-    public GroupBranch getGroupNode(Group group) {
+    public GroupBranch getGroupNode(Protocol protocol, Group group) {
         return null;
     }
     // #sijapp cond.if modules_MULTI is "true" #

@@ -84,28 +84,26 @@ public abstract class ContactListModel {
 
     public abstract void buildFlatItems(Vector items);
 
-    /**
-     * @deprecated
-     */
-    public final void updateGroup(Group group) {
-        updateGroupOrder(getProtocol(group), group);
-    }
-    public abstract void updateGroupOrder(Protocol protocol, Group group);
+    public abstract void updateGroupOrder(Updater.Update u);
 
-    public void removeFromGroup(Group group, Contact c) {
-        GroupBranch groupBranch = getGroupNode(group);
+    public void removeFromGroup(Protocol protocol, Group group, Contact c) {
+        GroupBranch groupBranch = getGroupNode(protocol, group);
+        if (null == groupBranch) return;
         if (groupBranch.getContacts().removeElement(c)) {
             groupBranch.updateGroupData();
         }
     }
 
-    public void addToGroup(Group group, Contact contact) {
-        GroupBranch gb = getGroupNode(group);
+    public void addToGroup(Protocol protocol, Group group, Contact contact) {
+        GroupBranch gb = getGroupNode(protocol, group);
+        if (null == gb) return;
         gb.getContacts().addElement(contact);
     }
 
-    public void updateGroupData(Group group) {
-        getGroupNode(group).updateGroupData();
+    public void updateGroupData(Protocol protocol, Group group) {
+        GroupBranch gb = getGroupNode(protocol, group);
+        if (null == gb) return;
+        gb.updateGroupData();
     }
 
     protected GroupBranch createGroup(Group g) {
@@ -141,9 +139,12 @@ public abstract class ContactListModel {
         }
     }
 
-    public abstract void updateGroup(Protocol protocol, Group group);
     public abstract void addGroup(Protocol protocol, Group group);
     public abstract void removeGroup(Protocol protocol, Group group);
 
-    public abstract GroupBranch getGroupNode(Group group);
+    public abstract GroupBranch getGroupNode(Protocol protocol, Group group);
+
+    public boolean hasProtocol(Protocol p) {
+        return -1 < Util.getIndex(protocolList, p);
+    }
 }

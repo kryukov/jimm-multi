@@ -54,6 +54,7 @@ public final class VirtualContactList extends VirtualList {
     private int nodeRectHeight;
     private boolean showStatusLine;
     private boolean useGroups;
+    private boolean useAccounts;
     private ContactListModel model;
     // #sijapp cond.if modules_MULTI isnot "true" #
     private Icon[] capIcons = new Icon[2];
@@ -63,13 +64,28 @@ public final class VirtualContactList extends VirtualList {
     private TreeNode currentNode = null;
     private boolean rebuildList = false;
 
-    private Vector updateQueue = new Vector();
-
     private Vector[] listOfContactList = new Vector[]{new Vector(), new Vector()};
     private int visibleListIndex = 0;
+    private Updater updater = new Updater();
 
     public VirtualContactList() {
         super("");
+        createModel();
+        // #sijapp cond.if modules_MULTI is "true" #
+        // #sijapp cond.if modules_TOUCH is "true"#
+        softBar = new RosterToolBar();
+        // #sijapp cond.end #
+        // #sijapp cond.end #
+        updateOption();
+    }
+    public ContactListModel getModel() {
+        return model;
+    }
+    public void setCLListener(ContactListListener listener) {
+        clListener = listener;
+    }
+
+    public void createModel() {
         // #sijapp cond.if modules_MULTI is "true" #
         if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
@@ -84,9 +100,6 @@ public final class VirtualContactList extends VirtualList {
                 model = new ContactModel();
             }
         }
-        // #sijapp cond.if modules_TOUCH is "true"#
-        softBar = new RosterToolBar();
-        // #sijapp cond.end #
         // #sijapp cond.else #
         if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
             model = new ProtocolGroupContactModel();
@@ -94,13 +107,7 @@ public final class VirtualContactList extends VirtualList {
             model = new ProtocolContactModel();
         }
         // #sijapp cond.end #
-        updateOption();
-    }
-    public ContactListModel getModel() {
-        return model;
-    }
-    public void setCLListener(ContactListListener listener) {
-        clListener = listener;
+        updater.setModel(model);
     }
 
     protected final int getItemHeight(int itemIndex) {
@@ -180,18 +187,9 @@ public final class VirtualContactList extends VirtualList {
         }
     }
 
-    public void putIntoQueue(Group g) {
-        if (-1 == Util.getIndex(updateQueue, g)) {
-            updateQueue.addElement(g);
-        }
-    }
     protected void beforePaint() {
         if (rebuildList) {
-            while (!updateQueue.isEmpty()) {
-                Group group = (Group)updateQueue.firstElement();
-                updateQueue.removeElementAt(0);
-                model.updateGroup(group);
-            }
+            updater.updateTree();
             rebuildList = false;
             try {
                 updateOption();
@@ -237,43 +235,28 @@ public final class VirtualContactList extends VirtualList {
     private void updateOption() {
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
         stepSize = Math.max(getFontSet()[FONT_STYLE_PLAIN].getHeight() / 4, 2);
-        boolean oldUserGroups = useGroups;
+        ContactListModel oldModel = model;
+        boolean oldUseGroups = useGroups;
         useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
+        boolean changeModel = oldUseGroups != useGroups;
         // #sijapp cond.if modules_MULTI is "true" #
-        boolean oldUseAccounts = !(model instanceof GroupContactModel);
-        boolean useAccounts = Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
-        boolean changeModel = oldUseAccounts != useAccounts;
-        changeModel |= oldUserGroups != useGroups;
+        boolean oldUseAccounts = useAccounts;
+        useAccounts = Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
+        changeModel |= oldUseAccounts != useAccounts;
+        // #sijapp cond.end#
         if (changeModel) {
-            ContactListModel oldModel = model;
-            if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
-                if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                    model = new ProtocolGroupContactModel();
-                } else {
-                    model = new ProtocolContactModel();
-                }
-            } else {
-                if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                    model = new GroupContactModel();
-                } else {
-                    model = new ContactModel();
-                }
-            }
+            createModel();
+            // #sijapp cond.if modules_MULTI is "true" #
             for (int i = 0; i < oldModel.getProtocolCount(); ++i) {
                 model.addProtocol(oldModel.getProtocol(i));
             }
+            // #sijapp cond.else#
+            model.addProtocol(oldModel.getProtocol(0));
+            // #sijapp cond.end#
         }
-        // #sijapp cond.else#
-        ContactListModel oldModel = model;
-        if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-            model = new ProtocolGroupContactModel();
-        } else {
-            model = new ProtocolContactModel();
-        }
-        model.addProtocol(oldModel.getProtocol(0));
-        // #sijapp cond.end#
         model.updateOptions();
     }
+
     /**
      * Build path to node int tree.
      */
@@ -286,7 +269,7 @@ public final class VirtualContactList extends VirtualList {
                 if (null == group) {
                     group = p.getNotInListGroup();
                 }
-                model.getGroupNode(group).setExpandFlag(true);
+                model.getGroupNode(p, group).setExpandFlag(true);
             }
         }
     }
@@ -648,5 +631,9 @@ public final class VirtualContactList extends VirtualList {
             return message;
         }
         return protocol.getStatusInfo().getName(contact.getStatusIndex());
+    }
+
+    public Updater getUpdater() {
+        return updater;
     }
 }

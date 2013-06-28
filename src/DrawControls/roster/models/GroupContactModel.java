@@ -2,6 +2,7 @@ package DrawControls.roster.models;
 
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
+import DrawControls.roster.Updater;
 import jimm.comm.Util;
 import jimm.util.JLocale;
 import protocol.Contact;
@@ -46,16 +47,13 @@ public class GroupContactModel extends ContactListModel {
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
             rebuildGroup((GroupBranch)groups.elementAt(groupIndex), !hideOffline, drawItems);
         }
-        rebuildGroup(notInListGroup, true, drawItems);
+        rebuildGroup(notInListGroup, false, drawItems);
     }
 
-    public void updateGroupOrder(Protocol protocol, Group g) {
-        GroupBranch group = getGroupNode(g);
-        if (null == group) {
-            group = createGroup(g);
-        }
-        group.updateGroupData();
-        group.sort();
+    public void updateGroupOrder(Updater.Update u) {
+        GroupBranch groupBranch = getGroupNode(u.protocol, u.group);
+        groupBranch.updateGroupData();
+        groupBranch.sort();
     }
 
     public void removeGroup(Protocol protocol, Group group) {
@@ -68,27 +66,23 @@ public class GroupContactModel extends ContactListModel {
             }
         }
         if (used) {
-            updateGroupContent(getGroupNode(group));
+            updateGroupContent(getGroupNode(protocol, group));
         } else {
-            groups.removeElement(getGroupNode(group));
+            groups.removeElement(getGroupNode(protocol, group));
         }
 
     }
     public void addGroup(Protocol protocol, Group group) {
-        GroupBranch gb = getGroupNode(group);
+        GroupBranch gb = getGroupNode(protocol, group);
         if (null == gb) {
             gb = createGroup(group);
             groups.addElement(gb);
+            gb.getContacts().addAll(group.getContacts(protocol));
+        } else {
+            updateGroupContent(gb);
         }
-        gb.getContacts().addAll(group.getContacts(protocol));
         gb.updateGroupData();
         gb.sort();
-    }
-    public void updateGroup(Protocol protocol, Group group) {
-        GroupBranch groupBranch = getGroupNode(group);
-        updateGroupContent(groupBranch);
-        groupBranch.updateGroupData();
-        groupBranch.sort();
     }
     private void updateGroupContent(GroupBranch groupBranch) {
         boolean notInList = groupBranch == notInListGroup;
@@ -111,7 +105,11 @@ public class GroupContactModel extends ContactListModel {
 
 
 
-    private GroupBranch getGroup(String name) {
+    public GroupBranch getGroupNode(Protocol protocol, Group group) {
+        if (null == group) {
+            return notInListGroup;
+        }
+        String name = group.getName();
         GroupBranch g;
         for (int i = 0; i < groups.size(); ++i) {
             g = (GroupBranch) groups.elementAt(i);
@@ -125,16 +123,8 @@ public class GroupContactModel extends ContactListModel {
         return null;
     }
 
-    public GroupBranch getGroupNode(Group group) {
-        GroupBranch groupBranch = getGroup(group.getName());
-        if (null == groupBranch) {
-            groupBranch = createGroup(group);
-            groups.addElement(groupBranch);
-        }
-        return groupBranch;
-    }
-
     public void addProtocol(Protocol prot) {
+        jimm.modules.DebugLog.println("proto " + prot.getGroupItems().size());
         super.addProtocol(prot);
         Vector inGroups = prot.getGroupItems();
         for (int i = 0; i < inGroups.size(); ++i) {

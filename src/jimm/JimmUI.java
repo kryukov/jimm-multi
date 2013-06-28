@@ -239,7 +239,7 @@ public final class JimmUI {
 
             case Options.HOTKEY_COLLAPSE_ALL:
                 if (currentDisplay == cl.getManager()) {
-                    ContactList.getInstance().collapseAll();
+                    ContactList.getInstance().getUpdater().collapseAll();
                 }
                 return true;
         }

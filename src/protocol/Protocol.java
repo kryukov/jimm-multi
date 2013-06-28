@@ -195,29 +195,19 @@ abstract public class Protocol {
         }
         ChatHistory.instance.restoreContactsWithChat(this);
 
-        synchronized (rosterLockObject) {
-            for (int i = 0; i < groups.size(); ++i) {
-                Group g = (Group)groups.elementAt(i);
-                updateContacts(g);
-            }
-            updateContacts(notInListGroup);
-        }
-        getContactList().getManager().update();
+        getContactList().getUpdater().updateProtocol(this);
         needSave();
     }
     // #sijapp cond.if protocols_JABBER is "true" #
     public final void setContactListAddition(Group group) {
         synchronized (rosterLockObject) {
-            updateContacts(group);
-            updateContacts(notInListGroup);
+            getContactList().getUpdater().addGroup(this, group);
+            getContactList().getUpdater().addGroup(this, notInListGroup);
+            getContactList().getUpdater().update();
         }
-        getContactList().getManager().update();
         needSave();
     }
     // #sijapp cond.end#
-    private void updateContacts(Group group) {
-        getContactList().getManager().getModel().updateGroup(this, group);
-    }
 
     /* ********************************************************************* */
     public final void setConnectingProgress(int percent) {
@@ -506,8 +496,13 @@ abstract public class Protocol {
 
     abstract protected void s_moveContact(Contact contact, Group to);
     public final void moveContactTo(Contact contact, Group to) {
+        Group from = getGroupById(contact.getGroupId());
         s_moveContact(contact, to);
-        cl_moveContact(contact, to);
+        getContactList().getUpdater().removeFromGroup(this, from, contact);
+        synchronized (rosterLockObject) {
+            ui_addContactToGroup(contact, to);
+        }
+        ui_updateContact(contact);
     }
     protected void s_addContact(Contact contact) {};
     protected void s_addedContact(Contact contact) {}
@@ -528,24 +523,16 @@ abstract public class Protocol {
     public final void removeGroup(Group group) {
         s_removeGroup(group);
         groups.removeElement(group);
-        synchronized (rosterLockObject) {
-            getContactList().getManager().getModel().removeGroup(this, group);
-            getContactList().getManager().update(group);
-        }
+        getContactList().getUpdater().removeGroup(this, group);
         needSave();
     }
     abstract protected void s_renameGroup(Group group, String name);
     public final void renameGroup(Group group, String name) {
-        synchronized (rosterLockObject) {
-            getContactList().getManager().getModel().removeGroup(this, group);
-        }
+        getContactList().getUpdater().removeGroup(this, group);
         s_renameGroup(group, name);
         group.setName(name);
-        synchronized (rosterLockObject) {
-            getContactList().getManager().getModel().addGroup(this, group);
-            getContactList().getManager().getModel().updateGroupData(group);
-            getContactList().getManager().update(group);
-        }
+        getContactList().getUpdater().addGroup(this, group);
+        getContactList().getUpdater().update(group);
         needSave();
     }
     abstract protected void s_addGroup(Group group);
@@ -557,11 +544,8 @@ abstract public class Protocol {
         }
         // #sijapp cond.end #
         groups.addElement(group);
-        synchronized (rosterLockObject) {
-            getContactList().getManager().getModel().addGroup(this, group);
-            getContactList().getManager().getModel().updateGroupData(group);
-            getContactList().getManager().update(group);
-        }
+        getContactList().getUpdater().addGroup(this, group);
+        getContactList().getUpdater().update(group);
         needSave();
     }
 
@@ -583,7 +567,7 @@ abstract public class Protocol {
         // #sijapp cond.if modules_TRAFFIC is "true" #
         Traffic.getInstance().safeSave();
         // #sijapp cond.end#
-        getContactList().getManager().update();
+        getContactList().getUpdater().update();
         getContactList().updateConnectionStatus();
         if (user) {
             // #sijapp cond.if modules_DEBUGLOG is "true" #
@@ -647,7 +631,8 @@ abstract public class Protocol {
             if (type && isConnected()) {
                 playNotification(Notify.NOTIFY_TYPING);
             }
-            getContactList().getManager().invalidate();
+
+            getContactList().getUpdater().typing(this, item);
         }
     }
     // #sijapp cond.end #
@@ -663,13 +648,7 @@ abstract public class Protocol {
             Contact c = (Contact)contacts.elementAt(i);
             c.setOfflineStatus();
         }
-        synchronized (rosterLockObject) {
-            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                for (int i = groups.size() - 1; i >= 0; --i) {
-                    getContactList().getManager().getModel().updateGroupData((Group)groups.elementAt(i));
-                }
-            }
-        }
+        getContactList().getUpdater().setOffline(this);
     }
 
     public final Contact getItemByUIN(String uin) {
@@ -767,32 +746,15 @@ abstract public class Protocol {
         if (null == g) {
             g = notInListGroup;
         }
-        getContactList().getManager().getModel().removeFromGroup(g, c);
+        getContactList().getUpdater().removeFromGroup(this, g, c);
     }
     private void ui_addContactToGroup(Contact contact, Group group) {
         ui_removeFromAnyGroup(contact);
         contact.setGroup(group);
-        if (null == group) {
-            group = notInListGroup;
-        }
-        getContactList().getManager().getModel().addToGroup(group, contact);
-    }
-    private void ui_updateGroup(Group group) {
-        if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-            synchronized (rosterLockObject) {
-                getContactList().getManager().getModel().updateGroupData(group);
-            }
-            ui_updateCL(group);
-        }
+        getContactList().getUpdater().addContactToGroup(this, group, contact);
     }
     public final Group getNotInListGroup() {
         return notInListGroup;
-    }
-    private void ui_updateCL(Contact c) {
-        getContactList().getManager().update(c);
-    }
-    private void ui_updateCL(Group g) {
-        getContactList().getManager().update(g);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -811,14 +773,7 @@ abstract public class Protocol {
         ui_updateContact(contact);
     }
     public final void ui_updateContact(Contact contact) {
-        synchronized (rosterLockObject) {
-            Group group = getGroup(contact);
-            if (null == group) {
-                group = notInListGroup;
-            }
-            getContactList().getManager().putIntoQueue(group);
-        }
-        ui_updateCL(contact);
+        getContactList().getUpdater().updateContact(this, getGroup(contact), contact);
     }
 
     private void cl_addContact(Contact contact) {
@@ -839,18 +794,11 @@ abstract public class Protocol {
     private void cl_renameContact(Contact contact) {
         ui_updateContact(contact);
     }
-    private void cl_moveContact(Contact contact, Group to) {
-        synchronized (rosterLockObject) {
-            ui_addContactToGroup(contact, to);
-        }
-        ui_updateContact(contact);
-    }
     private void cl_removeContact(Contact contact) {
         contacts.removeElement(contact);
         synchronized (rosterLockObject) {
             ui_removeFromAnyGroup(contact);
         }
-        ui_updateCL(contact);
     }
 
     public final void addLocalContact(Contact contact) {

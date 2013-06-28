@@ -399,8 +399,6 @@ public class Jimm extends MIDlet implements Runnable {
         ContactList.getInstance().initUI();
         splash.setProgress(60);
         ContactList.getInstance().initAccounts();
-        splash.setProgress(80);
-        ContactList.getInstance().loadAccounts();
 
         // #sijapp cond.if modules_ACTIVITYUI is "true"#
         if (isPhone(PHONE_SE) && (750 <= getSeVersion())) {

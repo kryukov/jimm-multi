@@ -3,6 +3,8 @@ package DrawControls.roster.models;
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
 import DrawControls.roster.ProtocolBranch;
+import DrawControls.roster.Updater;
+import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
 
@@ -39,23 +41,19 @@ public class ProtocolGroupContactModel extends ContactListModel {
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
             rebuildGroup((GroupBranch)groups.elementAt(groupIndex), !hideOffline, drawItems);
         }
-        rebuildGroup(p.getNotInListGroup(), true, drawItems);
+        rebuildGroup(p.getNotInListGroup(), false, drawItems);
     }
 
-    public void updateGroupOrder(Protocol protocol, Group group) {
-        GroupBranch groupBranch = getGroupNode(group);
-        if (null == groupBranch) return;
+    public void updateGroupOrder(Updater.Update u) {
+        GroupBranch groupBranch = getGroupNode(u.protocol, u.group);
         groupBranch.updateGroupData();
         groupBranch.sort();
-    }
-    public void updateGroup(Protocol protocol, Group group) {
-        addGroup(protocol, group);
     }
     public void removeGroup(Protocol protocol, Group group) {
         getProtocolNode(protocol).removeGroup(group);
     }
     public void addGroup(Protocol protocol, Group group) {
-        GroupBranch groupBranch = getGroupNode(group);
+        GroupBranch groupBranch = getGroupNode(protocol, group);
         if (null == groupBranch) {
             groupBranch = createGroup(group);
             getProtocolNode(protocol).getGroups().addElement(groupBranch);
@@ -67,13 +65,8 @@ public class ProtocolGroupContactModel extends ContactListModel {
         groupBranch.sort();
     }
 
-    public GroupBranch getGroupNode(Group group) {
-        GroupBranch groupBranch = getProtocolNode(getProtocol(group)).getGroupNode(group);
-        if (null == groupBranch) {
-            groupBranch = createGroup(group);
-            getProtocolNode(getProtocol(group)).getGroups().addElement(groupBranch);
-        }
-        return groupBranch;
+    public GroupBranch getGroupNode(Protocol protocol, Group group) {
+        return getProtocolNode(protocol).getGroupNode(group);
     }
     // #sijapp cond.if modules_MULTI is "true" #
     public ProtocolBranch getProtocolNode(Protocol p) {

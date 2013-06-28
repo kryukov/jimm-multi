@@ -76,6 +76,9 @@ public class ProtocolBranch extends TreeBranch {
     }
 
     public GroupBranch getGroupNode(Group group) {
+        if (null == group) {
+            return notInListGroup;
+        }
         String name = group.getName();
         GroupBranch g;
         for (int i = 0; i < items.size(); ++i) {

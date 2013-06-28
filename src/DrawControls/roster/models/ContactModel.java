@@ -2,6 +2,7 @@ package DrawControls.roster.models;
 
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
+import DrawControls.roster.Updater;
 import jimm.comm.Util;
 import protocol.Contact;
 import protocol.Contacts;
@@ -30,7 +31,7 @@ public class ContactModel extends ContactListModel {
         rebuildContacts(contacts, items);
     }
 
-    public void updateGroupOrder(Protocol protocol, Group g) {
+    public void updateGroupOrder(Updater.Update u) {
         Util.sort(contacts);
     }
 
@@ -38,21 +39,19 @@ public class ContactModel extends ContactListModel {
     }
     public void addGroup(Protocol protocol, Group group) {
     }
-    public void updateGroup(Protocol protocol, Group group) {
-    }
-    public void addToGroup(Group group, Contact contact) {
+    public void addToGroup(Protocol protocol, Group group, Contact contact) {
         contacts.addElement(contact);
     }
 
-    public void updateGroupData(Group group) {
+    public void updateGroupData(Protocol protocol, Group group) {
     }
 
-    public void removeFromGroup(Group group, Contact c) {
+    public void removeFromGroup(Protocol protocol, Group group, Contact c) {
         contacts.removeElement(c);
     }
 
 
-    public GroupBranch getGroupNode(Group group) {
+    public GroupBranch getGroupNode(Protocol protocol, Group group) {
         return null;
     }
 

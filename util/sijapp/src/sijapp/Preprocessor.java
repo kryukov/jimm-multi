@@ -504,6 +504,12 @@ public class Preprocessor {
 
     }
 
+    private boolean startsWith(String what, String with) {
+        for (int i = 0; i < what.length(); ++i) {
+            if (!Character.isSpaceChar(what.charAt(i))) return what.startsWith(with, i);
+        }
+        return false;
+    }
 
     // Preprocess
     public void run(BufferedReader reader, BufferedWriter writer) throws SijappException {
@@ -532,13 +538,14 @@ public class Preprocessor {
         // Read until EOF
         try {
             String line;
+            J2mizer j2mizer = new J2mizer();
             while ((line = this.reader.readLine()) != null) {
-
+                if (!startsWith(line, "//")) line = j2mizer.j2mize(line);
                 // Scan read line for s SiJaPP statement
                 Scanner.Token[] tokens = Scanner.scan(line);
 
                 // Get rid of special sijapp comments //# if inside an sijapp statement
-                if (tokens.length == 0 && line.trim().startsWith("//#") && this.doneStack.size() > 0)
+                if (tokens.length == 0 && startsWith(line, "//#") && this.doneStack.size() > 0)
                     line = line.trim().substring(3);
                 // No statement has been found
                 if (tokens.length == 0) {

@@ -23,14 +23,14 @@
 
 package jimm.cl;
 
-import DrawControls.icons.Icon;
-import DrawControls.roster.*;
+import ui.icons.Icon;
+import ui.roster.*;
 import jimm.*;
 import jimm.chat.*;
 import jimm.forms.*;
-import jimm.ui.menu.*;
+import ui.menu.*;
 import java.util.*;
-import jimm.ui.base.*;
+import ui.base.*;
 import protocol.*;
 import protocol.icq.*;
 import protocol.mrim.*;
@@ -417,7 +417,7 @@ public final class ContactList implements ContactListListener {
         Icon icon = ChatHistory.instance.getUnreadMessageIcon();
         if (icon != MyActionBar.getMessageIcon()) {
             MyActionBar.setMessageIcon(icon);
-            jimm.ui.base.NativeCanvas.getInstance().repaint();
+            ui.base.NativeCanvas.getInstance().repaint();
         }
         // #sijapp cond.if modules_ANDROID is "true" #
         ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon();

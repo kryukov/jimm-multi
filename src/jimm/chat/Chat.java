@@ -31,16 +31,16 @@
  */
 package jimm.chat;
 
-import DrawControls.icons.Icon;
-import DrawControls.text.*;
+import ui.icons.Icon;
+import ui.text.*;
 import java.util.*;
 import jimm.*;
 import jimm.chat.message.*;
 import jimm.cl.*;
 import jimm.comm.*;
 import jimm.history.*;
-import jimm.ui.base.*;
-import jimm.ui.menu.*;
+import ui.base.*;
+import ui.menu.*;
 import jimm.modules.*;
 import protocol.*;
 import protocol.jabber.*;

@@ -1,6 +1,6 @@
 package protocol.vk;
 
-import jimm.ui.menu.MenuModel;
+import ui.menu.MenuModel;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.StatusInfo;

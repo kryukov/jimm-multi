@@ -13,10 +13,10 @@ import java.util.Vector;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.search.*;
-import jimm.ui.*;
-import jimm.ui.form.FormListener;
-import jimm.ui.form.GraphForm;
-import jimm.ui.menu.*;
+import ui.*;
+import ui.form.FormListener;
+import ui.form.GraphForm;
+import ui.menu.*;
 import jimm.util.*;
 import protocol.*;
 

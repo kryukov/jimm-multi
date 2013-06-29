@@ -23,7 +23,7 @@ Author(s): Igor Palkin
 // #sijapp cond.if protocols_ICQ is "true" | protocols_JABBER is "true" | protocols_OBIMP is "true" #
 package jimm.forms;
 
-import jimm.ui.form.*;
+import ui.form.*;
 import protocol.Protocol;
 import jimm.search.*;
 

@@ -24,17 +24,17 @@
 
 package jimm.modules;
 
-import jimm.ui.text.TextList;
-import jimm.ui.text.TextListModel;
+import ui.text.TextList;
+import ui.text.TextListModel;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.comm.*;
 import jimm.io.Storage;
-import jimm.ui.ActionListener;
-import jimm.ui.base.*;
-import jimm.ui.menu.*;
-import jimm.ui.text.TextListController;
+import ui.ActionListener;
+import ui.base.*;
+import ui.menu.*;
+import ui.text.TextListController;
 import jimm.util.*;
 
 public final class Templates implements SelectListener, CommandListener {

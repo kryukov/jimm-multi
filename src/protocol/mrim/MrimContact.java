@@ -9,11 +9,11 @@
 // #sijapp cond.if protocols_MRIM is "true" #
 package protocol.mrim;
 
-import DrawControls.icons.*;
+import ui.icons.*;
 import jimm.*;
 import jimm.comm.*;
 import jimm.modules.*;
-import jimm.ui.menu.*;
+import ui.menu.*;
 import protocol.*;
 
 /**

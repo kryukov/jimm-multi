@@ -9,7 +9,7 @@
 // #sijapp cond.if protocols_OBIMP is "true" #
 package protocol.obimp;
 
-import jimm.ui.menu.MenuModel;
+import ui.menu.MenuModel;
 import protocol.*;
 
 /**

@@ -9,15 +9,15 @@
 
 package protocol;
 
-import DrawControls.roster.*;
-import DrawControls.icons.*;
+import ui.roster.*;
+import ui.icons.*;
 import jimm.*;
 import jimm.chat.*;
 import jimm.chat.message.*;
 import jimm.cl.ContactList;
 import jimm.history.*;
-import jimm.ui.base.*;
-import jimm.ui.menu.*;
+import ui.base.*;
+import ui.menu.*;
 import jimm.comm.*;
 
 /**

@@ -22,11 +22,7 @@
 // #sijapp cond.if protocols_MSN is "true" #
 package protocol.msn;
 
-import DrawControls.icons.Icon;
-import jimm.JimmUI;
-import jimm.chat.message.PlainMessage;
-import jimm.cl.ContactList;
-import jimm.ui.menu.*;
+import ui.menu.*;
 import protocol.*;
 
 /**

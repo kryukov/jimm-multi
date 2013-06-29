@@ -9,17 +9,17 @@
 
 package protocol;
 
-import jimm.ui.text.TextListModel;
-import DrawControls.icons.Icon;
-import DrawControls.text.Parser;
+import ui.text.TextListModel;
+import ui.icons.Icon;
+import ui.text.Parser;
 import jimm.Jimm;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
-import jimm.ui.base.CanvasEx;
-import jimm.ui.menu.*;
-import jimm.ui.text.TextList;
-import jimm.ui.text.TextListController;
+import ui.base.CanvasEx;
+import ui.menu.*;
+import ui.text.TextList;
+import ui.text.TextListController;
 import protocol.icq.*;
 import protocol.jabber.*;
 

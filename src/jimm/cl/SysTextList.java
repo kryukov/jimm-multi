@@ -9,14 +9,14 @@
 package jimm.cl;
 
 import jimm.modules.*;
-import DrawControls.text.Parser;
+import ui.text.Parser;
 import java.util.*;
 import jimm.*;
 import jimm.comm.*;
-import jimm.ui.menu.*;
-import jimm.ui.base.*;
-import jimm.ui.text.*;
-import jimm.ui.timers.*;
+import ui.menu.*;
+import ui.base.*;
+import ui.text.*;
+import ui.timers.*;
 import jimm.util.*;
 
 /**

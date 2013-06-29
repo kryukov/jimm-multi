@@ -3,8 +3,8 @@ package protocol.jabber;
 
 import jimm.*;
 import jimm.comm.*;
-import jimm.ui.form.FormListener;
-import jimm.ui.form.GraphForm;
+import ui.form.FormListener;
+import ui.form.GraphForm;
 import protocol.Profile;
 
 /**

@@ -9,7 +9,7 @@
 
 package protocol;
 
-import DrawControls.icons.*;
+import ui.icons.*;
 import java.io.*;
 import java.util.Vector;
 import javax.microedition.rms.*;

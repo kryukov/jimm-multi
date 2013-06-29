@@ -5,8 +5,8 @@
 package protocol;
 
 // #sijapp cond.if modules_CLIENTS is "true" #
-import DrawControls.icons.Icon;
-import DrawControls.icons.ImageList;
+import ui.icons.Icon;
+import ui.icons.ImageList;
 
 /**
  *

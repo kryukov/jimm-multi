@@ -9,7 +9,7 @@
 
 package protocol;
 
-import DrawControls.icons.*;
+import ui.icons.*;
 import jimm.util.JLocale;
 
 /**

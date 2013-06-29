@@ -23,14 +23,14 @@
 
 package jimm.chat;
 
-import DrawControls.icons.Icon;
+import ui.icons.Icon;
 import java.util.*;
 import jimm.*;
 import jimm.cl.ContactList;
 import jimm.comm.*;
-import jimm.ui.base.*;
+import ui.base.*;
 import protocol.Protocol;
-import jimm.ui.menu.*;
+import ui.menu.*;
 import java.io.*;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;

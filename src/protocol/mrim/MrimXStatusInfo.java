@@ -11,7 +11,7 @@
 // #sijapp cond.if modules_XSTATUSES is "true" #
 package protocol.mrim;
 
-import DrawControls.icons.*;
+import ui.icons.*;
 import jimm.comm.Config;
 import jimm.comm.StringConvertor;
 import protocol.*;

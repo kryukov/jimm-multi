@@ -24,7 +24,7 @@
 
 package jimm;
 
-import DrawControls.icons.Icon;
+import ui.icons.Icon;
 import java.io.*;
 import javax.microedition.io.*;
 import javax.microedition.midlet.*;
@@ -33,10 +33,10 @@ import jimm.cl.*;
 import jimm.comm.*;
 import jimm.modules.*;
 import jimm.search.Search;
-import jimm.ui.*;
-import jimm.ui.base.*;
+import ui.*;
+import ui.base.*;
 // #sijapp cond.if modules_ACTIVITYUI is "true"#
-import jimm.ui.notify.*;
+import ui.notify.*;
 // #sijapp cond.end#
 import jimm.util.JLocale;
 

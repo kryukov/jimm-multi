@@ -10,7 +10,7 @@
 package protocol.icq;
 
 import jimm.comm.Util;
-import jimm.ui.timers.*;
+import ui.timers.*;
 import protocol.Protocol;
 import protocol.icq.action.ConnectAction;
 import protocol.icq.action.IcqAction;

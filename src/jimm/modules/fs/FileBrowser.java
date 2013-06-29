@@ -1,14 +1,14 @@
 // #sijapp cond.if modules_FILES="true"#
 package jimm.modules.fs;
 
-import DrawControls.text.*;
-import DrawControls.icons.Icon;
-import DrawControls.icons.ImageList;
+import ui.text.*;
+import ui.icons.Icon;
+import ui.icons.ImageList;
 import java.util.*;
 import jimm.*;
 import jimm.cl.*;
 import jimm.comm.*;
-import jimm.ui.base.*;
+import ui.base.*;
 
 
 

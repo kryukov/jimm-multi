@@ -14,7 +14,7 @@ import jimm.chat.message.PlainMessage;
 import jimm.cl.ContactList;
 import jimm.forms.ManageContactListForm;
 import jimm.history.*;
-import jimm.ui.menu.*;
+import ui.menu.*;
 
 /**
  *

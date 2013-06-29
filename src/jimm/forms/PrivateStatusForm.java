@@ -10,13 +10,13 @@
 // #sijapp cond.if modules_SERVERLISTS is "true" #
 package jimm.forms;
 
-import DrawControls.icons.Icon;
-import DrawControls.icons.ImageList;
+import ui.icons.Icon;
+import ui.icons.ImageList;
 import jimm.*;
 import jimm.cl.ContactList;
 import protocol.icq.*;
 import protocol.mrim.*;
-import jimm.ui.menu.*;
+import ui.menu.*;
 import protocol.Protocol;
 
 /**

@@ -36,7 +36,7 @@ import jimm.cl.*;
 import jimm.modules.fs.*;
 // #sijapp cond.end#
 import jimm.modules.photo.*;
-import jimm.ui.form.*;
+import ui.form.*;
 import jimm.util.JLocale;
 import protocol.Contact;
 import protocol.Protocol;

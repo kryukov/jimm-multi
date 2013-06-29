@@ -28,7 +28,7 @@ package org.microemu.android.device;
 
 import javax.microedition.lcdui.Canvas;
 
-import jimm.ui.base.NativeCanvas;
+import ui.base.NativeCanvas;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;

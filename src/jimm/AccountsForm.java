@@ -9,13 +9,13 @@
 
 package jimm;
 
-import jimm.ui.text.TextList;
+import ui.text.TextList;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
-import jimm.ui.form.*;
-import jimm.ui.menu.*;
-import jimm.ui.text.TextListController;
-import jimm.ui.text.TextListModel;
+import ui.form.*;
+import ui.menu.*;
+import ui.text.TextListController;
+import ui.text.TextListModel;
 import jimm.util.JLocale;
 import protocol.*;
 

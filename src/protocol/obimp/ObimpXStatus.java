@@ -11,7 +11,7 @@
 // #sijapp cond.if modules_XSTATUSES is "true" #
 package protocol.obimp;
 
-import DrawControls.icons.ImageList;
+import ui.icons.ImageList;
 import jimm.comm.Config;
 import protocol.*;
 

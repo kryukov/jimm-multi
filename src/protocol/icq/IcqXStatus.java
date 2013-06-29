@@ -10,7 +10,7 @@
 // #sijapp cond.if modules_XSTATUSES is "true" #
 package protocol.icq;
 
-import DrawControls.icons.*;
+import ui.icons.*;
 import jimm.comm.*;
 import protocol.*;
 

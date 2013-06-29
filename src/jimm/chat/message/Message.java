@@ -24,8 +24,8 @@
 
 package jimm.chat.message;
 
-import DrawControls.icons.*;
-import DrawControls.text.*;
+import ui.icons.*;
+import ui.text.*;
 import jimm.chat.MessData;
 import protocol.Contact;
 import protocol.Protocol;

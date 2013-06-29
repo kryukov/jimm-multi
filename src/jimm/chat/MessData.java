@@ -31,7 +31,7 @@ Author(s): Andreas Rossbacher, Artyomov Denis, Dmitry Tunin, Vladimir Kryukov
  */
 package jimm.chat;
 
-import DrawControls.text.Par;
+import ui.text.Par;
 import jimm.Jimm;
 import jimm.comm.Util;
 

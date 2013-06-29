@@ -21,9 +21,9 @@ import jimm.Options;
 import jimm.chat.Chat;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
-import jimm.ui.ActionListener;
-import jimm.ui.Selector;
-import jimm.ui.base.CanvasEx;
+import ui.ActionListener;
+import ui.Selector;
+import ui.base.CanvasEx;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
 

@@ -12,7 +12,7 @@ package protocol.jabber;
 import java.util.Vector;
 import jimm.*;
 import jimm.comm.*;
-import jimm.ui.menu.*;
+import ui.menu.*;
 import jimm.util.JLocale;
 import protocol.*;
 

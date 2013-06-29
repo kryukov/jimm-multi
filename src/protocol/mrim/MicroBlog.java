@@ -25,20 +25,20 @@ Author(s): Artyomov Denis
 // #sijapp cond.if modules_MAGIC_EYE is "true" #
 package protocol.mrim;
 
-import jimm.ui.text.TextListModel;
-import jimm.ui.text.TextList;
-import DrawControls.icons.*;
-import DrawControls.text.Parser;
+import ui.text.TextListModel;
+import ui.text.TextList;
+import ui.icons.*;
+import ui.text.Parser;
 import jimm.chat.message.Message;
-import jimm.ui.base.CanvasEx;
-import jimm.ui.base.NativeCanvas;
+import ui.base.CanvasEx;
+import ui.base.NativeCanvas;
 import java.util.Vector;
 import jimm.*;
 import jimm.cl.ContactList;
 import jimm.comm.*;
-import jimm.ui.*;
-import jimm.ui.menu.*;
-import jimm.ui.text.TextListController;
+import ui.*;
+import ui.menu.*;
+import ui.text.TextListController;
 import jimm.util.*;
 import protocol.*;
 

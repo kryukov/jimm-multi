@@ -12,7 +12,7 @@ package protocol.jabber;
 
 import jimm.cl.ContactList;
 import jimm.comm.*;
-import jimm.ui.form.*;
+import ui.form.*;
 import protocol.*;
 
 /**

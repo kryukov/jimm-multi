@@ -25,7 +25,7 @@
 package jimm.modules.photo;
 
 // #sijapp cond.if modules_ANDROID isnot "true" #
-import DrawControls.text.*;
+import ui.text.*;
 import java.io.*;
 import javax.microedition.lcdui.*;
 import javax.microedition.media.*;
@@ -34,7 +34,7 @@ import jimm.*;
 import jimm.cl.ContactList;
 import jimm.comm.Util;
 import jimm.modules.*;
-import jimm.ui.base.*;
+import ui.base.*;
 import jimm.util.JLocale;
 
 /** ************************************************************************* */

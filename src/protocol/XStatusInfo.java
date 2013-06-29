@@ -9,8 +9,8 @@
 
 package protocol;
 
-import DrawControls.icons.Icon;
-import DrawControls.icons.ImageList;
+import ui.icons.Icon;
+import ui.icons.ImageList;
 import jimm.util.JLocale;
 
 /**

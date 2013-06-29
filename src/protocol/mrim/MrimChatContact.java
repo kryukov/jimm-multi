@@ -11,7 +11,7 @@
 package protocol.mrim;
 
 import java.util.Vector;
-import jimm.ui.menu.MenuModel;
+import ui.menu.MenuModel;
 import protocol.*;
 
 /**

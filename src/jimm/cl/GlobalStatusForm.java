@@ -1,11 +1,11 @@
 package jimm.cl;
 
-import DrawControls.icons.Icon;
-import DrawControls.icons.ImageList;
-import DrawControls.roster.ContactListModel;
-import jimm.ui.menu.MenuModel;
-import jimm.ui.menu.Select;
-import jimm.ui.menu.SelectListener;
+import ui.icons.Icon;
+import ui.icons.ImageList;
+import ui.roster.ContactListModel;
+import ui.menu.MenuModel;
+import ui.menu.Select;
+import ui.menu.SelectListener;
 import protocol.Protocol;
 import protocol.StatusInfo;
 

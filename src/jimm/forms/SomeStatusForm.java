@@ -11,9 +11,9 @@ package jimm.forms;
 
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
-import jimm.ui.InputTextBox;
-import jimm.ui.TextBoxListener;
-import jimm.ui.menu.*;
+import ui.InputTextBox;
+import ui.TextBoxListener;
+import ui.menu.*;
 import protocol.Protocol;
 import protocol.StatusInfo;
 

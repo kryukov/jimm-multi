@@ -9,7 +9,7 @@
 
 package protocol;
 
-import DrawControls.roster.*;
+import ui.roster.*;
 import java.util.Vector;
 
 /**

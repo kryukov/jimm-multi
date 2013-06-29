@@ -111,7 +111,7 @@ public final class VirtualContactList extends VirtualList {
             int currentModel = 0;
             if (Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE)) currentModel = 1;
             if (model == updater.getChatModel()) currentModel = 2;
-            currentModel = (currentModel + (isTrue ? -1 : +1)) % 3;
+            currentModel = (currentModel + 3 + (isTrue ? -1 : +1)) % 3;
             switch (currentModel) {
                 case 0:
                     model = updater.getModel();

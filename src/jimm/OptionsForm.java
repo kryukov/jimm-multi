@@ -328,6 +328,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                     // #sijapp cond.if modules_ANDROID is "true" #
                     NativeCanvas.getInstance().getInput().updateInput();
                     // #sijapp cond.end#
+                    ContactList.getInstance().updateModel();
                     ContactList.getInstance().getManager().update();
                     break;
 

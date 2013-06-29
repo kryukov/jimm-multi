@@ -79,7 +79,7 @@ public class GroupContactModel extends ContactListModel {
         if (null == gb) {
             gb = createGroup(u.group);
             groups.addElement(gb);
-            gb.getContacts().addAll(u.group.getContacts(u.protocol));
+            addAll(gb.getContacts(), u.group.getContacts(u.protocol));
             Util.sort(groups);
         } else {
             updateGroupContent(gb);
@@ -128,6 +128,11 @@ public class GroupContactModel extends ContactListModel {
     }
     public ProtocolBranch getProtocolNode(Updater.Update u) {
         return null;
+    }
+
+    @Override
+    public boolean hasGroups() {
+        return true;
     }
 
     protected void addProtocol(Protocol prot) {

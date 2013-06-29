@@ -54,7 +54,7 @@ public abstract class ContactListModel {
     }
 
 
-    void updateOptions() {
+    public ContactListModel() {
         hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
     }
 
@@ -133,5 +133,13 @@ public abstract class ContactListModel {
     public void expandPath(Updater.Update update) {
         GroupBranch gb = getGroupNode(update);
         if (null != gb) gb.setExpandFlag(true);
+    }
+
+    public abstract boolean hasGroups();
+
+    protected final void addAll(Vector to, Vector all) {
+        for (int i = 0; i < all.size(); ++i) {
+            to.addElement(all.elementAt(i));
+        }
     }
 }

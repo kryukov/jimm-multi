@@ -59,12 +59,15 @@ public class ProtocolContactModel extends ContactListModel {
         return (ProtocolBranch) protos.get(u.protocol);
     }
 
+    @Override
+    public boolean hasGroups() {
+        return false;
+    }
+
     protected void addProtocol(Protocol prot) {
         ProtocolBranch protocolBranch = new ProtocolBranch(prot);
         protos.put(prot, protocolBranch);
-        Vector inContacts = prot.getContactItems();
-        Vector outContacts = protocolBranch.getSortedContacts();
-        outContacts.addAll(inContacts);
+        addAll(protocolBranch.getSortedContacts(), prot.getContactItems());
         protocolBranch.sort();
     }
 }

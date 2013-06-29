@@ -29,7 +29,7 @@ import protocol.jabber.*;
  * @author vladimir
  */
 abstract public class Protocol {
-    protected Contacts contacts = new Contacts();
+    protected Vector<Contact> contacts = new Vector<Contact>();
     protected Vector groups = new Vector();
     private Profile profile;
     private String password;
@@ -168,15 +168,15 @@ abstract public class Protocol {
 
     public final void setContactListStub() {
         synchronized (rosterLockObject) {
-            contacts = new Contacts();
+            contacts = new Vector<Contact>();
             groups = new Vector();
         }
     }
-    public final void setContactList(Vector groups, Contacts contacts) {
+    public final void setContactList(Vector groups, Vector<Contact> contacts) {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         if ((contacts.size() > 0) && !(contacts.elementAt(0) instanceof Contact)) {
             DebugLog.panic("contacts is not list of Contact");
-            contacts = new Contacts();
+            contacts = new Vector<Contact>();
         }
         if ((groups.size() > 0) && !(groups.elementAt(0) instanceof Group)) {
             DebugLog.panic("groups is not list of Group");
@@ -267,7 +267,7 @@ abstract public class Protocol {
             // #sijapp cond.if modules_DEBUGLOG is "true" #
             DebugLog.panic("roster load", e);
             // #sijapp cond.end #
-            setContactList(new Vector(), new Contacts());
+            setContactList(new Vector(), new Vector<Contact>());
         }
     }
 
@@ -313,7 +313,7 @@ abstract public class Protocol {
     // Tries to load contact list from record store
     private void load() throws Exception {
         // Initialize vectors
-        Contacts cItems = new Contacts();
+        Vector<Contact> cItems = new Vector<Contact>();
         Vector gItems = new Vector();
 
         // Open record store
@@ -596,7 +596,7 @@ abstract public class Protocol {
         return new Search(this);
     }
 
-    public final Contacts getContactItems() {
+    public final Vector<Contact> getContactItems() {
         return contacts;
     }
     public final Vector getGroupItems() {

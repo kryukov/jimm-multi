@@ -24,10 +24,6 @@
 package DrawControls.roster;
 
 import DrawControls.icons.Icon;
-import DrawControls.roster.models.ContactModel;
-import DrawControls.roster.models.GroupContactModel;
-import DrawControls.roster.models.ProtocolContactModel;
-import DrawControls.roster.models.ProtocolGroupContactModel;
 import DrawControls.text.*;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
@@ -54,7 +50,6 @@ public final class VirtualContactList extends VirtualList {
     private int nodeRectHeight;
     private boolean showStatusLine;
     private boolean useGroups;
-    private boolean useAccounts;
     private ContactListModel model;
     // #sijapp cond.if modules_MULTI isnot "true" #
     private Icon[] capIcons = new Icon[2];
@@ -70,7 +65,7 @@ public final class VirtualContactList extends VirtualList {
 
     public VirtualContactList() {
         super("");
-        createModel();
+        model = updater.createModel();
         // #sijapp cond.if modules_MULTI is "true" #
         // #sijapp cond.if modules_TOUCH is "true"#
         softBar = new RosterToolBar();
@@ -85,23 +80,8 @@ public final class VirtualContactList extends VirtualList {
         clListener = listener;
     }
 
-    public void createModel() {
-        // #sijapp cond.if modules_MULTI is "true" #
-        if (!Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
-            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                model = new GroupContactModel();
-            } else {
-                model = new ContactModel();
-            }
-            return;
-        }
-        // #sijapp cond.end #
-        if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-            model = new ProtocolGroupContactModel();
-        } else {
-            model = new ProtocolContactModel();
-        }
-        updater.setModel(model);
+    public void setModel(ContactListModel model) {
+        this.model = model;
     }
 
     protected final int getItemHeight(int itemIndex) {
@@ -186,7 +166,6 @@ public final class VirtualContactList extends VirtualList {
             updater.updateTree();
             rebuildList = false;
             try {
-                updateOption();
                 buildList();
                 updateTitle();
                 updateItemHeight();
@@ -226,34 +205,17 @@ public final class VirtualContactList extends VirtualList {
         return null;
     }
 
-    private void updateOption() {
+    public void updateOption() {
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
         stepSize = Math.max(getFontSet()[FONT_STYLE_PLAIN].getHeight() / 4, 2);
-        ContactListModel oldModel = model;
-        boolean oldUseGroups = useGroups;
         useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
-        boolean changeModel = oldUseGroups != useGroups;
-        // #sijapp cond.if modules_MULTI is "true" #
-        boolean oldUseAccounts = useAccounts;
-        useAccounts = Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
-        changeModel |= oldUseAccounts != useAccounts;
-        // #sijapp cond.end#
-        if (changeModel) {
-            Vector protocols = new Vector();
-            for (int i = 0; i < oldModel.getProtocolCount(); ++i) {
-                protocols.addElement(oldModel.getProtocol(i));
-            }
-            createModel();
-            model.addProtocols(protocols);
-        }
-        model.updateOptions();
     }
 
     /**
      * Build path to node int tree.
      */
     private void expandNodePath(TreeNode node) {
-        if ((node instanceof Contact) && useGroups) {
+        if ((node instanceof Contact) && model.hasGroups()) {
             Contact c = (Contact)node;
             Protocol p = model.getContactProtocol(c);
             if (null != p) {
@@ -549,7 +511,7 @@ public final class VirtualContactList extends VirtualList {
             return;
         }
         // #sijapp cond.end #
-        if (useGroups) {
+        if (model.hasGroups()) {
             if (node instanceof GroupBranch) {
                 g.setThemeColor(CanvasEx.THEME_GROUP);
                 g.setFont(getFontSet()[FONT_STYLE_PLAIN]);

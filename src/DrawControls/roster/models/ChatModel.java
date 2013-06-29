@@ -51,4 +51,9 @@ public class ChatModel extends ContactListModel {
     public ProtocolBranch getProtocolNode(Updater.Update u) {
         return null;
     }
+
+    @Override
+    public boolean hasGroups() {
+        return false;
+    }
 }

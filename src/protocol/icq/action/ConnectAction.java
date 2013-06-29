@@ -654,7 +654,7 @@ public class ConnectAction extends IcqAction {
 
         // Check if all required packets have been received
         if (newRosterLoaded) {
-            Contacts contactItems = roster.mergeContacts();
+            Vector<Contact> contactItems = roster.mergeContacts();
             active();
 
             // #sijapp cond.if modules_SERVERLISTS is "true" #

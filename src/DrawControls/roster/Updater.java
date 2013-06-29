@@ -1,5 +1,10 @@
 package DrawControls.roster;
 
+import DrawControls.roster.models.ContactModel;
+import DrawControls.roster.models.GroupContactModel;
+import DrawControls.roster.models.ProtocolContactModel;
+import DrawControls.roster.models.ProtocolGroupContactModel;
+import jimm.Options;
 import jimm.cl.ContactList;
 import jimm.comm.Util;
 import protocol.Contact;
@@ -136,6 +141,27 @@ public class Updater {
             updateQueue.removeElementAt(0);
             model.updateOrder(update);
         }
+    }
+
+    public ContactListModel createModel() {
+        // #sijapp cond.if modules_MULTI is "true" #
+        if (!Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
+            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+                model = new GroupContactModel();
+            } else {
+                model = new ContactModel();
+            }
+            setModel(model);
+            return model;
+        }
+        // #sijapp cond.end #
+        if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+            model = new ProtocolGroupContactModel();
+        } else {
+            model = new ProtocolContactModel();
+        }
+        setModel(model);
+        return model;
     }
 
     public static class Update {

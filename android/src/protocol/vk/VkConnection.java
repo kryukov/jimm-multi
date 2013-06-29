@@ -4,7 +4,7 @@ import jimm.chat.message.PlainMessage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import protocol.Contacts;
+import protocol.Contact;
 import protocol.Group;
 import protocol.vk.api.VkApp;
 
@@ -66,8 +66,8 @@ public class VkConnection implements Runnable {
     public boolean isConnected() {
         return running && api.isLogged() && !api.isError();
     }
-    private Contacts to(JSONArray list) throws JSONException {
-        Contacts cl = new Contacts();
+    private Vector<Contact> to(JSONArray list) throws JSONException {
+        Vector<Contact> cl = new Vector<Contact>();
         for (int i = 0; i < list.length(); ++i) {
             JSONObject o = list.getJSONObject(i);
             String userId = "" + o.getInt("uid");
@@ -119,7 +119,7 @@ public class VkConnection implements Runnable {
 
     private void processContacts() {
         try {
-            Contacts contacts = to(api.getFriends().getJSONArray("response"));
+            Vector<Contact> contacts = to(api.getFriends().getJSONArray("response"));
             Vector<Group> groups = groups();
             vk.setContactList(groups, contacts);
         } catch (Exception ignored) {

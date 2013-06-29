@@ -112,7 +112,7 @@ public final class ContactList implements ContactListListener {
         mainMenu.setProtocol((Protocol) newProtocols.elementAt(0));
         // #sijapp cond.end #
         protocols = newProtocols;
-        contactList.createModel();
+        contactList.setModel(contactList.getUpdater().createModel());
         contactList.getModel().addProtocols(protocols);
         contactList.update();
         updateMainMenu();
@@ -486,5 +486,11 @@ public final class ContactList implements ContactListListener {
         }
         // #sijapp cond.end #
         return null;
+    }
+
+    public void updateModel() {
+        contactList.setModel(contactList.getUpdater().createModel());
+        contactList.getModel().addProtocols(protocols);
+        contactList.updateOption();
     }
 }

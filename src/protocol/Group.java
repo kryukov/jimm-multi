@@ -67,10 +67,10 @@ public class Group {//extends GroupBranch {
         return (mode & type) != 0;
     }
 
-    public Contacts getContacts(Protocol p) {
+    public Vector<Contact> getContacts(Protocol p) {
         Contact c;
-        Contacts result = new Contacts();
-        Contacts contacts = p.getContactItems();
+        Vector<Contact> result = new Vector<Contact>();
+        Vector<Contact> contacts = p.getContactItems();
         for (int i = 0; i < contacts.size(); ++i) {
             c = (Contact) contacts.elementAt(i);
             if (c.getGroupId() == groupId) {

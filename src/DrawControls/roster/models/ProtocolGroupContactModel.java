@@ -67,7 +67,7 @@ public class ProtocolGroupContactModel extends ContactListModel {
         }
         Vector groupItems = groupBranch.getContacts();
         groupItems.removeAllElements();
-        groupItems.addAll(u.group.getContacts(u.protocol));
+        addAll(groupItems, u.group.getContacts(u.protocol));
         groupBranch.updateGroupData();
         groupBranch.sort();
     }
@@ -78,6 +78,11 @@ public class ProtocolGroupContactModel extends ContactListModel {
 
     public ProtocolBranch getProtocolNode(Updater.Update u) {
         return (ProtocolBranch) protos.get(u.protocol);
+    }
+
+    @Override
+    public boolean hasGroups() {
+        return true;
     }
 
     protected void addProtocol(Protocol prot) {

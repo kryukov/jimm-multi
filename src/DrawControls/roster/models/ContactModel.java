@@ -5,7 +5,7 @@ import DrawControls.roster.GroupBranch;
 import DrawControls.roster.ProtocolBranch;
 import DrawControls.roster.Updater;
 import jimm.comm.Util;
-import protocol.Contacts;
+import protocol.Contact;
 import protocol.Protocol;
 
 import java.util.Vector;
@@ -18,7 +18,7 @@ import java.util.Vector;
  * @author vladimir
  */
 public class ContactModel extends ContactListModel {
-    private Contacts contacts = new Contacts();
+    private Vector<Contact> contacts = new Vector<Contact>();
 
     public ContactModel() {
     }
@@ -53,9 +53,13 @@ public class ContactModel extends ContactListModel {
         return null;
     }
 
+    public boolean hasGroups() {
+        return false;
+    }
+
     protected void addProtocol(Protocol prot) {
         Vector inContacts = prot.getContactItems();
-        contacts.addAll(inContacts);
+        addAll(contacts, inContacts);
         Util.sort(contacts);
     }
 }

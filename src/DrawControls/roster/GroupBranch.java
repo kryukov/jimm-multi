@@ -15,7 +15,7 @@ import java.util.Vector;
  *
  * @author vladimir
  */
-public class GroupBranch extends TreeBranch implements Sortable {
+public class GroupBranch implements TreeBranch, Sortable {
     public static final byte MODE_TOP          = 0x10;
     public static final byte MODE_BOTTOM       = 0x20;
     public static final byte MODE_BOTTOM2      = 0x40;
@@ -24,6 +24,7 @@ public class GroupBranch extends TreeBranch implements Sortable {
     private String caption = null;
     private String name;
     private byte mode;
+    private boolean expanded = false;
 
     public GroupBranch(String name) {
         setName(name);
@@ -50,9 +51,6 @@ public class GroupBranch extends TreeBranch implements Sortable {
 
     public final void setMode(int newMode) {
         mode = (byte)newMode;
-    }
-    public final byte getMode() {
-        return mode;
     }
     public final boolean hasMode(byte type) {
         return (mode & type) != 0;
@@ -99,5 +97,12 @@ public class GroupBranch extends TreeBranch implements Sortable {
     }
     public final boolean isEmpty() {
         return (0 == items.size());
+    }
+    public final boolean isExpanded() {
+        return expanded;
+    }
+    public final void setExpandFlag(boolean value) {
+        expanded = value;
+        if (expanded) sort();
     }
 }

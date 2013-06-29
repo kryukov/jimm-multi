@@ -39,25 +39,8 @@ import java.util.Vector;
  *
  * @author vladimir
  */
-public abstract class TreeBranch implements TreeNode {
-    public TreeBranch() {
-    }
-
-    private boolean expanded = false;
-
-    public final boolean isExpanded() {
-        return expanded;
-    }
-    /**
-     * Expand or collapse tree node.
-     * 
-     * NOTE: this is not recursive operation!
-     */
-    public final void setExpandFlag(boolean value) {
-        expanded = value;
-        if (expanded) sort();
-    }
-
-    public abstract void sort();
-    public abstract boolean isEmpty();
+public interface TreeBranch extends TreeNode {
+    boolean isExpanded();
+    void setExpandFlag(boolean value) ;
+    boolean isEmpty();
 }

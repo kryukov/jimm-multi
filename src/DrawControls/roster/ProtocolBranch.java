@@ -21,11 +21,12 @@ import protocol.*;
  *
  * @author Vladimir Kryukov
  */
-public class ProtocolBranch extends TreeBranch {
+public class ProtocolBranch implements TreeBranch {
     private Protocol protocol;
     private Vector<GroupBranch> items = new Vector<GroupBranch>();
     private Vector<Contact> sortedContacts = new Vector<Contact>();
     private GroupBranch notInListGroup;
+    private boolean expanded = false;
 
     public ProtocolBranch(Protocol p) {
         protocol = p;
@@ -55,9 +56,6 @@ public class ProtocolBranch extends TreeBranch {
         return protocol.getUserId();
     }
 
-    public int getNodeWeight() {
-        return 0;
-    }
     public void sort() {
         synchronized (protocol.getRosterLockObject()) {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
@@ -108,6 +106,13 @@ public class ProtocolBranch extends TreeBranch {
     }
     public final Vector getSortedContacts() {
         return sortedContacts;
+    }
+    public final boolean isExpanded() {
+        return expanded;
+    }
+    public final void setExpandFlag(boolean value) {
+        expanded = value;
+        if (expanded) sort();
     }
 }
 // #sijapp cond.end #

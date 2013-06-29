@@ -25,7 +25,6 @@ public class Group {//extends GroupBranch {
 
     public static final byte MODE_TOP          = GroupBranch.MODE_TOP;
     public static final byte MODE_BOTTOM       = GroupBranch.MODE_BOTTOM;
-    public static final byte MODE_BOTTOM2      = GroupBranch.MODE_BOTTOM2;
 
     private String name;
     private int groupId;

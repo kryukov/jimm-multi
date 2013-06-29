@@ -30,13 +30,13 @@ import protocol.*;
 public final class Jabber extends Protocol implements FormListener {
 
     private JabberXml connection;
-    private Vector rejoinList = new Vector();
+    private Vector<String> rejoinList = new Vector<String>();
     private String resource;
     private ServiceDiscovery disco = null;
     // #sijapp cond.if modules_XSTATUSES is "true" #
     public static final JabberXStatus xStatus = new JabberXStatus();
     // #sijapp cond.end#
-    private final Vector bots = new Vector();
+    private final Vector<String> bots = new Vector<String>();
 
     public Jabber() {
     }

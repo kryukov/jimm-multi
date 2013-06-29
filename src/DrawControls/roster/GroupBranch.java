@@ -18,7 +18,6 @@ import java.util.Vector;
 public class GroupBranch implements TreeBranch, Sortable {
     public static final byte MODE_TOP          = 0x10;
     public static final byte MODE_BOTTOM       = 0x20;
-    public static final byte MODE_BOTTOM2      = 0x40;
 
     private Vector<Contact> items = new Vector<Contact>();
     private String caption = null;
@@ -69,7 +68,6 @@ public class GroupBranch implements TreeBranch, Sortable {
     public final int getNodeWeight() {
         if (hasMode(MODE_TOP)) return -4;
         if (hasMode(MODE_BOTTOM)) return -2;
-        if (hasMode(MODE_BOTTOM2)) return -1;
         //if (!hasMode(MODE_EDITABLE)) return -2;
         //if (!hasMode(MODE_REMOVABLE)) return -1;
         return -3;

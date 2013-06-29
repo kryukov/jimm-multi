@@ -49,7 +49,6 @@ public final class VirtualContactList extends VirtualList {
     private int stepSize;
     private int nodeRectHeight;
     private boolean showStatusLine;
-    private boolean useGroups;
     private ContactListModel model;
     // #sijapp cond.if modules_MULTI isnot "true" #
     private Icon[] capIcons = new Icon[2];
@@ -208,7 +207,6 @@ public final class VirtualContactList extends VirtualList {
     public void updateOption() {
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
         stepSize = Math.max(getFontSet()[FONT_STYLE_PLAIN].getHeight() / 4, 2);
-        useGroups = Options.getBoolean(Options.OPTION_USER_GROUPS);
     }
 
     /**

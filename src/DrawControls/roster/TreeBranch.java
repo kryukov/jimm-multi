@@ -40,8 +40,6 @@ import java.util.Vector;
  * @author vladimir
  */
 public abstract class TreeBranch implements TreeNode {
-    protected final Vector items = new Vector();
-
     public TreeBranch() {
     }
 
@@ -60,10 +58,6 @@ public abstract class TreeBranch implements TreeNode {
         if (expanded) sort();
     }
 
-    public void sort() {
-        if (isExpanded()) {
-            Util.sort(items);
-        }
-    }
+    public abstract void sort();
     public abstract boolean isEmpty();
 }

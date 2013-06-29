@@ -3,6 +3,7 @@ package DrawControls.roster;
 import DrawControls.icons.Icon;
 import jimm.chat.ChatHistory;
 import jimm.comm.Sortable;
+import jimm.comm.Util;
 import protocol.Contact;
 
 import java.util.Vector;
@@ -19,6 +20,7 @@ public class GroupBranch extends TreeBranch implements Sortable {
     public static final byte MODE_BOTTOM       = 0x20;
     public static final byte MODE_BOTTOM2      = 0x40;
 
+    private Vector<Contact> items = new Vector<Contact>();
     private String caption = null;
     private String name;
     private byte mode;
@@ -90,6 +92,11 @@ public class GroupBranch extends TreeBranch implements Sortable {
         return items;
     }
 
+    public void sort() {
+        if (isExpanded()) {
+            Util.sort(items);
+        }
+    }
     public final boolean isEmpty() {
         return (0 == items.size());
     }

@@ -23,7 +23,8 @@ import protocol.*;
  */
 public class ProtocolBranch extends TreeBranch {
     private Protocol protocol;
-    private Vector sortedContacts = new Vector();
+    private Vector<GroupBranch> items = new Vector<GroupBranch>();
+    private Vector<Contact> sortedContacts = new Vector<Contact>();
     private GroupBranch notInListGroup;
 
     public ProtocolBranch(Protocol p) {
@@ -102,7 +103,7 @@ public class ProtocolBranch extends TreeBranch {
         return notInListGroup;
     }
 
-    public Vector<Group> getGroups() {
+    public Vector<GroupBranch> getGroups() {
         return items;
     }
     public final Vector getSortedContacts() {

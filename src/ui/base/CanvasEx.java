@@ -268,6 +268,9 @@ abstract public class CanvasEx extends DisplayableEx {
         // #sijapp cond.if modules_ANDROID is "true" #
         if (true) return getWidth();
         // #sijapp cond.end #
-        return Math.min(getWidth(), getHeight());
+        // #sijapp cond.if modules_TOUCH is "true" #
+        if (true) return Math.min(getWidth(), getHeight());
+        // #sijapp cond.end #
+        return getWidth();
     }
 }

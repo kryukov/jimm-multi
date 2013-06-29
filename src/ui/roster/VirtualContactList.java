@@ -223,6 +223,7 @@ public final class VirtualContactList extends VirtualList {
     public void updateOption() {
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
         stepSize = Math.max(getFontSet()[FONT_STYLE_PLAIN].getHeight() / 4, 2);
+        model.hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
     }
 
     /**

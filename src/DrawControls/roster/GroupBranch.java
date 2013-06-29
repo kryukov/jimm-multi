@@ -86,7 +86,7 @@ public class GroupBranch extends TreeBranch implements Sortable {
     }
 
 
-    public final Vector getContacts() {
+    public final Vector<Contact> getContacts() {
         return items;
     }
 

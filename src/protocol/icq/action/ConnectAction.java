@@ -62,9 +62,9 @@ public class ConnectAction extends IcqAction {
         0x000a, 0x0001,
         0x000b, 0x0001};
     // #sijapp cond.if modules_SERVERLISTS is "true" #
-    private Vector ignoreList = new Vector();
-    private Vector invisibleList = new Vector();
-    private Vector visibleList = new Vector();
+    private Vector<PrivacyItem> ignoreList = new Vector<PrivacyItem>();
+    private Vector<PrivacyItem> invisibleList = new Vector<PrivacyItem>();
+    private Vector<PrivacyItem> visibleList = new Vector<PrivacyItem>();
     // #sijapp cond.end #
     private int timestamp;
     private int count;

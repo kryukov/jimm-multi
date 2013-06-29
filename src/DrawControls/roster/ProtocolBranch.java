@@ -102,7 +102,7 @@ public class ProtocolBranch extends TreeBranch {
         return notInListGroup;
     }
 
-    public Vector getGroups() {
+    public Vector<Group> getGroups() {
         return items;
     }
     public final Vector getSortedContacts() {

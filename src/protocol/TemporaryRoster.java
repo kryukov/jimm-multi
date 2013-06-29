@@ -20,10 +20,10 @@ import protocol.mrim.*;
  */
 public class TemporaryRoster {
     private Protocol protocol;
-    private Vector oldGroups;
+    private Vector<Group> oldGroups;
     private Vector<Contact> oldContacts;
     private Contact[] existContacts;
-    private Vector groups = new Vector();
+    private Vector<Group> groups = new Vector<Group>();
     private Vector<Contact> contacts = new Vector<Contact>();
     
     /** Creates a new instance of TemporaryRoster */
@@ -57,7 +57,7 @@ public class TemporaryRoster {
     public void useOld() {
         groups = oldGroups;
         contacts = oldContacts;
-        oldGroups = new Vector();
+        oldGroups = new Vector<Group>();
         oldContacts = new Vector<Contact>();
         existContacts = new Contact[0];
     }
@@ -126,10 +126,10 @@ public class TemporaryRoster {
         c.setTempFlag(false);
         contacts.addElement(c);
     }
-    public Vector getContacts() {
+    public Vector<Contact> getContacts() {
         return contacts;
     }
-    public Vector getGroups() {
+    public Vector<Group> getGroups() {
         return groups;
     }
 

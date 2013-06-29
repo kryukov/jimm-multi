@@ -30,7 +30,7 @@ import protocol.jabber.*;
  */
 abstract public class Protocol {
     protected Vector<Contact> contacts = new Vector<Contact>();
-    protected Vector groups = new Vector();
+    protected Vector<Group> groups = new Vector<Group>();
     private Profile profile;
     private String password;
     private String userid = "";
@@ -169,10 +169,10 @@ abstract public class Protocol {
     public final void setContactListStub() {
         synchronized (rosterLockObject) {
             contacts = new Vector<Contact>();
-            groups = new Vector();
+            groups = new Vector<Group>();
         }
     }
-    public final void setContactList(Vector groups, Vector<Contact> contacts) {
+    public final void setContactList(Vector<Group> groups, Vector<Contact> contacts) {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         if ((contacts.size() > 0) && !(contacts.elementAt(0) instanceof Contact)) {
             DebugLog.panic("contacts is not list of Contact");
@@ -599,7 +599,7 @@ abstract public class Protocol {
     public final Vector<Contact> getContactItems() {
         return contacts;
     }
-    public final Vector getGroupItems() {
+    public final Vector<Group> getGroupItems() {
         return groups;
     }
     // #sijapp cond.if modules_SOUND is "true" #

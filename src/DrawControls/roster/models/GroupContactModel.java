@@ -20,7 +20,7 @@ import java.util.Vector;
  * @author vladimir
  */
 public class GroupContactModel extends ContactListModel {
-    private Vector groups = new Vector();
+    private Vector<GroupBranch> groups = new Vector<GroupBranch>();
     private GroupBranch notInListGroup;
 
     public GroupContactModel() {

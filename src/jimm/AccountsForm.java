@@ -10,7 +10,6 @@
 package jimm;
 
 import jimm.ui.text.TextList;
-import java.util.Vector;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.ui.form.*;
@@ -41,28 +40,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
     }
 
     private void setCurrentProtocol() {
-        ContactList cl = ContactList.getInstance();
-        Vector listOfProfiles = new Vector();
-        // #sijapp cond.if modules_MULTI is "true" #
-        for (int i = 0; i < Options.getAccountCount(); ++i) {
-            Profile p = Options.getAccount(i);
-            if (p.isActive) {
-                listOfProfiles.addElement(p);
-            }
-        }
-        if (listOfProfiles.isEmpty()) {
-            Profile p = Options.getAccount(0);
-            p.isActive = true;
-            listOfProfiles.addElement(p);
-        }
-        // #sijapp cond.else #
-        if (0 < Options.getAccountCount()) {
-            listOfProfiles.addElement(Options.getAccount(Options.getCurrentAccount()));
-        }
-        // #sijapp cond.end #
-        cl.addProtocols(listOfProfiles);
-        cl.getManager().update();
-        ContactList.getInstance().updateMainMenu();
+        ContactList.getInstance().updateAccounts();
     }
 
     ///////////////////////////////////////////////////////////////////////////

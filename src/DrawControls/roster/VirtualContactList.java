@@ -87,26 +87,20 @@ public final class VirtualContactList extends VirtualList {
 
     public void createModel() {
         // #sijapp cond.if modules_MULTI is "true" #
-        if (Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
-            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-                model = new ProtocolGroupContactModel();
-            } else {
-                model = new ProtocolContactModel();
-            }
-        } else {
+        if (!Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
                 model = new GroupContactModel();
             } else {
                 model = new ContactModel();
             }
+            return;
         }
-        // #sijapp cond.else #
+        // #sijapp cond.end #
         if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
             model = new ProtocolGroupContactModel();
         } else {
             model = new ProtocolContactModel();
         }
-        // #sijapp cond.end #
         updater.setModel(model);
     }
 
@@ -245,14 +239,12 @@ public final class VirtualContactList extends VirtualList {
         changeModel |= oldUseAccounts != useAccounts;
         // #sijapp cond.end#
         if (changeModel) {
-            createModel();
-            // #sijapp cond.if modules_MULTI is "true" #
+            Vector protocols = new Vector();
             for (int i = 0; i < oldModel.getProtocolCount(); ++i) {
-                model.addProtocol(oldModel.getProtocol(i));
+                protocols.addElement(oldModel.getProtocol(i));
             }
-            // #sijapp cond.else#
-            model.addProtocol(oldModel.getProtocol(0));
-            // #sijapp cond.end#
+            createModel();
+            model.addProtocols(protocols);
         }
         model.updateOptions();
     }
@@ -266,10 +258,7 @@ public final class VirtualContactList extends VirtualList {
             Protocol p = model.getContactProtocol(c);
             if (null != p) {
                 Group group = p.getGroupById(c.getGroupId());
-                if (null == group) {
-                    group = p.getNotInListGroup();
-                }
-                model.getGroupNode(p, group).setExpandFlag(true);
+                model.expandPath(new Updater.Update(p, group, c, Updater.Update.EXPAND));
             }
         }
     }

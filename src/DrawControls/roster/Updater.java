@@ -24,7 +24,7 @@ public class Updater {
     }
     public void addGroup(Protocol protocol, Group group) {
         if (model.hasProtocol(protocol)) {
-            model.addGroup(protocol, group);
+            model.addGroup(new Update(protocol,  group, null, Update.GROUP_ADD));
         }
     }
 
@@ -35,7 +35,7 @@ public class Updater {
                 for (int i = 0; i < groups.size(); ++i) {
                     addGroup(protocol, (Group) groups.elementAt(i));
                 }
-                addGroup(protocol, protocol.getNotInListGroup());
+                addGroup(protocol, null);
             }
             update();
         }
@@ -44,7 +44,7 @@ public class Updater {
     public void removeGroup(Protocol protocol, Group group) {
         if (model.hasProtocol(protocol)) {
             synchronized (protocol.getRosterLockObject()) {
-                model.removeGroup(protocol, group);
+                model.removeGroup(new Update(protocol,  group, null, Update.GROUP_REMOVE));
             }
             update();
         }
@@ -69,6 +69,7 @@ public class Updater {
 
     public void typing(Protocol protocol, Contact item) {
         if (model.hasProtocol(protocol)) {
+            // TODO: if contact visible only
             ContactList.getInstance().getManager().invalidate();
         }
     }
@@ -76,10 +77,7 @@ public class Updater {
     public void setOffline(Protocol protocol) {
         if (model.hasProtocol(protocol)) {
             synchronized (protocol.getRosterLockObject()) {
-                Vector groups = protocol.getGroupItems();
-                for (int i = groups.size() - 1; i >= 0; --i) {
-                    model.updateGroupData(protocol, (Group) groups.elementAt(i));
-                }
+                putIntoQueue(new Update(protocol, null, null, Update.PROTOCOL_UPDATE));
             }
             update();
         }
@@ -87,7 +85,7 @@ public class Updater {
 
     public void removeFromGroup(Protocol protocol, Group g, Contact c) {
         if (model.hasProtocol(protocol)) {
-            model.removeFromGroup(protocol, g, c);
+            model.removeFromGroup(new Update(protocol,  g, c, Update.REMOVE));
             update(c);
         }
     }
@@ -103,31 +101,24 @@ public class Updater {
 
     public void addContactToGroup(Protocol protocol, Group group, Contact contact) {
         if (model.hasProtocol(protocol)) {
-            if (null == group) {
-                group = protocol.getNotInListGroup();
-            }
-            model.addToGroup(protocol, group, contact);
-        }
-    }
-
-    public void updateGroupData(Protocol protocol, Group group) {
-        if (model.hasProtocol(protocol)) {
-            synchronized (protocol.getRosterLockObject()) {
-                model.updateGroupData(protocol, group);
-            }
-            update(group);
+            model.addToGroup(new Update(protocol, group, contact, Update.ADD));
+            updateContact(protocol, group, contact);
         }
     }
 
     public void collapseAll() {
-        int count = model.getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = model.getProtocol(i);
-            Vector groups = p.getGroupItems();
-            for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-                model.getGroupNode(p, (Group)groups.elementAt(groupIndex)).setExpandFlag(false);
+        try {
+            int count = model.getProtocolCount();
+            for (int i = 0; i < count; ++i) {
+                Protocol p = model.getProtocol(i);
+                Vector groups = p.getGroupItems();
+                for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
+                    model.getGroupNode(new Update(p, (Group)groups.elementAt(groupIndex), null, Update.EXPAND)).setExpandFlag(false);
+                }
+                model.getGroupNode(new Update(p, null, null, Update.EXPAND)).setExpandFlag(false);
             }
-            model.getGroupNode(p, p.getNotInListGroup()).setExpandFlag(false);
+        } catch (Exception e) {
+            // no groups mode
         }
         ContactList.getInstance().getManager().setAllToTop();
         update();
@@ -143,7 +134,7 @@ public class Updater {
         while (!updateQueue.isEmpty()) {
             Update update = (Update)updateQueue.firstElement();
             updateQueue.removeElementAt(0);
-            model.updateGroupOrder(update);
+            model.updateOrder(update);
         }
     }
 
@@ -151,10 +142,14 @@ public class Updater {
         public Protocol protocol;
         public Group group;
         public Contact contact;
-        private byte event;
-        private static final byte UPDATE = 1;
-        private static final byte ADD    = 2;
-        private static final byte REMOVE = 3;
+        public byte event;
+        public static final byte UPDATE = 1;
+        public static final byte PROTOCOL_UPDATE = 2;
+        public static final byte ADD    = 3;
+        public static final byte GROUP_ADD    = 4;
+        public static final byte REMOVE = 5;
+        public static final byte GROUP_REMOVE = 6;
+        public static final byte EXPAND = 7;
 
         public Update(Protocol protocol, Group group, Contact contact, byte event) {
             this.protocol = protocol;

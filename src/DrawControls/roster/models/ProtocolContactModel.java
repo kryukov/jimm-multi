@@ -4,8 +4,6 @@ import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
 import DrawControls.roster.ProtocolBranch;
 import DrawControls.roster.Updater;
-import protocol.Contact;
-import protocol.Group;
 import protocol.Protocol;
 
 import java.util.Hashtable;
@@ -26,7 +24,7 @@ public class ProtocolContactModel extends ContactListModel {
         for (int i = 0; i < count; ++i) {
             Protocol p = getProtocol(i);
             // #sijapp cond.if modules_MULTI is "true" #
-            ProtocolBranch root = getProtocolNode(p);
+            ProtocolBranch root = (ProtocolBranch) protos.get(p);
             items.addElement(root);
             if (!root.isExpanded()) continue;
             // #sijapp cond.end #
@@ -36,37 +34,32 @@ public class ProtocolContactModel extends ContactListModel {
         }
     }
 
-    public void updateGroupOrder(Updater.Update u) {
-        getProtocolNode(u.protocol).sort();
+    public void updateOrder(Updater.Update u) {
+        getProtocolNode(u).sort();
     }
-    public void removeGroup(Protocol protocol, Group group) {
+    public void removeGroup(Updater.Update u) {
     }
-    public void addGroup(Protocol protocol, Group group) {
+    public void addGroup(Updater.Update u) {
     }
-    public void addToGroup(Protocol protocol, Group group, Contact contact) {
-        ProtocolBranch pb = getProtocolNode(protocol);
-        pb.getSortedContacts().addElement(contact);
-        pb.sort();
-    }
-    public void updateGroupData(Protocol protocol, Group group) {
+    public void addToGroup(Updater.Update update) {
+        ProtocolBranch pb = getProtocolNode(update);
+        pb.getSortedContacts().addElement(update.contact);
     }
 
-    public void removeFromGroup(Protocol protocol, Group group, Contact c) {
-        ProtocolBranch pb = getProtocolNode(protocol);
-        pb.getSortedContacts().removeElement(c);
+    public void removeFromGroup(Updater.Update update) {
+        ProtocolBranch pb = getProtocolNode(update);
+        pb.getSortedContacts().removeElement(update.contact);
     }
 
-    public GroupBranch getGroupNode(Protocol protocol, Group group) {
+    public GroupBranch getGroupNode(Updater.Update u) {
         return null;
     }
-    // #sijapp cond.if modules_MULTI is "true" #
-    public ProtocolBranch getProtocolNode(Protocol p) {
-        return (ProtocolBranch) protos.get(p);
-    }
-    // #sijapp cond.end #
 
-    public void addProtocol(Protocol prot) {
-        super.addProtocol(prot);
+    public ProtocolBranch getProtocolNode(Updater.Update u) {
+        return (ProtocolBranch) protos.get(u.protocol);
+    }
+
+    protected void addProtocol(Protocol prot) {
         ProtocolBranch protocolBranch = new ProtocolBranch(prot);
         protos.put(prot, protocolBranch);
         Vector inContacts = prot.getContactItems();

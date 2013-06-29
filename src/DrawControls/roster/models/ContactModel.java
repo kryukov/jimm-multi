@@ -2,11 +2,10 @@ package DrawControls.roster.models;
 
 import DrawControls.roster.ContactListModel;
 import DrawControls.roster.GroupBranch;
+import DrawControls.roster.ProtocolBranch;
 import DrawControls.roster.Updater;
 import jimm.comm.Util;
-import protocol.Contact;
 import protocol.Contacts;
-import protocol.Group;
 import protocol.Protocol;
 
 import java.util.Vector;
@@ -25,38 +24,36 @@ public class ContactModel extends ContactListModel {
     }
 
     public void buildFlatItems(Vector items) {
-        // prepare
-        Util.sort(contacts);
         // build
         rebuildContacts(contacts, items);
     }
 
-    public void updateGroupOrder(Updater.Update u) {
+    public void updateOrder(Updater.Update u) {
         Util.sort(contacts);
     }
 
-    public void removeGroup(Protocol protocol, Group group) {
+    public void removeGroup(Updater.Update u) {
     }
-    public void addGroup(Protocol protocol, Group group) {
+    public void addGroup(Updater.Update u) {
     }
-    public void addToGroup(Protocol protocol, Group group, Contact contact) {
-        contacts.addElement(contact);
-    }
-
-    public void updateGroupData(Protocol protocol, Group group) {
+    public void addToGroup(Updater.Update update) {
+        contacts.addElement(update.contact);
     }
 
-    public void removeFromGroup(Protocol protocol, Group group, Contact c) {
-        contacts.removeElement(c);
+    public void removeFromGroup(Updater.Update update) {
+        contacts.removeElement(update.contact);
     }
 
 
-    public GroupBranch getGroupNode(Protocol protocol, Group group) {
+    public GroupBranch getGroupNode(Updater.Update u) {
         return null;
     }
 
-    public void addProtocol(Protocol prot) {
-        super.addProtocol(prot);
+    public ProtocolBranch getProtocolNode(Updater.Update u) {
+        return null;
+    }
+
+    protected void addProtocol(Protocol prot) {
         Vector inContacts = prot.getContactItems();
         contacts.addAll(inContacts);
         Util.sort(contacts);

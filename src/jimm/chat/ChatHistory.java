@@ -49,13 +49,13 @@ public final class ChatHistory extends VirtualList {
         itemHeight = Math.max(minItemHeight, getDefaultFont().getHeight());
     }
 
-    private int getTotal() {
+    public int getTotal() {
         return historyTable.size();
     }
     private Chat chatAt(int index) {
         return (Chat)historyTable.elementAt(index);
     }
-    private Contact contactAt(int index) {
+    public Contact contactAt(int index) {
         return chatAt(index).getContact();
     }
 

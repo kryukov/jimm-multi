@@ -67,9 +67,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     private void resetConnections() {
-        int count = ContactList.getInstance().getManager().getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = ContactList.getInstance().getManager().getModel().getProtocol(i);
+        for (Protocol p : ContactList.getInstance().getProtocols()) {
             p.disconnect(false);
         }
     }

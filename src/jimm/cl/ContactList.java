@@ -27,7 +27,6 @@ import DrawControls.icons.Icon;
 import DrawControls.roster.*;
 import jimm.*;
 import jimm.chat.*;
-import jimm.comm.Util;
 import jimm.forms.*;
 import jimm.ui.menu.*;
 import java.util.*;
@@ -48,6 +47,7 @@ public final class ContactList implements ContactListListener {
     // #sijapp cond.if modules_FILES="true"#
     private Vector transfers = new Vector();
     // #sijapp cond.end#
+    private Vector protocols = new Vector();
 
     public ContactList() {
     }
@@ -75,33 +75,49 @@ public final class ContactList implements ContactListListener {
         return (exist.protocolType == profile.protocolType)
                 && exist.userId.equals(profile.userId);
     }
-    public void addProtocols(Vector accounts) {
-        int count = contactList.getModel().getProtocolCount();
-        Protocol[] protocols = new Protocol[count];
-        for (int i = 0; i < count; ++i) {
-            protocols[i] = contactList.getModel().getProtocol(i);
+    public void updateAccounts() {
+        Protocol[] oldProtocols = new Protocol[protocols.size()];
+        for (int i = 0; i < oldProtocols.length; ++i) {
+            oldProtocols[i] = (Protocol) protocols.elementAt(i);
         }
-        contactList.createModel();
-        for (int i = 0; i < accounts.size(); ++i) {
-            Profile profile = (Profile)accounts.elementAt(i);
-            for (int j = 0; j < protocols.length; ++j) {
-                Protocol protocol = protocols[j];
+        Vector newProtocols = new Vector();
+        // #sijapp cond.if modules_MULTI is "true" #
+        int accountCount = Options.getAccountCount();
+        for (int i = 0; i < accountCount; ++i) {
+            Profile profile = Options.getAccount(i);
+            if (!profile.isActive) continue;
+            for (int j = 0; j < oldProtocols.length; ++j) {
+                Protocol protocol = oldProtocols[j];
                 if ((null != protocol) && is(protocol, profile)) {
                     if (protocol.getProfile() != profile) {
                         protocol.setProfile(profile);
                     }
-                    protocols[j] = null;
+                    oldProtocols[j] = null;
                     profile = null;
-                    contactList.getModel().addProtocol(protocol);
+                    newProtocols.addElement(protocol);
                     break;
                 }
             }
             if (null != profile) {
-                contactList.getModel().addProtocol(createProtocol(profile));
+                newProtocols.addElement(createProtocol(profile));
             }
         }
-        for (int i = 0; i < protocols.length; ++i) {
-            Protocol protocol = protocols[i];
+        if (0 == newProtocols.size()) {
+            Profile profile = Options.getAccount(0);
+            profile.isActive = true;
+            newProtocols.addElement(profile);
+        }
+        // #sijapp cond.else #
+        newProtocols.addElement(createProtocol(Options.getAccount(Options.getCurrentAccount())));
+        mainMenu.setProtocol((Protocol) newProtocols.elementAt(0));
+        // #sijapp cond.end #
+        protocols = newProtocols;
+        contactList.createModel();
+        contactList.getModel().addProtocols(protocols);
+        contactList.update();
+        updateMainMenu();
+        for (int i = 0; i < oldProtocols.length; ++i) {
+            Protocol protocol = oldProtocols[i];
             if (null != protocol) {
                 protocol.disconnect(true);
                 protocol.needSave();
@@ -109,19 +125,7 @@ public final class ContactList implements ContactListListener {
             }
         }
     }
-    public void initAccounts() {
-        // #sijapp cond.if modules_MULTI is "true" #
-        int count = Math.max(1, Options.getAccountCount());
-        for (int i = 0; i < count; ++i) {
-            Profile p = Options.getAccount(i);
-            if (p.isActive) {
-                contactList.getModel().addProtocol(createProtocol(p));
-            }
-        }
-        // #sijapp cond.else #
-        contactList.getModel().addProtocol(createProtocol(Options.getAccount(Options.getCurrentAccount())));
-        // #sijapp cond.end #
-    }
+
     public void gotoUrl(String textWithUrls) {
         SysTextList.gotoURL(textWithUrls);
     }
@@ -213,10 +217,9 @@ public final class ContactList implements ContactListListener {
         return instance;
     }
     public Protocol[] getProtocols() {
-        ContactListModel model = contactList.getModel();
-        Protocol[] all = new Protocol[model.getProtocolCount()];
+        Protocol[] all = new Protocol[protocols.size()];
         for (int i = 0; i < all.length; ++i) {
-            all[i] = model.getProtocol(i);
+            all[i] = (Protocol) protocols.elementAt(i);
         }
         return all;
     }
@@ -459,9 +462,6 @@ public final class ContactList implements ContactListListener {
 
     public void updateMainMenu() {
         int currentCommand = mainMenu.getSelectedItemCode();
-        // #sijapp cond.if modules_MULTI isnot "true" #
-        mainMenu.setProtocol(getManager().getCurrentProtocol());
-        // #sijapp cond.end #
         mainMenu.updateMenu();
         Select menuView = mainMenu.getView();
         mainMenu.setDefaultItemCode(currentCommand);

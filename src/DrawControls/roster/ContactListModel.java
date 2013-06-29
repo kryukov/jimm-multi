@@ -36,11 +36,11 @@ public abstract class ContactListModel {
 
     protected boolean hideOffline;
 
-    public void removeAllProtocols() {
-        protocolList.removeAllElements();
-    }
-    public void addProtocol(Protocol prot) {
-        protocolList.addElement(prot);
+    public void addProtocols(Vector protocols) {
+        for (int i = 0; i < protocols.size(); ++i) {
+            protocolList.addElement(protocols.elementAt(i));
+            addProtocol((Protocol) protocols.elementAt(i));
+        }
     }
     public final void setAlwaysVisibleNode(TreeNode node) {
         selectedItem = node;
@@ -66,44 +66,23 @@ public abstract class ContactListModel {
         }
         return null;
     }
-    protected final Protocol getProtocol(Group g) {
-        // #sijapp cond.if modules_MULTI is "true" #
-        for (int i = 0; i < getProtocolCount(); ++i) {
-            if (-1 < Util.getIndex(getProtocol(i).getGroupItems(), g)) {
-                return getProtocol(i);
-            }
-            if (getProtocol(i).getNotInListGroup() == g) {
-                return getProtocol(i);
-            }
-        }
-        // #sijapp cond.else #
-        if (true) return getProtocol(0);
-        // #sijapp cond.end #
-        return null;
-    }
 
     public abstract void buildFlatItems(Vector items);
 
-    public abstract void updateGroupOrder(Updater.Update u);
+    public abstract void updateOrder(Updater.Update u);
 
-    public void removeFromGroup(Protocol protocol, Group group, Contact c) {
-        GroupBranch groupBranch = getGroupNode(protocol, group);
+    public void removeFromGroup(Updater.Update update) {
+        GroupBranch groupBranch = getGroupNode(update);
         if (null == groupBranch) return;
-        if (groupBranch.getContacts().removeElement(c)) {
+        if (groupBranch.getContacts().removeElement(update.contact)) {
             groupBranch.updateGroupData();
         }
     }
 
-    public void addToGroup(Protocol protocol, Group group, Contact contact) {
-        GroupBranch gb = getGroupNode(protocol, group);
+    public void addToGroup(Updater.Update update) {
+        GroupBranch gb = getGroupNode(update);
         if (null == gb) return;
-        gb.getContacts().addElement(contact);
-    }
-
-    public void updateGroupData(Protocol protocol, Group group) {
-        GroupBranch gb = getGroupNode(protocol, group);
-        if (null == gb) return;
-        gb.updateGroupData();
+        gb.getContacts().addElement(update.contact);
     }
 
     protected GroupBranch createGroup(Group g) {
@@ -139,12 +118,20 @@ public abstract class ContactListModel {
         }
     }
 
-    public abstract void addGroup(Protocol protocol, Group group);
-    public abstract void removeGroup(Protocol protocol, Group group);
+    protected abstract void addProtocol(Protocol prot);
 
-    public abstract GroupBranch getGroupNode(Protocol protocol, Group group);
+    public abstract void addGroup(Updater.Update u);
+    public abstract void removeGroup(Updater.Update u);
+
+    public abstract GroupBranch getGroupNode(Updater.Update u);
+    public abstract ProtocolBranch getProtocolNode(Updater.Update u);
 
     public boolean hasProtocol(Protocol p) {
         return -1 < Util.getIndex(protocolList, p);
+    }
+
+    public void expandPath(Updater.Update update) {
+        GroupBranch gb = getGroupNode(update);
+        if (null != gb) gb.setExpandFlag(true);
     }
 }

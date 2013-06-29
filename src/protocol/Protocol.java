@@ -54,7 +54,6 @@ abstract public class Protocol {
     // #sijapp cond.end #
 
     private final Object rosterLockObject = new Object();
-    private Group notInListGroup;
 
     private Vector autoGrand = new Vector();
 
@@ -140,11 +139,6 @@ abstract public class Protocol {
     }
     // #sijapp cond.end #
     public final void init() {
-        // Not In List Group
-        notInListGroup = new Group(JLocale.getString("group_not_in_list"));
-        notInListGroup.setMode(Group.MODE_NONE);
-        notInListGroup.setGroupId(Group.NOT_IN_GROUP);
-
         // Status info
         initStatusInfo();
 
@@ -202,7 +196,7 @@ abstract public class Protocol {
     public final void setContactListAddition(Group group) {
         synchronized (rosterLockObject) {
             getContactList().getUpdater().addGroup(this, group);
-            getContactList().getUpdater().addGroup(this, notInListGroup);
+            getContactList().getUpdater().addGroup(this, null);
             getContactList().getUpdater().update();
         }
         needSave();
@@ -499,10 +493,7 @@ abstract public class Protocol {
         Group from = getGroupById(contact.getGroupId());
         s_moveContact(contact, to);
         getContactList().getUpdater().removeFromGroup(this, from, contact);
-        synchronized (rosterLockObject) {
-            ui_addContactToGroup(contact, to);
-        }
-        ui_updateContact(contact);
+        ui_addContactToGroup(contact, to);
     }
     protected void s_addContact(Contact contact) {};
     protected void s_addedContact(Contact contact) {}
@@ -742,19 +733,12 @@ abstract public class Protocol {
 
     ///////////////////////////////////////////////////////////////////////////
     private void ui_removeFromAnyGroup(Contact c) {
-        Group g = getGroupById(c.getGroupId());
-        if (null == g) {
-            g = notInListGroup;
-        }
-        getContactList().getUpdater().removeFromGroup(this, g, c);
+        getContactList().getUpdater().removeFromGroup(this, getGroupById(c.getGroupId()), c);
     }
     private void ui_addContactToGroup(Contact contact, Group group) {
         ui_removeFromAnyGroup(contact);
         contact.setGroup(group);
         getContactList().getUpdater().addContactToGroup(this, group, contact);
-    }
-    public final Group getNotInListGroup() {
-        return notInListGroup;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -785,10 +769,7 @@ abstract public class Protocol {
         if (hasnt) {
             contacts.addElement(contact);
         }
-        synchronized (rosterLockObject) {
-            ui_addContactToGroup(contact, g);
-        }
-        ui_updateContact(contact);
+        ui_addContactToGroup(contact, g);
     }
 
     private void cl_renameContact(Contact contact) {

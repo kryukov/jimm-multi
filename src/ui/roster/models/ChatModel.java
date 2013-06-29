@@ -1,6 +1,7 @@
 package ui.roster.models;
 
 import jimm.chat.Chat;
+import jimm.cl.ContactList;
 import ui.roster.ContactListModel;
 import ui.roster.GroupBranch;
 import ui.roster.ProtocolBranch;
@@ -18,10 +19,9 @@ import java.util.Vector;
  * @author vladimir
  */
 public class ChatModel extends ContactListModel {
-    public final Vector<Chat> chats = new Vector<Chat>();
-
     @Override
     public void buildFlatItems(Vector items) {
+        Vector<Chat> chats = ContactList.getInstance().jimmModel.chats;
         for (int i = 0; i < chats.size(); ++i) {
             items.addElement(((Chat)chats.elementAt(i)).getContact());
         }

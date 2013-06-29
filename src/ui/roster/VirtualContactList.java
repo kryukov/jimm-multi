@@ -108,11 +108,27 @@ public final class VirtualContactList extends VirtualList {
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
         if (getWidth() / 2 < Math.abs(fromX - toX)) {
             boolean isTrue = fromX < toX;
-            if (Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE) != isTrue) {
-                Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, isTrue);
-                Options.safeSave();
-                jimm.cl.ContactList.getInstance().activate();
+            int currentModel = 0;
+            if (Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE)) currentModel = 1;
+            if (model == updater.getChatModel()) currentModel = 2;
+            currentModel = (currentModel + (isTrue ? -1 : +1)) % 3;
+            switch (currentModel) {
+                case 0:
+                    model = updater.getModel();
+                    Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, false);
+                    break;
+                case 1:
+                    model = updater.getModel();
+                    Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, true);
+                    break;
+                case 2:
+                    model = updater.getChatModel();
+                    Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, false);
+                    break;
             }
+            model.hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+            Options.safeSave();
+            jimm.cl.ContactList.getInstance().activate();
         }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {

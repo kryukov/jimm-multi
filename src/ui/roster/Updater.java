@@ -21,7 +21,7 @@ import java.util.Vector;
 public class Updater {
     private Vector updateQueue = new Vector();
 
-    private ContactListModel chatsModel = new ChatModel();
+    private ContactListModel chatModel = new ChatModel();
     private ContactListModel model;
     public void addGroup(Protocol protocol, Group group) {
         if (model.hasProtocol(protocol)) {
@@ -95,7 +95,7 @@ public class Updater {
 
     public void removeFromGroup(Protocol protocol, Group g, Contact c) {
         if (model.hasProtocol(protocol)) {
-            model.removeFromGroup(new Update(protocol,  g, c, Update.REMOVE));
+            model.removeFromGroup(new Update(protocol, g, c, Update.REMOVE));
             update(c);
         }
     }
@@ -165,6 +165,19 @@ public class Updater {
             model = new ProtocolContactModel();
         }
         return model;
+    }
+
+    public ContactListModel getModel() {
+        return model;
+    }
+
+    public ContactListModel getChatModel() {
+        return chatModel;
+    }
+
+    public void addProtocols(Vector<Protocol> protocols) {
+        model.addProtocols(protocols);
+        chatModel.addProtocols(protocols);
     }
 
     public static class Update {

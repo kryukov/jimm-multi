@@ -80,12 +80,12 @@ public class GroupContactModel extends ContactListModel {
             gb = createGroup(u.group);
             groups.addElement(gb);
             addAll(gb.getContacts(), u.group.getContacts(u.protocol));
-            Util.sort(groups);
         } else {
             updateGroupContent(gb);
         }
         gb.updateGroupData();
         gb.sort();
+        Util.sort(groups);
     }
 
     private void updateGroupContent(GroupBranch groupBranch) {

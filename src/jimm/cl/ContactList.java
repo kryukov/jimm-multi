@@ -485,7 +485,7 @@ public final class ContactList implements ContactListListener {
 
     public void updateModel() {
         contactList.setModel(contactList.getUpdater().createModel());
-        contactList.getModel().addProtocols(jimmModel.protocols);
+        contactList.getUpdater().addProtocols(jimmModel.protocols);
         contactList.updateOption();
     }
 }

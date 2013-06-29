@@ -37,6 +37,7 @@ public abstract class ContactListModel {
     protected boolean hideOffline;
 
     public void addProtocols(Vector protocols) {
+        protocolList.removeAllElements();
         for (int i = 0; i < protocols.size(); ++i) {
             protocolList.addElement(protocols.elementAt(i));
             addProtocol((Protocol) protocols.elementAt(i));

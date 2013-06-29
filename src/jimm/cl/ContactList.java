@@ -47,7 +47,7 @@ public final class ContactList implements ContactListListener {
     // #sijapp cond.if modules_FILES="true"#
     private Vector transfers = new Vector();
     // #sijapp cond.end#
-    private Vector protocols = new Vector();
+    public JimmModel jimmModel = new JimmModel();
 
     public ContactList() {
     }
@@ -76,10 +76,7 @@ public final class ContactList implements ContactListListener {
                 && exist.userId.equals(profile.userId);
     }
     public void updateAccounts() {
-        Protocol[] oldProtocols = new Protocol[protocols.size()];
-        for (int i = 0; i < oldProtocols.length; ++i) {
-            oldProtocols[i] = (Protocol) protocols.elementAt(i);
-        }
+        Protocol[] oldProtocols = getProtocols();
         Vector newProtocols = new Vector();
         // #sijapp cond.if modules_MULTI is "true" #
         int accountCount = Options.getAccountCount();
@@ -111,11 +108,6 @@ public final class ContactList implements ContactListListener {
         newProtocols.addElement(createProtocol(Options.getAccount(Options.getCurrentAccount())));
         mainMenu.setProtocol((Protocol) newProtocols.elementAt(0));
         // #sijapp cond.end #
-        protocols = newProtocols;
-        contactList.setModel(contactList.getUpdater().createModel());
-        contactList.getModel().addProtocols(protocols);
-        contactList.update();
-        updateMainMenu();
         for (int i = 0; i < oldProtocols.length; ++i) {
             Protocol protocol = oldProtocols[i];
             if (null != protocol) {
@@ -124,6 +116,9 @@ public final class ContactList implements ContactListListener {
                 protocol.dismiss();
             }
         }
+        jimmModel.protocols = newProtocols;
+        updateModel();
+        updateMainMenu();
     }
 
     public void gotoUrl(String textWithUrls) {
@@ -217,9 +212,9 @@ public final class ContactList implements ContactListListener {
         return instance;
     }
     public Protocol[] getProtocols() {
-        Protocol[] all = new Protocol[protocols.size()];
+        Protocol[] all = new Protocol[jimmModel.protocols.size()];
         for (int i = 0; i < all.length; ++i) {
-            all[i] = (Protocol) protocols.elementAt(i);
+            all[i] = (Protocol) jimmModel.protocols.elementAt(i);
         }
         return all;
     }
@@ -490,7 +485,7 @@ public final class ContactList implements ContactListListener {
 
     public void updateModel() {
         contactList.setModel(contactList.getUpdater().createModel());
-        contactList.getModel().addProtocols(protocols);
+        contactList.getModel().addProtocols(jimmModel.protocols);
         contactList.updateOption();
     }
 }

@@ -39,7 +39,6 @@ import jimm.util.JLocale;
 import protocol.Contact;
 
 public final class ChatHistory extends VirtualList {
-    protected final Vector historyTable = new Vector();
     public static final ChatHistory instance = new ChatHistory();
     private final Icon[] leftIcons = new Icon[7];
     private int itemHeight;
@@ -49,13 +48,13 @@ public final class ChatHistory extends VirtualList {
         itemHeight = Math.max(minItemHeight, getDefaultFont().getHeight());
     }
 
-    public int getTotal() {
-        return historyTable.size();
+    private int getTotal() {
+        return ContactList.getInstance().jimmModel.chats.size();
     }
     private Chat chatAt(int index) {
-        return (Chat)historyTable.elementAt(index);
+        return (Chat) ContactList.getInstance().jimmModel.chats.elementAt(index);
     }
-    public Contact contactAt(int index) {
+    private Contact contactAt(int index) {
         return chatAt(index).getContact();
     }
 
@@ -160,9 +159,8 @@ public final class ChatHistory extends VirtualList {
 
     // Creates a new chat form
     public void registerChat(Chat item) {
-        if (-1 == Util.getIndex(historyTable, item)) {
-            historyTable.addElement(item);
-            item.getContact().updateChatState(item);
+        if (ContactList.getInstance().jimmModel.registerChat(item)) {
+            ContactList.getInstance().getUpdater().registerChat(item);
             try {
                 Icon[] icons = new Icon[7];
                 item.getContact().getLeftIcons(icons);
@@ -176,17 +174,16 @@ public final class ChatHistory extends VirtualList {
         for (int i = getTotal() - 1; 0 <= i; --i) {
             Chat key = chatAt(i);
             if (key.getProtocol() == p) {
-                historyTable.removeElement(key);
-                key.clear();
-                key.getContact().updateChatState(null);
+                ContactList.getInstance().jimmModel.unregisterChat(key);
+                ContactList.getInstance().getUpdater().unregisterChat(key);
             }
         }
         ContactList.getInstance().markMessages(null);
     }
     public void unregisterChat(Chat item) {
         if (null == item) return;
-        historyTable.removeElement(item);
-        item.clear();
+        ContactList.getInstance().jimmModel.unregisterChat(item);
+        ContactList.getInstance().getUpdater().unregisterChat(item);
         Contact c = item.getContact();
         c.updateChatState(null);
         item.getProtocol().ui_updateContact(c);
@@ -268,14 +265,14 @@ public final class ChatHistory extends VirtualList {
         invalidate();
     }
     private int getPreferredItem() {
-        for (int i = 0; i < historyTable.size(); ++i) {
+        for (int i = 0; i < getTotal(); ++i) {
             if (0 < chatAt(i).getPersonalUnreadMessageCount()) {
                 return i;
             }
         }
         Contact currentContact = ContactList.getInstance().getCurrentContact();
         int current  = 0;
-        for (int i = 0; i < historyTable.size(); ++i) {
+        for (int i = 0; i < getTotal(); ++i) {
             Chat chat = chatAt(i);
             if (0 < chat.getUnreadMessageCount()) {
                 return i;
@@ -300,7 +297,7 @@ public final class ChatHistory extends VirtualList {
 
     // shows next or previos chat
     public void showNextPrevChat(Chat item, boolean next) {
-        int chatNum = historyTable.indexOf(item);
+        int chatNum = ContactList.getInstance().jimmModel.chats.indexOf(item);
         if (-1 == chatNum) {
             return;
         }
@@ -367,13 +364,13 @@ public final class ChatHistory extends VirtualList {
         }
         g.setThemeColor(THEME_TEXT);
         g.setFont(getDefaultFont());
-        Chat chat = (Chat)historyTable.elementAt(index);
+        Chat chat = chatAt(index);
         chat.getContact().getLeftIcons(leftIcons);
         g.drawString(leftIcons, chat.getContact().getName(), null, x, y, w, h);
     }
 
     protected int getSize() {
-        return historyTable.size();
+        return getTotal();
     }
 
     public void saveUnreadMessages() {

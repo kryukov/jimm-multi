@@ -1,9 +1,7 @@
 package ui.roster;
 
-import ui.roster.models.ContactModel;
-import ui.roster.models.GroupContactModel;
-import ui.roster.models.ProtocolContactModel;
-import ui.roster.models.ProtocolGroupContactModel;
+import jimm.chat.Chat;
+import ui.roster.models.*;
 import jimm.Options;
 import jimm.cl.ContactList;
 import jimm.comm.Util;
@@ -23,15 +21,22 @@ import java.util.Vector;
 public class Updater {
     private Vector updateQueue = new Vector();
 
+    private ContactListModel chatsModel = new ChatModel();
     private ContactListModel model;
-    public void setModel(ContactListModel model) {
-        this.model = model;
-    }
     public void addGroup(Protocol protocol, Group group) {
         if (model.hasProtocol(protocol)) {
             model.addGroup(new Update(protocol,  group, null, Update.GROUP_ADD));
         }
     }
+
+    public void unregisterChat(Chat item) {
+        update(item.getContact());
+    }
+
+    public void registerChat(Chat item) {
+        update(item.getContact());
+    }
+
 
     public void updateProtocol(Protocol protocol) {
         if (model.hasProtocol(protocol)) {
@@ -49,7 +54,7 @@ public class Updater {
     public void removeGroup(Protocol protocol, Group group) {
         if (model.hasProtocol(protocol)) {
             synchronized (protocol.getRosterLockObject()) {
-                model.removeGroup(new Update(protocol,  group, null, Update.GROUP_REMOVE));
+                model.removeGroup(new Update(protocol, group, null, Update.GROUP_REMOVE));
             }
             update();
         }
@@ -151,7 +156,6 @@ public class Updater {
             } else {
                 model = new ContactModel();
             }
-            setModel(model);
             return model;
         }
         // #sijapp cond.end #
@@ -160,7 +164,6 @@ public class Updater {
         } else {
             model = new ProtocolContactModel();
         }
-        setModel(model);
         return model;
     }
 

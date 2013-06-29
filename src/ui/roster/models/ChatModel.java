@@ -1,5 +1,6 @@
 package ui.roster.models;
 
+import jimm.chat.Chat;
 import ui.roster.ContactListModel;
 import ui.roster.GroupBranch;
 import ui.roster.ProtocolBranch;
@@ -17,12 +18,12 @@ import java.util.Vector;
  * @author vladimir
  */
 public class ChatModel extends ContactListModel {
+    public final Vector<Chat> chats = new Vector<Chat>();
 
     @Override
     public void buildFlatItems(Vector items) {
-        ChatHistory chats = ChatHistory.instance;
-        for (int i = 0; i < chats.getTotal(); ++i) {
-            items.addElement(chats.contactAt(i));
+        for (int i = 0; i < chats.size(); ++i) {
+            items.addElement(((Chat)chats.elementAt(i)).getContact());
         }
     }
 

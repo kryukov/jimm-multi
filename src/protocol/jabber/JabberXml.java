@@ -2311,7 +2311,7 @@ public final class JabberXml extends ClientConnection {
             if (!StringConvertor.isEmpty(password)) {
                 xNode += "<password>" + Util.xmlEscape(password) + "</password>";
             }
-            long time = conf.hasChat() ? getJabber().getChat(conf).getLastMessageTime() : 0;
+            long time = conf.hasChat() ? getJabber().getChatModel(conf).getLastMessageTime() : 0;
             time = (0 == time) ? 24*60*60 : (Jimm.getCurrentGmtTime() - time);
             xNode += "<history maxstanzas='20' seconds='" + time + "'/>";
             if (!StringConvertor.isEmpty(xNode)) {

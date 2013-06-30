@@ -28,7 +28,7 @@ public class JimmModel {
     public boolean unregisterChat(Chat item) {
         if (null == item) return false;
         chats.removeElement(item);
-        item.clear();
+        item.getModel().clear();
         item.getContact().updateChatState(null);
         return true;
     }

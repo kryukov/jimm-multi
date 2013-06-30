@@ -1112,6 +1112,9 @@ abstract public class Protocol {
     public String getUniqueUserId(Contact contact) {
         return contact.getUserId();
     }
+    public final ChatModel getChatModel(Contact contact) {
+        return getChat(contact).getModel();
+    }
     public final Chat getChat(Contact contact) {
         Chat chat = ChatHistory.instance.getChat(contact);
         if (null == chat) {

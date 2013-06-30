@@ -19,7 +19,7 @@ public class ChatModel {
         return messData.size();
     }
 
-    public MessData getMessageDataByIndex(int index) {
+    public MessData getMessage(int index) {
         return (MessData) messData.elementAt(index);
     }
 

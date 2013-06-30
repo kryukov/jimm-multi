@@ -33,7 +33,6 @@ package jimm.chat;
 
 import jimmui.view.icons.Icon;
 import jimmui.view.text.*;
-import java.util.*;
 import jimm.*;
 import jimm.chat.message.*;
 import jimm.cl.*;
@@ -71,11 +70,7 @@ public final class Chat extends VirtualList {
     }
 
     private Par getPar(int index) {
-        return getMessageDataByIndex(index).par;
-    }
-
-    private MessData getMessageDataByIndex(int index) {
-        return model.getMessageDataByIndex(index);
+        return model.getMessage(index).par;
     }
 
     ///////////////////////////////////////////
@@ -120,14 +115,14 @@ public final class Chat extends VirtualList {
     // #sijapp cond.end#
 
     private void markItem(int item) {
-        MessData mData = getMessageDataByIndex(item);
+        MessData mData = model.getMessage(item);
         mData.setMarked(!mData.isMarked());
         selectMode = hasSelectedItems();
         invalidate();
     }
     private boolean hasSelectedItems() {
         for (int i = 0; i < model.size(); ++i) {
-            MessData md = getMessageDataByIndex(i);
+            MessData md = model.getMessage(i);
             if (md.isMarked()) {
                 return true;
             }
@@ -747,12 +742,12 @@ public final class Chat extends VirtualList {
     }
 
     protected int getItemHeight(int itemIndex) {
-        MessData mData = getMessageDataByIndex(itemIndex);
+        MessData mData = model.getMessage(itemIndex);
         return getPar(itemIndex).getHeight() + getMessageHeaderHeight(mData);
     }
 
     protected void drawItemBack(GraphicsEx g, int index, int x, int y, int w, int h, int skip, int to) {
-        MessData mData = getMessageDataByIndex(index);
+        MessData mData = model.getMessage(index);
         byte bg;
         if (mData.isMarked()) {
             bg = THEME_CHAT_BG_MARKED;
@@ -776,7 +771,7 @@ public final class Chat extends VirtualList {
 
     protected void drawItemData(GraphicsEx g, int index, int x, int y,
                                 int w, int h, int skip, int to) {
-        MessData mData = getMessageDataByIndex(index);
+        MessData mData = model.getMessage(index);
         int header = getMessageHeaderHeight(mData);
         if (0 < header) {
             drawMessageHeader(g, mData, x, y, w, header);
@@ -906,7 +901,7 @@ public final class Chat extends VirtualList {
     private MessData getCurrentMsgData() {
         try {
             int messIndex = getCurrItem();
-            return (messIndex < 0) ? null : model.getMessageDataByIndex(messIndex);
+            return (messIndex < 0) ? null : model.getMessage(messIndex);
         } catch (Exception e) {
             return null;
         }
@@ -915,10 +910,6 @@ public final class Chat extends VirtualList {
     private String getCurrentText() {
         MessData md = getCurrentMsgData();
         return (null == md) ? "" : md.getText();
-    }
-
-    public void clear() {
-        model.clear();
     }
 
     private void removeMessages(int limit) {
@@ -954,13 +945,13 @@ public final class Chat extends VirtualList {
     private void resetSelected() {
         selectMode = false;
         for (int i = 0; i < model.size(); ++i) {
-            getMessageDataByIndex(i).setMarked(false);
+            model.getMessage(i).setMarked(false);
         }
     }
     private String copySelected() {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < model.size(); ++i) {
-            MessData md = getMessageDataByIndex(i);
+            MessData md = model.getMessage(i);
             if (md.isMarked()) {
                 String msg = md.getText();
                 if (md.isMe()) {
@@ -992,10 +983,6 @@ public final class Chat extends VirtualList {
 
     public boolean empty() {
         return (0 == model.size()) && (0 == getSize());
-    }
-
-    public long getLastMessageTime() {
-        return model.getLastMessageTime();
     }
 
     public boolean isVisibleChat() {
@@ -1118,6 +1105,10 @@ public final class Chat extends VirtualList {
 
     MessData getUnreadMessage(int num) {
         int index = model.size() - getUnreadMessageCount() + num;
-        return model.getMessageDataByIndex(index);
+        return model.getMessage(index);
+    }
+
+    public ChatModel getModel() {
+        return model;
     }
 }

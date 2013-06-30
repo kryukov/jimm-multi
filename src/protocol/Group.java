@@ -66,19 +66,6 @@ public class Group {//extends GroupBranch {
         return (mode & type) != 0;
     }
 
-    public Vector<Contact> getContacts(Protocol p) {
-        Contact c;
-        Vector<Contact> result = new Vector<Contact>();
-        Vector<Contact> contacts = p.getContactItems();
-        for (int i = 0; i < contacts.size(); ++i) {
-            c = (Contact) contacts.elementAt(i);
-            if (c.getGroupId() == groupId) {
-                result.addElement(c);
-            }
-        }
-        return result;
-    }
-
     public boolean isEmpty(Protocol p) {
         Vector contacts = p.getContactItems();
         for (int i = 0; i < contacts.size(); ++i) {

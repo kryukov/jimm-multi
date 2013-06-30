@@ -1,5 +1,8 @@
 package ui.roster.models;
 
+import jimm.comm.Util;
+import protocol.Contact;
+import protocol.Group;
 import ui.roster.ContactListModel;
 import ui.roster.GroupBranch;
 import ui.roster.ProtocolBranch;
@@ -40,7 +43,11 @@ public class ProtocolContactModel extends ContactListModel {
     public void removeGroup(Updater.Update u) {
     }
     public void addGroup(Updater.Update u) {
+        Vector contacts = u.protocol.getContacts(u.group);
+        Util.removeAll(getProtocolNode(u).getSortedContacts(), contacts);
+        Util.addAll(getProtocolNode(u).getSortedContacts(), contacts);
     }
+
     public void addToGroup(Updater.Update update) {
         ProtocolBranch pb = getProtocolNode(update);
         pb.getSortedContacts().addElement(update.contact);
@@ -64,10 +71,10 @@ public class ProtocolContactModel extends ContactListModel {
         return false;
     }
 
-    protected void addProtocol(Protocol prot) {
-        ProtocolBranch protocolBranch = new ProtocolBranch(prot);
-        protos.put(prot, protocolBranch);
-        addAll(protocolBranch.getSortedContacts(), prot.getContactItems());
+    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+        ProtocolBranch protocolBranch = new ProtocolBranch(protocol);
+        protos.put(protocol, protocolBranch);
+        Util.addAll(protocolBranch.getSortedContacts(), protocol.getContactItems());
         protocolBranch.sort();
     }
 }

@@ -79,7 +79,7 @@ public class GroupContactModel extends ContactListModel {
         if (null == gb) {
             gb = createGroup(u.group);
             groups.addElement(gb);
-            addAll(gb.getContacts(), u.group.getContacts(u.protocol));
+            Util.addAll(gb.getContacts(), u.protocol.getContacts(u.group));
         } else {
             updateGroupContent(gb);
         }
@@ -135,9 +135,17 @@ public class GroupContactModel extends ContactListModel {
         return true;
     }
 
-    protected void addProtocol(Protocol prot) {
-        Vector inGroups = prot.getGroupItems();
-        Updater.Update u = new Updater.Update(prot,  null, null, Updater.Update.ADD);
+    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+        Updater.Update u = new Updater.Update(protocol,  null, null, Updater.Update.GROUP_REMOVE);
+        for (int i = 0; i < oldGroups.size(); ++i) {
+            u.group = (Group) oldGroups.elementAt(i);
+            removeGroup(u);
+        }
+        u.group = null;
+        removeGroup(u);
+
+        u.event = Updater.Update.GROUP_ADD;
+        Vector inGroups = protocol.getGroupItems();
         for (int i = 0; i < inGroups.size(); ++i) {
             u.group = (Group) inGroups.elementAt(i);
             addGroup(u);

@@ -1,5 +1,6 @@
 package ui.roster.models;
 
+import protocol.Group;
 import ui.roster.ContactListModel;
 import ui.roster.GroupBranch;
 import ui.roster.ProtocolBranch;
@@ -35,6 +36,9 @@ public class ContactModel extends ContactListModel {
     public void removeGroup(Updater.Update u) {
     }
     public void addGroup(Updater.Update u) {
+        Vector contacts = u.protocol.getContacts(u.group);
+        Util.removeAll(this.contacts, contacts);
+        Util.addAll(this.contacts, contacts);
     }
     public void addToGroup(Updater.Update update) {
         contacts.addElement(update.contact);
@@ -57,9 +61,11 @@ public class ContactModel extends ContactListModel {
         return false;
     }
 
-    protected void addProtocol(Protocol prot) {
-        Vector inContacts = prot.getContactItems();
-        addAll(contacts, inContacts);
+    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+        contacts.removeAllElements();
+        for (int i = 0; i < getProtocolCount(); ++i) {
+            Util.addAll(contacts, getProtocol(i).getContactItems());
+        }
         Util.sort(contacts);
     }
 }

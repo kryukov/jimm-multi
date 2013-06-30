@@ -30,17 +30,17 @@ import protocol.*;
 import java.util.Vector;
 
 public abstract class ContactListModel {
-    private final Vector protocolList = new Vector();
+    private final Vector<Protocol> protocolList = new Vector<Protocol>();
 
     protected TreeNode selectedItem = null;
 
     protected boolean hideOffline;
 
-    public void addProtocols(Vector protocols) {
+    public void addProtocols(Vector<Protocol> protocols) {
         protocolList.removeAllElements();
         for (int i = 0; i < protocols.size(); ++i) {
             protocolList.addElement(protocols.elementAt(i));
-            addProtocol((Protocol) protocols.elementAt(i));
+            updateProtocol((Protocol) protocols.elementAt(i), null, null);
         }
     }
     public final void setAlwaysVisibleNode(TreeNode node) {
@@ -119,7 +119,7 @@ public abstract class ContactListModel {
         }
     }
 
-    protected abstract void addProtocol(Protocol prot);
+    public abstract void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts);
 
     public abstract void addGroup(Updater.Update u);
     public abstract void removeGroup(Updater.Update u);
@@ -137,10 +137,4 @@ public abstract class ContactListModel {
     }
 
     public abstract boolean hasGroups();
-
-    protected final void addAll(Vector to, Vector all) {
-        for (int i = 0; i < all.size(); ++i) {
-            to.addElement(all.elementAt(i));
-        }
-    }
 }

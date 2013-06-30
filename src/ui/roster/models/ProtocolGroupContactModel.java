@@ -1,5 +1,7 @@
 package ui.roster.models;
 
+import jimm.comm.Util;
+import protocol.Contact;
 import ui.roster.ContactListModel;
 import ui.roster.GroupBranch;
 import ui.roster.ProtocolBranch;
@@ -67,7 +69,7 @@ public class ProtocolGroupContactModel extends ContactListModel {
         }
         Vector groupItems = groupBranch.getContacts();
         groupItems.removeAllElements();
-        addAll(groupItems, u.group.getContacts(u.protocol));
+        Util.addAll(groupItems, u.protocol.getContacts(u.group));
         groupBranch.updateGroupData();
         groupBranch.sort();
     }
@@ -85,11 +87,20 @@ public class ProtocolGroupContactModel extends ContactListModel {
         return true;
     }
 
-    protected void addProtocol(Protocol prot) {
-        ProtocolBranch protocolBranch = new ProtocolBranch(prot);
-        protos.put(prot, protocolBranch);
-        Updater.Update u = new Updater.Update(prot,  null, null, Updater.Update.GROUP_ADD);
-        Vector inGroups = prot.getGroupItems();
+    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+        ProtocolBranch protocolBranch = new ProtocolBranch(protocol);
+        protos.put(protocol, protocolBranch);
+
+        Updater.Update u = new Updater.Update(protocol,  null, null, Updater.Update.GROUP_REMOVE);
+        for (int i = 0; i < oldGroups.size(); ++i) {
+            u.group = (Group) oldGroups.elementAt(i);
+            removeGroup(u);
+        }
+        u.group = null;
+        removeGroup(u);
+
+        u.event = Updater.Update.GROUP_ADD;
+        Vector inGroups = protocol.getGroupItems();
         for (int i = 0; i < inGroups.size(); ++i) {
             u.group = (Group) inGroups.elementAt(i);
             addGroup(u);

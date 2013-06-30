@@ -1030,4 +1030,18 @@ public class Util {
         }
         return -1;
     }
+
+    public static void removeAll(Vector to, Vector all) {
+        for (int i = 0; i < all.size(); ++i) {
+            int index = Util.getIndex(to, all.elementAt(i));
+            if (0 <= index) {
+                to.removeElementAt(index);
+            }
+        }
+    }
+    public static void addAll(Vector to, Vector all) {
+        for (int i = 0; i < all.size(); ++i) {
+            to.addElement(all.elementAt(i));
+        }
+    }
 }

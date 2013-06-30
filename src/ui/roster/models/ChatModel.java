@@ -2,6 +2,8 @@ package ui.roster.models;
 
 import jimm.chat.Chat;
 import jimm.cl.ContactList;
+import protocol.Contact;
+import protocol.Group;
 import ui.roster.ContactListModel;
 import ui.roster.GroupBranch;
 import ui.roster.ProtocolBranch;
@@ -31,7 +33,7 @@ public class ChatModel extends ContactListModel {
     }
 
     @Override
-    protected void addProtocol(Protocol prot) {
+    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
     }
 
     @Override

@@ -55,7 +55,7 @@ abstract public class Protocol {
 
     private final Object rosterLockObject = new Object();
 
-    private Vector autoGrand = new Vector();
+    private Vector<String> autoGrand = new Vector<String>();
 
     private static final int RECONNECT_COUNT = 20;
 
@@ -180,16 +180,22 @@ abstract public class Protocol {
         }
         if ((groups.size() > 0) && !(groups.elementAt(0) instanceof Group)) {
             DebugLog.panic("groups is not list of Group");
-            groups = new Vector();
+            groups = new Vector<Group>();
         }
         // #sijapp cond.end #
+        Vector<Group> oldGroups;
+        Vector<Contact> oldContacts;
         synchronized (rosterLockObject) {
+            oldContacts = this.contacts;
+            oldGroups = this.groups;
+            Util.removeAll(oldGroups, groups);
+            Util.removeAll(oldContacts, contacts);
             this.contacts = contacts;
             this.groups = groups;
         }
         ChatHistory.instance.restoreContactsWithChat(this);
 
-        getContactList().getUpdater().updateProtocol(this);
+        getContactList().getUpdater().updateProtocol(this, oldGroups, oldContacts);
         needSave();
     }
     // #sijapp cond.if protocols_JABBER is "true" #
@@ -267,7 +273,7 @@ abstract public class Protocol {
             // #sijapp cond.if modules_DEBUGLOG is "true" #
             DebugLog.panic("roster load", e);
             // #sijapp cond.end #
-            setContactList(new Vector(), new Vector<Contact>());
+            setContactList(new Vector<Group>(), new Vector<Contact>());
         }
     }
 
@@ -484,7 +490,7 @@ abstract public class Protocol {
             return;
         }
         contact.setName(name);
-        cl_renameContact(contact);
+        ui_updateContact(contact);
         needSave();
     }
 
@@ -772,16 +778,6 @@ abstract public class Protocol {
         ui_addContactToGroup(contact, g);
     }
 
-    private void cl_renameContact(Contact contact) {
-        ui_updateContact(contact);
-    }
-    private void cl_removeContact(Contact contact) {
-        contacts.removeElement(contact);
-        synchronized (rosterLockObject) {
-            ui_removeFromAnyGroup(contact);
-        }
-    }
-
     public final void addLocalContact(Contact contact) {
         cl_addContact(contact);
     }
@@ -791,7 +787,8 @@ abstract public class Protocol {
         }
         boolean inCL = inContactList(contact);
         if (inCL) {
-            cl_removeContact(contact);
+            contacts.removeElement(contact);
+            ui_removeFromAnyGroup(contact);
         }
         if (contact.hasChat()) {
             ChatHistory.instance.unregisterChat(ChatHistory.instance.getChat(contact));
@@ -1128,5 +1125,19 @@ abstract public class Protocol {
             }
         }
         return chat;
+    }
+
+    public Vector<Contact> getContacts(Group g) {
+        int id = null == g ? Group.NOT_IN_GROUP : g.getId();
+        Contact c;
+        Vector<Contact> result = new Vector<Contact>();
+        Vector<Contact> contacts = getContactItems();
+        for (int i = 0; i < contacts.size(); ++i) {
+            c = (Contact) contacts.elementAt(i);
+            if (c.getGroupId() == id) {
+                result.addElement(c);
+            }
+        }
+        return result;
     }
 }

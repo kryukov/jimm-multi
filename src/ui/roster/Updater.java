@@ -38,14 +38,11 @@ public class Updater {
     }
 
 
-    public void updateProtocol(Protocol protocol) {
+    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
         if (model.hasProtocol(protocol)) {
+
             synchronized (protocol.getRosterLockObject()) {
-                Vector groups = protocol.getGroupItems();
-                for (int i = 0; i < groups.size(); ++i) {
-                    addGroup(protocol, (Group) groups.elementAt(i));
-                }
-                addGroup(protocol, null);
+                model.updateProtocol(protocol, oldGroups, oldContacts);
             }
             update();
         }

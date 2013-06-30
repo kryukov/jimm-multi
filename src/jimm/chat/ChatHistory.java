@@ -23,29 +23,25 @@
 
 package jimm.chat;
 
+import ui.base.CanvasEx;
 import ui.icons.Icon;
 import java.util.*;
 import jimm.*;
 import jimm.cl.ContactList;
 import jimm.comm.*;
-import ui.base.*;
 import protocol.Protocol;
 import ui.menu.*;
 import java.io.*;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
 import jimm.io.Storage;
-import jimm.util.JLocale;
 import protocol.Contact;
+import ui.roster.VirtualContactList;
 
-public final class ChatHistory extends VirtualList {
+public final class ChatHistory implements SelectListener {
     public static final ChatHistory instance = new ChatHistory();
-    private final Icon[] leftIcons = new Icon[7];
-    private int itemHeight;
 
     private ChatHistory() {
-        super(JLocale.getString("chats"));
-        itemHeight = Math.max(minItemHeight, getDefaultFont().getHeight());
     }
 
     private int getTotal() {
@@ -128,45 +124,10 @@ public final class ChatHistory extends VirtualList {
         return Message.msgIcons.iconAt(icon);
     }
 
-    private Chat getSelectedChat() {
-        return (getCurrItem() < getSize()) ? chatAt(getCurrItem()) : null;
-    }
-    protected final void doKeyReaction(int keyCode, int actionCode, int type) {
-        Chat chat = getSelectedChat();
-        if ((KEY_PRESSED == type) && (NativeCanvas.CLEAR_KEY == keyCode)) {
-            removeChat(chat);
-            return;
-        }
-        if ((KEY_REPEATED == type) || (KEY_PRESSED == type)) {
-            switch (actionCode) {
-                case NativeCanvas.NAVIKEY_DOWN:
-                    setCurrentItemIndex((getCurrItem() + 1) % getSize());
-                    invalidate();
-                    return;
-                case NativeCanvas.NAVIKEY_UP:
-                    setCurrentItemIndex((getCurrItem() + getSize() - 1) % getSize());
-                    invalidate();
-                    return;
-            }
-        }
-
-        if (JimmUI.execHotKey(null == chat ? null : chat.getProtocol(),
-                null == chat ? null : chat.getContact(), keyCode, type)) {
-            return;
-        }
-        super.doKeyReaction(keyCode, actionCode, type);
-    }
-
     // Creates a new chat form
     public void registerChat(Chat item) {
         if (ContactList.getInstance().jimmModel.registerChat(item)) {
             ContactList.getInstance().getUpdater().registerChat(item);
-            try {
-                Icon[] icons = new Icon[7];
-                item.getContact().getLeftIcons(icons);
-                itemHeight = Math.max(itemHeight, GraphicsEx.getMaxImagesHeight(icons));
-            } catch (Exception ignored) {
-            }
         }
     }
 
@@ -198,13 +159,10 @@ public final class ChatHistory extends VirtualList {
             if (Jimm.getJimm().getDisplay().remove(chat)) {
                 ContactList.getInstance()._setActiveContact(null);
             }
-            setCurrentItemIndex(getCurrItem());
-            invalidate();
+            ContactList.getInstance().getUpdater().update();
         }
-        if (0 < getSize()) {
-            restore();
-
-        } else {
+        if (0 == getTotal()) {
+            ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getChatModel());
             ContactList.getInstance().activate();
         }
     }
@@ -222,11 +180,9 @@ public final class ChatHistory extends VirtualList {
             if (except == chat) continue;
             clearChat(chat);
         }
-        setCurrentItemIndex(getCurrItem());
-        if (0 < getSize()) {
-            restore();
-
-        } else {
+        ContactList.getInstance().getUpdater().update();
+        if (0 == getTotal()) {
+            ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getChatModel());
             ContactList.getInstance().activate();
         }
     }
@@ -261,9 +217,6 @@ public final class ChatHistory extends VirtualList {
         }
     }
 
-    void updateChatList() {
-        invalidate();
-    }
     private int getPreferredItem() {
         for (int i = 0; i < getTotal(); ++i) {
             if (0 < chatAt(i).getPersonalUnreadMessageCount()) {
@@ -283,18 +236,6 @@ public final class ChatHistory extends VirtualList {
         }
         return current;
     }
-    public void showChatList(boolean forceGoToChat) {
-        if (forceGoToChat) {
-            Chat current = chatAt(getPreferredItem());
-            if (0 < current.getUnreadMessageCount()) {
-                current.activate();
-                return;
-            }
-        }
-        setCurrentItemIndex(getPreferredItem());
-        show();
-    }
-
     // shows next or previos chat
     public void showNextPrevChat(Chat item, boolean next) {
         int chatNum = ContactList.getInstance().jimmModel.chats.indexOf(item);
@@ -310,26 +251,10 @@ public final class ChatHistory extends VirtualList {
     private static final int MENU_DEL_ALL_CHATS_EXCEPT_CUR = 3;
     private static final int MENU_DEL_ALL_CHATS = 4;
 
-    protected void doJimmAction(int action) {
-        switch (action) {
-            case NativeCanvas.JIMM_SELECT:
-                getSelectedChat().activate();
-                return;
-
-            case NativeCanvas.JIMM_BACK:
-                back();
-                return;
-
-            case NativeCanvas.JIMM_MENU:
-                showMenu(getMenu());
-                return;
-        }
-        Chat chat = getSelectedChat();
-        switch (action) {
-            case MENU_SELECT:
-                execJimmAction(NativeCanvas.JIMM_SELECT);
-                return;
-
+    @Override
+    public void select(Select select, MenuModel menu, int cmd) {
+        Chat chat = getChat(ContactList.getInstance().getCurrentContact());
+        switch (cmd) {
             case MENU_DEL_CURRENT_CHAT:
                 removeChat(chat);
                 break;
@@ -344,33 +269,16 @@ public final class ChatHistory extends VirtualList {
         }
     }
 
-    protected final MenuModel getMenu() {
+    public final MenuModel getMenu() {
         MenuModel menu = new MenuModel();
-        if (0 < getSize()) {
+        if (0 < getTotal()) {
             menu.addItem("select",                  MENU_SELECT);
             menu.addItem("delete_chat",             MENU_DEL_CURRENT_CHAT);
             menu.addItem("all_contact_except_this", MENU_DEL_ALL_CHATS_EXCEPT_CUR);
             menu.addItem("all_contacts",            MENU_DEL_ALL_CHATS);
         }
-        menu.setActionListener(new Binder(this));
+        menu.setActionListener(this);
         return menu;
-    }
-    protected int getItemHeight(int itemIndex) {
-        return itemHeight;
-    }
-    protected void drawItemData(GraphicsEx g, int index, int x, int y, int w, int h, int skip, int to) {
-        for (int i = 0; i < leftIcons.length; ++i) {
-            leftIcons[i] = null;
-        }
-        g.setThemeColor(THEME_TEXT);
-        g.setFont(getDefaultFont());
-        Chat chat = chatAt(index);
-        chat.getContact().getLeftIcons(leftIcons);
-        g.drawString(leftIcons, chat.getContact().getName(), null, x, y, w, h);
-    }
-
-    protected int getSize() {
-        return getTotal();
     }
 
     public void saveUnreadMessages() {
@@ -406,6 +314,7 @@ public final class ChatHistory extends VirtualList {
         }
         s.close();
     }
+
     public void loadUnreadMessages() {
         Storage s = new Storage("unread");
         try {
@@ -431,5 +340,31 @@ public final class ChatHistory extends VirtualList {
         }
         s.close();
         s.delete();
+    }
+
+    public void showChatList(boolean forceGoToChat) {
+        if (forceGoToChat) {
+            Chat current = chatAt(getPreferredItem());
+            if (0 < current.getUnreadMessageCount()) {
+                current.activate();
+                return;
+            }
+        }
+        ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getChatModel());
+        ContactList.getInstance().setActiveContact(chatAt(getPreferredItem()).getContact());
+        ContactList.getInstance().getManager().show();
+    }
+
+    public void back() {
+        ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getModel());
+        Jimm.getJimm().getDisplay().back(ContactList.getInstance().getManager());
+    }
+
+    public static boolean isChats(CanvasEx canvas) {
+        if (canvas instanceof VirtualContactList) {
+            VirtualContactList vcl = ((VirtualContactList) canvas);
+            return vcl.getModel() == vcl.getUpdater().getChatModel();
+        }
+        return false;
     }
 }

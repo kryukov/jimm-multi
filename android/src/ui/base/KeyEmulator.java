@@ -1,5 +1,6 @@
 package ui.base;
 
+import jimm.chat.ChatHistory;
 import ui.roster.VirtualContactList;
 import jimm.Jimm;
 
@@ -16,6 +17,10 @@ public class KeyEmulator {
     }
     public static boolean isMain() {
         Object current = Jimm.getJimm().getDisplay().getCurrentDisplay();
-        return (current instanceof VirtualContactList);
+
+        if (current instanceof VirtualContactList) {
+            return !ChatHistory.isChats((CanvasEx) current);
+        }
+        return false;
     }
 }

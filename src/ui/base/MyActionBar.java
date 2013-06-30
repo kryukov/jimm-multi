@@ -153,7 +153,7 @@ public class MyActionBar extends ActiveRegion {
             jimm.chat.ChatHistory.instance.showChatList(true);
 
         } else if (CAPTION_REGION_GENERAL == region) {
-            if (jimm.chat.ChatHistory.instance == canvas) {
+            if (jimm.chat.ChatHistory.isChats(canvas)) {
                 jimm.chat.ChatHistory.instance.back();
             } else {
                 jimm.chat.ChatHistory.instance.showChatList(false);

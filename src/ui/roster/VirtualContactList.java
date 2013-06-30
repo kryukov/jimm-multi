@@ -23,6 +23,7 @@
 
 package ui.roster;
 
+import jimm.util.JLocale;
 import ui.icons.Icon;
 import ui.text.*;
 import java.util.Vector;
@@ -81,6 +82,9 @@ public final class VirtualContactList extends VirtualList {
 
     public void setModel(ContactListModel model) {
         this.model = model;
+        updateTitle();
+        update();
+        invalidate();
     }
 
     protected final int getItemHeight(int itemIndex) {
@@ -116,18 +120,19 @@ public final class VirtualContactList extends VirtualList {
                 case 0:
                     model = updater.getModel();
                     Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, false);
+                    model.hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+                    Options.safeSave();
                     break;
                 case 1:
                     model = updater.getModel();
                     Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, true);
+                    model.hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+                    Options.safeSave();
                     break;
                 case 2:
                     model = updater.getChatModel();
-                    Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, false);
                     break;
             }
-            model.hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
-            Options.safeSave();
             jimm.cl.ContactList.getInstance().activate();
         }
     }
@@ -347,6 +352,9 @@ public final class VirtualContactList extends VirtualList {
             text = "Jimm aspro";
             // #sijapp cond.end #
         }
+        if (model == updater.getChatModel()) {
+            text = JLocale.getString("chats");
+        }
         setCaption(text);
     }
 
@@ -362,7 +370,12 @@ public final class VirtualContactList extends VirtualList {
                 return;
 
             case NativeCanvas.JIMM_BACK:
+                // #sijapp cond.if modules_ANDROID is "true" #
+                setModel(getUpdater().getModel());
+                back();
+                // #sijapp cond.else #
                 showContextMenu(getCurrentNode());
+                // #sijapp cond.end #
                 return;
         }
     }

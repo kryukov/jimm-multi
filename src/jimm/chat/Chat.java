@@ -1113,7 +1113,6 @@ public final class Chat extends VirtualList {
         }
         if (inc) {
             contact.updateChatState(this);
-            ChatHistory.instance.updateChatList();
         }
     }
 

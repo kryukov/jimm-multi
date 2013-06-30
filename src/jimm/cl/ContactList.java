@@ -464,6 +464,9 @@ public final class ContactList implements ContactListListener {
     }
 
     public final MenuModel getContextMenu(Protocol p, TreeNode node) {
+        if (contactList.getModel() == getUpdater().getChatModel()) {
+            return ChatHistory.instance.getMenu();
+        }
         if (node instanceof Contact) {
             return new ContactMenu(p, (Contact) node).getContextMenu();
         }

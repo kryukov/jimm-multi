@@ -6,7 +6,6 @@ import ui.roster.ContactListModel;
 import ui.roster.GroupBranch;
 import ui.roster.ProtocolBranch;
 import ui.roster.Updater;
-import jimm.chat.ChatHistory;
 import protocol.Protocol;
 
 import java.util.Vector;

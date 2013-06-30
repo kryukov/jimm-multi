@@ -9,15 +9,15 @@
 
 package protocol;
 
-import ui.roster.*;
-import ui.icons.*;
+import jimmui.view.roster.*;
+import jimmui.view.icons.*;
 import jimm.*;
 import jimm.chat.*;
 import jimm.chat.message.*;
 import jimm.cl.ContactList;
 import jimm.history.*;
-import ui.base.*;
-import ui.menu.*;
+import jimmui.view.base.*;
+import jimmui.view.menu.*;
 import jimm.comm.*;
 
 /**

@@ -20,7 +20,7 @@ import javax.wireless.messaging.*;
 // #sijapp cond.end #
 // #sijapp cond.end #
 import jimm.cl.ContactList;
-import ui.form.*;
+import jimmui.view.form.*;
 import jimm.util.JLocale;
 import protocol.mrim.*;
 import protocol.Protocol;

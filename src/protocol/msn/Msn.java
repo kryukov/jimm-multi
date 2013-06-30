@@ -10,7 +10,7 @@
 // #sijapp cond.if protocols_MSN is "true" #
 package protocol.msn;
 
-import ui.icons.ImageList;
+import jimmui.view.icons.ImageList;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import jimm.chat.message.PlainMessage;

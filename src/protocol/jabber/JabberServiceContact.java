@@ -13,7 +13,7 @@ package protocol.jabber;
 import java.util.Vector;
 import jimm.comm.StringConvertor;
 import jimm.chat.message.*;
-import ui.menu.*;
+import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import protocol.*;
 

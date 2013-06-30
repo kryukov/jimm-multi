@@ -31,16 +31,16 @@
  */
 package jimm.chat;
 
-import ui.icons.Icon;
-import ui.text.*;
+import jimmui.view.icons.Icon;
+import jimmui.view.text.*;
 import java.util.*;
 import jimm.*;
 import jimm.chat.message.*;
 import jimm.cl.*;
 import jimm.comm.*;
 import jimm.history.*;
-import ui.base.*;
-import ui.menu.*;
+import jimmui.view.base.*;
+import jimmui.view.menu.*;
 import jimm.modules.*;
 import protocol.*;
 import protocol.jabber.*;
@@ -57,7 +57,7 @@ public final class Chat extends VirtualList {
     private static InputTextLine line = new InputTextLine();
     private boolean classic = false;
     private Icon[] statusIcons = new Icon[7];
-    private Vector messData = new Vector();
+    private ChatModel model = new ChatModel();
     private boolean showStatus = true;
     private static boolean selectMode;
     ///////////////////////////////////////////
@@ -67,7 +67,7 @@ public final class Chat extends VirtualList {
     }
 
     public final int getSize() {
-        return messData.size();
+        return model.size();
     }
 
     private Par getPar(int index) {
@@ -75,7 +75,7 @@ public final class Chat extends VirtualList {
     }
 
     private MessData getMessageDataByIndex(int index) {
-        return (MessData) messData.elementAt(index);
+        return model.getMessageDataByIndex(index);
     }
 
     ///////////////////////////////////////////
@@ -126,7 +126,7 @@ public final class Chat extends VirtualList {
         invalidate();
     }
     private boolean hasSelectedItems() {
-        for (int i = 0; i < messData.size(); ++i) {
+        for (int i = 0; i < model.size(); ++i) {
             MessData md = getMessageDataByIndex(i);
             if (md.isMarked()) {
                 return true;
@@ -518,7 +518,7 @@ public final class Chat extends VirtualList {
         synchronized (this) {
             boolean atTheEnd = (getFullSize() - getTopOffset() <= getContentHeight());
             lock();
-            messData.addElement(mData);
+            model.add(mData);
             setCurrentItemIndex(getSize() - 1);
             removeOldMessages();
             unlock();
@@ -535,7 +535,7 @@ public final class Chat extends VirtualList {
         long time = Jimm.getCurrentGmtTime();
         short flags = MessData.PROGRESS;
         synchronized (this) {
-            int index = Util.getIndex(messData, mData);
+            int index = model.getIndex(mData);
             if ((0 < getSize()) && (0 <= index)) {
                 lock();
                 mData.init(time, text, caption, flags, Message.ICON_NONE);
@@ -654,7 +654,7 @@ public final class Chat extends VirtualList {
                 atTheEnd = true;
             }
             lock();
-            messData.addElement(mData);
+            model.add(mData);
 
             int size = getSize();
             if (incoming) {
@@ -906,7 +906,7 @@ public final class Chat extends VirtualList {
     private MessData getCurrentMsgData() {
         try {
             int messIndex = getCurrItem();
-            return (messIndex < 0) ? null : (MessData) messData.elementAt(messIndex);
+            return (messIndex < 0) ? null : model.getMessageDataByIndex(messIndex);
         } catch (Exception e) {
             return null;
         }
@@ -918,7 +918,7 @@ public final class Chat extends VirtualList {
     }
 
     public void clear() {
-        messData.removeAllElements();
+        model.clear();
     }
 
     private void removeMessages(int limit) {
@@ -926,9 +926,9 @@ public final class Chat extends VirtualList {
             return;
         }
         if ((0 < limit) && (0 < getSize())) {
-            while (limit < messData.size()) {
+            while (limit < model.size()) {
                 int top = Math.max(0, getTopOffset() - getItemHeight(0));
-                messData.removeElementAt(0);
+                model.removeTopMessage();
                 setCurrentItemIndex(Math.max(0, getCurrItem() - 1));
                 setTopByOffset(top);
             }
@@ -947,19 +947,19 @@ public final class Chat extends VirtualList {
     }
 
     public void removeMessagesAtCursor() {
-        removeMessages(messData.size() - getCurrItem() - 1);
+        removeMessages(model.size() - getCurrItem() - 1);
     }
 
 
     private void resetSelected() {
         selectMode = false;
-        for (int i = 0; i < messData.size(); ++i) {
+        for (int i = 0; i < model.size(); ++i) {
             getMessageDataByIndex(i).setMarked(false);
         }
     }
     private String copySelected() {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < messData.size(); ++i) {
+        for (int i = 0; i < model.size(); ++i) {
             MessData md = getMessageDataByIndex(i);
             if (md.isMarked()) {
                 String msg = md.getText();
@@ -991,15 +991,11 @@ public final class Chat extends VirtualList {
     }
 
     public boolean empty() {
-        return (0 == messData.size()) && (0 == getSize());
+        return (0 == model.size()) && (0 == getSize());
     }
 
     public long getLastMessageTime() {
-        if (0 == messData.size()) {
-            return 0;
-        }
-        MessData md = (MessData) messData.lastElement();
-        return md.getTime();
+        return model.getLastMessageTime();
     }
 
     public boolean isVisibleChat() {
@@ -1121,7 +1117,7 @@ public final class Chat extends VirtualList {
     }
 
     MessData getUnreadMessage(int num) {
-        int index = messData.size() - getUnreadMessageCount() + num;
-        return (MessData) messData.elementAt(index);
+        int index = model.size() - getUnreadMessageCount() + num;
+        return model.getMessageDataByIndex(index);
     }
 }

@@ -22,15 +22,15 @@
  *******************************************************************************/
 
 package jimm.chat;
-import ui.text.*;
+import jimmui.view.text.*;
 import javax.microedition.lcdui.*;
 import jimm.Options;
 import jimm.comm.Config;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimm.modules.*;
-import ui.*;
-import ui.base.*;
+import jimmui.view.*;
+import jimmui.view.base.*;
 
 /**
  *

@@ -27,9 +27,9 @@ import javax.microedition.lcdui.*;
 import jimm.cl.ContactList;
 import jimm.comm.*;
 import jimm.modules.*;
-import ui.base.*;
-import ui.form.*;
-import ui.menu.*;
+import jimmui.view.base.*;
+import jimmui.view.form.*;
+import jimmui.view.menu.*;
 import jimm.util.*;
 
 /* Form for editing option values */

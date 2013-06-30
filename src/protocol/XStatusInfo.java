@@ -9,8 +9,8 @@
 
 package protocol;
 
-import ui.icons.Icon;
-import ui.icons.ImageList;
+import jimmui.view.icons.Icon;
+import jimmui.view.icons.ImageList;
 import jimm.util.JLocale;
 
 /**

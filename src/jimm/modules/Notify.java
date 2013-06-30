@@ -17,7 +17,7 @@ import javax.microedition.media.control.*;
 import java.io.InputStream;
 import jimm.*;
 import jimm.comm.Util;
-import ui.base.Popup;
+import jimmui.view.base.Popup;
 import jimm.util.*;
 
 /**

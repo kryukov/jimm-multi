@@ -11,7 +11,7 @@
 // #sijapp cond.if modules_CLIENTS is "true" #
 package protocol.jabber;
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import jimm.comm.Config;
 import protocol.ClientInfo;
 

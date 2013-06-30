@@ -9,9 +9,9 @@
 
 package jimm.search;
 
-import ui.text.TextListModel;
-import ui.text.TextList;
-import ui.icons.*;
+import jimmui.view.text.TextListModel;
+import jimmui.view.text.TextList;
+import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
 import jimm.JimmException;
 import jimm.cl.ContactList;
@@ -21,10 +21,10 @@ import jimm.forms.*;
 import jimm.modules.fs.*;
 import jimm.modules.photo.*;
 // #sijapp cond.end#
-import ui.*;
-import ui.menu.*;
-import ui.base.*;
-import ui.text.TextListController;
+import jimmui.view.*;
+import jimmui.view.menu.*;
+import jimmui.view.base.*;
+import jimmui.view.text.TextListController;
 import jimm.util.JLocale;
 import protocol.net.TcpSocket;
 import protocol.*;

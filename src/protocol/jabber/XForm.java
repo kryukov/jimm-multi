@@ -8,7 +8,7 @@ package protocol.jabber;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.comm.*;
-import ui.form.*;
+import jimmui.view.form.*;
 import jimm.util.JLocale;
 
 /**

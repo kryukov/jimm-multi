@@ -24,8 +24,8 @@
 // #sijapp cond.if protocols_ICQ is "true" #
 package protocol.icq;
 
-import ui.menu.*;
-import ui.icons.*;
+import jimmui.view.menu.*;
+import jimmui.view.icons.*;
 import protocol.*;
 
 public class IcqContact extends Contact {

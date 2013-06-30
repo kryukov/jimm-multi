@@ -31,7 +31,7 @@ Author(s): Andreas Rossbacher, Artyomov Denis, Dmitry Tunin, Vladimir Kryukov
  */
 package jimm.chat;
 
-import ui.text.Par;
+import jimmui.view.text.Par;
 import jimm.Jimm;
 import jimm.comm.Util;
 

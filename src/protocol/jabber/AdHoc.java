@@ -8,8 +8,8 @@ package protocol.jabber;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
-import ui.base.Popup;
-import ui.form.*;
+import jimmui.view.base.Popup;
+import jimmui.view.form.*;
 import jimm.util.JLocale;
 
 /**

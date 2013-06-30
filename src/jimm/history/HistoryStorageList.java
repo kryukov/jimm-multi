@@ -11,24 +11,24 @@ package jimm.history;
 
 // #sijapp cond.if modules_HISTORY is "true" #
 
-import ui.text.TextList;
-import ui.text.TextListModel;
-import ui.text.*;
+import jimmui.view.text.TextList;
+import jimmui.view.text.TextListModel;
+import jimmui.view.text.*;
 import java.util.*;
 import javax.microedition.rms.*;
 import jimm.*;
 import jimm.cl.*;
 // #sijapp cond.if modules_FILES="true"#
 // #sijapp cond.end#
-import ui.*;
-import ui.base.*;
-import ui.form.*;
-import ui.menu.*;
+import jimmui.view.*;
+import jimmui.view.base.*;
+import jimmui.view.form.*;
+import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import jimm.comm.*;
-import ui.text.TextListController;
+import jimmui.view.text.TextListController;
 
 // Visual messages history list
 public final class HistoryStorageList extends VirtualList implements

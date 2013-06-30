@@ -9,8 +9,8 @@
 
 package protocol.mrim;
 
-import ui.icons.*;
-import ui.menu.*;
+import jimmui.view.icons.*;
+import jimmui.view.menu.*;
 import protocol.*;
 // #sijapp cond.if protocols_MRIM is "true" #
 /**

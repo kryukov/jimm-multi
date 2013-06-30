@@ -1,14 +1,14 @@
 package jimm.cl;
 
-import ui.icons.Icon;
+import jimmui.view.icons.Icon;
 import jimm.Jimm;
 import jimm.Options;
 import jimm.OptionsForm;
 import jimm.forms.*;
 import jimm.modules.*;
-import ui.menu.MenuModel;
-import ui.menu.Select;
-import ui.menu.SelectListener;
+import jimmui.view.menu.MenuModel;
+import jimmui.view.menu.Select;
+import jimmui.view.menu.SelectListener;
 import protocol.Protocol;
 import protocol.StatusInfo;
 import protocol.icq.*;

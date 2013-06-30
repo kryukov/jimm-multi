@@ -24,16 +24,16 @@ Author(s): Artyomov Denis
 // #sijapp cond.if modules_MAGIC_EYE is "true" #
 package jimm.modules;
 
-import ui.text.TextListModel;
-import ui.text.TextList;
-import ui.text.Parser;
+import jimmui.view.text.TextListModel;
+import jimmui.view.text.TextList;
+import jimmui.view.text.Parser;
 import java.util.Vector;
 import jimm.Jimm;
 import jimm.cl.ContactList;
 import jimm.comm.*;
-import ui.base.CanvasEx;
-import ui.menu.*;
-import ui.text.TextListController;
+import jimmui.view.base.CanvasEx;
+import jimmui.view.menu.*;
+import jimmui.view.text.TextListController;
 import jimm.util.*;
 import protocol.*;
 

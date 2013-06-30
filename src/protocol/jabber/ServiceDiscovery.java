@@ -10,17 +10,17 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
-import ui.text.TextList;
-import ui.text.*;
+import jimmui.view.text.TextList;
+import jimmui.view.text.*;
 import java.util.Vector;
 import jimm.cl.ContactList;
-import ui.*;
-import ui.menu.*;
+import jimmui.view.*;
+import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import jimm.comm.*;
-import ui.base.CanvasEx;
-import ui.text.TextListController;
-import ui.text.TextListModel;
+import jimmui.view.base.CanvasEx;
+import jimmui.view.text.TextListController;
+import jimmui.view.text.TextListModel;
 import protocol.*;
 
 /**

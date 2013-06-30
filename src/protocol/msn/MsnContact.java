@@ -22,7 +22,7 @@
 // #sijapp cond.if protocols_MSN is "true" #
 package protocol.msn;
 
-import ui.menu.*;
+import jimmui.view.menu.*;
 import protocol.*;
 
 /**

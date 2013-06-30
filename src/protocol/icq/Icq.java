@@ -24,7 +24,7 @@
 // #sijapp cond.if protocols_ICQ is "true" #
 package protocol.icq;
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import java.io.*;
 import java.util.*;
 import jimm.chat.message.*;
@@ -538,7 +538,7 @@ public class Icq extends Protocol {
         // #sijapp cond.end #
     }
     public void getAvatar(UserInfo userInfo) {
-        new ui.timers.GetVersion(userInfo).get();
+        new jimmui.view.timers.GetVersion(userInfo).get();
     }
 
 

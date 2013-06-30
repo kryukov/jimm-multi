@@ -25,11 +25,11 @@ package jimm.modules;
 
 // #sijapp cond.if (modules_SMILES is "true") #
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import java.util.*;
 import java.io.*;
 import jimm.comm.*;
-import ui.*;
+import jimmui.view.*;
 import protocol.net.TcpSocket;
 
 public final class Emotions {

@@ -1,6 +1,6 @@
 package protocol.vk;
 
-import ui.menu.MenuModel;
+import jimmui.view.menu.MenuModel;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.StatusInfo;

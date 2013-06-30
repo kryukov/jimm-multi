@@ -5,8 +5,8 @@
 package protocol;
 
 // #sijapp cond.if modules_CLIENTS is "true" #
-import ui.icons.Icon;
-import ui.icons.ImageList;
+import jimmui.view.icons.Icon;
+import jimmui.view.icons.ImageList;
 
 /**
  *

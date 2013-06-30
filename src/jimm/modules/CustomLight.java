@@ -182,7 +182,7 @@ public final class CustomLight extends TimerTask {
     private static int detectMode() {
         // #sijapp cond.if target is "MIDP2" #
         try {
-            Class.forName("com.nokia.mid.ui.DeviceControl");
+            Class.forName("com.nokia.mid.jimmui.ui.DeviceControl");
             return LIGHT_NOKIA;
         } catch (Exception e) {
         }

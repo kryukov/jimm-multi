@@ -9,7 +9,7 @@
 
 package protocol;
 
-import ui.roster.*;
+import jimmui.view.roster.*;
 import java.util.Vector;
 
 /**

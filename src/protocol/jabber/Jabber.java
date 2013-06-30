@@ -9,17 +9,17 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import java.util.Vector;
 import jimm.*;
 import jimm.chat.message.PlainMessage;
 import jimm.cl.ContactList;
 import jimm.comm.*;
 import jimm.search.*;
-import ui.form.FormListener;
-import ui.form.GraphForm;
-import ui.menu.MenuModel;
-import ui.menu.Select;
+import jimmui.view.form.FormListener;
+import jimmui.view.form.GraphForm;
+import jimmui.view.menu.MenuModel;
+import jimmui.view.menu.Select;
 import jimm.util.JLocale;
 import protocol.*;
 

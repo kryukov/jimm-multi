@@ -35,7 +35,7 @@ import jimm.modules.*;
 import jimm.util.*;
 import java.io.*;
 import java.util.*;
-import ui.base.NativeCanvas;
+import jimmui.view.base.NativeCanvas;
 
 
 /**

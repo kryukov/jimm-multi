@@ -23,18 +23,18 @@
 
 package jimm.search;
 
-import ui.text.TextList;
-import ui.text.TextListModel;
+import jimmui.view.text.TextList;
+import jimmui.view.text.TextListModel;
 import java.util.Vector;
 
 import jimm.cl.*;
 import jimm.comm.*;
-import ui.*;
-import ui.base.Binder;
-import ui.base.CanvasEx;
-import ui.form.*;
-import ui.menu.*;
-import ui.text.TextListController;
+import jimmui.view.*;
+import jimmui.view.base.Binder;
+import jimmui.view.base.CanvasEx;
+import jimmui.view.form.*;
+import jimmui.view.menu.*;
+import jimmui.view.text.TextListController;
 import jimm.util.*;
 import protocol.*;
 import protocol.icq.*;

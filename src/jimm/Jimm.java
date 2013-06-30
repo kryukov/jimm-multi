@@ -24,7 +24,7 @@
 
 package jimm;
 
-import ui.icons.Icon;
+import jimmui.view.icons.Icon;
 import java.io.*;
 import javax.microedition.io.*;
 import javax.microedition.midlet.*;
@@ -33,10 +33,10 @@ import jimm.cl.*;
 import jimm.comm.*;
 import jimm.modules.*;
 import jimm.search.Search;
-import ui.*;
-import ui.base.*;
+import jimmui.view.*;
+import jimmui.view.base.*;
 // #sijapp cond.if modules_ACTIVITYUI is "true"#
-import ui.notify.*;
+import jimmui.view.notify.*;
 // #sijapp cond.end#
 import jimm.util.JLocale;
 
@@ -83,7 +83,7 @@ public class Jimm extends MIDlet implements Runnable {
         // #sijapp cond.if target is "MIDP2" #
         if (null == platform) {
             try {
-                Class.forName("com.nokia.mid.ui.DeviceControl");
+                Class.forName("com.nokia.mid.jimmui.ui.DeviceControl");
                 return "Nokia";
             } catch (Exception e) {
             }

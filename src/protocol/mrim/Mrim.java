@@ -9,8 +9,8 @@
 // #sijapp cond.if protocols_MRIM is "true" #
 package protocol.mrim;
 
-import ui.text.TextList;
-import ui.icons.*;
+import jimmui.view.text.TextList;
+import jimmui.view.icons.*;
 import java.io.*;
 import java.util.Vector;
 import jimm.chat.message.PlainMessage;
@@ -18,9 +18,9 @@ import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimm.search.*;
-import ui.menu.MenuModel;
-import ui.text.TextListController;
-import ui.text.TextListModel;
+import jimmui.view.menu.MenuModel;
+import jimmui.view.text.TextListController;
+import jimmui.view.text.TextListModel;
 import jimm.util.JLocale;
 import protocol.*;
 
@@ -283,7 +283,7 @@ public class Mrim extends Protocol {
     }
 
     public void getAvatar(UserInfo userInfo) {
-        new ui.timers.GetVersion(userInfo).get();
+        new jimmui.view.timers.GetVersion(userInfo).get();
     }
 
     public String getUserIdName() {

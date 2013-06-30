@@ -10,7 +10,7 @@
 // #sijapp cond.if modules_CLIENTS is "true" #
 package protocol.icq;
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import java.io.*;
 import jimm.comm.*;
 import protocol.ClientInfo;

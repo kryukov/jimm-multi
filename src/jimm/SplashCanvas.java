@@ -22,14 +22,14 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher, Vladimir Kryukov
  *******************************************************************************/
 package jimm;
 
-import ui.icons.*;
-import ui.text.*;
+import jimmui.view.icons.*;
+import jimmui.view.text.*;
 import javax.microedition.lcdui.*;
 import jimm.chat.ChatHistory;
 import jimm.comm.*;
 import jimm.chat.message.Message;
 import jimm.cl.*;
-import ui.base.*;
+import jimmui.view.base.*;
 import jimm.util.*;
 
 public final class SplashCanvas extends CanvasEx {

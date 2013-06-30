@@ -9,14 +9,14 @@
 package jimm.cl;
 
 import jimm.modules.*;
-import ui.text.Parser;
+import jimmui.view.text.Parser;
 import java.util.*;
 import jimm.*;
 import jimm.comm.*;
-import ui.menu.*;
-import ui.base.*;
-import ui.text.*;
-import ui.timers.*;
+import jimmui.view.menu.*;
+import jimmui.view.base.*;
+import jimmui.view.text.*;
+import jimmui.view.timers.*;
 import jimm.util.*;
 
 /**

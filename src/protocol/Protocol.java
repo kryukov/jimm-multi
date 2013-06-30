@@ -9,7 +9,7 @@
 
 package protocol;
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import java.io.*;
 import java.util.Vector;
 import javax.microedition.rms.*;

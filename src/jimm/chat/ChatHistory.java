@@ -23,20 +23,20 @@
 
 package jimm.chat;
 
-import ui.base.CanvasEx;
-import ui.icons.Icon;
+import jimmui.view.base.CanvasEx;
+import jimmui.view.icons.Icon;
 import java.util.*;
 import jimm.*;
 import jimm.cl.ContactList;
 import jimm.comm.*;
 import protocol.Protocol;
-import ui.menu.*;
+import jimmui.view.menu.*;
 import java.io.*;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
 import jimm.io.Storage;
 import protocol.Contact;
-import ui.roster.VirtualContactList;
+import jimmui.view.roster.VirtualContactList;
 
 public final class ChatHistory implements SelectListener {
     public static final ChatHistory instance = new ChatHistory();

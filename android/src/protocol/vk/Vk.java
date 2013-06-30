@@ -1,6 +1,6 @@
 package protocol.vk;
 
-import ui.icons.ImageList;
+import jimmui.view.icons.ImageList;
 import jimm.chat.message.PlainMessage;
 import jimm.search.Search;
 import jimm.search.UserInfo;

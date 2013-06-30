@@ -24,15 +24,15 @@ Author(s): Artyomov Denis
 // #sijapp cond.if modules_DEBUGLOG is "true" #
 package jimm.modules;
 
-import ui.text.TextListModel;
-import ui.text.TextList;
-import ui.text.Parser;
+import jimmui.view.text.TextListModel;
+import jimmui.view.text.TextList;
+import jimmui.view.text.Parser;
 import jimm.Jimm;
 import jimm.comm.MD5;
 import jimm.comm.Util;
-import ui.base.CanvasEx;
-import ui.menu.*;
-import ui.text.TextListController;
+import jimmui.view.base.CanvasEx;
+import jimmui.view.menu.*;
+import jimmui.view.text.TextListController;
 import jimm.util.*;
 
 public final class DebugLog implements SelectListener {

@@ -9,7 +9,7 @@
 
 package protocol;
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import jimm.util.JLocale;
 
 /**

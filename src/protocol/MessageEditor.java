@@ -11,7 +11,7 @@ package protocol;
 
 import jimm.Options;
 import jimm.cl.ContactList;
-import ui.*;
+import jimmui.view.*;
 
 /**
  *

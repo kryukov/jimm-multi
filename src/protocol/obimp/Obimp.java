@@ -10,13 +10,13 @@
 // #sijapp cond.if protocols_OBIMP is "true" #
 package protocol.obimp;
 
-import ui.icons.*;
+import jimmui.view.icons.*;
 import jimm.chat.message.PlainMessage;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimm.search.*;
-import ui.menu.MenuModel;
+import jimmui.view.menu.MenuModel;
 import protocol.*;
 
 /**

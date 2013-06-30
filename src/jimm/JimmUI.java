@@ -27,7 +27,7 @@ import javax.microedition.lcdui.*;
 import jimm.chat.*;
 import jimm.comm.StringConvertor;
 import jimm.modules.*;
-import ui.base.*;
+import jimmui.view.base.*;
 import jimm.cl.*;
 import protocol.*;
 

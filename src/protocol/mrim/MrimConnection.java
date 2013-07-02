@@ -8,7 +8,8 @@ package protocol.mrim;
 import java.util.*;
 import jimm.*;
 import jimm.JimmException;
-import jimm.chat.Chat;
+import jimm.chat.ChatHistory;
+import jimm.chat.ChatModel;
 import jimm.chat.message.*;
 import jimm.cl.ContactList;
 import jimm.comm.*;
@@ -250,11 +251,11 @@ public final class MrimConnection extends ClientConnection {
                 PlainMessage message = new PlainMessage(contact.getUserId(),
                         mrim, Jimm.getCurrentGmtTime(), msg, false);
                 message.setName("SMS");
-                Chat chat = mrim.getChat(contact);
+                ChatModel chat = mrim.getChatModel(contact);
                 if (contact instanceof MrimPhoneContact) {
                     chat.setWritable(false);
                 }
-                chat.addMessage(message, false);
+                ChatHistory.instance.getUpdater().addMessage(chat, message, false);
                 if (!(contact instanceof MrimPhoneContact)) {
                     fromEmail = contact.getUserId();
                 }

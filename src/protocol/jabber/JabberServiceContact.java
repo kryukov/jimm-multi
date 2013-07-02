@@ -145,7 +145,7 @@ public class JabberServiceContact extends JabberContact {
     }
     void nickOnline(Jabber jabber, String nick) {
         if (hasChat()) {
-            jabber.getChat(this).setWritable(canWrite());
+            jabber.getChatModel(this).setWritable(canWrite());
         }
         SubContact sc = getExistSubContact(nick);
         if (null != sc) {
@@ -236,7 +236,7 @@ public class JabberServiceContact extends JabberContact {
         // #sijapp cond.end #
         }
         if (hasChat()) {
-            jabber.getChat(this).setWritable(canWrite());
+            jabber.getChatModel(this).setWritable(canWrite());
         }
         showTopLine(nick + ": " + jabber.getStatusInfo().getName(StatusInfo.STATUS_OFFLINE));
     }

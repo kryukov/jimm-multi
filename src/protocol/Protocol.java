@@ -861,7 +861,7 @@ abstract public class Protocol {
                 if (autoGrand.contains(contact.getUserId())) {
                     grandAuth(contact.getUserId());
                     autoGrand.removeElement(contact.getUserId());
-                    chat.resetAuthRequests();
+                    chat.getModel().resetAuthRequests();
                 }
             }
         }
@@ -876,7 +876,7 @@ abstract public class Protocol {
     private void addMessageNotify(Chat chat, Contact contact, Message message) {
         boolean isPersonal = contact.isSingleUserContact();
         boolean isBlog = isBlogBot(contact.getUserId());
-        boolean isHuman = isBlog || chat.isHuman() || !contact.isSingleUserContact();
+        boolean isHuman = isBlog || chat.getModel().isHuman() || !contact.isSingleUserContact();
         if (isBot(contact)) {
             isHuman = false;
         }

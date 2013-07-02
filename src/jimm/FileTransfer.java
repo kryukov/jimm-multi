@@ -27,7 +27,8 @@ import java.io.*;
 import javax.microedition.io.*;
 import javax.microedition.lcdui.Image;
 
-import jimm.chat.Chat;
+import jimm.chat.ChatHistory;
+import jimm.chat.ChatModel;
 import jimm.chat.MessData;
 import jimm.comm.*;
 import jimm.modules.*;
@@ -64,7 +65,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
 
     private Protocol protocol;
     private Contact cItem;
-    private Chat chat;
+    private ChatModel chat;
 
     // #sijapp cond.if modules_ANDROID isnot "true" #
     private ViewFinder vf;
@@ -215,10 +216,10 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     }
     private void changeFileProgress(String message) {
         if (cItem.hasChat()) {
-            chat.changeFileProgress(progressInstance,
+            ChatHistory.instance.getUpdater().changeFileProgress(chat, progressInstance,
                     JLocale.getEllipsisString("sending_file"),
                     getProgressText() + "\n"
-                    + JLocale.getString(message));
+                            + JLocale.getString(message));
         }
     }
 
@@ -233,9 +234,10 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         return canceled;
     }
     private void addProgress() {
-        chat = protocol.getChat(cItem);
-        progressInstance = chat.addFileProgress(JLocale.getEllipsisString("sending_file"), getProgressText());
-        chat.activate();
+        chat = protocol.getChatModel(cItem);
+        progressInstance = ChatHistory.instance.getUpdater().addFileProgress(chat,
+                JLocale.getEllipsisString("sending_file"), getProgressText());
+        ChatHistory.instance.getUpdater().activate(chat);
         ContactList.getInstance().addTransfer(this);
     }
     public void setProgress(int percent) {
@@ -261,7 +263,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         }
         progressInstance.par.setProgress((byte)percent);
         if (cItem.hasChat()) {
-            chat.invalidate();
+            ChatHistory.instance.getUpdater().invalidate(chat);
         }
     }
     private void handleException(JimmException e) {

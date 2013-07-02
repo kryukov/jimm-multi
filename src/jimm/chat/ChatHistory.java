@@ -40,15 +40,23 @@ import jimmui.view.roster.VirtualContactList;
 
 public final class ChatHistory implements SelectListener {
     public static final ChatHistory instance = new ChatHistory();
+    private ChatUpdater updater = new ChatUpdater();
 
     private ChatHistory() {
+    }
+
+    public ChatUpdater getUpdater() {
+        return updater;
     }
 
     private int getTotal() {
         return ContactList.getInstance().jimmModel.chats.size();
     }
+    private ChatModel chatModelAt(int index) {
+        return (ChatModel) ContactList.getInstance().jimmModel.chats.elementAt(index);
+    }
     private Chat chatAt(int index) {
-        return (Chat) ContactList.getInstance().jimmModel.chats.elementAt(index);
+        return (Chat) ContactList.getInstance().jimmModel.modelToChat.get(ContactList.getInstance().jimmModel.chats.elementAt(index));
     }
     private Contact contactAt(int index) {
         return chatAt(index).getContact();
@@ -66,15 +74,15 @@ public final class ChatHistory implements SelectListener {
     public int getUnreadMessageCount() {
         int count = 0;
         for (int i = getTotal() - 1; 0 <= i; --i) {
-            count += chatAt(i).getUnreadMessageCount();
+            count += chatAt(i).getModel().getUnreadMessageCount();
         }
         return count;
     }
     public int getPersonalUnreadMessageCount(boolean all) {
         int count = 0;
-        Chat chat;
+        ChatModel chat;
         for (int i = getTotal() - 1; 0 <= i; --i) {
-            chat = chatAt(i);
+            chat = chatModelAt(i);
             if (all || chat.isHuman() || !chat.getContact().isSingleUserContact()) {
                 count += chat.getPersonalUnreadMessageCount();
             }
@@ -148,7 +156,7 @@ public final class ChatHistory implements SelectListener {
         Contact c = item.getContact();
         c.updateChatState(null);
         item.getProtocol().ui_updateContact(c);
-        if (0 < item.getUnreadMessageCount()) {
+        if (0 < item.getModel().getUnreadMessageCount()) {
             ContactList.getInstance().markMessages(c);
         }
     }
@@ -167,7 +175,7 @@ public final class ChatHistory implements SelectListener {
         }
     }
     private void clearChat(Chat chat) {
-        if (chat.isHuman() && !chat.getContact().isTemp()) {
+        if (chat.getModel().isHuman() && !chat.getModel().getContact().isTemp()) {
             chat.removeReadMessages();
 
         } else {
@@ -219,7 +227,7 @@ public final class ChatHistory implements SelectListener {
 
     private int getPreferredItem() {
         for (int i = 0; i < getTotal(); ++i) {
-            if (0 < chatAt(i).getPersonalUnreadMessageCount()) {
+            if (0 < chatAt(i).getModel().getPersonalUnreadMessageCount()) {
                 return i;
             }
         }
@@ -227,7 +235,7 @@ public final class ChatHistory implements SelectListener {
         int current  = 0;
         for (int i = 0; i < getTotal(); ++i) {
             Chat chat = chatAt(i);
-            if (0 < chat.getUnreadMessageCount()) {
+            if (0 < chat.getModel().getUnreadMessageCount()) {
                 return i;
             }
             if (currentContact == chat.getContact()) {
@@ -297,7 +305,7 @@ public final class ChatHistory implements SelectListener {
                 if (!chat.getContact().hasHistory()) {
                     continue;
                 }
-                int count = chat.getUnreadMessageCount();
+                int count = chat.getModel().getUnreadMessageCount();
                 for (int j = 0; j < count; ++j) {
                     MessData message = chat.getUnreadMessage(j);
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -345,7 +353,7 @@ public final class ChatHistory implements SelectListener {
     public void showChatList(boolean forceGoToChat) {
         if (forceGoToChat) {
             Chat current = chatAt(getPreferredItem());
-            if (0 < current.getUnreadMessageCount()) {
+            if (0 < current.getModel().getUnreadMessageCount()) {
                 current.activate();
                 return;
             }

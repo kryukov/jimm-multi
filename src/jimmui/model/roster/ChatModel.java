@@ -22,9 +22,9 @@ import java.util.Vector;
 public class ChatModel extends ContactListModel {
     @Override
     public void buildFlatItems(Vector items) {
-        Vector<Chat> chats = ContactList.getInstance().jimmModel.chats;
+        Vector<jimm.chat.ChatModel> chats = ContactList.getInstance().jimmModel.chats;
         for (int i = 0; i < chats.size(); ++i) {
-            items.addElement(((Chat)chats.elementAt(i)).getContact());
+            items.addElement(((jimm.chat.ChatModel)chats.elementAt(i)).getContact());
         }
     }
 

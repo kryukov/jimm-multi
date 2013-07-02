@@ -118,13 +118,13 @@ public class ContactMenu implements SelectListener {
 
             case Contact.USER_MENU_GRANT_AUTH:
                 protocol.grandAuth(contact.getUserId());
-                protocol.getChat(contact).resetAuthRequests();
+                protocol.getChatModel(contact).resetAuthRequests();
                 Jimm.getJimm().getDisplay().closeMenus();
                 break;
 
             case Contact.USER_MENU_DENY_AUTH:
                 protocol.denyAuth(contact.getUserId());
-                protocol.getChat(contact).resetAuthRequests();
+                protocol.getChatModel(contact).resetAuthRequests();
                 Jimm.getJimm().getDisplay().closeMenus();
                 break;
                 

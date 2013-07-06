@@ -92,12 +92,14 @@ public class ProtocolGroupContactModel extends ContactListModel {
         protos.put(protocol, protocolBranch);
 
         Updater.Update u = new Updater.Update(protocol,  null, null, Updater.Update.GROUP_REMOVE);
-        for (int i = 0; i < oldGroups.size(); ++i) {
-            u.group = (Group) oldGroups.elementAt(i);
+        if (null != oldGroups) {
+            for (int i = 0; i < oldGroups.size(); ++i) {
+                u.group = (Group) oldGroups.elementAt(i);
+                removeGroup(u);
+            }
+            u.group = null;
             removeGroup(u);
         }
-        u.group = null;
-        removeGroup(u);
 
         u.event = Updater.Update.GROUP_ADD;
         Vector inGroups = protocol.getGroupItems();

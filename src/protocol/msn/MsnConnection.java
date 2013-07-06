@@ -163,7 +163,7 @@ public class MsnConnection implements  Runnable {
             for (int i = 0; i < contacts.size(); ++i) {
                 Contact c = ((Contact)contacts.elementAt(i));
                 if (c.hasChat()) {
-                    ChatHistory.instance.unregisterChat(msn.getChat(c));
+                    ChatHistory.instance.unregisterChat(msn.getChatModel(c));
                 }
             }
         }

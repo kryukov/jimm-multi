@@ -1,6 +1,5 @@
 package jimmui.model.roster;
 
-import jimm.chat.Chat;
 import jimm.cl.ContactList;
 import protocol.Contact;
 import protocol.Group;

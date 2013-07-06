@@ -1,10 +1,12 @@
 package jimm.chat;
 
+import jimm.chat.message.Message;
 import jimm.comm.Util;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.jabber.Jabber;
 import protocol.jabber.JabberContact;
+import protocol.jabber.JabberServiceContact;
 import protocol.jabber.Jid;
 
 import java.util.Vector;
@@ -17,6 +19,8 @@ import java.util.Vector;
  * @author vladimir
  */
 public class ChatModel {
+    public static final int MAX_HIST_LAST_MESS = 5;
+
     public boolean writable = true;
     public Protocol protocol;
     public Contact contact;
@@ -26,7 +30,8 @@ public class ChatModel {
     protected short otherMessageCounter = 0;
     protected byte sysNoticeCounter = 0;
     protected byte authRequestCounter = 0;
-    private boolean ghgjgjh;
+    public int topOffset;
+    public int current;
 
     public int size() {
         return messData.size();
@@ -68,7 +73,7 @@ public class ChatModel {
         boolean notEmpty = (0 < authRequestCounter);
         authRequestCounter = 0;
         if (notEmpty) {
-            contact.updateChatState(ChatHistory.instance.getChat(contact));
+            contact.updateChatState(this);
             protocol.markMessages(contact);
         }
     }
@@ -81,7 +86,7 @@ public class ChatModel {
         otherMessageCounter = 0;
         sysNoticeCounter = 0;
         if (notEmpty) {
-            contact.updateChatState(ChatHistory.instance.getChat(contact));
+            contact.updateChatState(this);
             protocol.markMessages(contact);
         }
     }
@@ -115,5 +120,36 @@ public class ChatModel {
         }
         // #sijapp cond.end #
         return false;
+    }
+
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
+    MessData getUnreadMessage(int num) {
+        int index = size() - getUnreadMessageCount() + num;
+        return getMessage(index);
+    }
+
+    public final int getNewMessageIcon() {
+        if (0 < messageCounter) {
+            return Message.ICON_IN_MSG_HI;
+        } else if (0 < authRequestCounter) {
+            return Message.ICON_SYSREQ;
+        } else if (0 < otherMessageCounter) {
+            return Message.ICON_IN_MSG;
+        } else if (0 < sysNoticeCounter) {
+            return Message.ICON_SYS_OK;
+        }
+        return -1;
+    }
+    final String getMyName() {
+        // #sijapp cond.if protocols_JABBER is "true" #
+        if (getContact() instanceof JabberServiceContact) {
+            String nick = ((JabberServiceContact)getContact()).getMyName();
+            if (null != nick) return nick;
+        }
+        // #sijapp cond.end#
+        return getProtocol().getNick();
     }
 }

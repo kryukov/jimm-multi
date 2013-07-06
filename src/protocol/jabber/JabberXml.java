@@ -1576,10 +1576,8 @@ public final class JabberXml extends ClientConnection {
                     }
                     subject = null;
                     fromRes = null;
-                    if (StringConvertor.isEmpty(prevSubject) && !c.hasUnreadMessage()) {
-                        if (!(c.hasChat() && protocol.getChat(c).isVisibleChat())) {
-                            return;
-                        }
+                    if (StringConvertor.isEmpty(prevSubject) && !c.hasUnreadMessage() && !c.hasChat()) {
+                        return;
                     }
                 }
             }

@@ -59,12 +59,14 @@ public class GroupContactModel extends ContactListModel {
     }
 
     public void removeGroup(Updater.Update u) {
-        boolean used = false;
-        for (int i = 0; i < getProtocolCount(); ++i) {
-            Protocol p = getProtocol(i);
-            if ((u.protocol != p) && (null != p.getGroup(u.group.getName()))) {
-                used = true;
-                break;
+        boolean used = (null == u.group);
+        if (!used) {
+            for (int i = 0; i < getProtocolCount(); ++i) {
+                Protocol p = getProtocol(i);
+                if ((u.protocol != p) && (null != p.getGroup(u.group.getName()))) {
+                    used = true;
+                    break;
+                }
             }
         }
         if (used) {
@@ -137,12 +139,14 @@ public class GroupContactModel extends ContactListModel {
 
     public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
         Updater.Update u = new Updater.Update(protocol,  null, null, Updater.Update.GROUP_REMOVE);
-        for (int i = 0; i < oldGroups.size(); ++i) {
-            u.group = (Group) oldGroups.elementAt(i);
+        if (null != oldGroups) {
+            for (int i = 0; i < oldGroups.size(); ++i) {
+                u.group = (Group) oldGroups.elementAt(i);
+                removeGroup(u);
+            }
+            u.group = null;
             removeGroup(u);
         }
-        u.group = null;
-        removeGroup(u);
 
         u.event = Updater.Update.GROUP_ADD;
         Vector inGroups = protocol.getGroupItems();

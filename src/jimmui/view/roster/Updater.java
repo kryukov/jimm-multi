@@ -1,6 +1,5 @@
 package jimmui.view.roster;
 
-import jimm.chat.Chat;
 import jimmui.model.roster.*;
 import jimm.Options;
 import jimm.cl.ContactList;
@@ -29,11 +28,11 @@ public class Updater {
         }
     }
 
-    public void unregisterChat(Chat item) {
+    public void unregisterChat(jimm.chat.ChatModel item) {
         update(item.getContact());
     }
 
-    public void registerChat(Chat item) {
+    public void registerChat(jimm.chat.ChatModel item) {
         update(item.getContact());
     }
 

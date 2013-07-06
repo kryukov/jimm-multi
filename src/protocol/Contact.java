@@ -137,7 +137,8 @@ abstract public class Contact implements TreeNode, Sortable {
         if ((null != editor) && editor.getTextBox().isShown()) {
             vis = editor.getTextBox();
         } else if (hasChat()) {
-            vis = ChatHistory.instance.getChat(this);
+            ChatModel chat = ChatHistory.instance.getChatModel(this);
+            vis = ChatHistory.instance.getChat(chat);
         }
         UIUpdater.startFlashCaption(vis, text);
     }
@@ -147,11 +148,11 @@ abstract public class Contact implements TreeNode, Sortable {
     public void activate(Protocol p) {
         ContactList.getInstance().setCurrentContact(this);
 
-        Chat chat = p.getChat(this);
+        ChatModel chat = p.getChatModel(this);
         if (hasChat()) {
-            chat.activate();
+            ChatHistory.instance.getUpdater().activate(chat);
         } else {
-            chat.writeMessage(null);
+            ChatHistory.instance.getUpdater().writeMessage(chat, null);
         }
     }
 ///////////////////////////////////////////////////////////////////////////
@@ -202,7 +203,8 @@ abstract public class Contact implements TreeNode, Sortable {
     public final boolean hasChat() {
         return (booleanValues & HAS_CHAT) != 0;
     }
-    public final void updateChatState(Chat chat) {
+
+    public final void updateChatState(ChatModel chat) {
         int icon = -1;
         if (null != chat) {
             icon = chat.getNewMessageIcon();

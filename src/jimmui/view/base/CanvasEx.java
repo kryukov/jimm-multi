@@ -263,14 +263,4 @@ abstract public class CanvasEx extends DisplayableEx {
 
     protected void sizeChanged(int prevW, int prevH, int w, int h) {
     }
-
-    public int getMinScreenMetrics() {
-        // #sijapp cond.if modules_ANDROID is "true" #
-        if (true) return getWidth();
-        // #sijapp cond.end #
-        // #sijapp cond.if modules_TOUCH is "true" #
-        if (true) return Math.min(getWidth(), getHeight());
-        // #sijapp cond.end #
-        return getWidth();
-    }
 }

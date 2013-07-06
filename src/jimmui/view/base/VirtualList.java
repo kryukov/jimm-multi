@@ -86,7 +86,7 @@ public abstract class VirtualList extends CanvasEx {
     }
 
     // returns height of draw area in pixels
-    protected final int getContentHeight() {
+    public final int getContentHeight() {
         return getHeight() - bar.getHeight() - 1;
     }
 
@@ -311,7 +311,7 @@ public abstract class VirtualList extends CanvasEx {
         return size;
     }
 
-    protected final void setTopByOffset(int offset) {
+    public final void setTopByOffset(int offset) {
         offset = Math.max(0, Math.min(offset, getFullSize() - getContentHeight()));
         int top = getItemByOffset(offset);
         setTop(top, offset - getOffset(top));
@@ -327,7 +327,7 @@ public abstract class VirtualList extends CanvasEx {
         }
         return height;
     }
-    protected final int getFullSize() {
+    public final int getFullSize() {
         return getOffset(getSize());
     }
 

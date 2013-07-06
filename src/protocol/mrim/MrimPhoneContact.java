@@ -9,6 +9,7 @@
 
 package protocol.mrim;
 
+import jimm.chat.ChatHistory;
 import jimmui.view.icons.*;
 import jimmui.view.menu.*;
 import protocol.*;
@@ -36,7 +37,7 @@ public class MrimPhoneContact extends MrimContact {
     }
     public void activate(Protocol p) {
         if (hasChat()) {
-            p.getChat(this).activate();
+            ChatHistory.instance.getUpdater().activate(p.getChatModel(this));
             
         } else {
             new ContactMenu(p, this).doAction(USER_MENU_SEND_SMS);

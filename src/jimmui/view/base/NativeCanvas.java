@@ -562,7 +562,10 @@ public class NativeCanvas extends Canvas {
         }
         if (true) return minScreenMetrics;
         // #sijapp cond.end #
-        return Math.min(getWidth(), getHeight());
+        // #sijapp cond.if modules_TOUCH is "true" #
+        if (true) return Math.min(getWidth(), getHeight());
+        // #sijapp cond.end #
+        return getWidth();
     }
 
     public static boolean isLongFirePress() {

@@ -10,6 +10,7 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
+import jimm.chat.ChatHistory;
 import jimmui.view.icons.*;
 import java.util.Vector;
 import jimm.JimmUI;
@@ -132,7 +133,7 @@ public final class ConferenceParticipants extends VirtualList {
                         return;
                     }
                 }
-                protocol.getChat(conference).writeMessageTo(nick);
+                ChatHistory.instance.getUpdater().writeMessageTo(conference, nick);
                 break;
 
             case COMMAND_PRIVATE:

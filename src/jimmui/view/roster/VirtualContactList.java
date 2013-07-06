@@ -387,8 +387,8 @@ public final class VirtualContactList extends VirtualList {
             switch (keyCode) {
                 case NativeCanvas.CLEAR_KEY:
                     if ((item instanceof Contact) && ((Contact)item).hasChat()) {
-                        Chat chat = ChatHistory.instance.getChat((Contact)item);
-                        chat.removeReadMessages();
+                        ChatModel chat = ChatHistory.instance.getChatModel((Contact)item);
+                        ChatHistory.instance.getUpdater().removeReadMessages(chat);
                     }
                     return;
             }

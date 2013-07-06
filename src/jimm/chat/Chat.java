@@ -40,9 +40,7 @@ import jimm.comm.*;
 import jimm.history.*;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
-import jimm.modules.*;
 import protocol.*;
-import protocol.jabber.*;
 
 import javax.microedition.lcdui.Font;
 
@@ -54,7 +52,6 @@ public final class Chat extends VirtualList {
     private boolean classic = false;
     private Icon[] statusIcons = new Icon[7];
     private ChatModel model = new ChatModel();
-    private boolean showStatus = true;
     private static boolean selectMode;
     ///////////////////////////////////////////
 
@@ -67,20 +64,12 @@ public final class Chat extends VirtualList {
     }
 
     ///////////////////////////////////////////
-    public Chat(Protocol p, Contact item) {
+    public Chat(ChatModel model) {
         super(null);
-        model.contact = item;
-        model.protocol = p;
+        this.model = model;
 
         setFontSet(GraphicsEx.chatFontSet);
-        // #sijapp cond.if modules_HISTORY is "true" #
-        fillFromHistory();
-        // #sijapp cond.end #
         setTopByOffset(getFullSize());
-    }
-
-    void setContact(Contact item) {
-        model.contact = item;
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
@@ -128,8 +117,6 @@ public final class Chat extends VirtualList {
     }
     public void updateStatus() {
         updateStatusIcons();
-        showStatus = true;
-        showStatusPopup();
         invalidate();
     }
 
@@ -211,7 +198,7 @@ public final class Chat extends VirtualList {
         }
         MessData md = getCurrentMsgData();
         String nick = ((null == md) || md.isFile()) ? null : md.getNick();
-        writeMessageTo(getMyName().equals(nick) ? null : nick);
+        writeMessageTo(model.getMyName().equals(nick) ? null : nick);
     }
 
     protected boolean qwertyKey(int keyCode, int type) {
@@ -302,11 +289,11 @@ public final class Chat extends VirtualList {
             // #sijapp cond.end#
 
             case ACTION_DEL_CHAT:
-                removeMessagesAtCursor();
+                ChatHistory.instance.getUpdater().removeMessagesAtCursor(model);
                 if (0 < getSize()) {
                     restore();
                 } else {
-                    ChatHistory.instance.unregisterChat(this);
+                    ChatHistory.instance.unregisterChat(model);
                     ContactList.getInstance().activate(null);
                 }
                 break;
@@ -346,7 +333,7 @@ public final class Chat extends VirtualList {
         }
         menu.addItem("copy_text", ACTION_COPY_TEXT);
         // #sijapp cond.if modules_HISTORY is "true" #
-        if (!selectMode && !Options.getBoolean(Options.OPTION_HISTORY) && hasHistory()) {
+        if (!selectMode && !Options.getBoolean(Options.OPTION_HISTORY) && getContact().hasHistory()) {
             menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
         }
         // #sijapp cond.end#
@@ -423,7 +410,7 @@ public final class Chat extends VirtualList {
 
         // #sijapp cond.if modules_ANDROID isnot "true" #
         // #sijapp cond.if modules_HISTORY is "true" #
-        if (!Options.getBoolean(Options.OPTION_HISTORY) && hasHistory()) {
+        if (!Options.getBoolean(Options.OPTION_HISTORY) && getContact().hasHistory()) {
             menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
         }
         // #sijapp cond.end#
@@ -445,34 +432,6 @@ public final class Chat extends VirtualList {
         invalidate();
     }
 
-    // #sijapp cond.if protocols_JABBER is "true" #
-    public static boolean isHighlight(String text, String nick) {
-        if (null == nick) {
-            return false;
-        }
-        for (int index = text.indexOf(nick); -1 != index; index = text.indexOf(nick, index + 1)) {
-            if (0 < index) {
-                char before = text.charAt(index - 1);
-                if ((' ' != before) && ('\n' != before) && ('\t' != before)) {
-                    continue;
-                }
-            }
-            if (index + nick.length() + 2 < text.length()) {
-                // Calculate space char...
-                // ' a': min(' ', 'a') is ' '
-                // 'a ': min('a', ' ') is ' '
-                char after = (char) Math.min(text.charAt(index + nick.length()),
-                        text.charAt(index + nick.length() + 1));
-                if ((' ' != after) && ('\n' != after) && ('\t' != after)) {
-                    continue;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-    // #sijapp cond.end#
-
     // #sijapp cond.if modules_FILES="true"#
     public MessData addFileProgress(String caption, String text) {
         long time = Jimm.getCurrentGmtTime();
@@ -487,7 +446,7 @@ public final class Chat extends VirtualList {
             lock();
             model.add(mData);
             setCurrentItemIndex(getSize() - 1);
-            removeOldMessages();
+            ChatHistory.instance.getUpdater().removeOldMessages(model);
             unlock();
         }
         ChatHistory.instance.registerChat(this);
@@ -495,7 +454,7 @@ public final class Chat extends VirtualList {
     }
 
     public void changeFileProgress(MessData mData, String caption, String text) {
-        final int width = getMinScreenMetrics() - 3;
+        final int width = NativeCanvas.getInstance().getMinScreenMetrics() - 3;
         Parser parser = new Parser(mData.par, getFontSet(), width);
         parser.addText(text, THEME_TEXT, FONT_STYLE_PLAIN);
 
@@ -513,151 +472,14 @@ public final class Chat extends VirtualList {
     }
     // #sijapp cond.end#
 
-    private int getIcon(Message message) {
-        if (message instanceof SystemNotice) {
-            int type = ((SystemNotice)message).getSysnoteType();
-            if (SystemNotice.SYS_NOTICE_MESSAGE == type) {
-                return Message.ICON_NONE;
-            }
-            return Message.ICON_SYSREQ;
-        }
-        if (message.isIncoming()) {
-            // #sijapp cond.if protocols_JABBER is "true" #
-            if (!getContact().isSingleUserContact()
-                    && !isHighlight(message.getProcessedText(), getMyName())) {
-                return Message.ICON_IN_MSG;
-            }
-            // #sijapp cond.end#
-            return Message.ICON_IN_MSG_HI;
-        }
-        return Message.ICON_OUT_MSG;
-    }
-
-    private String getMyName() {
-        // #sijapp cond.if protocols_JABBER is "true" #
-        if (getContact() instanceof JabberServiceContact) {
-            String nick = ((JabberServiceContact)getContact()).getMyName();
-            if (null != nick) return nick;
-        }
-        // #sijapp cond.end#
-        return getProtocol().getNick();
-    }
     private String getFrom(Message message) {
         String senderName = message.getName();
         if (null == senderName) {
             senderName = message.isIncoming()
                     ? getContact().getName()
-                    : getMyName();
+                    : model.getMyName();
         }
         return senderName;
-    }
-    private void addTextToForm(Message message) {
-        String from = getFrom(message);
-        boolean incoming = message.isIncoming();
-        boolean offline = message.isOffline();
-
-        String messageText = message.getProcessedText();
-        messageText = StringConvertor.removeCr(messageText);
-        if (StringConvertor.isEmpty(messageText)) {
-            return;
-        }
-        boolean isMe = messageText.startsWith(PlainMessage.CMD_ME);
-        if (isMe) {
-            messageText = messageText.substring(4);
-            if (0 == messageText.length()) {
-                return;
-            }
-        }
-
-        Parser parser = createParser();
-
-        final byte captColor = getInOutColor(incoming);
-        final byte plain = FONT_STYLE_PLAIN;
-        if (isMe) {
-            Icon icon = Message.msgIcons.iconAt(getIcon(message));
-            if (null != icon) {
-                parser.addImage(icon);
-            }
-            parser.addText("*", captColor, plain);
-            parser.addText(from, captColor, plain);
-            parser.addText(" ", captColor, plain);
-            parser.addTextWithSmiles(messageText, captColor, plain);
-
-        } else {
-            byte color = THEME_TEXT;
-            // #sijapp cond.if protocols_JABBER is "true" #
-            if (incoming && !getContact().isSingleUserContact()
-                    && isHighlight(messageText, getMyName())) {
-                color = CanvasEx.THEME_CHAT_HIGHLIGHT_MSG;
-            }
-            // #sijapp cond.end#
-            parser.addTextWithSmiles(messageText, color, plain);
-        }
-
-        short flags = 0;
-        if (incoming) {
-            flags |= MessData.INCOMING;
-        }
-        if (isMe) {
-            flags |= MessData.ME;
-        }
-        if (Util.hasURL(messageText)) {
-            flags |= MessData.URLS;
-        }
-        if (message instanceof SystemNotice) {
-            flags |= MessData.SERVICE;
-        }
-
-        Par par = parser.getPar();
-        MessData mData = new MessData(message.getNewDate(), messageText, from, flags, getIcon(message), par);
-        if (!incoming) {
-            message.setVisibleIcon(par, mData);
-        }
-        synchronized (this) {
-            boolean atTheEnd;
-            try {
-                atTheEnd = (getFullSize() - getTopOffset() <= getContentHeight());
-            } catch (Exception ignored) {
-                atTheEnd = true;
-            }
-            lock();
-            model.add(mData);
-
-            int size = getSize();
-            if (incoming) {
-                int currentMessageIndex = getCurrItem();
-                if (isVisibleChat()) {
-                    if (atTheEnd) {
-                        // #sijapp cond.if modules_TOUCH is "true"#
-                        atTheEnd = (currentMessageIndex == size - 2);
-                        if (NativeCanvas.getInstance().touchControl.touchUsed) {
-                            atTheEnd = true;
-                        }
-                        // #sijapp cond.end#
-                    }
-                    if (atTheEnd) {
-                        setCurrentItemIndex(size - 1);
-                    }
-
-                } else {
-                    int unread = model.getUnreadMessageCount();
-                    if (size - unread - 2 <= currentMessageIndex) {
-                        setCurrentItemToTop(Math.max(0, size - 1 - unread));
-                    }
-                }
-
-            } else if (model.isBlogBot()) {
-                if (atTheEnd) {
-                    setCurrentItemIndex(size - 1);
-                }
-
-            } else {
-                setCurrentItemIndex(size - 1);
-            }
-
-            removeOldMessages();
-            unlock();
-        }
     }
 
     protected void restoring() {
@@ -678,9 +500,6 @@ public final class Chat extends VirtualList {
         resetSelected();
         line.setString("");
         showTop();
-        if (showStatus) {
-            showStatusPopup();
-        }
         ContactList.getInstance()._setActiveContact(getContact());
         // #sijapp cond.if modules_ANDROID is "true" #
         NativeCanvas.getInstance().getInput().setOwner(this);
@@ -688,7 +507,7 @@ public final class Chat extends VirtualList {
     }
     // #sijapp cond.if modules_ANDROID is "true" #
     public void sendMessage(String message) {
-        ChatHistory.instance.registerChat(Chat.this);
+        ChatHistory.instance.registerChat(model);
         NativeCanvas.getInstance().getInput().resetText();
         if (!getContact().isSingleUserContact() && message.endsWith(", ")) {
             message = "";
@@ -698,16 +517,6 @@ public final class Chat extends VirtualList {
         }
     }
     // #sijapp cond.end #
-    private void showStatusPopup() {
-        showStatus = false;
-//        String status = getContact().getStatusText();
-//        if (StringConvertor.isEmpty(status)) {
-//            status = getContact().getXStatusText();
-//        }
-//        if (!StringConvertor.isEmpty(status)) {
-//            new Popup(this, status).show();
-//        }
-    }
 
     protected boolean isCurrentItemSelectable() {
         return true;
@@ -803,70 +612,30 @@ public final class Chat extends VirtualList {
     }
 
     // #sijapp cond.if modules_HISTORY is "true" #
-    final static private int MAX_HIST_LAST_MESS = 5;
-
-    private boolean hasHistory() {
-        return getContact().hasHistory();
-    }
-    private void fillFromHistory() {
-        if (!hasHistory()) {
-            return;
-        }
-        if (model.isBlogBot()) {
-            return;
-        }
-        if (Options.getBoolean(Options.OPTION_HISTORY)) {
-            if (0 != getSize()) {
-                return;
-            }
-            HistoryStorage hist = getHistory();
-            hist.openHistory();
-            int recCount = hist.getHistorySize();
-            if (0 == recCount) {
-                return;
-            }
-
-            int loadOffset = Math.max(recCount - MAX_HIST_LAST_MESS, 0);
-            for (int i = loadOffset; i < recCount; ++i) {
-                CachedRecord rec = hist.getRecord(i);
-                if (null == rec) {
-                    continue;
-                }
-                long date = Util.createLocalDate(rec.date);
-                PlainMessage message;
-                if (rec.isIncoming()) {
-                    message = new PlainMessage(rec.from, getProtocol(), date, rec.text, true);
-                } else {
-                    message = new PlainMessage(getProtocol(), getContact(), date, rec.text);
-                }
-                addTextToForm(message);
-            }
-            hist.closeHistory();
-        }
-    }
-
     public HistoryStorage getHistory() {
-        if ((null == history) && hasHistory()) {
+        if ((null == history) && getContact().hasHistory()) {
             history = HistoryStorage.getHistory(getContact());
         }
         return history;
     }
 
     private void addToHistory(String msg, boolean incoming, String nick, long time) {
-        if (hasHistory()) {
+        if (getContact().hasHistory()) {
             getHistory().addText(msg, incoming, nick, time);
         }
     }
 
     private void addTextToHistory() {
-        if (!hasHistory()) {
+        if (!getContact().hasHistory()) {
             return;
         }
         MessData md = getCurrentMsgData();
         if ((null == md) || (null == md.getText())) {
             return;
         }
-        addToHistory(md.getText(), md.isIncoming(), md.getNick(), md.getTime());
+        if (getContact().hasHistory()) {
+            getHistory().addText(md.getText(), md.isIncoming(), md.getNick(), md.getTime());
+        }
     }
     // #sijapp cond.end#
 
@@ -883,36 +652,6 @@ public final class Chat extends VirtualList {
         MessData md = getCurrentMsgData();
         return (null == md) ? "" : md.getText();
     }
-
-    private void removeMessages(int limit) {
-        if (getSize() < limit) {
-            return;
-        }
-        if ((0 < limit) && (0 < getSize())) {
-            while (limit < model.size()) {
-                int top = Math.max(0, getTopOffset() - getItemHeight(0));
-                model.removeTopMessage();
-                setCurrentItemIndex(Math.max(0, getCurrItem() - 1));
-                setTopByOffset(top);
-            }
-            invalidate();
-        } else {
-            ChatHistory.instance.unregisterChat(this);
-        }
-    }
-
-    private void removeOldMessages() {
-        removeMessages(Options.getInt(Options.OPTION_MAX_MSG_COUNT));
-    }
-
-    public void removeReadMessages() {
-        removeMessages(model.getUnreadMessageCount());
-    }
-
-    public void removeMessagesAtCursor() {
-        removeMessages(model.size() - getCurrItem() - 1);
-    }
-
 
     private void resetSelected() {
         selectMode = false;
@@ -954,7 +693,7 @@ public final class Chat extends VirtualList {
     }
 
     public boolean empty() {
-        return (0 == model.size()) && (0 == getSize());
+        return 0 == model.size();
     }
 
     public boolean isVisibleChat() {
@@ -963,88 +702,8 @@ public final class Chat extends VirtualList {
     }
 
 
-
-    public final int getNewMessageIcon() {
-        if (0 < model.messageCounter) {
-            return Message.ICON_IN_MSG_HI;
-        } else if (0 < model.authRequestCounter) {
-            return Message.ICON_SYSREQ;
-        } else if (0 < model.otherMessageCounter) {
-            return Message.ICON_IN_MSG;
-        } else if (0 < model.sysNoticeCounter) {
-            return Message.ICON_SYS_OK;
-        }
-        return -1;
-    }
-
-    public void addMyMessage(PlainMessage message) {
-        ChatHistory.instance.registerChat(this);
-        model.resetUnreadMessages();
-        addTextToForm(message);
-        // #sijapp cond.if modules_HISTORY is "true" #
-        if (Options.getBoolean(Options.OPTION_HISTORY)) {
-            addToHistory(message.getText(), false, getFrom(message), message.getNewDate());
-        }
-        // #sijapp cond.end#
-    }
-    // Adds a message to the message display
-
-    private short inc(short val) {
-        return (short) ((val < Short.MAX_VALUE) ? (val + 1) : val);
-    }
-    private byte inc(byte val) {
-        return (byte) ((val < Byte.MAX_VALUE) ? (val + 1) : val);
-    }
-    public void addMessage(Message message, boolean toHistory) {
-        ChatHistory.instance.registerChat(this);
-        boolean inc = !isVisibleChat();
-        if (message instanceof PlainMessage) {
-
-            addTextToForm(message);
-            // #sijapp cond.if modules_HISTORY is "true" #
-            if (toHistory && Options.getBoolean(Options.OPTION_HISTORY)) {
-                final String nick = getFrom(message);
-                addToHistory(message.getText(), true, nick, message.getNewDate());
-            }
-            // #sijapp cond.end#
-            if (inc) {
-                model.messageCounter = inc(model.messageCounter);
-                // #sijapp cond.if protocols_JABBER is "true" #
-                if (!getContact().isSingleUserContact()
-                        && !isHighlight(message.getProcessedText(), getMyName())) {
-                    model.otherMessageCounter = inc(model.otherMessageCounter);
-                    model.messageCounter--;
-                }
-                // #sijapp cond.end#
-            }
-
-        } else if (message instanceof SystemNotice) {
-            SystemNotice notice = (SystemNotice) message;
-            if (SystemNotice.SYS_NOTICE_AUTHREQ == notice.getSysnoteType()) {
-                inc = true;
-                model.authRequestCounter = inc(model.authRequestCounter);
-
-            } else if (inc) {
-                model.sysNoticeCounter = inc(model.sysNoticeCounter);
-            }
-
-            // #sijapp cond.if modules_MAGIC_EYE is "true" #
-            MagicEye.addAction(getProtocol(), getContact().getUserId(), message.getText());
-            // #sijapp cond.end #
-            addTextToForm(message);
-        }
-        if (inc) {
-            getContact().updateChatState(this);
-        }
-    }
-
     public Contact getContact() {
         return model.contact;
-    }
-
-    MessData getUnreadMessage(int num) {
-        int index = model.size() - model.getUnreadMessageCount() + num;
-        return model.getMessage(index);
     }
 
     public ChatModel getModel() {
@@ -1052,7 +711,7 @@ public final class Chat extends VirtualList {
     }
 
     private Parser createParser() {
-        return new Parser(getFontSet(), getMinScreenMetrics() - 3);
+        return new Parser(getFontSet(), NativeCanvas.getInstance().getMinScreenMetrics() - 3);
     }
 
 }

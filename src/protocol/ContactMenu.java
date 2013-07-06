@@ -10,6 +10,7 @@
 package protocol;
 
 import jimm.*;
+import jimm.chat.ChatHistory;
 import jimm.chat.message.PlainMessage;
 import jimm.cl.ContactList;
 import jimm.forms.ManageContactListForm;
@@ -42,11 +43,11 @@ public class ContactMenu implements SelectListener {
     public void doAction(int cmd) {
         switch (cmd) {
             case Contact.USER_MENU_MESSAGE: /* Send plain message */
-                protocol.getChat(contact).writeMessage(null);
+                ChatHistory.instance.getUpdater().writeMessage(contact, null);
                 break;
                 
             case Contact.USER_MENU_PASTE: /* Send plain message without quotation */
-                protocol.getChat(contact).writeMessage(JimmUI.getClipBoardText());
+                ChatHistory.instance.getUpdater().writeMessage(contact, JimmUI.getClipBoardText());
                 break;
                 
             case Contact.USER_MENU_ADD_USER:
@@ -67,7 +68,7 @@ public class ContactMenu implements SelectListener {
 
             case Contact.USER_MENU_WAKE:
                 protocol.sendMessage(contact, PlainMessage.CMD_WAKEUP, true);
-                protocol.getChat(contact).activate();
+                ChatHistory.instance.getUpdater().activate(ChatHistory.instance.getChatModel(contact));
                 break;
 
             // #sijapp cond.if modules_FILES is "true"#
@@ -136,17 +137,7 @@ public class ContactMenu implements SelectListener {
     // #sijapp cond.if modules_HISTORY is "true" #
     private void showHistory() {
         if (contact.hasHistory()) {
-            HistoryStorage history;
-            if (contact.hasChat()) {
-                history = protocol.getChat(contact).getHistory();
-            } else {
-                history = HistoryStorage.getHistory(contact);
-            }
-            // #sijapp cond.if modules_ANDROID is "true" #
-            ru.net.jimm.JimmActivity.getInstance().externalApi.showHistory(history);
-            // #sijapp cond.else #
-            new HistoryStorageList(history).show();
-            // #sijapp cond.end #
+            ChatHistory.instance.getUpdater().showHistory(contact);
         }
     }
     // #sijapp cond.end#

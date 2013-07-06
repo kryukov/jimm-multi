@@ -1,6 +1,5 @@
 package jimm.cl;
 
-import jimm.chat.Chat;
 import jimm.chat.ChatModel;
 import jimm.comm.Util;
 import protocol.Protocol;
@@ -20,19 +19,19 @@ public class JimmModel {
     public final Vector<ChatModel> chats = new Vector<ChatModel>();
     public final Hashtable modelToChat = new Hashtable();
 
-    public boolean registerChat(Chat item) {
+    public boolean registerChat(ChatModel item) {
         if (-1 == Util.getIndex(chats, item)) {
-            chats.addElement(item.getModel());
-            modelToChat.put(item.getModel(), item);
+            chats.addElement(item);
             item.getContact().updateChatState(item);
             return true;
         }
         return false;
     }
-    public boolean unregisterChat(Chat item) {
+    public boolean unregisterChat(ChatModel item) {
         if (null == item) return false;
         chats.removeElement(item);
-        item.getModel().clear();
+        modelToChat.remove(item);
+        item.clear();
         item.getContact().updateChatState(null);
         return true;
     }

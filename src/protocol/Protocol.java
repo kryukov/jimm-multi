@@ -621,9 +621,9 @@ abstract public class Protocol {
         }
         if (item.isTyping() != type) {
             item.beginTyping(type);
-            Chat chat = ChatHistory.instance.getChat(item);
+            ChatModel chat = ChatHistory.instance.getChatModel(item);
             if (null != chat) {
-                chat.beginTyping(type);
+                ChatHistory.instance.getUpdater().typing(chat, type);
             }
             if (type && isConnected()) {
                 playNotification(Notify.NOTIFY_TYPING);
@@ -633,12 +633,6 @@ abstract public class Protocol {
         }
     }
     // #sijapp cond.end #
-    private void updateChatStatus(Contact c) {
-        Chat chat = ChatHistory.instance.getChat(c);
-        if (null != chat) {
-            chat.updateStatus();
-        }
-    }
 
     protected final void setStatusesOffline() {
         for (int i = contacts.size() - 1; i >= 0; --i) {
@@ -759,7 +753,11 @@ abstract public class Protocol {
         getContactList().markMessages(contact);
     }
     public final void ui_changeContactStatus(Contact contact) {
-        updateChatStatus(contact);
+        ChatModel chat = ChatHistory.instance.getChatModel(contact);
+        Chat view = ChatHistory.instance.getChat(chat);
+        if (null != view) {
+            view.updateStatus();
+        }
         ui_updateContact(contact);
     }
     public final void ui_updateContact(Contact contact) {
@@ -791,7 +789,7 @@ abstract public class Protocol {
             ui_removeFromAnyGroup(contact);
         }
         if (contact.hasChat()) {
-            ChatHistory.instance.unregisterChat(ChatHistory.instance.getChat(contact));
+            ChatHistory.instance.unregisterChat(ChatHistory.instance.getChatModel(contact));
         }
         if (inCL) {
             if (isConnected()) {
@@ -853,15 +851,15 @@ abstract public class Protocol {
         }
 
         // Adds a message to the message display
-        Chat chat = getChat(contact);
-        chat.addMessage(message, !silent && !message.isWakeUp());
+        ChatModel chat = getChatModel(contact);
+        ChatHistory.instance.getUpdater().addMessage(chat, message, !silent && !message.isWakeUp());
         if (message instanceof SystemNotice) {
             SystemNotice notice = (SystemNotice) message;
             if (SystemNotice.SYS_NOTICE_AUTHREQ == notice.getSysnoteType()) {
                 if (autoGrand.contains(contact.getUserId())) {
                     grandAuth(contact.getUserId());
                     autoGrand.removeElement(contact.getUserId());
-                    chat.getModel().resetAuthRequests();
+                    chat.resetAuthRequests();
                 }
             }
         }
@@ -873,10 +871,10 @@ abstract public class Protocol {
         }
         ContactList.getInstance().receivedMessage(contact);
     }
-    private void addMessageNotify(Chat chat, Contact contact, Message message) {
+    private void addMessageNotify(ChatModel chat, Contact contact, Message message) {
         boolean isPersonal = contact.isSingleUserContact();
         boolean isBlog = isBlogBot(contact.getUserId());
-        boolean isHuman = isBlog || chat.getModel().isHuman() || !contact.isSingleUserContact();
+        boolean isHuman = isBlog || chat.isHuman() || !contact.isSingleUserContact();
         if (isBot(contact)) {
             isHuman = false;
         }
@@ -888,7 +886,7 @@ abstract public class Protocol {
             // regexp: "^nick. "
             isPersonal = msg.startsWith(myName)
                     && msg.startsWith(" ", myName.length() + 1);
-            isMention = Chat.isHighlight(msg, myName);
+            isMention = MessageBuilder.isHighlight(msg, myName);
         }
         // #sijapp cond.end #
 
@@ -897,7 +895,12 @@ abstract public class Protocol {
         isPaused = Jimm.isPaused() && ContactList.getInstance().isCollapsible();
         if (isPaused && isPersonal && isHuman) {
             if (Options.getBoolean(Options.OPTION_BRING_UP)) {
-                Jimm.maximize(getChat(contact));
+                ChatModel model = getChatModel(contact);
+                Chat view = ChatHistory.instance.getChat(model);
+                if (null == view) {
+                    view = new Chat(model);
+                }
+                Jimm.maximize(view);
                 isPaused = false;
             }
         }
@@ -1072,7 +1075,7 @@ abstract public class Protocol {
                 if (!cmdExecuted) {
                     String text = JLocale.getString("jabber_command_not_found");
                     SystemNotice notice = new SystemNotice(this, SystemNotice.SYS_NOTICE_MESSAGE, to.getUserId(), text);
-                    getChat(to).addMessage(notice, false);
+                    ChatHistory.instance.getUpdater().addMessage(getChatModel(to), notice, false);
                 }
                 return;
             }
@@ -1080,7 +1083,7 @@ abstract public class Protocol {
             sendSomeMessage(plainMsg);
         }
         if (addToChat) {
-            getChat(to).addMyMessage(plainMsg);
+            ChatHistory.instance.getUpdater().addMyMessage(getChatModel(to), plainMsg);
         }
     }
 
@@ -1113,17 +1116,14 @@ abstract public class Protocol {
         return contact.getUserId();
     }
     public final ChatModel getChatModel(Contact contact) {
-        return getChat(contact).getModel();
-    }
-    public final Chat getChat(Contact contact) {
-        Chat chat = ChatHistory.instance.getChat(contact);
+        ChatModel chat = ChatHistory.instance.getChatModel(contact);
         if (null == chat) {
-            chat = new Chat(this, contact);
+            chat = ChatHistory.instance.getUpdater().createModel(this, contact);
             if (!inContactList(contact)) {
                 contact.setTempFlag(true);
                 addLocalContact(contact);
             }
-            if (!chat.empty() || !contact.isSingleUserContact()) {
+            if ((0 < chat.size()) || !contact.isSingleUserContact()) {
                 ChatHistory.instance.registerChat(chat);
             }
         }

@@ -20,7 +20,6 @@ import jimm.comm.*;
 import jimm.modules.*;
 import jimm.util.JLocale;
 import protocol.*;
-import javax.microedition.lcdui.*;
 import protocol.net.ClientConnection;
 
 /**
@@ -1105,7 +1104,7 @@ public final class JabberXml extends ClientConnection {
             }
             if (showError) {
                 getJabber().addMessage(new SystemNotice(getJabber(),
-                        SystemNotice.SYS_NOTICE_ERROR, from, getError(errorNode)));
+                        SystemNotice.TYPE_NOTICE_ERROR, from, getError(errorNode)));
             }
 
             Contact c = getJabber().getItemByUIN(from);
@@ -1121,7 +1120,7 @@ public final class JabberXml extends ClientConnection {
                 sendSubscribed(from);
                 requestSubscribe(from);
             } else {
-                getJabber().addMessage(new SystemNotice(getJabber(), SystemNotice.SYS_NOTICE_AUTHREQ, from, null));
+                getJabber().addMessage(new SystemNotice(getJabber(), SystemNotice.TYPE_NOTICE_AUTHREQ, from, null));
             }
             Contact c = getJabber().getItemByUIN(from);
             autoRenameContact(c, x);

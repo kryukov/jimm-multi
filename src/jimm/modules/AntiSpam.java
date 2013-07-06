@@ -58,7 +58,7 @@ public class AntiSpam {
     private void denyAuth(Protocol protocol, Message message) {
         if (message instanceof SystemNotice) {
     	    SystemNotice notice = (SystemNotice)message;
-    	    if (SystemNotice.SYS_NOTICE_AUTHREQ == notice.getSysnoteType()) {
+    	    if (SystemNotice.TYPE_NOTICE_AUTHREQ == notice.getMessageType()) {
                 protocol.autoDenyAuth(message.getSndrUin());
     	    }
         }

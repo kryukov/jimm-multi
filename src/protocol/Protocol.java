@@ -855,7 +855,7 @@ abstract public class Protocol {
         ChatHistory.instance.getUpdater().addMessage(chat, message, !silent && !message.isWakeUp());
         if (message instanceof SystemNotice) {
             SystemNotice notice = (SystemNotice) message;
-            if (SystemNotice.SYS_NOTICE_AUTHREQ == notice.getSysnoteType()) {
+            if (SystemNotice.TYPE_NOTICE_AUTHREQ == notice.getMessageType()) {
                 if (autoGrand.contains(contact.getUserId())) {
                     grandAuth(contact.getUserId());
                     autoGrand.removeElement(contact.getUserId());
@@ -1074,7 +1074,7 @@ abstract public class Protocol {
                 boolean cmdExecuted = ((JabberContact)to).execCommand(this, msg);
                 if (!cmdExecuted) {
                     String text = JLocale.getString("jabber_command_not_found");
-                    SystemNotice notice = new SystemNotice(this, SystemNotice.SYS_NOTICE_MESSAGE, to.getUserId(), text);
+                    SystemNotice notice = new SystemNotice(this, SystemNotice.TYPE_NOTICE_MESSAGE, to.getUserId(), text);
                     ChatHistory.instance.getUpdater().addMessage(getChatModel(to), notice, false);
                 }
                 return;

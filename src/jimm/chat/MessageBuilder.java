@@ -50,7 +50,7 @@ public class MessageBuilder {
 
         } else if (message instanceof SystemNotice) {
             SystemNotice notice = (SystemNotice) message;
-            if (SystemNotice.SYS_NOTICE_AUTHREQ == notice.getSysnoteType()) {
+            if (SystemNotice.TYPE_NOTICE_AUTHREQ == notice.getMessageType()) {
                 inc = true;
                 model.authRequestCounter = inc(model.authRequestCounter);
 
@@ -78,21 +78,20 @@ public class MessageBuilder {
         // #sijapp cond.end#
     }
 
-    public void buildMessage(ChatModel chat, Message message) {
+    public MessData buildMessage(ChatModel chat, Message message) {
         String from = getFrom(chat, message);
         boolean incoming = message.isIncoming();
-        boolean offline = message.isOffline();
 
         String messageText = message.getProcessedText();
         messageText = StringConvertor.removeCr(messageText);
         if (StringConvertor.isEmpty(messageText)) {
-            return;
+            return null;
         }
         boolean isMe = messageText.startsWith(PlainMessage.CMD_ME);
         if (isMe) {
             messageText = messageText.substring(4);
             if (0 == messageText.length()) {
-                return;
+                return null;
             }
         }
 
@@ -119,6 +118,9 @@ public class MessageBuilder {
             }
             // #sijapp cond.end#
             parser.addTextWithSmiles(messageText, color, plain);
+        }
+        if (SystemNotice.TYPE_FILE == message.getMessageType()) {
+            parser.addProgress(CanvasEx.THEME_TEXT);
         }
 
         short flags = 0;
@@ -156,6 +158,7 @@ public class MessageBuilder {
                 view.unlock();
             }
         }
+        return mData;
     }
     private boolean chatAtTheEnd(Chat chat) {
         try {
@@ -196,14 +199,18 @@ public class MessageBuilder {
             }
 
         } else {
+            chat.topOffset = -1;
             chat.current = chat.size() - 1;
         }
     }
 
     private int getIcon(ChatModel chat, Message message) {
         if (message instanceof SystemNotice) {
-            int type = ((SystemNotice)message).getSysnoteType();
-            if (SystemNotice.SYS_NOTICE_MESSAGE == type) {
+            int type = ((SystemNotice)message).getMessageType();
+            if (SystemNotice.TYPE_NOTICE_MESSAGE == type) {
+                return Message.ICON_NONE;
+            }
+            if (SystemNotice.TYPE_FILE == type) {
                 return Message.ICON_NONE;
             }
             return Message.ICON_SYSREQ;
@@ -323,23 +330,9 @@ public class MessageBuilder {
 
     // #sijapp cond.if modules_FILES="true"#
     public MessData addFileProgress(ChatModel model, String caption, String text) {
-        long time = Jimm.getCurrentGmtTime();
-        short flags = MessData.PROGRESS;
-        Parser parser = createParser(null);
-        parser.addText(text, CanvasEx.THEME_TEXT, CanvasEx.FONT_STYLE_PLAIN);
-        parser.addProgress(CanvasEx.THEME_TEXT);
-        Par par = parser.getPar();
-        MessData mData = new MessData(time, "", caption, flags, Message.ICON_NONE, par);
-        synchronized (this) {
-            Chat view = ChatHistory.instance.getChat(model);
-            if (null != view) view.lock();
-            model.add(mData);
-            model.topOffset = -1;
-            model.current = model.size() - 1;
-            ChatHistory.instance.getUpdater().removeOldMessages(model);
-            if (null != view) view.unlock();
-        }
-        return mData;
+        SystemNotice notice = new SystemNotice(model.protocol, SystemNotice.TYPE_FILE, model.getContact().getUserId(), text);
+        notice.setName(caption);
+        return buildMessage(model, notice);
     }
 
     public void changeFileProgress(ChatModel model, MessData mData, String caption, String text) {

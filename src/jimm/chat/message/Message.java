@@ -32,6 +32,13 @@ import protocol.Contact;
 import protocol.Protocol;
 
 public abstract class Message {
+    // Types of system messages
+    public static final int TYPE_MESSAGE = 0;
+    public static final int TYPE_NOTICE_AUTHREQ = 1;
+    public static final int TYPE_NOTICE_ERROR = 2;
+    public static final int TYPE_NOTICE_MESSAGE = 3;
+    public static final int TYPE_FILE = 4;
+
     public static final ImageList msgIcons = ImageList.createImageList("/msgs.png");
     public static final int ICON_NONE = -1;
     public static final int ICON_SYSREQ = 0;
@@ -132,5 +139,9 @@ public abstract class Message {
     }
     public boolean isWakeUp() {
         return false;
+    }
+
+    public int getMessageType() {
+        return SystemNotice.TYPE_MESSAGE;
     }
 }

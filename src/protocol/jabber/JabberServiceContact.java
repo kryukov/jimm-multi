@@ -161,7 +161,7 @@ public class JabberServiceContact extends JabberContact {
         if (409 == code) {
             if (!StringConvertor.isEmpty(reasone)) {
                 jabber.addMessage(new SystemNotice(jabber,
-                        SystemNotice.SYS_NOTICE_ERROR, getUserId(), reasone));
+                        SystemNotice.TYPE_NOTICE_ERROR, getUserId(), reasone));
             }
             if (!myNick.equals(baseMyNick)) {
                 myNick = baseMyNick;
@@ -170,7 +170,7 @@ public class JabberServiceContact extends JabberContact {
 
         } else {
             jabber.addMessage(new SystemNotice(jabber,
-                    SystemNotice.SYS_NOTICE_ERROR, getUserId(), reasone));
+                    SystemNotice.TYPE_NOTICE_ERROR, getUserId(), reasone));
         }
 
         if (myNick.equals(nick)) {
@@ -205,7 +205,7 @@ public class JabberServiceContact extends JabberContact {
                 }
                 text += '.';
                 jabber.addMessage(new SystemNotice(jabber,
-                        SystemNotice.SYS_NOTICE_ERROR, getUserId(), text));
+                        SystemNotice.TYPE_NOTICE_ERROR, getUserId(), text));
             }
             for (int i = 0; i < subcontacts.size(); ++i) {
                 ((SubContact)subcontacts.elementAt(i)).status = StatusInfo.STATUS_OFFLINE;

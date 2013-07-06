@@ -140,7 +140,7 @@ public class ObimpConnection extends ClientConnection {
                     }
                     authinfo.skipWtld();
                 }
-                obimp.addMessage(new SystemNotice(obimp, SystemNotice.SYS_NOTICE_AUTHREQ, from, null));
+                obimp.addMessage(new SystemNotice(obimp, SystemNotice.TYPE_NOTICE_AUTHREQ, from, null));
             } else if (0x000E == pkt.getSubType()) { // OBIMP_BEX_CL_CLI_SRV_AUTH_REPLY
                 ObimpData authinfo = pkt.getData();
                 String from = "";

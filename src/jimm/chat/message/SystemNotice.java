@@ -28,11 +28,6 @@ import jimm.util.JLocale;
 import protocol.Protocol;
 
 public class SystemNotice extends Message {
-
-    // Types of system messages
-    public static final int SYS_NOTICE_AUTHREQ = 1;
-    public static final int SYS_NOTICE_ERROR = 2;
-    public static final int SYS_NOTICE_MESSAGE = 3;
     /****************************************************************************/
     // Type of the note
     private int sysnotetype;
@@ -44,27 +39,27 @@ public class SystemNotice extends Message {
         super(Jimm.getCurrentGmtTime(), protocol, _uin, true);
         sysnotetype = _sysnotetype;
         reason = StringConvertor.notNull(_reason);
-    }
-
-    public String getName() {
-        return JLocale.getString("sysnotice");
+        setName(JLocale.getString("sysnotice"));
     }
 
     // Get Sysnotetype
-    public int getSysnoteType() {
+    public int getMessageType() {
         return sysnotetype;
     }
 
     public String getText() {
+        if (TYPE_FILE == getMessageType()) {
+            return reason;
+        }
         String text = "";
-        if (SYS_NOTICE_MESSAGE == getSysnoteType()) {
+        if (TYPE_NOTICE_MESSAGE == getMessageType()) {
             return "* " + reason;
 
         }
-        if (SYS_NOTICE_ERROR == getSysnoteType()) {
+        if (TYPE_NOTICE_ERROR == getMessageType()) {
             return reason;
         }
-        if (SYS_NOTICE_AUTHREQ == getSysnoteType()) {
+        if (TYPE_NOTICE_AUTHREQ == getMessageType()) {
             text = getSndrUin() + JLocale.getString("wantsyourauth");
         }
         if (StringConvertor.isEmpty(text)) {

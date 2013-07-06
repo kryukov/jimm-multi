@@ -275,7 +275,7 @@ public final class MrimConnection extends ClientConnection {
         }
         if ((MrimPacket.MESSAGE_FLAG_AUTHORIZE & flags) != 0) {
             mrim.addMessage(new SystemNotice(mrim,
-                    SystemNotice.SYS_NOTICE_AUTHREQ,
+                    SystemNotice.TYPE_NOTICE_AUTHREQ,
                     from, msg));
 
         } else if ((MrimPacket.MESSAGE_FLAG_NOTIFY & flags) == 0) {

@@ -484,13 +484,13 @@ HDN - Hidden
         //JOE zoran.mesec@siol.net nick
         String[] params = Utils.tokenize(data);
         String msg = params[2] + " has joined the conversation window.";
-        msn.addMessage(new SystemNotice(msn, SystemNotice.SYS_NOTICE_MESSAGE, cs.c.getUserId(), msg));
+        msn.addMessage(new SystemNotice(msn, SystemNotice.TYPE_NOTICE_MESSAGE, cs.c.getUserId(), msg));
     }
     private void userBYE(String data, ChatSession cs) {
         //BYE zoran.mesec@siol.net
         String userId = data.substring(3);
         String msg = userId + " has closed the conversation window.";
-        msn.addMessage(new SystemNotice(msn, SystemNotice.SYS_NOTICE_MESSAGE, cs.c.getUserId(), msg));
+        msn.addMessage(new SystemNotice(msn, SystemNotice.TYPE_NOTICE_MESSAGE, cs.c.getUserId(), msg));
     }
     private void groupAdded(String data) {
         //ADG 15 New%20Group b145b37f-7e09-47e7-880e-9daa5346eaab

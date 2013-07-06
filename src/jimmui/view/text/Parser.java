@@ -47,9 +47,7 @@ public final class Parser {
     }
 
     public Parser(Font[] fontSet, int width) {
-        par = new Par();
-        maxWidth = (short) width;
-        this.fontSet = fontSet;
+        this(new Par(), fontSet, width);
     }
     public void setSelectable(boolean selectable) {
         par.selectable = selectable;

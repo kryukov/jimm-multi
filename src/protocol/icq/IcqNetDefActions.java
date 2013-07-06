@@ -227,7 +227,7 @@ public final class IcqNetDefActions {
 
                     String reason = getReasone(authMarker);
 
-                    getIcq().addMessage(new SystemNotice(getIcq(), SystemNotice.SYS_NOTICE_AUTHREQ, uin, reason));
+                    getIcq().addMessage(new SystemNotice(getIcq(), SystemNotice.TYPE_NOTICE_AUTHREQ, uin, reason));
 
                     //	  Watch out for SRV_AUTHREPLY
                 } else if (SnacPacket.SRV_AUTHREPLY_COMMAND == command) {
@@ -271,7 +271,7 @@ public final class IcqNetDefActions {
                             String message = JLocale.getString("contact_has_been_removed");
                             if (c.hasChat()) {
                                 getIcq().addMessage(new SystemNotice(getIcq(),
-                                        SystemNotice.SYS_NOTICE_MESSAGE, uin, message));
+                                        SystemNotice.TYPE_NOTICE_MESSAGE, uin, message));
                             }
                             // #sijapp cond.if modules_MAGIC_EYE is "true" #
                             MagicEye.addAction(getIcq(), uin, message);

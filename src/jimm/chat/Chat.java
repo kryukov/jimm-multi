@@ -32,7 +32,6 @@
 package jimm.chat;
 
 import jimmui.view.icons.Icon;
-import jimmui.view.text.*;
 import jimm.*;
 import jimm.chat.message.*;
 import jimm.cl.*;
@@ -45,9 +44,6 @@ import protocol.*;
 import javax.microedition.lcdui.Font;
 
 public final class Chat extends VirtualList {
-    // #sijapp cond.if modules_HISTORY is "true" #
-    private HistoryStorage history;
-    // #sijapp cond.end#
     private static InputTextLine line = new InputTextLine();
     private boolean classic = false;
     private Icon[] statusIcons = new Icon[7];
@@ -63,15 +59,14 @@ public final class Chat extends VirtualList {
     public Chat(ChatModel model) {
         super(null);
         this.model = model;
-
-        setFontSet(GraphicsEx.chatFontSet);
-        setTopByOffset(getFullSize());
+        setFontSet(model.fontSet);
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
         if (getWidth() / 2 < Math.abs(fromX - toX)) {
-            ChatHistory.instance.showNextPrevChat(this, (fromX > toX));
+            ChatHistory.instance.getUpdater().storeTopPosition(model, this);
+            ChatHistory.instance.showNextPrevChat(model, (fromX > toX));
         }
     }
     // #sijapp cond.end#
@@ -219,7 +214,8 @@ public final class Chat extends VirtualList {
             switch (actionCode) {
                 case NativeCanvas.NAVIKEY_LEFT:
                 case NativeCanvas.NAVIKEY_RIGHT:
-                    ChatHistory.instance.showNextPrevChat(this, NativeCanvas.NAVIKEY_RIGHT == actionCode);
+                    ChatHistory.instance.getUpdater().storeTopPosition(model, this);
+                    ChatHistory.instance.showNextPrevChat(model, NativeCanvas.NAVIKEY_RIGHT == actionCode);
                     return;
             }
         }
@@ -250,6 +246,7 @@ public final class Chat extends VirtualList {
                 return;
 
             case NativeCanvas.JIMM_BACK:
+                ChatHistory.instance.getUpdater().storeTopPosition(model, this);
                 ContactList.getInstance().activate(getContact());
                 return;
 
@@ -557,29 +554,13 @@ public final class Chat extends VirtualList {
     }
 
     // #sijapp cond.if modules_HISTORY is "true" #
-    public HistoryStorage getHistory() {
-        if ((null == history) && getContact().hasHistory()) {
-            history = HistoryStorage.getHistory(getContact());
-        }
-        return history;
-    }
-
-    private void addToHistory(String msg, boolean incoming, String nick, long time) {
-        if (getContact().hasHistory()) {
-            getHistory().addText(msg, incoming, nick, time);
-        }
-    }
-
     private void addTextToHistory() {
-        if (!getContact().hasHistory()) {
-            return;
-        }
         MessData md = getCurrentMsgData();
         if ((null == md) || (null == md.getText())) {
             return;
         }
         if (getContact().hasHistory()) {
-            getHistory().addText(md.getText(), md.isIncoming(), md.getNick(), md.getTime());
+            HistoryStorage.getHistory(getContact()).addText(md.getText(), md.isIncoming(), md.getNick(), md.getTime());
         }
     }
     // #sijapp cond.end#

@@ -264,8 +264,8 @@ public final class ChatHistory implements SelectListener {
         return current;
     }
     // shows next or previos chat
-    public void showNextPrevChat(Chat item, boolean next) {
-        int chatNum = ContactList.getInstance().jimmModel.chats.indexOf(item.getModel());
+    public void showNextPrevChat(ChatModel item, boolean next) {
+        int chatNum = ContactList.getInstance().jimmModel.chats.indexOf(item);
         if (-1 == chatNum) {
             return;
         }

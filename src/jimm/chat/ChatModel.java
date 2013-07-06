@@ -32,7 +32,7 @@ public class ChatModel {
     protected short otherMessageCounter = 0;
     protected byte sysNoticeCounter = 0;
     protected byte authRequestCounter = 0;
-    public int topOffset;
+    public int topOffset = -1;
     public int current;
     public Font[] fontSet;
 

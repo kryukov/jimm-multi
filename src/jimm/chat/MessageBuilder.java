@@ -147,7 +147,7 @@ public class MessageBuilder {
             boolean atTheEnd = chatAtTheEnd(view);
             if (null != view) {
                 view.lock();
-                ChatHistory.instance.getUpdater().storeTopPosition(chat);
+                ChatHistory.instance.getUpdater().storeTopPosition(chat, view);
             }
             chat.add(mData);
             setCursor(chat, view, incoming, atTheEnd);

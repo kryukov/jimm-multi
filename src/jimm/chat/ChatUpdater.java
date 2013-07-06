@@ -110,7 +110,7 @@ public class ChatUpdater {
             return;
         }
         if ((0 < limit) && (0 < chat.size())) {
-            storeTopPosition(chat);
+            storeTopPosition(chat, ChatHistory.instance.getChat(chat));
             while (limit < chat.size()) {
                 chat.topOffset = Math.max(0, chat.topOffset - chat.getItemHeight(chat.getMessage(0)));
                 chat.current = Math.max(0, chat.current - 1);
@@ -134,8 +134,7 @@ public class ChatUpdater {
         }
     }
 
-    void storeTopPosition(ChatModel chat) {
-        Chat view = ChatHistory.instance.getChat(chat);
+    void storeTopPosition(ChatModel chat, Chat view) {
         if (null != view) {
             chat.topOffset = view.getTopOffset();
             chat.current = view.getCurrItem();

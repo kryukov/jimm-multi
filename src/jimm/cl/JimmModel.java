@@ -17,7 +17,6 @@ import java.util.Vector;
 public class JimmModel {
     public Vector<Protocol> protocols = new Vector<Protocol>();
     public final Vector<ChatModel> chats = new Vector<ChatModel>();
-    public final Hashtable modelToChat = new Hashtable();
 
     public boolean registerChat(ChatModel item) {
         if (-1 == Util.getIndex(chats, item)) {
@@ -30,7 +29,6 @@ public class JimmModel {
     public boolean unregisterChat(ChatModel item) {
         if (null == item) return false;
         chats.removeElement(item);
-        modelToChat.remove(item);
         item.clear();
         item.getContact().updateChatState(null);
         return true;

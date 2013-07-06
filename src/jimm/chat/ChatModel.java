@@ -2,6 +2,7 @@ package jimm.chat;
 
 import jimm.chat.message.Message;
 import jimm.comm.Util;
+import jimmui.view.icons.Icon;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.jabber.Jabber;
@@ -9,6 +10,7 @@ import protocol.jabber.JabberContact;
 import protocol.jabber.JabberServiceContact;
 import protocol.jabber.Jid;
 
+import javax.microedition.lcdui.Font;
 import java.util.Vector;
 
 /**
@@ -32,6 +34,7 @@ public class ChatModel {
     protected byte authRequestCounter = 0;
     public int topOffset;
     public int current;
+    public Font[] fontSet;
 
     public int size() {
         return messData.size();
@@ -151,5 +154,20 @@ public class ChatModel {
         }
         // #sijapp cond.end#
         return getProtocol().getNick();
+    }
+
+    public int getMessageHeaderHeight(MessData mData) {
+        if ((null == mData) || mData.isMe()) return 0;
+
+        int height = fontSet[Chat.FONT_STYLE_BOLD].getHeight();
+        Icon icon = Message.msgIcons.iconAt(mData.iconIndex);
+        if (null != icon) {
+            height = Math.max(height, icon.getHeight());
+        }
+        return height;
+    }
+
+    protected int getItemHeight(MessData mData) {
+        return mData.par.getHeight() + getMessageHeaderHeight(mData);
     }
 }

@@ -896,10 +896,7 @@ abstract public class Protocol {
         if (isPaused && isPersonal && isHuman) {
             if (Options.getBoolean(Options.OPTION_BRING_UP)) {
                 ChatModel model = getChatModel(contact);
-                Chat view = ChatHistory.instance.getChat(model);
-                if (null == view) {
-                    view = new Chat(model);
-                }
+                Chat view = ChatHistory.instance.getOrCreateChat(model);
                 Jimm.maximize(view);
                 isPaused = false;
             }

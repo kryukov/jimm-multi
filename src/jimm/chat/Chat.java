@@ -59,10 +59,6 @@ public final class Chat extends VirtualList {
         return model.size();
     }
 
-    private Par getPar(int index) {
-        return model.getMessage(index).par;
-    }
-
     ///////////////////////////////////////////
     public Chat(ChatModel model) {
         super(null);
@@ -432,6 +428,7 @@ public final class Chat extends VirtualList {
         invalidate();
     }
 
+
     private String getFrom(Message message) {
         String senderName = message.getName();
         if (null == senderName) {
@@ -483,8 +480,7 @@ public final class Chat extends VirtualList {
     }
 
     protected int getItemHeight(int itemIndex) {
-        MessData mData = model.getMessage(itemIndex);
-        return getPar(itemIndex).getHeight() + getMessageHeaderHeight(mData);
+        return model.getItemHeight(model.getMessage(itemIndex));
     }
 
     protected void drawItemBack(GraphicsEx g, int index, int x, int y, int w, int h, int skip, int to) {
@@ -513,25 +509,14 @@ public final class Chat extends VirtualList {
     protected void drawItemData(GraphicsEx g, int index, int x, int y,
                                 int w, int h, int skip, int to) {
         MessData mData = model.getMessage(index);
-        int header = getMessageHeaderHeight(mData);
+        int header = model.getMessageHeaderHeight(mData);
         if (0 < header) {
             drawMessageHeader(g, mData, x, y, w, header);
             y += header;
             h -= header;
             skip -= header;
         }
-        getPar(index).paint(getFontSet(), g, 1, y, skip, to);
-    }
-
-    private int getMessageHeaderHeight(MessData mData) {
-        if ((null == mData) || mData.isMe()) return 0;
-
-        int height = getFontSet()[FONT_STYLE_BOLD].getHeight();
-        Icon icon = Message.msgIcons.iconAt(mData.iconIndex);
-        if (null != icon) {
-            height = Math.max(height, icon.getHeight());
-        }
-        return height;
+        model.getMessage(index).par.paint(getFontSet(), g, 1, y, skip, to);
     }
 
     private void drawMessageHeader(GraphicsEx g, MessData mData, int x1, int y1, int w, int h) {
@@ -669,9 +654,4 @@ public final class Chat extends VirtualList {
     public ChatModel getModel() {
         return model;
     }
-
-    private Parser createParser() {
-        return new Parser(getFontSet(), NativeCanvas.getInstance().getMinScreenMetrics() - 3);
-    }
-
 }

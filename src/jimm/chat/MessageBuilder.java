@@ -11,7 +11,6 @@ import jimm.history.CachedRecord;
 import jimm.history.HistoryStorage;
 import jimm.modules.MagicEye;
 import jimmui.view.base.CanvasEx;
-import jimmui.view.base.GraphicsEx;
 import jimmui.view.base.NativeCanvas;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.Par;
@@ -95,7 +94,7 @@ public class MessageBuilder {
             }
         }
 
-        Parser parser = createParser(null);
+        Parser parser = createParser(chat, null);
 
         final byte captColor = getInOutColor(incoming);
         final byte plain = CanvasEx.FONT_STYLE_PLAIN;
@@ -154,7 +153,7 @@ public class MessageBuilder {
             setCursor(chat, view, incoming, atTheEnd);
             ChatHistory.instance.getUpdater().removeOldMessages(chat);
             if (null != view) {
-                ChatHistory.instance.getUpdater().restoreTopPositionToUI(chat);
+                ChatHistory.instance.getUpdater().restoreTopPositionToUI(chat, view);
                 view.unlock();
             }
         }
@@ -231,11 +230,11 @@ public class MessageBuilder {
         return incoming ? CanvasEx.THEME_CHAT_INMSG : CanvasEx.THEME_CHAT_OUTMSG;
     }
 
-    private Parser createParser(Par par) {
+    private Parser createParser(ChatModel chat, Par par) {
         if (null == par) {
-            return new Parser(GraphicsEx.chatFontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
+            return new Parser(chat.fontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
         } else {
-            return new Parser(par, GraphicsEx.chatFontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
+            return new Parser(par, chat.fontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
         }
     }
 
@@ -336,7 +335,7 @@ public class MessageBuilder {
     }
 
     public void changeFileProgress(ChatModel model, MessData mData, String caption, String text) {
-        Parser parser = createParser(mData.par);
+        Parser parser = createParser(model, mData.par);
         parser.addText(text, CanvasEx.THEME_TEXT, CanvasEx.FONT_STYLE_PLAIN);
 
         long time = Jimm.getCurrentGmtTime();

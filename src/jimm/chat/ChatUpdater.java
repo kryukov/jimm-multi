@@ -5,6 +5,7 @@ import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
 import jimm.history.HistoryStorage;
 import jimm.history.HistoryStorageList;
+import jimmui.view.base.GraphicsEx;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.jabber.JabberServiceContact;
@@ -22,6 +23,7 @@ public class ChatUpdater {
         ChatModel chat = new ChatModel();
         chat.protocol = p;
         chat.contact = contact;
+        chat.fontSet = GraphicsEx.chatFontSet;
         // #sijapp cond.if modules_HISTORY is "true" #
         new MessageBuilder().fillFromHistory(chat);
         // #sijapp cond.end #
@@ -50,10 +52,7 @@ public class ChatUpdater {
     // #sijapp cond.end#
 
     public void activate(ChatModel chat) {
-        Chat view = ChatHistory.instance.getChat(chat);
-        if (null == view) {
-            view = new Chat(chat);
-        }
+        Chat view = ChatHistory.instance.getOrCreateChat(chat);
         view.activate();
     }
 
@@ -69,10 +68,7 @@ public class ChatUpdater {
     }
 
     public void writeMessage(ChatModel chat, String message) {
-        Chat view = ChatHistory.instance.getChat(chat);
-        if (null == view) {
-            view = new Chat(chat);
-        }
+        Chat view = ChatHistory.instance.getOrCreateChat(chat);
         view.writeMessage(message);
     }
 
@@ -91,10 +87,7 @@ public class ChatUpdater {
 
     public void writeMessageTo(JabberServiceContact conference, String nick) {
         ChatModel chat = ChatHistory.instance.getChatModel(conference);
-        Chat view = ChatHistory.instance.getChat(chat);
-        if (null == view) {
-            view = new Chat(chat);
-        }
+        Chat view = ChatHistory.instance.getOrCreateChat(chat);
         view.writeMessageTo(nick);
     }
 
@@ -109,7 +102,7 @@ public class ChatUpdater {
         removeMessages(chat, Options.getInt(Options.OPTION_MAX_MSG_COUNT));
     }
     public void removeMessagesAtCursor(ChatModel model) {
-        restoreTopPositionToUI(model);
+        restoreTopPositionToUI(model, ChatHistory.instance.getChat(model));
         removeMessages(model, model.size() - model.current - 1);
     }
     private void removeMessages(ChatModel chat, int limit) {
@@ -118,21 +111,19 @@ public class ChatUpdater {
         }
         if ((0 < limit) && (0 < chat.size())) {
             storeTopPosition(chat);
-            Chat c = ChatHistory.instance.getChatOOOOOO(chat);
             while (limit < chat.size()) {
-                chat.topOffset = Math.max(0, chat.topOffset - c.getItemHeight(0));
+                chat.topOffset = Math.max(0, chat.topOffset - chat.getItemHeight(chat.getMessage(0)));
                 chat.current = Math.max(0, chat.current - 1);
                 chat.removeTopMessage();
             }
-            restoreTopPositionToUI(chat);
+            restoreTopPositionToUI(chat, ChatHistory.instance.getChat(chat));
             invalidate(chat);
         } else {
             ChatHistory.instance.unregisterChat(chat);
         }
     }
 
-    void restoreTopPositionToUI(ChatModel chat) {
-        Chat view = ChatHistory.instance.getChat(chat);
+    void restoreTopPositionToUI(ChatModel chat, Chat view) {
         if (null != view) {
             if (-1 == chat.topOffset) {
                 view.setCurrentItemToTop(chat.current);

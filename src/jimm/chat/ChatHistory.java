@@ -68,15 +68,22 @@ public final class ChatHistory implements SelectListener {
         }
         return null;
     }
-    public Chat getChatOOOOOO(ChatModel c) {
-        return getChat(c);
-    }
     public Chat getChat(ChatModel c) {
         if (null == c) return null;
-        Chat chat = (Chat) ContactList.getInstance().jimmModel.modelToChat.get(c);
-        if (null == chat) {
+        Object view = Jimm.getJimm().getDisplay().getCurrentDisplay();
+        if (view instanceof Chat) {
+            Chat chat = (Chat) view;
+            if (chat.getModel() == c) {
+                return chat;
+            }
+        }
+        return null;
+    }
+    public Chat getOrCreateChat(ChatModel c) {
+        Chat chat = getChat(c);
+        if (null != c) {
             chat = new Chat(c);
-            ContactList.getInstance().jimmModel.modelToChat.put(c, chat);
+            updater.restoreTopPositionToUI(c, chat);
         }
         return chat;
     }
@@ -142,12 +149,6 @@ public final class ChatHistory implements SelectListener {
         return Message.msgIcons.iconAt(icon);
     }
 
-    // Creates a new chat form
-    public void registerChat(Chat item) {
-        if (registerChat(item.getModel())) {
-            ContactList.getInstance().jimmModel.modelToChat.put(item.getModel(), item);
-        }
-    }
     public boolean registerChat(ChatModel item) {
         if (ContactList.getInstance().jimmModel.registerChat(item)) {
             ContactList.getInstance().getUpdater().registerChat(item);

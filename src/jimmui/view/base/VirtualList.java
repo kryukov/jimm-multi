@@ -237,8 +237,12 @@ public abstract class VirtualList extends CanvasEx {
         }
     }
     protected void sizeChanged(int prevW, int prevH, int w, int h) {
-        int delta = prevH - h;
-        setTopByOffset(getTopOffset() + delta);
+        boolean prev = prevH < prevW;
+        boolean curr = h < w;
+        if (prev != curr) {
+            int delta = prevH - h;
+            setTopByOffset(getTopOffset() + delta);
+        }
     }
     private void setOptimalTopItem() {
         int size = getSize();

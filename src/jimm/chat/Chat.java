@@ -432,46 +432,6 @@ public final class Chat extends VirtualList {
         invalidate();
     }
 
-    // #sijapp cond.if modules_FILES="true"#
-    public MessData addFileProgress(String caption, String text) {
-        long time = Jimm.getCurrentGmtTime();
-        short flags = MessData.PROGRESS;
-        Parser parser = createParser();
-        parser.addText(text, THEME_TEXT, FONT_STYLE_PLAIN);
-        parser.addProgress(THEME_TEXT);
-        Par par = parser.getPar();
-        MessData mData = new MessData(time, "", caption, flags, Message.ICON_NONE, par);
-        synchronized (this) {
-            boolean atTheEnd = (getFullSize() - getTopOffset() <= getContentHeight());
-            lock();
-            model.add(mData);
-            setCurrentItemIndex(getSize() - 1);
-            ChatHistory.instance.getUpdater().removeOldMessages(model);
-            unlock();
-        }
-        ChatHistory.instance.registerChat(this);
-        return mData;
-    }
-
-    public void changeFileProgress(MessData mData, String caption, String text) {
-        final int width = NativeCanvas.getInstance().getMinScreenMetrics() - 3;
-        Parser parser = new Parser(mData.par, getFontSet(), width);
-        parser.addText(text, THEME_TEXT, FONT_STYLE_PLAIN);
-
-        long time = Jimm.getCurrentGmtTime();
-        short flags = MessData.PROGRESS;
-        synchronized (this) {
-            int index = model.getIndex(mData);
-            if ((0 < getSize()) && (0 <= index)) {
-                lock();
-                mData.init(time, text, caption, flags, Message.ICON_NONE);
-                parser.commit();
-                unlock();
-            }
-        }
-    }
-    // #sijapp cond.end#
-
     private String getFrom(Message message) {
         String senderName = message.getName();
         if (null == senderName) {

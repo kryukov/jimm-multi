@@ -1,5 +1,6 @@
 package jimm.chat;
 
+import jimm.Jimm;
 import jimm.Options;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
@@ -95,7 +96,7 @@ public class MessageBuilder {
             }
         }
 
-        Parser parser = createParser();
+        Parser parser = createParser(null);
 
         final byte captColor = getInOutColor(incoming);
         final byte plain = CanvasEx.FONT_STYLE_PLAIN;
@@ -223,8 +224,12 @@ public class MessageBuilder {
         return incoming ? CanvasEx.THEME_CHAT_INMSG : CanvasEx.THEME_CHAT_OUTMSG;
     }
 
-    private Parser createParser() {
-        return new Parser(GraphicsEx.chatFontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
+    private Parser createParser(Par par) {
+        if (null == par) {
+            return new Parser(GraphicsEx.chatFontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
+        } else {
+            return new Parser(par, GraphicsEx.chatFontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
+        }
     }
 
     private String getFrom(ChatModel chat, Message message) {
@@ -315,4 +320,45 @@ public class MessageBuilder {
     private byte inc(byte val) {
         return (byte) ((val < Byte.MAX_VALUE) ? (val + 1) : val);
     }
+
+    // #sijapp cond.if modules_FILES="true"#
+    public MessData addFileProgress(ChatModel model, String caption, String text) {
+        long time = Jimm.getCurrentGmtTime();
+        short flags = MessData.PROGRESS;
+        Parser parser = createParser(null);
+        parser.addText(text, CanvasEx.THEME_TEXT, CanvasEx.FONT_STYLE_PLAIN);
+        parser.addProgress(CanvasEx.THEME_TEXT);
+        Par par = parser.getPar();
+        MessData mData = new MessData(time, "", caption, flags, Message.ICON_NONE, par);
+        synchronized (this) {
+            Chat view = ChatHistory.instance.getChat(model);
+            if (null != view) view.lock();
+            model.add(mData);
+            model.topOffset = -1;
+            model.current = model.size() - 1;
+            ChatHistory.instance.getUpdater().removeOldMessages(model);
+            if (null != view) view.unlock();
+        }
+        return mData;
+    }
+
+    public void changeFileProgress(ChatModel model, MessData mData, String caption, String text) {
+        Parser parser = createParser(mData.par);
+        parser.addText(text, CanvasEx.THEME_TEXT, CanvasEx.FONT_STYLE_PLAIN);
+
+        long time = Jimm.getCurrentGmtTime();
+        short flags = MessData.PROGRESS;
+        synchronized (this) {
+            int index = model.getIndex(mData);
+
+            if ((0 < model.size()) && (0 <= index)) {
+                Chat view = ChatHistory.instance.getChat(model);
+                if (null != view) view.lock();
+                mData.init(time, text, caption, flags, Message.ICON_NONE);
+                parser.commit();
+                if (null != view) view.unlock();
+            }
+        }
+    }
+    // #sijapp cond.end#
 }

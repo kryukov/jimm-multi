@@ -40,11 +40,12 @@ public class ChatUpdater {
 
     // #sijapp cond.if modules_FILES="true"#
     public MessData addFileProgress(ChatModel chat, String caption, String text) {
-        return ChatHistory.instance.getChatOOOOOO(chat).addFileProgress(caption, text);
+        ChatHistory.instance.registerChat(chat);
+        return new MessageBuilder().addFileProgress(chat, caption, text);
     }
 
     public void changeFileProgress(ChatModel chat, MessData mData, String caption, String text) {
-        ChatHistory.instance.getChatOOOOOO(chat).changeFileProgress(mData, caption, text);
+        new MessageBuilder().changeFileProgress(chat, mData, caption, text);
     }
     // #sijapp cond.end#
 

@@ -77,7 +77,7 @@ public final class ContactList implements ContactListListener {
     }
     public void updateAccounts() {
         Protocol[] oldProtocols = getProtocols();
-        Vector newProtocols = new Vector();
+        Vector<Protocol> newProtocols = new Vector<Protocol>();
         // #sijapp cond.if modules_MULTI is "true" #
         int accountCount = Options.getAccountCount();
         for (int i = 0; i < accountCount; ++i) {
@@ -102,7 +102,7 @@ public final class ContactList implements ContactListListener {
         if (0 == newProtocols.size()) {
             Profile profile = Options.getAccount(0);
             profile.isActive = true;
-            newProtocols.addElement(profile);
+            newProtocols.addElement(createProtocol(profile));
         }
         // #sijapp cond.else #
         newProtocols.addElement(createProtocol(Options.getAccount(Options.getCurrentAccount())));

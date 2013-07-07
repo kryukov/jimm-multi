@@ -15,6 +15,7 @@ import jimm.comm.*;
 import jimm.modules.*;
 import jimmui.view.menu.*;
 import protocol.*;
+import protocol.ui.XStatusInfo;
 
 /**
  *

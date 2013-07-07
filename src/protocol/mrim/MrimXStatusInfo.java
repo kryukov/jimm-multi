@@ -11,10 +11,9 @@
 // #sijapp cond.if modules_XSTATUSES is "true" #
 package protocol.mrim;
 
-import jimmui.view.icons.*;
 import jimm.comm.Config;
 import jimm.comm.StringConvertor;
-import protocol.*;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -22,19 +21,11 @@ import protocol.*;
  */
 public class MrimXStatusInfo {
     private final String[] statusCodes;
-    private final XStatusInfo info;
-    
+
     public MrimXStatusInfo() {
-        Config config = new Config().loadLocale("/mrim-xstatus.txt");
-        statusCodes = config.getKeys();
-        ImageList xstatusIcons = ImageList.createImageList("/mrim-xstatus.png");
-        String[] statusStrings = config.getValues();
-        info = new XStatusInfo(xstatusIcons, statusStrings);
+        statusCodes = new Config().loadLocale("/mrim-xstatus.txt").getKeys();
     }
-    public XStatusInfo getInfo() {
-        return info;
-    }
-    
+
     public String getNativeXStatus(byte statusIndex) {
         if (0 <= statusIndex && statusIndex < statusCodes.length) {
             return statusCodes[statusIndex];

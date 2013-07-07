@@ -19,6 +19,8 @@ import jimm.history.*;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import jimm.comm.*;
+import protocol.ui.InfoFactory;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -41,8 +43,8 @@ abstract public class Contact implements TreeNode, Sortable {
     private String xstatusText = null;
     // #sijapp cond.end#
     // #sijapp cond.if modules_CLIENTS is "true" #
-    short clientIndex = ClientInfo.CLI_NONE;
-    String version = "";
+    public short clientIndex = ClientInfo.CLI_NONE;
+    public String version = "";
     // #sijapp cond.end #
     public long chaingingStatusTime = 0;
 
@@ -283,7 +285,7 @@ abstract public class Contact implements TreeNode, Sortable {
             }
             // #sijapp cond.if modules_XSTATUSES is "true" #
             if (XStatusInfo.XSTATUS_NONE != getXStatusIndex()) {
-                lIcons[1] = protocol.getXStatusInfo().getIcon(getXStatusIndex());
+                lIcons[1] = InfoFactory.factory.getXStatusInfo(protocol).getIcon(getXStatusIndex());
             }
             // #sijapp cond.end #
         }

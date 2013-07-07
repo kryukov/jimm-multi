@@ -32,6 +32,7 @@ import protocol.icq.packet.*;
 import protocol.icq.plugin.*;
 import jimm.modules.*;
 import jimm.util.JLocale;
+import protocol.ui.XStatusInfo;
 
 public final class IcqNetDefActions {
     public static final int FLAG_HAPPY    = 0x0008;

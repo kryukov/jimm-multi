@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package protocol;
+package protocol.ui;
 
 import jimmui.view.icons.Icon;
 import jimmui.view.icons.ImageList;

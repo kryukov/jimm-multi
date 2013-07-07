@@ -39,6 +39,8 @@ import jimm.util.JLocale;
 import jimm.*;
 import protocol.*;
 import protocol.icq.plugin.*;
+import protocol.ui.StatusView;
+import protocol.ui.XStatusInfo;
 
 public class Icq extends Protocol {
     private static final int[] statusIconIndex = {1, 0, 4, 3, 10, 11, 8, 9, 12, 5, 6, 7, 2, 2, 1};
@@ -67,9 +69,6 @@ public class Icq extends Protocol {
     }
     protected void initStatusInfo() {
         info = new StatusInfo(statusIcons, statusIconIndex, statuses);
-        // #sijapp cond.if modules_XSTATUSES is "true" #
-        xstatusInfo = Icq.xstatus.getInfo();
-        // #sijapp cond.end #
         // #sijapp cond.if modules_CLIENTS is "true" #
         clientInfo = ClientDetector.instance.get();
         // #sijapp cond.end #

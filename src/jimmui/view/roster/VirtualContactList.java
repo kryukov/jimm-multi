@@ -35,6 +35,8 @@ import jimm.comm.*;
 import jimm.modules.*;
 import jimmui.view.base.*;
 import protocol.*;
+import protocol.ui.InfoFactory;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -326,7 +328,16 @@ public final class VirtualContactList extends VirtualList {
         capIcons[0] = null;
         capIcons[1] = null;
         if (null != protocol) {
-            protocol.getCapIcons(capIcons);
+            if (protocol.isConnected() && !protocol.isConnecting()) {
+                capIcons[0] = protocol.getStatusInfo().getIcon(protocol.getProfile().statusIndex);
+            } else {
+                capIcons[0] = protocol.getStatusInfo().getIcon(StatusInfo.STATUS_OFFLINE);
+            }
+            // #sijapp cond.if modules_XSTATUSES is "true" #
+            if (null != InfoFactory.factory.getXStatusInfo(protocol)) {
+                capIcons[1] = InfoFactory.factory.getXStatusInfo(protocol).getIcon(protocol.getProfile().xstatusIndex);
+            }
+            // #sijapp cond.end #
         }
         bar.setImages(capIcons);
         // #sijapp cond.end #
@@ -599,7 +610,7 @@ public final class VirtualContactList extends VirtualList {
             if (!StringConvertor.isEmpty(message)) {
                 return message;
             }
-            message = protocol.getXStatusInfo().getName(contact.getXStatusIndex());
+            message = InfoFactory.factory.getXStatusInfo(protocol).getName(contact.getXStatusIndex());
             if (!StringConvertor.isEmpty(message)) {
                 return message;
             }

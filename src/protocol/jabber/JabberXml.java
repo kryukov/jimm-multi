@@ -21,6 +21,8 @@ import jimm.modules.*;
 import jimm.util.JLocale;
 import protocol.*;
 import protocol.net.ClientConnection;
+import protocol.ui.StatusView;
+import protocol.ui.XStatusInfo;
 
 /**
  *

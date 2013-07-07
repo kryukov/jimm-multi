@@ -14,6 +14,7 @@ import protocol.StatusInfo;
 import protocol.icq.*;
 import protocol.jabber.*;
 import protocol.mrim.*;
+import protocol.ui.InfoFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -127,8 +128,8 @@ public class ProtocolMenu implements SelectListener {
                 protocol.getStatusInfo().getIcon(protocol.getProfile().statusIndex),
                 MENU_STATUS);
         // #sijapp cond.if modules_XSTATUSES is "true" #
-        if (0 < getXStatusCount(protocol)) {
-            Icon icon = protocol.getXStatusInfo().getIcon(protocol.getProfile().xstatusIndex);
+        if (hasXStatus(protocol)) {
+            Icon icon = InfoFactory.factory.getXStatusInfo(protocol).getIcon(protocol.getProfile().xstatusIndex);
             menu.addItem("set_xstatus", icon, MENU_XSTATUS);
         }
         // #sijapp cond.end #
@@ -163,11 +164,11 @@ public class ProtocolMenu implements SelectListener {
         }
     }
     // #sijapp cond.if modules_XSTATUSES is "true" #
-    private int getXStatusCount(Protocol protocol) {
-        if (null != protocol.getXStatusInfo()) {
-            return protocol.getXStatusInfo().getXStatusCount();
+    private boolean hasXStatus(Protocol protocol) {
+        if (null != InfoFactory.factory.getXStatusInfo(protocol)) {
+            return 0 < InfoFactory.factory.getXStatusInfo(protocol).getXStatusCount();
         }
-        return 0;
+        return false;
     }
     // #sijapp cond.end #
 

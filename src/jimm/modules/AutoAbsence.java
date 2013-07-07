@@ -14,6 +14,7 @@ import jimm.Jimm;
 import jimm.Options;
 import jimm.cl.ContactList;
 import protocol.*;
+import protocol.ui.XStatusInfo;
 
 /**
  *

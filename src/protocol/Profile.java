@@ -128,4 +128,22 @@ public final class Profile {
     public boolean isConnected() {
         return StatusInfo.STATUS_OFFLINE != statusIndex;
     }
+
+    public byte getEffectiveType() {
+        // #sijapp cond.if protocols_JABBER is "true" #
+        // #sijapp cond.if modules_MULTI is "true" #
+        switch (protocolType) {
+            case Profile.PROTOCOL_GTALK:
+            case Profile.PROTOCOL_FACEBOOK:
+            case Profile.PROTOCOL_LJ:
+            case Profile.PROTOCOL_YANDEX:
+            case Profile.PROTOCOL_VK:
+            case Profile.PROTOCOL_QIP:
+            case Profile.PROTOCOL_ODNOKLASSNIKI:
+                return Profile.PROTOCOL_JABBER;
+        }
+        // #sijapp cond.end #
+        // #sijapp cond.end #
+        return protocolType;
+    }
 }

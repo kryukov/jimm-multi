@@ -23,6 +23,8 @@ import jimmui.view.text.TextListController;
 import jimmui.view.text.TextListModel;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.StatusView;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -65,10 +67,6 @@ public class Mrim extends Protocol {
         info = new StatusInfo(statusIcons, statusIconIndex, statuses);
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
         microBlog = new MicroBlog(this);
-        // #sijapp cond.end #
-
-        // #sijapp cond.if modules_XSTATUSES is "true" #
-        xstatusInfo = Mrim.xStatus.getInfo();
         // #sijapp cond.end #
 
         // #sijapp cond.if modules_CLIENTS is "true" #

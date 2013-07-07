@@ -35,6 +35,7 @@ import protocol.*;
 import protocol.icq.*;
 import protocol.mrim.*;
 import protocol.jabber.*;
+import protocol.ui.StatusView;
 
 
 public final class ContactList implements ContactListListener {
@@ -125,27 +126,9 @@ public final class ContactList implements ContactListListener {
         SysTextList.gotoURL(textWithUrls);
     }
 
-    private byte getRealType(byte type) {
-        // #sijapp cond.if protocols_JABBER is "true" #
-        // #sijapp cond.if modules_MULTI is "true" #
-        switch (type) {
-            case Profile.PROTOCOL_GTALK:
-            case Profile.PROTOCOL_FACEBOOK:
-            case Profile.PROTOCOL_LJ:
-            case Profile.PROTOCOL_YANDEX:
-            case Profile.PROTOCOL_VK:
-            case Profile.PROTOCOL_QIP:
-            case Profile.PROTOCOL_ODNOKLASSNIKI:
-                return Profile.PROTOCOL_JABBER;
-        }
-        // #sijapp cond.end #
-        // #sijapp cond.end #
-        return type;
-    }
     private Protocol createProtocol(Profile account) {
         Protocol protocol = null;
-        byte type = getProtocolType(account);
-        switch (getRealType(type)) {
+        switch (account.getEffectiveType()) {
             // #sijapp cond.if protocols_ICQ is "true" #
             case Profile.PROTOCOL_ICQ:
                 protocol = new Icq();

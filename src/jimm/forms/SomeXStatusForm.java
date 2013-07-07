@@ -22,6 +22,8 @@ import protocol.*;
 import protocol.icq.*;
 import protocol.jabber.*;
 import protocol.mrim.*;
+import protocol.ui.InfoFactory;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -89,7 +91,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
 
     public final void show() {
         menu.clean();
-        XStatusInfo info = protocol.getXStatusInfo();
+        XStatusInfo info = InfoFactory.factory.getXStatusInfo(protocol);
         for (byte i = -1; i < info.getXStatusCount(); ++i) {
             menu.addItem(info.getName(i), info.getIcon(i), i);
         }

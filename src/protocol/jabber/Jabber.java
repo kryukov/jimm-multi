@@ -23,6 +23,8 @@ import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.StatusView;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -50,10 +52,6 @@ public final class Jabber extends Protocol implements FormListener {
         ImageList icons = createStatusIcons(type);
         final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
         info = new StatusInfo(icons, statusIconIndex, statuses);
-
-        // #sijapp cond.if modules_XSTATUSES is "true" #
-        xstatusInfo = Jabber.xStatus.getInfo();
-        // #sijapp cond.end #
 
         // #sijapp cond.if modules_CLIENTS is "true" #
         clientInfo = JabberClient.get();

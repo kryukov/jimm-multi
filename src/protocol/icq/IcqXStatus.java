@@ -10,9 +10,8 @@
 // #sijapp cond.if modules_XSTATUSES is "true" #
 package protocol.icq;
 
-import jimmui.view.icons.*;
 import jimm.comm.*;
-import protocol.*;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -21,15 +20,9 @@ import protocol.*;
 public class IcqXStatus {
     private byte[][] guids;
     private short[] ids;
-    private final XStatusInfo info;
-    
+
     public IcqXStatus() {
         Config config = new Config().loadLocale("/icq-xstatus.txt");
-
-        String[] names = config.getValues();
-        ImageList icons = ImageList.createImageList("/icq-xstatus.png");
-        info = new XStatusInfo(icons, names);
-
         String[] keys = config.getKeys();
         guids = new byte[keys.length][];
         ids = new short[keys.length];
@@ -44,9 +37,6 @@ public class IcqXStatus {
                 }
             }
         }
-    }
-    public XStatusInfo getInfo() {
-        return info;
     }
     private byte[] getGuid(String line) {
         byte[] data = new byte[16];

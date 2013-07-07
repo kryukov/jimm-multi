@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package protocol;
+package protocol.ui;
 
 import jimmui.view.text.TextListModel;
 import jimmui.view.icons.Icon;
@@ -20,6 +20,10 @@ import jimmui.view.base.CanvasEx;
 import jimmui.view.menu.*;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListController;
+import protocol.ClientInfo;
+import protocol.Contact;
+import protocol.Protocol;
+import protocol.StatusInfo;
 import protocol.icq.*;
 import protocol.jabber.*;
 
@@ -141,7 +145,7 @@ public final class StatusView extends TextListController {
     }
     // #sijapp cond.if modules_XSTATUSES is "true" #
     public void addXStatus() {
-        XStatusInfo info = protocol.getXStatusInfo();
+        XStatusInfo info = InfoFactory.factory.getXStatusInfo(protocol);
         int x = contact.getXStatusIndex();
         addStatus(info.getIcon(x), info.getName(x));
     }

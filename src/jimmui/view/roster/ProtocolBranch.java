@@ -17,6 +17,8 @@ import jimm.chat.ChatHistory;
 import jimm.comm.Util;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.InfoFactory;
+
 /**
  *
  * @author Vladimir Kryukov
@@ -66,7 +68,16 @@ public class ProtocolBranch implements TreeBranch {
         }
     }
     public final void getLeftIcons(Icon[] leftIcons) {
-        protocol.getCapIcons(leftIcons);
+        if (protocol.isConnected() && !protocol.isConnecting()) {
+            leftIcons[0] = protocol.getStatusInfo().getIcon(protocol.getProfile().statusIndex);
+        } else {
+            leftIcons[0] = protocol.getStatusInfo().getIcon(StatusInfo.STATUS_OFFLINE);
+        }
+        // #sijapp cond.if modules_XSTATUSES is "true" #
+        if (null != InfoFactory.factory.getXStatusInfo(protocol)) {
+            leftIcons[1] = InfoFactory.factory.getXStatusInfo(protocol).getIcon(protocol.getProfile().xstatusIndex);
+        }
+        // #sijapp cond.end #
     }
     public final void getRightIcons(Icon[] rightIcons) {
         if (!isExpanded()) {

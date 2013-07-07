@@ -9,7 +9,6 @@
 
 package protocol;
 
-import jimmui.view.icons.*;
 import java.io.*;
 import java.util.Vector;
 import javax.microedition.rms.*;
@@ -24,7 +23,7 @@ import jimm.search.*;
 import jimm.util.JLocale;
 import protocol.jabber.*;
 
-/**
+            /**
  *
  * @author vladimir
  */
@@ -35,9 +34,6 @@ abstract public class Protocol {
     private String password;
     private String userid = "";
     protected StatusInfo info;
-    // #sijapp cond.if modules_XSTATUSES is "true" #
-    protected XStatusInfo xstatusInfo;
-    // #sijapp cond.end #
     // #sijapp cond.if modules_CLIENTS is "true" #
     public ClientInfo clientInfo;
     // #sijapp cond.end #
@@ -134,11 +130,6 @@ abstract public class Protocol {
     protected String processUin(String uin) {
         return uin;
     }
-    // #sijapp cond.if modules_XSTATUSES is "true" #
-    public final XStatusInfo getXStatusInfo() {
-        return xstatusInfo;
-    }
-    // #sijapp cond.end #
     public final void init() {
         // Status info
         initStatusInfo();
@@ -152,21 +143,6 @@ abstract public class Protocol {
         return true;
     }
 
-    private Icon getCurrentStatusIcon() {
-        if (isConnected() && !isConnecting()) {
-            return getStatusInfo().getIcon(getProfile().statusIndex);
-        }
-        return getStatusInfo().getIcon(StatusInfo.STATUS_OFFLINE);
-    }
-    public final void getCapIcons(Icon[] capIcons) {
-        capIcons[0] = getCurrentStatusIcon();
-        // #sijapp cond.if modules_XSTATUSES is "true" #
-        if (null != xstatusInfo) {
-            capIcons[1] = xstatusInfo.getIcon(getProfile().xstatusIndex);
-        }
-        // #sijapp cond.end #
-    }
-
     public final void setContactListStub() {
         synchronized (rosterLockObject) {
             contacts = new Vector<Contact>();
@@ -174,16 +150,6 @@ abstract public class Protocol {
         }
     }
     public final void setContactList(Vector<Group> groups, Vector<Contact> contacts) {
-        // #sijapp cond.if modules_DEBUGLOG is "true" #
-        if ((contacts.size() > 0) && !(contacts.elementAt(0) instanceof Contact)) {
-            DebugLog.panic("contacts is not list of Contact");
-            contacts = new Vector<Contact>();
-        }
-        if ((groups.size() > 0) && !(groups.elementAt(0) instanceof Group)) {
-            DebugLog.panic("groups is not list of Group");
-            groups = new Vector<Group>();
-        }
-        // #sijapp cond.end #
         Vector<Group> oldGroups;
         Vector<Contact> oldContacts;
         synchronized (rosterLockObject) {
@@ -310,7 +276,7 @@ abstract public class Protocol {
             }
             try {
                 // Close record store
-                cl.closeRecordStore();
+                if (null != cl) cl.closeRecordStore();
             } catch (Exception e) {
                 // Do nothing
             }

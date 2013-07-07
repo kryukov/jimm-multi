@@ -18,6 +18,8 @@ import jimm.comm.Util;
 import jimm.search.*;
 import jimmui.view.menu.MenuModel;
 import protocol.*;
+import protocol.ui.StatusView;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -28,9 +30,6 @@ public class Obimp extends Protocol {
     private static final int[] statusIcon = {2, 0, 6, 5, 10, 11, -1, -1, 12, 7, 8, 9, 4, 3, 1};
 
     private ObimpConnection connection;
-    // #sijapp cond.if modules_XSTATUSES is "true" #
-    public static ObimpXStatus xStatus = new ObimpXStatus();
-    // #sijapp cond.end #
     private String server = "";
 
     public Obimp() {
@@ -39,10 +38,6 @@ public class Obimp extends Protocol {
     @Override
     protected void initStatusInfo() {
         info = new StatusInfo(statusIcons, statusIcon, statuses);
-
-        // #sijapp cond.if modules_XSTATUSES is "true" #
-        xstatusInfo = Obimp.xStatus.getInfo();
-        // #sijapp cond.end #
     }
     @Override
     public boolean isEmpty() {

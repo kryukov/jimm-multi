@@ -11,10 +11,9 @@
 // #sijapp cond.if modules_XSTATUSES is "true" #
 package protocol.jabber;
 
-import jimmui.view.icons.*;
 import jimm.comm.Config;
 import jimm.comm.StringConvertor;
-import protocol.*;
+import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -22,7 +21,6 @@ import protocol.*;
  */
 public class JabberXStatus {
     private final String[] xstatusCaps;
-    private final XStatusInfo info;
 
     public static final int TYPE_X = 0x1000;
     public static final int TYPE_MOOD = 0x2000;
@@ -35,12 +33,6 @@ public class JabberXStatus {
     public JabberXStatus() {
         Config cfg = new Config().loadLocale("/jabber-xstatus.txt");
         xstatusCaps = cfg.getKeys();
-        String[] xstatusNames = cfg.getValues();
-        ImageList xstatusIcons = ImageList.createImageList("/jabber-xstatus.png");
-        info = new XStatusInfo(xstatusIcons, xstatusNames);
-    }
-    public XStatusInfo getInfo() {
-        return info;
     }
     private int getType(String type) {
         if (type.startsWith("q" + "ip")) {

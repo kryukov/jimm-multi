@@ -68,11 +68,6 @@ public final class AutoAbsence {
         if ((null == p) || !p.isConnected() || p.isAway(p.getProfile().statusIndex)) {
             return false;
         }
-        // #sijapp cond.if protocols_MSN is "true" #
-        if (p instanceof protocol.msn.Msn) {
-            return false;
-        }
-        // #sijapp cond.end #
         return true;
     }
     private void doRestore() {

@@ -20,7 +20,6 @@ public final class Profile {
     public static final int PROTOCOL_ICQ = 0;
     public static final int PROTOCOL_MRIM = 1;
     public static final int PROTOCOL_JABBER = 2;
-    public static final int PROTOCOL_MSN = 4;
     public static final int PROTOCOL_OBIMP = 9;
     public static final int PROTOCOL_FACEBOOK = 10;
     public static final int PROTOCOL_LJ = 11;
@@ -49,9 +48,6 @@ public final class Profile {
             + "|QIP"
             // #sijapp cond.end #
             // #sijapp cond.end #
-            // #sijapp cond.if protocols_MSN is "true" #
-            + "|MSN"
-            // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #
             + "|OBIMP"
             // #sijapp cond.end #
@@ -78,9 +74,6 @@ public final class Profile {
             PROTOCOL_QIP,
             // #sijapp cond.end #
             // #sijapp cond.end #
-            // #sijapp cond.if protocols_MSN is "true" #
-            PROTOCOL_MSN,
-            // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #
             PROTOCOL_OBIMP,
             // #sijapp cond.end #
@@ -106,9 +99,6 @@ public final class Profile {
             "Login",
             "Login",
             // #sijapp cond.end #
-            // #sijapp cond.end #
-            // #sijapp cond.if protocols_MSN is "true" #
-            "LiveID/E-mail",
             // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #
             "ObimpID",

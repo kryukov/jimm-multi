@@ -161,11 +161,6 @@ public final class ContactList implements ContactListListener {
                 protocol = new Jabber();
                 break;
             // #sijapp cond.end #
-            // #sijapp cond.if protocols_MSN is "true" #
-            case Profile.PROTOCOL_MSN:
-                protocol = new protocol.msn.Msn();
-                break;
-            // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #
             case Profile.PROTOCOL_OBIMP:
                 protocol = new protocol.obimp.Obimp();

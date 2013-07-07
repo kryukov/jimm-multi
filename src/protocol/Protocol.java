@@ -71,6 +71,7 @@ abstract public class Protocol {
     protected final void setUserId(String userId) {
         userid = userId;
     }
+
     public boolean isEmpty() {
         return StringConvertor.isEmpty(userid);
     }

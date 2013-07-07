@@ -35,6 +35,8 @@ public class Obimp extends Protocol {
 
     public Obimp() {
     }
+
+    @Override
     protected void initStatusInfo() {
         info = new StatusInfo(statusIcons, statusIcon, statuses);
 
@@ -42,12 +44,17 @@ public class Obimp extends Protocol {
         xstatusInfo = Obimp.xStatus.getInfo();
         // #sijapp cond.end #
     }
+    @Override
     public boolean isEmpty() {
         return super.isEmpty() || StringConvertor.isEmpty(server);
     }
+
+    @Override
     public String getUserIdName() {
         return "ObimpID";
     }
+
+    @Override
     protected String processUin(String uin) {
         String[] userId = Util.explode(uin, '@');
         if (2 == userId.length) {
@@ -170,11 +177,13 @@ public class Obimp extends Protocol {
     }
 
     // #sijapp cond.if modules_XSTATUSES is "true" #
+    @Override
     protected void s_updateXStatus() {
         connection.sendStatus();
     }
     // #sijapp cond.end #
 
+    @Override
     public void showUserInfo(Contact contact) {
         UserInfo data = null;
         if (isConnected()) {
@@ -191,6 +200,8 @@ public class Obimp extends Protocol {
         }
         data.showProfile();
     }
+
+    @Override
     public void showStatus(Contact contact) {
         StatusView statusView = ContactList.getInstance().getStatusView();
         MenuModel menu = new MenuModel();

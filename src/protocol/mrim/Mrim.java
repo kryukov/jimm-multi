@@ -57,9 +57,10 @@ public class Mrim extends Protocol {
         StatusInfo.STATUS_UNDETERMINATED,
         StatusInfo.STATUS_INVISIBLE};
 
-    /** Creates a new instance of Mrim */
     public Mrim() {
     }
+
+    @Override
     protected void initStatusInfo() {
         info = new StatusInfo(statusIcons, statusIconIndex, statuses);
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
@@ -74,13 +75,18 @@ public class Mrim extends Protocol {
         clientInfo = MrimClient.get();
         // #sijapp cond.end #
     }
+
+    @Override
     protected String processUin(String uin) {
         return uin.toLowerCase();
     }
+
+    @Override
     public boolean isEmpty() {
         return super.isEmpty() || (getUserId().indexOf('@') <= 0);
     }
 
+    @Override
     public String getUniqueUserId(Contact contact) {
         String userId = contact.getUserId();
         if (userId.endsWith("@uin.icq")) {
@@ -89,13 +95,17 @@ public class Mrim extends Protocol {
         return contact.getUserId();
     }
 
+    @Override
     protected void startConnection() {
         connection = new MrimConnection(this);
         connection.start();
     }
+
     public MrimConnection getConnection() {
         return connection;
     }
+
+    @Override
     public boolean isConnected() {
         return (null != connection) && connection.isConnected();
     }
@@ -111,6 +121,8 @@ public class Mrim extends Protocol {
         addGroup(phoneGroup);
         return phoneGroup;
     }
+
+    @Override
     protected Contact createContact(String uin, String name) {
         name = (null == name) ? uin : name;
         if (-1 == uin.indexOf('@')) {
@@ -127,6 +139,7 @@ public class Mrim extends Protocol {
         return new MrimContact(uin, name);
     }
 
+    @Override
     protected void closeConnection() {
         MrimConnection c = connection;
         connection = null;
@@ -135,15 +148,19 @@ public class Mrim extends Protocol {
         }
     }
 
+    @Override
     protected void sendSomeMessage(PlainMessage msg) {
         connection.sendMessage(msg);
     }
+
+    @Override
     protected void s_sendTypingNotify(Contact to, boolean isTyping) {
         if (to.isSingleUserContact()) {
             connection.sendTypingNotify(to.getUserId(), isTyping);
         }
     }
 
+    @Override
     public boolean isMeVisible(Contact to) {
         // #sijapp cond.if modules_SERVERLISTS is "true" #
         if (to.inInvisibleList()) {
@@ -158,11 +175,13 @@ public class Mrim extends Protocol {
 
     // #sijapp cond.if modules_XSTATUSES is "true" #
     public static final MrimXStatusInfo xStatus = new MrimXStatusInfo();
+    @Override
     protected void s_updateXStatus() {
         connection.setStatus();
     }
     // #sijapp cond.end #
     // #sijapp cond.if modules_SERVERLISTS is "true" #
+    @Override
     protected void s_setPrivateStatus() {
         if (isConnected()) {
             connection.setStatus();
@@ -180,6 +199,7 @@ public class Mrim extends Protocol {
         return 0x00000000;
     }
 
+    @Override
     protected void s_searchUsers(Search cont) {
         String uin = cont.getSearchParam(Search.UIN);
         if ((null != uin) && (-1 == uin.indexOf('@'))) {
@@ -196,48 +216,61 @@ public class Mrim extends Protocol {
         }
         connection.searchUsers(cont);
     }
+    @Override
     protected void s_updateOnlineStatus() {
         connection.setStatus();
     }
 
+    @Override
     protected void s_addContact(Contact contact) {
         connection.addContact((MrimContact)contact);
     }
 
+    @Override
     public void requestAuth(String uin) {
         connection.requestAuth(uin, getUserId());
     }
+    @Override
     public void grandAuth(String uin) {
         connection.grandAuth(uin);
     }
+    @Override
     protected void denyAuth(String userId) {
     }
+    @Override
     protected void s_removeContact(Contact contact) {
         connection.removeContact((MrimContact) contact);
     }
 
+    @Override
     protected void s_addGroup(Group group) {
         connection.addGroup((MrimGroup) group);
     }
+    @Override
     public Group createGroup(String name) {
         return new MrimGroup(-1, 0, name);
     }
 
+    @Override
     protected void s_removeGroup(Group group) {
         connection.removeGroup((MrimGroup) group);
     }
+    @Override
     protected void s_renameGroup(Group group, String name) {
         group.setName(name);
         connection.renameGroup((MrimGroup) group);
     }
+    @Override
     protected void s_moveContact(Contact contact, Group to) {
         contact.setGroup(to);
         getConnection().updateContact((MrimContact) contact);
     }
+    @Override
     protected void s_renameContact(Contact contact, String name) {
         contact.setName(name);
         getConnection().updateContact((MrimContact) contact);
     }
+
     public void sendSms(String phone, String text) {
         getConnection().sendSms(phone, text);
     }
@@ -253,6 +286,7 @@ public class Mrim extends Protocol {
         return null;
     }
 
+    @Override
     protected Contact loadContact(DataInputStream dis) throws Exception {
         // Get item type
         int contactId = dis.readInt();
@@ -269,6 +303,8 @@ public class Mrim extends Protocol {
         c.setBooleanValues(booleanValues);
         return c;
     }
+
+    @Override
     protected void saveContact(DataOutputStream out, Contact contact) throws Exception {
         MrimContact mrimContact = (MrimContact)contact;
         if (contact instanceof MrimPhoneContact) return;
@@ -282,15 +318,21 @@ public class Mrim extends Protocol {
         out.writeInt(mrimContact.getFlags());
     }
 
+    @Override
     public void getAvatar(UserInfo userInfo) {
         new jimmui.view.timers.GetVersion(userInfo).get();
     }
 
+    @Override
     public String getUserIdName() {
         return "E-mail";
     }
+
+    @Override
     public void saveUserInfo(UserInfo userInfo) {
     }
+
+    @Override
     protected void doAction(Contact c, int action) {
         MrimContact contact = (MrimContact)c;
         switch (action) {
@@ -338,6 +380,7 @@ public class Mrim extends Protocol {
         }
     }
 
+    @Override
     public void showUserInfo(Contact contact) {
         UserInfo data = null;
         if (contact instanceof MrimPhoneContact) {
@@ -363,6 +406,7 @@ public class Mrim extends Protocol {
         data.showProfile();
     }
 
+    @Override
     public void showStatus(Contact contact) {
         if (contact instanceof MrimPhoneContact) {
             return;

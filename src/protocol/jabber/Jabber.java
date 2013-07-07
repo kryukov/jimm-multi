@@ -122,18 +122,22 @@ public final class Jabber extends Protocol implements FormListener {
         }
     }
 
+    @Override
     public boolean isEmpty() {
         return super.isEmpty() || (getUserId().indexOf('@') <= 0);
     }
 
+    @Override
     public boolean isConnected() {
         return (null != connection) && connection.isConnected();
     }
 
+    @Override
     public final boolean isBlogBot(String jid) {
         return -1 < bots.indexOf(jid);
     }
 
+    @Override
     protected void startConnection() {
         connection = new JabberXml();
         connection.setJabber(this);
@@ -156,6 +160,7 @@ public final class Jabber extends Protocol implements FormListener {
         return true;
     }
 
+    @Override
     public boolean hasVCardEditor() {
         // #sijapp cond.if modules_MULTI is "true" #
         switch (getProfile().protocolType) {
@@ -169,10 +174,12 @@ public final class Jabber extends Protocol implements FormListener {
         return true;
     }
 
+    @Override
     protected final void userCloseConnection() {
         rejoinList.removeAllElements();
     }
 
+    @Override
     protected final void closeConnection() {
         JabberXml c = connection;
         connection = null;
@@ -200,6 +207,7 @@ public final class Jabber extends Protocol implements FormListener {
     public static final String GATE_GROUP = "group_transports";
     public static final String CONFERENCE_GROUP = "group_conferences";
 
+    @Override
     public final Group createGroup(String name) {
         Group group = new Group(name);
         group.setGroupId(getNextGroupId());
@@ -266,10 +274,12 @@ public final class Jabber extends Protocol implements FormListener {
         return nick;
     }
 
+    @Override
     protected void sendSomeMessage(PlainMessage msg) {
         getConnection().sendMessage(msg);
     }
 
+    @Override
     protected final void s_searchUsers(Search cont) {
         // FIXME
         UserInfo userInfo = new UserInfo(this);
@@ -281,6 +291,7 @@ public final class Jabber extends Protocol implements FormListener {
     }
     public final static int PRIORITY = 50;
 
+    @Override
     protected void s_updateOnlineStatus() {
         connection.setStatus(getProfile().statusIndex, "", PRIORITY);
         for (int i = 0; i < rejoinList.size(); ++i) {
@@ -301,16 +312,20 @@ public final class Jabber extends Protocol implements FormListener {
         c.__setStatus(resource, priority, status, text);
     }
 
+    @Override
     protected final void s_addedContact(Contact contact) {
         connection.updateContact((JabberContact) contact);
     }
 
+    @Override
     protected final void s_addGroup(Group group) {
     }
 
+    @Override
     protected final void s_removeGroup(Group group) {
     }
 
+    @Override
     protected final void s_removedContact(Contact contact) {
         if (!contact.isTemp()) {
             boolean unregister = Jid.isGate(contact.getUserId())
@@ -328,33 +343,40 @@ public final class Jabber extends Protocol implements FormListener {
         }
     }
 
+    @Override
     protected final void s_renameGroup(Group group, String name) {
         group.setName(name);
         connection.updateContacts(contacts);
     }
 
+    @Override
     protected final void s_moveContact(Contact contact, Group to) {
         contact.setGroup(to);
         connection.updateContact((JabberContact) contact);
     }
 
+    @Override
     protected final void s_renameContact(Contact contact, String name) {
         contact.setName(name);
         connection.updateContact((JabberContact) contact);
     }
 
+    @Override
     public void grandAuth(String uin) {
         connection.sendSubscribed(uin);
     }
 
+    @Override
     public void denyAuth(String uin) {
         connection.sendUnsubscribed(uin);
     }
 
+    @Override
     public void autoDenyAuth(String uin) {
         denyAuth(uin);
     }
 
+    @Override
     public void requestAuth(String uin) {
         connection.requestSubscribe(uin);
     }
@@ -411,6 +433,7 @@ public final class Jabber extends Protocol implements FormListener {
         return null;
     }
 
+    @Override
     protected String processUin(String uin) {
         resource = Jid.getResource(uin, "Jimm");
         return Jid.getBareJid(uin);
@@ -420,6 +443,7 @@ public final class Jabber extends Protocol implements FormListener {
         return resource;
     }
 
+    @Override
     protected void s_setPrivateStatus() {
     }
 
@@ -435,28 +459,32 @@ public final class Jabber extends Protocol implements FormListener {
         return disco;
     }
 
+    @Override
     public String getUserIdName() {
         return "JID";
     }
 
     // #sijapp cond.if modules_FILES is "true"#
+    @Override
     public void sendFile(FileTransfer transfer, String filename, String description) {
         getConnection().setIBB(new IBBFileTransfer(filename, description, transfer));
     }
     // #sijapp cond.end#
     // #sijapp cond.if modules_XSTATUSES is "true" #
-
+    @Override
     protected void s_updateXStatus() {
         connection.setXStatus();
     }
     // #sijapp cond.end #
 
+    @Override
     public void saveUserInfo(UserInfo userInfo) {
         if (isConnected()) {
             getConnection().saveVCard(userInfo);
         }
     }
 
+    @Override
     protected void s_sendTypingNotify(Contact to, boolean isTyping) {
         if (to instanceof JabberServiceContact) {
             return;
@@ -520,6 +548,7 @@ public final class Jabber extends Protocol implements FormListener {
         }
     }
 
+    @Override
     protected void doAction(Contact c, int cmd) {
         JabberContact contact = (JabberContact) c;
         switch (cmd) {
@@ -615,6 +644,7 @@ public final class Jabber extends Protocol implements FormListener {
         new Select(sublist).show();
     }
 
+    @Override
     public void showUserInfo(Contact contact) {
         if (!contact.isSingleUserContact()) {
             doAction(contact, JabberContact.USER_MENU_USERS_LIST);
@@ -684,6 +714,7 @@ public final class Jabber extends Protocol implements FormListener {
         statusView.update();
     }
 
+    @Override
     public void showStatus(Contact contact) {
         StatusView statusView = ContactList.getInstance().getStatusView();
         try {
@@ -702,6 +733,7 @@ public final class Jabber extends Protocol implements FormListener {
         statusView.showIt();
     }
 
+    @Override
     public String getUniqueUserId(Contact c) {
         String jid = c.getUserId();
         if (isContactOverGate(jid)) {
@@ -736,6 +768,7 @@ public final class Jabber extends Protocol implements FormListener {
         }
     }
 
+    @Override
     public void formAction(GraphForm form, boolean apply) {
         if (enterData == form) {
             if (apply) {

@@ -36,6 +36,7 @@ public class Msn extends Protocol {
         info = new StatusInfo(statusIcons, statusIcon, new byte[0]);
     }
 
+    @Override
     public boolean isEmpty() {
         return super.isEmpty() || (getUserId().indexOf('@') <= 0);
     }

@@ -75,6 +75,7 @@ public class Icq extends Protocol {
         // #sijapp cond.end #
     }
 
+    @Override
     public boolean isEmpty() {
         return super.isEmpty() || ((0 == Util.strToIntDef(getUserId(), 0)) && (getUserId().indexOf('@') <= 0));
     }

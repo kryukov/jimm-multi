@@ -23,11 +23,11 @@ public final class StatusInfo {
     public static final byte STATUS_CHAT    = 3;
 
     // Jabber statuses
-    public static final byte STATUS_XA = 9;//4;
-    public static final byte STATUS_DND = 11;//5;
+    public static final byte STATUS_XA = 9;
+    public static final byte STATUS_DND = 11;
     // Mrim statuses
-    public static final byte STATUS_UNDETERMINATED = 10;//4;
-    public static final byte STATUS_INVISIBLE      = 12;//5;
+    public static final byte STATUS_UNDETERMINATED = 10;
+    public static final byte STATUS_INVISIBLE      = 12;
     // Icq statuses
     public static final byte STATUS_NA         = 9;
     public static final byte STATUS_OCCUPIED   = 10;
@@ -64,7 +64,6 @@ public final class StatusInfo {
         "status_not_in_list"
     };
     
-    /** Creates a new instance of StatusInfo */
     public StatusInfo(ImageList statuses, int[] index, byte[] applicableStatuses) {
         statusIcons = statuses;
         statusIconIndex = index;
@@ -82,19 +81,5 @@ public final class StatusInfo {
     }
     public static int getWidth(byte status) {
         return statusWidth[status];
-    }
-    public final boolean isAway(byte statusIndex) {
-        switch (statusIndex) {
-            case StatusInfo.STATUS_OFFLINE:
-            case StatusInfo.STATUS_AWAY:
-            case StatusInfo.STATUS_DND:
-            case StatusInfo.STATUS_XA:
-            case StatusInfo.STATUS_UNDETERMINATED:
-            case StatusInfo.STATUS_INVISIBLE:
-            case StatusInfo.STATUS_INVIS_ALL:
-            case StatusInfo.STATUS_NOT_IN_LIST:
-                return true;
-        }
-        return false;
     }
 }

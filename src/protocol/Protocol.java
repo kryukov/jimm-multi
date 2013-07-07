@@ -977,7 +977,7 @@ abstract public class Protocol {
     }
     public final void playNotification(int type) {
         // #sijapp cond.if modules_SOUND is "true" #
-        if (!getStatusInfo().isAway(getProfile().statusIndex)
+        if (!isAway(getProfile().statusIndex)
                 || Options.getBoolean(Options.OPTION_NOTIFY_IN_AWAY)) {
             Notify.getSound().playSoundNotification(type);
         }
@@ -1101,7 +1101,7 @@ abstract public class Protocol {
                 return;
             }
             // #sijapp cond.if modules_SOUND is "true" #
-            if (!getStatusInfo().isAway(curr) && getStatusInfo().isAway(prev)) {
+            if (!isAway(curr) && isAway(prev)) {
                 playNotification(Notify.NOTIFY_ONLINE);
             }
             // #sijapp cond.end #
@@ -1139,5 +1139,20 @@ abstract public class Protocol {
             }
         }
         return result;
+    }
+
+    public final boolean isAway(byte statusIndex) {
+        switch (statusIndex) {
+            case StatusInfo.STATUS_OFFLINE:
+            case StatusInfo.STATUS_AWAY:
+            case StatusInfo.STATUS_DND:
+            case StatusInfo.STATUS_XA:
+            case StatusInfo.STATUS_UNDETERMINATED:
+            case StatusInfo.STATUS_INVISIBLE:
+            case StatusInfo.STATUS_INVIS_ALL:
+            case StatusInfo.STATUS_NOT_IN_LIST:
+                return true;
+        }
+        return false;
     }
 }

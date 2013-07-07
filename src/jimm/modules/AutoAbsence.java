@@ -65,7 +65,7 @@ public final class AutoAbsence {
         absence = true;
     }
     private boolean isSupported(Protocol p) {
-        if ((null == p) || !p.isConnected() || p.getStatusInfo().isAway(p.getProfile().statusIndex)) {
+        if ((null == p) || !p.isConnected() || p.isAway(p.getProfile().statusIndex)) {
             return false;
         }
         // #sijapp cond.if protocols_MSN is "true" #

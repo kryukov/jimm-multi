@@ -381,12 +381,12 @@ public final class VirtualContactList extends VirtualList {
                 return;
 
             case NativeCanvas.JIMM_BACK:
-                // #sijapp cond.if modules_ANDROID is "true" #
-                setModel(getUpdater().getModel());
-                back();
-                // #sijapp cond.else #
-                showContextMenu(getCurrentNode());
-                // #sijapp cond.end #
+                if (getModel() == getUpdater().getChatModel()) {
+                    setModel(getUpdater().getModel());
+                    back();
+                } else {
+                    showContextMenu(getCurrentNode());
+                }
                 return;
         }
     }

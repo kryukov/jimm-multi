@@ -16,7 +16,7 @@ public class InfoFactory {
     public static InfoFactory factory = new InfoFactory();
     // #sijapp cond.if modules_XSTATUSES is "true" #
     private XStatusInfo[] xStatuses = new XStatusInfo[21];
-    // #sijapp cond.end modules_XSTATUSES is "true" #
+    // #sijapp cond.end #
 
     // #sijapp cond.if modules_XSTATUSES is "true" #
     public XStatusInfo getXStatusInfo(Protocol protocol) {
@@ -35,7 +35,6 @@ public class InfoFactory {
                 // #sijapp cond.if protocols_ICQ is "true" #
             case Profile.PROTOCOL_ICQ:
                 config = new Config().loadLocale("/icq-xstatus.txt");
-
                 names = config.getValues();
                 icons = ImageList.createImageList("/icq-xstatus.png");
                 break;
@@ -64,8 +63,6 @@ public class InfoFactory {
                 icons = ImageList.createImageList("/obimp-xstatus.png");
                 break;
             // #sijapp cond.end #
-
-
 
             default:
                 names = new String[0];

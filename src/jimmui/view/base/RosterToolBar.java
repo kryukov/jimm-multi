@@ -9,6 +9,7 @@ import jimm.cl.ContactList;
 import jimm.cl.GlobalStatusForm;
 import jimmui.view.menu.MenuModel;
 import protocol.Protocol;
+import protocol.ui.InfoFactory;
 
 import javax.microedition.lcdui.Graphics;
 
@@ -58,7 +59,7 @@ public class RosterToolBar extends MySoftBar {
         ContactListModel m = ((VirtualContactList)c).getModel();
         for (int i = 0; i < m.getProtocolCount(); ++i) {
             Protocol p = m.getProtocol(i);
-            Icon icon = p.getStatusInfo().getIcon(p.getProfile().statusIndex);
+            Icon icon = InfoFactory.factory.getStatusInfo(p).getIcon(p.getProfile().statusIndex);
             if (p.isConnecting()) {
                 int progress = Math.min(2, getIconWidth() * p.getConnectingProgress() / 100);
                 g.setThemeColor(CanvasEx.THEME_CAP_TEXT);
@@ -68,7 +69,7 @@ public class RosterToolBar extends MySoftBar {
         }
         // #sijapp cond.else #
         Protocol p = ((VirtualContactList)c).getModel().getProtocol(0);
-        Icon icon = p.getStatusInfo().getIcon(p.getProfile().statusIndex);
+        Icon icon = InfoFactory.factory.getStatusInfo(p).getIcon(p.getProfile().statusIndex);
         x += drawLeft(g, icon, x, y, height);
         // #sijapp cond.end #
     }

@@ -33,6 +33,8 @@ import protocol.jabber.*;
 import protocol.mrim.*;
 // #sijapp cond.if protocols_OBIMP is "true" #
 import protocol.obimp.*;
+import protocol.ui.InfoFactory;
+import protocol.ui.StatusInfo;
 // #sijapp cond.end #
 
 
@@ -326,7 +328,7 @@ public class UserInfo implements
                 case 2: statusIndex = StatusInfo.STATUS_INVISIBLE; break;
                 default: return null;
             }
-            return protocol.getStatusInfo().getIcon(statusIndex);
+            return InfoFactory.factory.getStatusInfo(protocol).getIcon(statusIndex);
         }
         return null;
     }

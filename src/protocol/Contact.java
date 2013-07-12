@@ -21,6 +21,7 @@ import jimmui.view.menu.*;
 import jimm.comm.*;
 import protocol.ui.ClientInfo;
 import protocol.ui.InfoFactory;
+import protocol.ui.StatusInfo;
 import protocol.ui.XStatusInfo;
 
 /**
@@ -128,22 +129,6 @@ abstract public class Contact implements TreeNode, Sortable {
         }
         status = statusIndex;
         statusText = (StatusInfo.STATUS_OFFLINE == status) ? null : text;
-    }
-
-///////////////////////////////////////////////////////////////////////////
-    protected final void showTopLine(String text) {
-        if (this != ContactList.getInstance().getCurrentContact()) {
-            return;
-        }
-        Object vis = null;
-        MessageEditor editor = ContactList.getInstance().getMessageEditor();
-        if ((null != editor) && editor.getTextBox().isShown()) {
-            vis = editor.getTextBox();
-        } else if (hasChat()) {
-            ChatModel chat = ChatHistory.instance.getChatModel(this);
-            vis = ChatHistory.instance.getChat(chat);
-        }
-        UIUpdater.startFlashCaption(vis, text);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -282,7 +267,7 @@ abstract public class Contact implements TreeNode, Sortable {
         Protocol protocol = getProtocol();
         if (null != protocol) {
             if (null == lIcons[0]) {
-                lIcons[0] = protocol.getStatusInfo().getIcon(getStatusIndex());
+                lIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(getStatusIndex());
             }
             // #sijapp cond.if modules_XSTATUSES is "true" #
             if (XStatusInfo.XSTATUS_NONE != getXStatusIndex()) {
@@ -308,8 +293,7 @@ abstract public class Contact implements TreeNode, Sortable {
     }
     public final void getRightIcons(Icon[] icons) {
         // #sijapp cond.if modules_CLIENTS is "true" #
-        Protocol protocol = getProtocol();
-        ClientInfo info = InfoFactory.factory.getClientInfo(protocol);
+        ClientInfo info = InfoFactory.factory.getClientInfo(getProtocol());
         icons[0] = (null != info) ? info.getIcon(clientIndex) : null;
         // #sijapp cond.end #
     }

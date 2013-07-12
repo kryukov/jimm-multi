@@ -7,7 +7,7 @@ import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 import jimmui.view.menu.SelectListener;
 import protocol.Protocol;
-import protocol.StatusInfo;
+import protocol.ui.StatusInfo;
 
 /**
  * Created with IntelliJ IDEA.

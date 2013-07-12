@@ -27,9 +27,9 @@ package protocol.icq;
 import jimmui.view.menu.*;
 import jimmui.view.icons.*;
 import protocol.*;
+import protocol.ui.InfoFactory;
 
 public class IcqContact extends Contact {
-    private static final ImageList happyIcon = ImageList.createImageList("/happy.png");
 
     public boolean happyFlag;
 
@@ -46,12 +46,8 @@ public class IcqContact extends Contact {
         contactId = (short)id;
     }
 ///////////////////////////////////////////////////////////////////////////
-    public Icon getHappyIcon() {
-        return happyFlag ? happyIcon.iconAt(0) : null;
-    }
-
     public void getLeftIcons(Icon[] leftIcons) {
-        leftIcons[2] = getHappyIcon();
+        if (happyFlag) leftIcons[2] = InfoFactory.happyIcon;
         super.getLeftIcons(leftIcons);
     }
 
@@ -89,12 +85,6 @@ public class IcqContact extends Contact {
         setXStatus(getXStatusIndex(), text);
     }
     // #sijapp cond.end #
-
-    public void setStatusMessage(String msg) {
-        setStatus(getStatusIndex(), msg);
-    }
-
-
 
     protected void initManageContactMenu(Protocol protocol, MenuModel menu) {
         boolean connected = protocol.isConnected();

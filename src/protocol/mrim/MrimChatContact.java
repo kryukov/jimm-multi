@@ -13,6 +13,7 @@ package protocol.mrim;
 import java.util.Vector;
 import jimmui.view.menu.MenuModel;
 import protocol.*;
+import protocol.ui.StatusInfo;
 
 /**
  *

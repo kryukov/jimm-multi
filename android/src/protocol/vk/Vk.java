@@ -7,7 +7,7 @@ import jimm.search.UserInfo;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
-import protocol.StatusInfo;
+import protocol.ui.StatusInfo;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,15 +23,7 @@ public class Vk extends Protocol {
         return "Id";
     }
 
-    private static final byte[] statuses = {
-            StatusInfo.STATUS_ONLINE};
 
-    @Override
-    protected void initStatusInfo() {
-        ImageList icons = createStatusIcons();
-        final int[] statusIconIndex = {1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
-        info = new StatusInfo(icons, statusIconIndex, statuses);
-    }
     private ImageList createStatusIcons() {
         ImageList icons = ImageList.createImageList("/vk-status.png");
         if (0 < icons.size()) {

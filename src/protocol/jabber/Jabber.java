@@ -10,7 +10,7 @@
 package protocol.jabber;
 
 import jimm.chat.ChatHistory;
-import jimmui.view.icons.*;
+
 import java.util.Vector;
 import jimm.*;
 import jimm.chat.message.PlainMessage;
@@ -23,6 +23,7 @@ import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.StatusInfo;
 import protocol.ui.StatusView;
 import protocol.ui.XStatusInfo;
 
@@ -44,57 +45,13 @@ public final class Jabber extends Protocol implements FormListener {
     public Jabber() {
     }
 
+    @Override
     protected void initStatusInfo() {
         bots.addElement("juick@juick.com");
         bots.addElement("psto@psto.net");
-
-        byte type = getProfile().protocolType;
-        ImageList icons = createStatusIcons(type);
-        final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
-        info = new StatusInfo(icons, statusIconIndex, statuses);
     }
 
-    private static final byte[] statuses = {
-            StatusInfo.STATUS_CHAT,
-            StatusInfo.STATUS_ONLINE,
-            StatusInfo.STATUS_AWAY,
-            StatusInfo.STATUS_XA,
-            StatusInfo.STATUS_DND};
 
-
-    private ImageList createStatusIcons(byte type) {
-        // #sijapp cond.if modules_MULTI is "true" #
-        String file = "jabber";
-        switch (type) {
-            case Profile.PROTOCOL_GTALK:
-                file = "gtalk";
-                break;
-            case Profile.PROTOCOL_FACEBOOK:
-                file = "facebook";
-                break;
-            case Profile.PROTOCOL_LJ:
-                file = "livejournal";
-                break;
-            case Profile.PROTOCOL_YANDEX:
-                file = "ya";
-                break;
-            case Profile.PROTOCOL_VK:
-                file = "vk";
-                break;
-            case Profile.PROTOCOL_QIP:
-                file = "qip";
-                break;
-            case Profile.PROTOCOL_ODNOKLASSNIKI:
-                file = "o" + "k";
-                break;
-        }
-        ImageList icons = ImageList.createImageList("/" + file + "-status.png");
-        if (0 < icons.size()) {
-            return icons;
-        }
-        // #sijapp cond.end #
-        return ImageList.createImageList("/jabber-status.png");
-    }
 
     public void addRejoin(String jid) {
         if (!rejoinList.contains(jid)) {
@@ -626,8 +583,8 @@ public final class Jabber extends Protocol implements FormListener {
         MenuModel sublist = new MenuModel();
         int selected = 0;
         StatusInfo statusInfo = getStatusInfo();
-        for (int i = 0; i < c.subcontacts.size(); ++i) {
-            JabberContact.SubContact contact = (JabberContact.SubContact) c.subcontacts.elementAt(i);
+        for (int i = 0; i < c.subContacts.size(); ++i) {
+            JabberContact.SubContact contact = (JabberContact.SubContact) c.subContacts.elementAt(i);
             sublist.addRawItem(contact.resource, statusInfo.getIcon(contact.status), i);
             if (contact.resource.equals(c.currentResource)) {
                 selected = i;

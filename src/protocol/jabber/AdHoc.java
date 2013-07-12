@@ -53,9 +53,9 @@ public final class AdHoc implements FormListener, ControlStateListener {
         requestCommandsForCurrentResource();
     }
     private String[] getResources() {
-        String[] resources = new String[contact.subcontacts.size()];
+        String[] resources = new String[contact.subContacts.size()];
         for (int i = resources.length - 1; 0 <= i; --i) {
-            JabberContact.SubContact sub = (JabberContact.SubContact) contact.subcontacts.elementAt(i);
+            JabberContact.SubContact sub = (JabberContact.SubContact) contact.subContacts.elementAt(i);
             resources[i] = sub.resource;
         }
         return resources;
@@ -92,12 +92,12 @@ public final class AdHoc implements FormListener, ControlStateListener {
         if (null != Jid.getResource(contact.getUserId(), null)) {
             jid = contact.getUserId();
 
-        } else if (1 < contact.subcontacts.size()) {
+        } else if (1 < contact.subContacts.size()) {
             String resource = commandsListForm.getSelectorString(FORM_RESOURCE);
             jid = contact.getUserId() + "/" + resource;
 
-        } else if (1 == contact.subcontacts.size()) {
-            JabberContact.SubContact sub = (JabberContact.SubContact) contact.subcontacts.elementAt(0);
+        } else if (1 == contact.subContacts.size()) {
+            JabberContact.SubContact sub = (JabberContact.SubContact) contact.subContacts.elementAt(0);
             if (StringConvertor.isEmpty(sub.resource)) {
                 jid = contact.getUserId();
             } else {

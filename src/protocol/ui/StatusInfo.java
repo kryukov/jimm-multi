@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package protocol;
+package protocol.ui;
 
 import jimmui.view.icons.*;
 import jimm.util.JLocale;
@@ -81,5 +81,9 @@ public final class StatusInfo {
     }
     public static int getWidth(byte status) {
         return statusWidth[status];
+    }
+    public Icon getMrimPhone() {
+        if (7 == statusIcons.size()) return statusIcons.iconAt(6);
+        return getIcon(STATUS_OFFLINE);
     }
 }

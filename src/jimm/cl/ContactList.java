@@ -35,6 +35,8 @@ import protocol.*;
 import protocol.icq.*;
 import protocol.mrim.*;
 import protocol.jabber.*;
+import protocol.ui.ContactMenu;
+import protocol.ui.MessageEditor;
 import protocol.ui.StatusView;
 
 

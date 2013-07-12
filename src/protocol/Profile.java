@@ -10,6 +10,7 @@
 package protocol;
 
 import jimm.comm.Util;
+import protocol.ui.StatusInfo;
 
 /**
  *

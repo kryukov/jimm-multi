@@ -10,7 +10,7 @@ import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 import jimmui.view.menu.SelectListener;
 import protocol.Protocol;
-import protocol.StatusInfo;
+import protocol.ui.StatusInfo;
 import protocol.icq.*;
 import protocol.jabber.*;
 import protocol.mrim.*;
@@ -99,7 +99,7 @@ public class ProtocolMenu implements SelectListener {
         int count = ContactList.getInstance().getManager().getModel().getProtocolCount();
         for (int i = 0; i < count; ++i) {
             Protocol p = ContactList.getInstance().getManager().getModel().getProtocol(i);
-            m.addRawItem(p.getUserId(), p.getStatusInfo().getIcon(p.getProfile().statusIndex),
+            m.addRawItem(p.getUserId(), InfoFactory.factory.getStatusInfo(p).getIcon(p.getProfile().statusIndex),
                     MENU_FIRST_ACCOUNT + i);
         }
         ContactList.getInstance().getManager().showMenu(m);
@@ -125,7 +125,7 @@ public class ProtocolMenu implements SelectListener {
         }
         */
         menu.addItem("set_status",
-                protocol.getStatusInfo().getIcon(protocol.getProfile().statusIndex),
+                InfoFactory.factory.getStatusInfo(protocol).getIcon(protocol.getProfile().statusIndex),
                 MENU_STATUS);
         // #sijapp cond.if modules_XSTATUSES is "true" #
         if (hasXStatus(protocol)) {

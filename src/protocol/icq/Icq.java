@@ -39,12 +39,12 @@ import jimm.util.JLocale;
 import jimm.*;
 import protocol.*;
 import protocol.icq.plugin.*;
+import protocol.ui.InfoFactory;
+import protocol.ui.StatusInfo;
 import protocol.ui.StatusView;
 import protocol.ui.XStatusInfo;
 
 public class Icq extends Protocol {
-    private static final int[] statusIconIndex = {1, 0, 4, 3, 10, 11, 8, 9, 12, 5, 6, 7, 2, 2, 1};
-    private static final ImageList statusIcons = ImageList.createImageList("/icq-status.png");
 
     private IcqNetWorking connection = null;
     // #sijapp cond.if modules_XSTATUSES is "true" #
@@ -66,9 +66,6 @@ public class Icq extends Protocol {
     }
     public String getUserIdName() {
         return "UIN";
-    }
-    protected void initStatusInfo() {
-        info = new StatusInfo(statusIcons, statusIconIndex, statuses);
     }
 
     @Override
@@ -635,21 +632,6 @@ public class Icq extends Protocol {
     private static final int WORK_POSITION_TLV = 0x01C2;
 
 
-    private static final byte[] statuses = {
-        StatusInfo.STATUS_CHAT,
-        StatusInfo.STATUS_ONLINE,
-        StatusInfo.STATUS_AWAY,
-        StatusInfo.STATUS_NA,
-        StatusInfo.STATUS_OCCUPIED,
-        StatusInfo.STATUS_DND,
-        StatusInfo.STATUS_EVIL,
-        StatusInfo.STATUS_DEPRESSION,
-        StatusInfo.STATUS_LUNCH,
-        StatusInfo.STATUS_HOME,
-        StatusInfo.STATUS_WORK,
-        StatusInfo.STATUS_INVISIBLE,
-        StatusInfo.STATUS_INVIS_ALL};
-
     protected void s_sendTypingNotify(Contact to, boolean isTyping) {
         sendBeginTyping(to, isTyping);
     }
@@ -1018,9 +1000,8 @@ public class Icq extends Protocol {
         statusView.addContactStatus();
 
         if (contact.isOnline()) {
-            Icon happy = ((IcqContact)contact).getHappyIcon();
-            if (null != happy) {
-                statusView.addPlain(happy,
+            if (((IcqContact)contact).happyFlag) {
+                statusView.addPlain(InfoFactory.happyIcon,
                         JLocale.getString("status_happy_flag"));
             }
             String statusText = contact.getStatusText();

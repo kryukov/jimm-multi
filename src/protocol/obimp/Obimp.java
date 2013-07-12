@@ -18,6 +18,7 @@ import jimm.comm.Util;
 import jimm.search.*;
 import jimmui.view.menu.MenuModel;
 import protocol.*;
+import protocol.ui.StatusInfo;
 import protocol.ui.StatusView;
 import protocol.ui.XStatusInfo;
 
@@ -26,19 +27,12 @@ import protocol.ui.XStatusInfo;
  * @author Vladimir Kryukov
  */
 public class Obimp extends Protocol {
-    private static final ImageList statusIcons = ImageList.createImageList("/obimp-status.png");
-    private static final int[] statusIcon = {2, 0, 6, 5, 10, 11, -1, -1, 12, 7, 8, 9, 4, 3, 1};
-
     private ObimpConnection connection;
     private String server = "";
 
     public Obimp() {
     }
 
-    @Override
-    protected void initStatusInfo() {
-        info = new StatusInfo(statusIcons, statusIcon, statuses);
-    }
     @Override
     public boolean isEmpty() {
         return super.isEmpty() || StringConvertor.isEmpty(server);
@@ -145,19 +139,6 @@ public class Obimp extends Protocol {
             getConnection().saveVCard(userInfo);
         }
     }
-
-    private static final byte[] statuses = {
-        StatusInfo.STATUS_CHAT,
-        StatusInfo.STATUS_ONLINE,
-        StatusInfo.STATUS_AWAY,
-        StatusInfo.STATUS_NA,
-        StatusInfo.STATUS_OCCUPIED,
-        StatusInfo.STATUS_DND,
-        StatusInfo.STATUS_LUNCH,
-        StatusInfo.STATUS_HOME,
-        StatusInfo.STATUS_WORK,
-        StatusInfo.STATUS_INVISIBLE,
-        StatusInfo.STATUS_INVIS_ALL};
 
     protected void requestAuth(String userId) {
         connection.sendAuthRequest(userId);

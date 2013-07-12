@@ -1,6 +1,7 @@
 package protocol.ui;
 
 import jimm.comm.Config;
+import jimmui.view.icons.Icon;
 import jimmui.view.icons.ImageList;
 import protocol.Profile;
 import protocol.Protocol;
@@ -17,12 +18,109 @@ import protocol.mrim.MrimClient;
  */
 public class InfoFactory {
     public static InfoFactory factory = new InfoFactory();
+    // #sijapp cond.if protocols_ICQ is "true" #
+    public static final Icon happyIcon = ImageList.createImageList("/happy.png").iconAt(0);
+    // #sijapp cond.end #
+    protected StatusInfo[] info = new StatusInfo[21];
     // #sijapp cond.if modules_XSTATUSES is "true" #
     private XStatusInfo[] xStatuses = new XStatusInfo[21];
     // #sijapp cond.end #
     // #sijapp cond.if modules_CLIENTS is "true" #
     private ClientInfo[] clientInfo = new ClientInfo[21];
     // #sijapp cond.end #
+
+    public StatusInfo getStatusInfo(Protocol protocol) {
+        int protocolType = protocol.getProfile().protocolType;
+        if (null == info[protocolType]) {
+            info[protocolType] = createStatusInfo(protocolType);
+        }
+        return info[protocolType];
+    }
+
+    public StatusInfo getStatusInfo(int protocolType) {
+        if (null == info[protocolType]) {
+            info[protocolType] = createStatusInfo(protocolType);
+        }
+        return info[protocolType];
+    }
+
+    private StatusInfo createStatusInfo(int protocolType) {
+        final int[] statusIconIndex;
+        final ImageList statusIcons;
+        switch (protocolType) {
+            // #sijapp cond.if protocols_ICQ is "true" #
+            case Profile.PROTOCOL_ICQ:
+                statusIconIndex = new int[]{1, 0, 4, 3, 10, 11, 8, 9, 12, 5, 6, 7, 2, 2, 1};
+                statusIcons = ImageList.createImageList("/icq-status.png");
+                return new StatusInfo(statusIcons, statusIconIndex, icqStatuses);
+            // #sijapp cond.end #
+
+            // #sijapp cond.if protocols_MRIM is "true" #
+            case Profile.PROTOCOL_MRIM:
+                statusIcons = ImageList.createImageList("/mrim-status.png");
+                statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, -1, 5, -1, 2, -1, 1};
+                return new StatusInfo(statusIcons, statusIconIndex, mrimStatuses);
+            // #sijapp cond.end #
+
+            // #sijapp cond.if protocols_JABBER is "true" #
+            case Profile.PROTOCOL_JABBER:
+                statusIcons = createStatusIcons(protocolType);
+                statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
+                return new StatusInfo(statusIcons, statusIconIndex, xmppStatuses);
+            // #sijapp cond.end #
+
+            // #sijapp cond.if protocols_OBIMP is "true" #
+            case Profile.PROTOCOL_OBIMP:
+                statusIcons = ImageList.createImageList("/obimp-status.png");
+                statusIconIndex = new int[]{2, 0, 6, 5, 10, 11, -1, -1, 12, 7, 8, 9, 4, 3, 1};
+                return new StatusInfo(statusIcons, statusIconIndex, obimpStatuses);
+            // #sijapp cond.end #
+
+            // #sijapp cond.if protocols_VKAPI is "true" #
+            case Profile.PROTOCOL_VK_API:
+                ImageList icons = createStatusIcons(Profile.PROTOCOL_VK);
+                statusIconIndex = new int[]{1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
+                return new StatusInfo(icons, statusIconIndex, vkApiStatuses);
+            // #sijapp cond.end #
+
+            default:
+        }
+        return null;
+    }
+
+    private ImageList createStatusIcons(int type) {
+        // #sijapp cond.if modules_MULTI is "true" #
+        String file = "jabber";
+        switch (type) {
+            case Profile.PROTOCOL_GTALK:
+                file = "gtalk";
+                break;
+            case Profile.PROTOCOL_FACEBOOK:
+                file = "facebook";
+                break;
+            case Profile.PROTOCOL_LJ:
+                file = "livejournal";
+                break;
+            case Profile.PROTOCOL_YANDEX:
+                file = "ya";
+                break;
+            case Profile.PROTOCOL_VK:
+                file = "vk";
+                break;
+            case Profile.PROTOCOL_QIP:
+                file = "qip";
+                break;
+            case Profile.PROTOCOL_ODNOKLASSNIKI:
+                file = "o" + "k";
+                break;
+        }
+        ImageList icons = ImageList.createImageList("/" + file + "-status.png");
+        if (0 < icons.size()) {
+            return icons;
+        }
+        // #sijapp cond.end #
+        return ImageList.createImageList("/jabber-status.png");
+    }
 
     // #sijapp cond.if modules_CLIENTS is "true" #
     public ClientInfo getClientInfo(Protocol protocol) {
@@ -115,4 +213,48 @@ public class InfoFactory {
         return new XStatusInfo(icons, names);
     }
     // #sijapp cond.end #
+
+    private static final byte[] icqStatuses = {
+            StatusInfo.STATUS_CHAT,
+            StatusInfo.STATUS_ONLINE,
+            StatusInfo.STATUS_AWAY,
+            StatusInfo.STATUS_NA,
+            StatusInfo.STATUS_OCCUPIED,
+            StatusInfo.STATUS_DND,
+            StatusInfo.STATUS_EVIL,
+            StatusInfo.STATUS_DEPRESSION,
+            StatusInfo.STATUS_LUNCH,
+            StatusInfo.STATUS_HOME,
+            StatusInfo.STATUS_WORK,
+            StatusInfo.STATUS_INVISIBLE,
+            StatusInfo.STATUS_INVIS_ALL};
+
+    private static final byte[] xmppStatuses = {
+            StatusInfo.STATUS_CHAT,
+            StatusInfo.STATUS_ONLINE,
+            StatusInfo.STATUS_AWAY,
+            StatusInfo.STATUS_XA,
+            StatusInfo.STATUS_DND};
+
+    private static final byte[] mrimStatuses = {
+            StatusInfo.STATUS_CHAT,
+            StatusInfo.STATUS_ONLINE,
+            StatusInfo.STATUS_AWAY,
+            StatusInfo.STATUS_UNDETERMINATED,
+            StatusInfo.STATUS_INVISIBLE};
+
+    private static final byte[] obimpStatuses = {
+            StatusInfo.STATUS_CHAT,
+            StatusInfo.STATUS_ONLINE,
+            StatusInfo.STATUS_AWAY,
+            StatusInfo.STATUS_NA,
+            StatusInfo.STATUS_OCCUPIED,
+            StatusInfo.STATUS_DND,
+            StatusInfo.STATUS_LUNCH,
+            StatusInfo.STATUS_HOME,
+            StatusInfo.STATUS_WORK,
+            StatusInfo.STATUS_INVISIBLE,
+            StatusInfo.STATUS_INVIS_ALL};
+
+    private static final byte[] vkApiStatuses = {StatusInfo.STATUS_ONLINE};
 }

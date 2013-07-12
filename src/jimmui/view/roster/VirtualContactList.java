@@ -36,6 +36,7 @@ import jimm.modules.*;
 import jimmui.view.base.*;
 import protocol.*;
 import protocol.ui.InfoFactory;
+import protocol.ui.StatusInfo;
 import protocol.ui.XStatusInfo;
 
 /**
@@ -96,7 +97,7 @@ public final class VirtualContactList extends VirtualList {
         int iconHeight = 0;
         if (0 < getModel().getProtocolCount()) {
             Protocol p = getModel().getProtocol(0);
-            Icon icon = p.getStatusInfo().getIcon(StatusInfo.STATUS_ONLINE);
+            Icon icon = InfoFactory.factory.getStatusInfo(p).getIcon(StatusInfo.STATUS_ONLINE);
             iconHeight = (null == icon) ? 0 : (icon.getHeight() + 2);
         }
         int fontHeight = getFontSet()[FONT_STYLE_PLAIN].getHeight();
@@ -329,9 +330,9 @@ public final class VirtualContactList extends VirtualList {
         capIcons[1] = null;
         if (null != protocol) {
             if (protocol.isConnected() && !protocol.isConnecting()) {
-                capIcons[0] = protocol.getStatusInfo().getIcon(protocol.getProfile().statusIndex);
+                capIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(protocol.getProfile().statusIndex);
             } else {
-                capIcons[0] = protocol.getStatusInfo().getIcon(StatusInfo.STATUS_OFFLINE);
+                capIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(StatusInfo.STATUS_OFFLINE);
             }
             // #sijapp cond.if modules_XSTATUSES is "true" #
             if (null != InfoFactory.factory.getXStatusInfo(protocol)) {
@@ -620,7 +621,7 @@ public final class VirtualContactList extends VirtualList {
         if (!StringConvertor.isEmpty(message)) {
             return message;
         }
-        return protocol.getStatusInfo().getName(contact.getStatusIndex());
+        return InfoFactory.factory.getStatusInfo(protocol).getName(contact.getStatusIndex());
     }
 
     public Updater getUpdater() {

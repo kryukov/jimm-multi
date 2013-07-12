@@ -3,7 +3,7 @@ package protocol.vk;
 import jimmui.view.menu.MenuModel;
 import protocol.Contact;
 import protocol.Protocol;
-import protocol.StatusInfo;
+import protocol.ui.StatusInfo;
 
 /**
  * Created with IntelliJ IDEA.

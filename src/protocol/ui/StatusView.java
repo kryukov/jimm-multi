@@ -22,7 +22,6 @@ import jimmui.view.text.TextList;
 import jimmui.view.text.TextListController;
 import protocol.Contact;
 import protocol.Protocol;
-import protocol.StatusInfo;
 import protocol.icq.*;
 import protocol.jabber.*;
 
@@ -140,7 +139,7 @@ public final class StatusView extends TextListController {
     /////////////////////
     public void addContactStatus() {
         byte status = contact.getStatusIndex();
-        StatusInfo info = protocol.getStatusInfo();
+        StatusInfo info = InfoFactory.factory.getStatusInfo(protocol);
         addStatus(info.getIcon(status), info.getName(status));
     }
     // #sijapp cond.if modules_XSTATUSES is "true" #

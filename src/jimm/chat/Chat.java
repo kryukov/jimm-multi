@@ -40,6 +40,8 @@ import jimm.history.*;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import protocol.*;
+import protocol.ui.ContactMenu;
+import protocol.ui.MessageEditor;
 
 import javax.microedition.lcdui.Font;
 

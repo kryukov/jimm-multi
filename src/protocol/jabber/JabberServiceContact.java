@@ -13,9 +13,12 @@ package protocol.jabber;
 import java.util.Vector;
 import jimm.comm.StringConvertor;
 import jimm.chat.message.*;
+import jimmui.view.base.UIUpdater;
 import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.ContactMenu;
+import protocol.ui.StatusInfo;
 
 /**
  *
@@ -149,7 +152,7 @@ public class JabberServiceContact extends JabberContact {
         }
         SubContact sc = getExistSubContact(nick);
         if (null != sc) {
-            showTopLine(nick + ": " + jabber.getStatusInfo().getName(sc.status));
+            UIUpdater.showTopLine(jabber, this, nick, sc.status);
         }
         if (myNick.equals(nick)) {
             setStatus(StatusInfo.STATUS_ONLINE, getStatusText());
@@ -207,8 +210,8 @@ public class JabberServiceContact extends JabberContact {
                 jabber.addMessage(new SystemNotice(jabber,
                         SystemNotice.TYPE_NOTICE_ERROR, getUserId(), text));
             }
-            for (int i = 0; i < subcontacts.size(); ++i) {
-                ((SubContact)subcontacts.elementAt(i)).status = StatusInfo.STATUS_OFFLINE;
+            for (int i = 0; i < subContacts.size(); ++i) {
+                ((SubContact) subContacts.elementAt(i)).status = StatusInfo.STATUS_OFFLINE;
             }
             String startUin = getUserId() + '/';
             Vector contactList = jabber.getContactItems();
@@ -238,12 +241,12 @@ public class JabberServiceContact extends JabberContact {
         if (hasChat()) {
             jabber.getChatModel(this).setWritable(canWrite());
         }
-        showTopLine(nick + ": " + jabber.getStatusInfo().getName(StatusInfo.STATUS_OFFLINE));
+        UIUpdater.showTopLine(jabber, this, nick, StatusInfo.STATUS_OFFLINE);
     }
 
     String getRealJid(String nick) {
-        for (int i = subcontacts.size() - 1; i >= 0; --i) {
-            SubContact c = (SubContact)subcontacts.elementAt(i);
+        for (int i = subContacts.size() - 1; i >= 0; --i) {
+            SubContact c = (SubContact) subContacts.elementAt(i);
         }
         SubContact sc = getExistSubContact(nick);
         return (null == sc) ? null : sc.realJid;
@@ -267,8 +270,8 @@ public class JabberServiceContact extends JabberContact {
         if (StringConvertor.isEmpty(nick)) {
             return null;
         }
-        for (int i = 0; i < subcontacts.size(); ++i) {
-            JabberContact.SubContact contact = (JabberContact.SubContact)subcontacts.elementAt(i);
+        for (int i = 0; i < subContacts.size(); ++i) {
+            JabberContact.SubContact contact = (JabberContact.SubContact) subContacts.elementAt(i);
             if (nick.equals(contact.resource)) {
                 return contact;
             }
@@ -394,10 +397,10 @@ public class JabberServiceContact extends JabberContact {
             // #sijapp cond.end #
 
         } else {
-            if (subcontacts.isEmpty()) {
-                subcontacts.addElement(sc);
+            if (subContacts.isEmpty()) {
+                subContacts.addElement(sc);
             } else {
-                subcontacts.setElementAt(sc, 0);
+                subContacts.setElementAt(sc, 0);
             }
             setStatus(sc.status, sc.statusText);
             // #sijapp cond.if modules_CLIENTS is "true" #

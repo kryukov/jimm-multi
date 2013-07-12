@@ -7,12 +7,14 @@
  * and open the template in the editor.
  */
 
-package protocol;
+package protocol.ui;
 
 import jimm.Options;
 import jimm.chat.ChatHistory;
 import jimm.cl.ContactList;
 import jimmui.view.*;
+import protocol.Contact;
+import protocol.Protocol;
 
 /**
  *

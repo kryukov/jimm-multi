@@ -15,7 +15,8 @@ import jimmui.view.InputTextBox;
 import jimmui.view.TextBoxListener;
 import jimmui.view.menu.*;
 import protocol.Protocol;
-import protocol.StatusInfo;
+import protocol.ui.InfoFactory;
+import protocol.ui.StatusInfo;
 
 /**
  *
@@ -32,7 +33,7 @@ public final class SomeStatusForm implements SelectListener, TextBoxListener {
 
     public final void show() {
         MenuModel menu = new MenuModel();
-        addStatuses(menu, protocol.getStatusInfo(), protocol.getProfile().statusIndex);
+        addStatuses(menu, InfoFactory.factory.getStatusInfo(protocol), protocol.getProfile().statusIndex);
         menu.setActionListener(this);
         new Select(menu).show();
     }

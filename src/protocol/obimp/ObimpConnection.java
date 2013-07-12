@@ -19,6 +19,7 @@ import jimm.search.*;
 import jimm.util.*;
 import protocol.*;
 import protocol.net.*;
+import protocol.ui.StatusInfo;
 
 /**
  *

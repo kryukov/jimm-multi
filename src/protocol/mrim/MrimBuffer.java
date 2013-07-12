@@ -12,7 +12,7 @@ package protocol.mrim;
 
 import java.io.*;
 import jimm.comm.*;
-import protocol.*;
+import protocol.ui.StatusInfo;
 
 /**
  *
@@ -38,7 +38,7 @@ class MrimBuffer {
             out.write(((value & 0x0000FF00) >> 8)  & 0xFF);
             out.write(((value & 0x00FF0000) >> 16) & 0xFF);
             out.write(((value & 0xFF000000) >> 24) & 0xFF);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
     }
     void putString(String str) {
@@ -54,7 +54,7 @@ class MrimBuffer {
                 out.write(ch & 0xFF);
                 out.write((ch >> 8) & 0xFF);
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
     }
     void putStringAsQWord(String value) {
@@ -64,7 +64,7 @@ class MrimBuffer {
     void putBytes(byte[] data) {
         try {
             out.write(data);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
     }
     void putSearchParam(int key, String value) {
@@ -82,7 +82,6 @@ class MrimBuffer {
     public final void putStatusInfo(Mrim mrim) {
         String title = "";
         String desc = "";
-        StatusInfo info = mrim.getStatusInfo();
         byte statusIndex = mrim.getProfile().statusIndex;
         int status = MrimConnection.getNativeStatus(statusIndex);
         status |= mrim.getPrivateStatusMask();

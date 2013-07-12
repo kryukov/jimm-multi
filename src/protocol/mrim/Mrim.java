@@ -10,7 +10,7 @@
 package protocol.mrim;
 
 import jimmui.view.text.TextList;
-import jimmui.view.icons.*;
+
 import java.io.*;
 import java.util.Vector;
 import jimm.chat.message.PlainMessage;
@@ -23,6 +23,7 @@ import jimmui.view.text.TextListController;
 import jimmui.view.text.TextListModel;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.ContactMenu;
 import protocol.ui.StatusView;
 import protocol.ui.XStatusInfo;
 
@@ -35,16 +36,6 @@ public class Mrim extends Protocol {
     // #sijapp cond.if modules_MAGIC_EYE is "true" #
     private MicroBlog microBlog;
     // #sijapp cond.end#
-    private static final ImageList statusIcons = ImageList.createImageList("/mrim-status.png");
-    private static final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, -1, 5, -1, 2, -1, 1};
-
-    static Icon getPhoneContactIcon() {
-        int phoneContactIndex = statusIconIndex[StatusInfo.STATUS_OFFLINE];
-        if (6 < statusIcons.size()) {
-            phoneContactIndex = statusIcons.size() - 1;
-        }
-        return statusIcons.iconAt(phoneContactIndex);
-    }
 
     // #sijapp cond.if modules_MAGIC_EYE is "true" #
     public MicroBlog getMicroBlog() {
@@ -52,19 +43,12 @@ public class Mrim extends Protocol {
     }
     // #sijapp cond.end#
 
-    private static final byte[] statuses = {
-        StatusInfo.STATUS_CHAT,
-        StatusInfo.STATUS_ONLINE,
-        StatusInfo.STATUS_AWAY,
-        StatusInfo.STATUS_UNDETERMINATED,
-        StatusInfo.STATUS_INVISIBLE};
 
     public Mrim() {
     }
 
     @Override
     protected void initStatusInfo() {
-        info = new StatusInfo(statusIcons, statusIconIndex, statuses);
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
         microBlog = new MicroBlog(this);
         // #sijapp cond.end #

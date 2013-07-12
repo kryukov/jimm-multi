@@ -16,6 +16,7 @@ import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import protocol.*;
 import protocol.ui.ClientInfo;
+import protocol.ui.StatusInfo;
 
 /**
  *
@@ -56,7 +57,7 @@ public class JabberContact extends Contact implements SelectListener {
     protected void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         addChatItems(contactMenu);
 
-        if (0 < subcontacts.size()) {
+        if (0 < subContacts.size()) {
             contactMenu.addItem("list_of_connections", USER_MENU_CONNECTIONS);
         }
         addGeneralItems(protocol, contactMenu);
@@ -170,21 +171,21 @@ public class JabberContact extends Contact implements SelectListener {
         public byte status;
         public byte priority;
     }
-    Vector subcontacts = new Vector();
+    Vector<SubContact> subContacts = new Vector<SubContact>();
     private void removeSubContact(String resource) {
-        for (int i = subcontacts.size() - 1; i >= 0; --i) {
-            SubContact c = (SubContact)subcontacts.elementAt(i);
+        for (int i = subContacts.size() - 1; i >= 0; --i) {
+            SubContact c = (SubContact) subContacts.elementAt(i);
             if (c.resource.equals(resource)) {
                 c.status = StatusInfo.STATUS_OFFLINE;
                 c.statusText = null;
-                subcontacts.removeElementAt(i);
+                subContacts.removeElementAt(i);
                 return;
             }
         }
     }
     protected SubContact getExistSubContact(String resource) {
-        for (int i = subcontacts.size() - 1; i >= 0; --i) {
-            SubContact c = (SubContact)subcontacts.elementAt(i);
+        for (int i = subContacts.size() - 1; i >= 0; --i) {
+            SubContact c = (SubContact) subContacts.elementAt(i);
             if (c.resource.equals(resource)) {
                 return c;
             }
@@ -199,7 +200,7 @@ public class JabberContact extends Contact implements SelectListener {
         c = new SubContact();
         c.resource = resource;
         c.status = StatusInfo.STATUS_OFFLINE;
-        subcontacts.addElement(c);
+        subContacts.addElement(c);
         return c;
     }
     void setRealJid(String resource, String realJid) {
@@ -209,7 +210,7 @@ public class JabberContact extends Contact implements SelectListener {
         }
     }
     SubContact getCurrentSubContact() {
-        if ((0 == subcontacts.size()) || isConference()) {
+        if ((0 == subContacts.size()) || isConference()) {
             return null;
         }
         SubContact currentContact = getExistSubContact(currentResource);
@@ -217,10 +218,10 @@ public class JabberContact extends Contact implements SelectListener {
             return currentContact;
         }
         try {
-            currentContact = (SubContact)subcontacts.elementAt(0);
+            currentContact = (SubContact) subContacts.elementAt(0);
             byte maxPriority = currentContact.priority;
-            for (int i = 1; i < subcontacts.size(); ++i) {
-                SubContact contact = (SubContact)subcontacts.elementAt(i);
+            for (int i = 1; i < subContacts.size(); ++i) {
+                SubContact contact = (SubContact) subContacts.elementAt(i);
                 if (maxPriority < contact.priority) {
                     maxPriority = contact.priority;
                     currentContact = contact;
@@ -240,7 +241,7 @@ public class JabberContact extends Contact implements SelectListener {
                 currentResource = null;
             }
             removeSubContact(resource);
-            if (0 == subcontacts.size()) {
+            if (0 == subContacts.size()) {
                 setOfflineStatus();
             }
 
@@ -288,7 +289,7 @@ public class JabberContact extends Contact implements SelectListener {
     // #sijapp cond.end #
 
     public final void setOfflineStatus() {
-        subcontacts.removeAllElements();
+        subContacts.removeAllElements();
         super.setOfflineStatus();
     }
     public void setActiveResource(String resource) {

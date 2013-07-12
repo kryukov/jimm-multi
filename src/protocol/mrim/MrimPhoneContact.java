@@ -13,6 +13,8 @@ import jimm.chat.ChatHistory;
 import jimmui.view.icons.*;
 import jimmui.view.menu.*;
 import protocol.*;
+import protocol.ui.ContactMenu;
+import protocol.ui.InfoFactory;
 // #sijapp cond.if protocols_MRIM is "true" #
 /**
  *
@@ -33,7 +35,7 @@ public class MrimPhoneContact extends MrimContact {
     }
 
     public void getLeftIcons(Icon[] icons) {
-        icons[0] = Mrim.getPhoneContactIcon();
+        icons[0] = InfoFactory.factory.getStatusInfo(Profile.PROTOCOL_MRIM).getMrimPhone();
     }
     public void activate(Protocol p) {
         if (hasChat()) {

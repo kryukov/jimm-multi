@@ -36,6 +36,7 @@ import jimm.util.*;
 import java.io.*;
 import java.util.*;
 import jimmui.view.base.NativeCanvas;
+import protocol.ui.StatusInfo;
 
 
 /**

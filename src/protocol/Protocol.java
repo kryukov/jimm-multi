@@ -21,7 +21,10 @@ import jimm.io.Storage;
 import jimm.modules.*;
 import jimm.search.*;
 import jimm.util.JLocale;
+import jimmui.view.base.UIUpdater;
 import protocol.jabber.*;
+import protocol.ui.InfoFactory;
+import protocol.ui.StatusInfo;
 
             /**
  *
@@ -33,7 +36,6 @@ abstract public class Protocol {
     private Profile profile;
     private String password;
     private String userid = "";
-    protected StatusInfo info;
     private String rmsName = null;
 
     private boolean isReconnect;
@@ -134,7 +136,8 @@ abstract public class Protocol {
         // Status
         initStatus();
     }
-    protected abstract void initStatusInfo();
+    protected void initStatusInfo() {
+    }
 
     public boolean hasVCardEditor() {
         return true;
@@ -284,7 +287,7 @@ abstract public class Protocol {
     private void load() throws Exception {
         // Initialize vectors
         Vector<Contact> cItems = new Vector<Contact>();
-        Vector gItems = new Vector();
+        Vector<Group> gItems = new Vector<Group>();
 
         // Open record store
         RecordStore cl = RecordStore.openRecordStore(getContactListRS(), false);
@@ -328,7 +331,7 @@ abstract public class Protocol {
                                 break;
                         }
                     }
-                } catch (EOFException e) {
+                } catch (EOFException ignored) {
                 }
             }
             // #sijapp cond.if modules_DEBUGLOG is "true"#
@@ -424,11 +427,12 @@ abstract public class Protocol {
 
     /* ********************************************************************* */
 
-    protected void s_removeContact(Contact contact) {};
-    protected void s_removedContact(Contact contact) {};
+    protected void s_removeContact(Contact contact) {}
+    protected void s_removedContact(Contact contact) {}
     public final void removeContact(Contact contact) {
         // Check whether contact item is temporary
         if (contact.isTemp()) {
+            // do nothing
         } else if (isConnected()) {
             // Request contact item removal
             s_removeContact(contact);
@@ -465,7 +469,7 @@ abstract public class Protocol {
         getContactList().getUpdater().removeFromGroup(this, from, contact);
         ui_addContactToGroup(contact, to);
     }
-    protected void s_addContact(Contact contact) {};
+    protected void s_addContact(Contact contact) {}
     protected void s_addedContact(Contact contact) {}
     public final void addContact(Contact contact) {
         s_addContact(contact);
@@ -651,7 +655,7 @@ abstract public class Protocol {
     }
 
     public final StatusInfo getStatusInfo() {
-        return info;
+        return InfoFactory.factory.getStatusInfo(this);
     }
 
     protected abstract void s_updateOnlineStatus();
@@ -1069,7 +1073,7 @@ abstract public class Protocol {
                 playNotification(Notify.NOTIFY_ONLINE);
             }
             // #sijapp cond.end #
-            contact.showTopLine(getStatusInfo().getName(curr));
+            UIUpdater.showTopLine(this, contact, null, contact.getStatusIndex());
         }
     }
 

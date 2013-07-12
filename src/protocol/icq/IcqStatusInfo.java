@@ -10,7 +10,7 @@
 package protocol.icq;
 
 import jimm.comm.GUID;
-import protocol.StatusInfo;
+import protocol.ui.StatusInfo;
 
 /**
  *

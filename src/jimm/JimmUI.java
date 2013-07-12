@@ -30,6 +30,7 @@ import jimm.modules.*;
 import jimmui.view.base.*;
 import jimm.cl.*;
 import protocol.*;
+import protocol.ui.ContactMenu;
 
 public final class JimmUI {
     //////////////////////

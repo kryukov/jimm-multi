@@ -11,8 +11,14 @@ package jimmui.view.base;
 
 import java.util.*;
 import jimm.Jimm;
+import jimm.chat.ChatHistory;
+import jimm.chat.ChatModel;
 import jimm.cl.ContactList;
 import jimmui.view.*;
+import protocol.Contact;
+import protocol.ui.MessageEditor;
+import protocol.Protocol;
+import protocol.ui.InfoFactory;
 
 /**
  *
@@ -43,20 +49,36 @@ public class UIUpdater extends TimerTask {
         uiTimer.schedule(uiUpdater, 0, NativeCanvas.UIUPDATE_TIME);
     }
 
-    public static void startFlashCaption(Object disp, String text) {
-        if (null == disp) return;
+    public static void showTopLine(Protocol protocol, Contact contact, String nick, byte statusIndex) {
+        if (contact != ContactList.getInstance().getCurrentContact()) {
+            return;
+        }
+        Object vis = null;
+        MessageEditor editor = ContactList.getInstance().getMessageEditor();
+        if ((null != editor) && editor.getTextBox().isShown()) {
+            vis = editor.getTextBox();
+        } else if (contact.hasChat()) {
+            ChatModel chat = ChatHistory.instance.getChatModel(contact);
+            vis = ChatHistory.instance.getChat(chat);
+        }
+        if (null == vis) return;
+
+        String text = InfoFactory.factory.getStatusInfo(protocol).getName(statusIndex);
         if (null == text) return;
+        if (null != nick) text = nick + ": " + text;
+
         Object prevDisplay = uiUpdater.displ;
         uiUpdater.displ = null;
         if (null != prevDisplay) {
             uiUpdater.setTicker(prevDisplay, null);
         }
-        uiUpdater.setTicker(disp, text);
+        uiUpdater.setTicker(vis, text);
         uiUpdater.text  = text;
-        uiUpdater.counter = (disp instanceof InputTextBox) ? SYS_FLASH_COUNTER : FLASH_COUNTER;
+        uiUpdater.counter = (vis instanceof InputTextBox) ? SYS_FLASH_COUNTER : FLASH_COUNTER;
         uiUpdater.flashCaptionInterval = FLASH_CAPTION_INTERVAL;
-        uiUpdater.displ = disp;
+        uiUpdater.displ = vis;
     }
+    ///////////////////////////////////////////////////////////////////////////
 
     private void taskFlashCaption(Object curDispay) {
         flashCaptionInterval -= NativeCanvas.UIUPDATE_TIME;

@@ -22,6 +22,7 @@ import jimm.util.JLocale;
 import jimm.comm.*;
 import protocol.*;
 import protocol.ui.InfoFactory;
+import protocol.ui.MessageEditor;
 
 /**
  *
@@ -241,7 +242,7 @@ public final class ConferenceParticipants extends VirtualList {
     private void addLayerToListOfSubcontacts(String layer, byte priority) {
         boolean hasLayer = false;
         contacts.addElement(JLocale.getString(layer));
-        Vector subcontacts = conference.subcontacts;
+        Vector subcontacts = conference.subContacts;
         for (int i = 0; i < subcontacts.size(); ++i) {
             JabberContact.SubContact contact = (JabberContact.SubContact)subcontacts.elementAt(i);
             if ((contact.priority & JabberServiceContact.ROLE_MASK) == priority) {

@@ -52,10 +52,6 @@ public final class Jabber extends Protocol implements FormListener {
         ImageList icons = createStatusIcons(type);
         final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
         info = new StatusInfo(icons, statusIconIndex, statuses);
-
-        // #sijapp cond.if modules_CLIENTS is "true" #
-        clientInfo = JabberClient.get();
-        // #sijapp cond.end #
     }
 
     private static final byte[] statuses = {

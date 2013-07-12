@@ -13,7 +13,7 @@ package protocol.icq;
 import jimmui.view.icons.*;
 import java.io.*;
 import jimm.comm.*;
-import protocol.ClientInfo;
+import protocol.ui.ClientInfo;
 import protocol.net.TcpSocket;
 
 /**

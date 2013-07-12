@@ -34,9 +34,6 @@ abstract public class Protocol {
     private String password;
     private String userid = "";
     protected StatusInfo info;
-    // #sijapp cond.if modules_CLIENTS is "true" #
-    public ClientInfo clientInfo;
-    // #sijapp cond.end #
     private String rmsName = null;
 
     private boolean isReconnect;

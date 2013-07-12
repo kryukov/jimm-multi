@@ -20,7 +20,6 @@ import jimmui.view.base.CanvasEx;
 import jimmui.view.menu.*;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListController;
-import protocol.ClientInfo;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.StatusInfo;
@@ -77,10 +76,11 @@ public final class StatusView extends TextListController {
     // #sijapp cond.if modules_CLIENTS is "true" #
     public void addClient() {
         addBr();
+        ClientInfo info = InfoFactory.factory.getClientInfo(protocol);
         if ((ClientInfo.CLI_NONE != contact.clientIndex)
-                && (null != protocol.clientInfo)) {
-            addPlain(protocol.clientInfo.getIcon(contact.clientIndex),
-                    (protocol.clientInfo.getName(contact.clientIndex)
+                && (null != info)) {
+            addPlain(info.getIcon(contact.clientIndex),
+                    (info.getName(contact.clientIndex)
                     + " " + contact.version).trim());
         }
         addPlain(null, clientVersion);

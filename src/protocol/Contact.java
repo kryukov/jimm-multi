@@ -19,6 +19,7 @@ import jimm.history.*;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import jimm.comm.*;
+import protocol.ui.ClientInfo;
 import protocol.ui.InfoFactory;
 import protocol.ui.XStatusInfo;
 
@@ -308,7 +309,7 @@ abstract public class Contact implements TreeNode, Sortable {
     public final void getRightIcons(Icon[] icons) {
         // #sijapp cond.if modules_CLIENTS is "true" #
         Protocol protocol = getProtocol();
-        ClientInfo info = (null != protocol) ? protocol.clientInfo : null;
+        ClientInfo info = InfoFactory.factory.getClientInfo(protocol);
         icons[0] = (null != info) ? info.getIcon(clientIndex) : null;
         // #sijapp cond.end #
     }

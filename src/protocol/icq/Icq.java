@@ -69,9 +69,6 @@ public class Icq extends Protocol {
     }
     protected void initStatusInfo() {
         info = new StatusInfo(statusIcons, statusIconIndex, statuses);
-        // #sijapp cond.if modules_CLIENTS is "true" #
-        clientInfo = ClientDetector.instance.get();
-        // #sijapp cond.end #
     }
 
     @Override

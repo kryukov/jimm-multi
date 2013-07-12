@@ -13,7 +13,7 @@ package protocol.jabber;
 
 import jimmui.view.icons.*;
 import jimm.comm.Config;
-import protocol.ClientInfo;
+import protocol.ui.ClientInfo;
 
 /**
  *

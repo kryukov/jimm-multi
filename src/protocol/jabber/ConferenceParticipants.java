@@ -21,6 +21,7 @@ import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import jimm.comm.*;
 import protocol.*;
+import protocol.ui.InfoFactory;
 
 /**
  *
@@ -259,7 +260,7 @@ public final class ConferenceParticipants extends VirtualList {
             JabberContact.SubContact c = (JabberContact.SubContact)o;
             int height = getDefaultFont().getHeight() + 1;
             // #sijapp cond.if modules_CLIENTS is "true" #
-            Icon client = protocol.clientInfo.getIcon(c.client);
+            Icon client = InfoFactory.factory.getClientInfo(protocol).getIcon(c.client);
             if (null != client) {
                 height = Math.max(height, client.getHeight());
             }
@@ -283,7 +284,7 @@ public final class ConferenceParticipants extends VirtualList {
             leftIcons[0] = protocol.getStatusInfo().getIcon(c.status);
             leftIcons[1] = affiliationIcons.iconAt(c.priority & JabberServiceContact.AFFILIATION_MASK);
             // #sijapp cond.if modules_CLIENTS is "true" #
-            rightIcons[0] = protocol.clientInfo.getIcon(c.client);
+            rightIcons[0] = InfoFactory.factory.getClientInfo(protocol).getIcon(c.client);
             // #sijapp cond.end #
             g.drawString(leftIcons, c.resource, rightIcons, x, y, w, h);
             return;

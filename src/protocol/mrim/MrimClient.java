@@ -15,7 +15,7 @@ import jimmui.view.icons.*;
 import jimm.comm.Config;
 import jimm.comm.StringConvertor;
 import jimm.modules.*;
-import protocol.ClientInfo;
+import protocol.ui.ClientInfo;
 
 /**
  *
@@ -31,7 +31,7 @@ public final class MrimClient {
         clientNames = cfg.getValues();
     }
 
-    static ClientInfo get() {
+    public static ClientInfo get() {
         return new ClientInfo(clientIcons, clientNames);
     }
 

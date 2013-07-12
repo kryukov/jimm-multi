@@ -68,10 +68,6 @@ public class Mrim extends Protocol {
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
         microBlog = new MicroBlog(this);
         // #sijapp cond.end #
-
-        // #sijapp cond.if modules_CLIENTS is "true" #
-        clientInfo = MrimClient.get();
-        // #sijapp cond.end #
     }
 
     @Override

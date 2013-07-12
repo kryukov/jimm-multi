@@ -15,6 +15,7 @@ import jimm.comm.*;
 import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.ClientInfo;
 
 /**
  *

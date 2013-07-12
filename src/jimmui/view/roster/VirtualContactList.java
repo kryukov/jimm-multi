@@ -162,14 +162,6 @@ public final class VirtualContactList extends VirtualList {
         setFontSet(GraphicsEx.contactListFontSet);
         rebuildList = true;
     }
-    public void update(Group node) {
-        // TODO: update group only if protocol is expanded
-        update();
-    }
-    public void update(Contact node) {
-        // TODO: update contact only if group and protocol is expanded
-         update();
-    }
     public final void update() {
         rebuildList = true;
         //invalidate();

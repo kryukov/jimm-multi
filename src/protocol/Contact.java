@@ -29,7 +29,6 @@ import protocol.ui.XStatusInfo;
  * @author vladimir
  */
 abstract public class Contact implements TreeNode, Sortable {
-    protected static final ImageList authIcon = ImageList.createImageList("/auth.png");
     // #sijapp cond.if modules_SERVERLISTS is "true" #
     private static final ImageList serverListsIcons = ImageList.createImageList("/serverlists.png");
     // #sijapp cond.end #
@@ -277,18 +276,10 @@ abstract public class Contact implements TreeNode, Sortable {
         }
 
         if (!isTemp() && !isAuth()) {
-            lIcons[3] = authIcon.iconAt(0);
+            lIcons[3] = InfoFactory.authIcon;
         }
         // #sijapp cond.if modules_SERVERLISTS is "true" #
-        int privacyList = -1;
-        if (inIgnoreList()) {
-            privacyList = 0;
-        } else if (inInvisibleList()) {
-            privacyList = 1;
-        } else if (inVisibleList()) {
-            privacyList = 2;
-        }
-        lIcons[4] = serverListsIcons.iconAt(privacyList);
+        lIcons[4] = InfoFactory.factory.getServerListIcon(this);
         // #sijapp cond.end #
     }
     public final void getRightIcons(Icon[] icons) {

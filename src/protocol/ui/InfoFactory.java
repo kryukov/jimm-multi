@@ -3,6 +3,7 @@ package protocol.ui;
 import jimm.comm.Config;
 import jimmui.view.icons.Icon;
 import jimmui.view.icons.ImageList;
+import protocol.Contact;
 import protocol.Profile;
 import protocol.Protocol;
 import protocol.icq.ClientDetector;
@@ -18,15 +19,34 @@ import protocol.mrim.MrimClient;
  */
 public class InfoFactory {
     public static InfoFactory factory = new InfoFactory();
+    // #sijapp cond.if modules_SERVERLISTS is "true" #
+    private final ImageList serverListsIcons = ImageList.createImageList("/serverlists.png");
+    // #sijapp cond.end #
     // #sijapp cond.if protocols_ICQ is "true" #
     public static final Icon happyIcon = ImageList.createImageList("/happy.png").iconAt(0);
     // #sijapp cond.end #
+    public static final Icon authIcon = ImageList.createImageList("/auth.png").iconAt(0);
     protected StatusInfo[] info = new StatusInfo[21];
     // #sijapp cond.if modules_XSTATUSES is "true" #
     private XStatusInfo[] xStatuses = new XStatusInfo[21];
     // #sijapp cond.end #
     // #sijapp cond.if modules_CLIENTS is "true" #
     private ClientInfo[] clientInfo = new ClientInfo[21];
+    // #sijapp cond.end #
+
+
+    // #sijapp cond.if modules_SERVERLISTS is "true" #
+    public Icon getServerListIcon(Contact contact) {
+        int privacyList = -1;
+        if (contact.inIgnoreList()) {
+            privacyList = 0;
+        } else if (contact.inInvisibleList()) {
+            privacyList = 1;
+        } else if (contact.inVisibleList()) {
+            privacyList = 2;
+        }
+        return serverListsIcons.iconAt(privacyList);
+    }
     // #sijapp cond.end #
 
     public StatusInfo getStatusInfo(Protocol protocol) {

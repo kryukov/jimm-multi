@@ -22,7 +22,7 @@ public class VkContact extends Contact {
         return uid;
     }
     @Override
-    protected void initManageContactMenu(Protocol protocol, MenuModel menu) {
+    public void initManageContactMenu(Protocol protocol, MenuModel menu) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

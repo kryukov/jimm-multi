@@ -279,8 +279,8 @@ public class JabberServiceContact extends JabberContact {
         return null;
     }
 
-    /** Creates a new instance of JabberServiceContact */
-    protected void initContextMenu(Protocol protocol, MenuModel contactMenu) {
+    @Override
+    public void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         if (!protocol.isConnected()) {
             return;
         }
@@ -329,7 +329,8 @@ public class JabberServiceContact extends JabberContact {
             initManageContactMenu(protocol, contactMenu);
         }
     }
-    protected void initManageContactMenu(Protocol protocol, MenuModel menu) {
+    @Override
+    public void initManageContactMenu(Protocol protocol, MenuModel menu) {
         if (protocol.isConnected()) {
             if (isOnline() && isPrivate) {
                 menu.addItem("adhoc", USER_MENU_ADHOC);

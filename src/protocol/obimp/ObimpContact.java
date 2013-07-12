@@ -53,8 +53,8 @@ public class ObimpContact extends Contact {
     
     /////////////////////////////////////////////////////////////////////////
 
-
-    protected void initManageContactMenu(Protocol protocol, MenuModel menu) {
+    @Override
+    public void initManageContactMenu(Protocol protocol, MenuModel menu) {
         if (protocol.isConnected()) {
             if (isTemp()) {
                 menu.addItem("add_user", USER_MENU_ADD_USER);

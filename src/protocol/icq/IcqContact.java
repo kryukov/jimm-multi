@@ -86,7 +86,8 @@ public class IcqContact extends Contact {
     }
     // #sijapp cond.end #
 
-    protected void initManageContactMenu(Protocol protocol, MenuModel menu) {
+    @Override
+    public void initManageContactMenu(Protocol protocol, MenuModel menu) {
         boolean connected = protocol.isConnected();
         boolean temp = isTemp();
         boolean inList = protocol.inContactList(this);

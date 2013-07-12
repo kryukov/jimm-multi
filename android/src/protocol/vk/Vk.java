@@ -1,13 +1,11 @@
 package protocol.vk;
 
-import jimmui.view.icons.ImageList;
 import jimm.chat.message.PlainMessage;
 import jimm.search.Search;
 import jimm.search.UserInfo;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
-import protocol.ui.StatusInfo;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,26 +22,18 @@ public class Vk extends Protocol {
     }
 
 
-    private ImageList createStatusIcons() {
-        ImageList icons = ImageList.createImageList("/vk-status.png");
-        if (0 < icons.size()) {
-            return icons;
-        }
-        return ImageList.createImageList("/jabber-status.png");
-    }
-
     @Override
     protected void requestAuth(String userId) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    protected void grandAuth(String userId) {
+    public void grandAuth(String userId) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    protected void denyAuth(String userId) {
+    public void denyAuth(String userId) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

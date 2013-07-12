@@ -97,14 +97,16 @@ public class MrimContact extends Contact {
             model.addItem("wake", USER_MENU_WAKE);
         }
     }
-    protected void initContextMenu(Protocol protocol, MenuModel contactMenu) {
+    @Override
+    public void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         addChatItems(contactMenu);
         if (!StringConvertor.isEmpty(phones)) {
             contactMenu.addItem("send_sms", USER_MENU_SEND_SMS);
         }
         addGeneralItems(protocol, contactMenu);
     }
-    protected void initManageContactMenu(Protocol protocol, MenuModel menu) {
+    @Override
+    public void initManageContactMenu(Protocol protocol, MenuModel menu) {
         if (protocol.isConnected()) {
             // #sijapp cond.if modules_SERVERLISTS is "true" #
             initPrivacyMenu(menu);

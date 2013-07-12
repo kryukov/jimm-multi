@@ -24,7 +24,6 @@
 // #sijapp cond.if protocols_ICQ is "true" #
 package protocol.icq;
 
-import jimmui.view.icons.*;
 import java.io.*;
 import java.util.*;
 import jimm.chat.message.*;
@@ -243,7 +242,8 @@ public class Icq extends Protocol {
     }
 
     /** ********************************************************************* */
-    protected void doAction(Contact contact, int action) {
+    @Override
+    public void doAction(Contact contact, int action) {
         switch (action) {
             case IcqContact.USER_MENU_REMOVE_ME:
                 // Remove me from other users contact list
@@ -950,11 +950,13 @@ public class Icq extends Protocol {
                 stream.toByteArray()));
     }
 
-    protected void grandAuth(String userId) {
+    @Override
+    public void grandAuth(String userId) {
         sendAuthResult(userId, true);
     }
 
-    protected void denyAuth(String userId) {
+    @Override
+    public void denyAuth(String userId) {
         sendAuthResult(userId, false);
     }
 

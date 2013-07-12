@@ -54,7 +54,8 @@ public class JabberContact extends Contact implements SelectListener {
             }
         }
     }
-    protected void initContextMenu(Protocol protocol, MenuModel contactMenu) {
+    @Override
+    public void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         addChatItems(contactMenu);
 
         if (0 < subContacts.size()) {
@@ -62,7 +63,8 @@ public class JabberContact extends Contact implements SelectListener {
         }
         addGeneralItems(protocol, contactMenu);
     }
-    protected void initManageContactMenu(Protocol protocol, MenuModel menu) {
+    @Override
+    public void initManageContactMenu(Protocol protocol, MenuModel menu) {
         if (protocol.isConnected()) {
             if (isOnline()) {
                 menu.addItem("adhoc", USER_MENU_ADHOC);

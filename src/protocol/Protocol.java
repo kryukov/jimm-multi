@@ -203,8 +203,8 @@ abstract public class Protocol {
     }
     /* ********************************************************************* */
     protected abstract void requestAuth(String userId);
-    protected abstract void grandAuth(String userId);
-    protected abstract void denyAuth(String userId);
+    public abstract void grandAuth(String userId);
+    public abstract void denyAuth(String userId);
     // #sijapp cond.if modules_SERVERLISTS is "true" #
     protected abstract void s_setPrivateStatus();
     public final void setPrivateStatus(byte status) {
@@ -221,6 +221,7 @@ abstract public class Protocol {
         requestAuth(contact.getUserId());
         autoGrandAuth(contact.getUserId());
     }
+
     private void autoGrandAuth(String userId) {
         autoGrand.addElement(userId);
     }
@@ -1052,7 +1053,8 @@ abstract public class Protocol {
         }
     }
 
-    protected void doAction(Contact contact, int cmd) {
+    @Deprecated
+    public void doAction(Contact contact, int cmd) {
     }
 
     public void showUserInfo(Contact contact) {

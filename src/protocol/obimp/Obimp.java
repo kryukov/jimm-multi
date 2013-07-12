@@ -10,15 +10,12 @@
 // #sijapp cond.if protocols_OBIMP is "true" #
 package protocol.obimp;
 
-import jimmui.view.icons.*;
 import jimm.chat.message.PlainMessage;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimm.search.*;
-import jimmui.view.menu.MenuModel;
 import protocol.*;
-import protocol.ui.StatusInfo;
 import protocol.ui.StatusView;
 import protocol.ui.XStatusInfo;
 
@@ -144,11 +141,13 @@ public class Obimp extends Protocol {
         connection.sendAuthRequest(userId);
     }
 
-    protected void grandAuth(String userId) {
+    @Override
+    public void grandAuth(String userId) {
         connection.sendAuthReply(userId, true);
     }
 
-    protected void denyAuth(String userId) {
+    @Override
+    public void denyAuth(String userId) {
         connection.sendAuthReply(userId, false);
     }
 
@@ -161,7 +160,7 @@ public class Obimp extends Protocol {
 
     @Override
     public void showUserInfo(Contact contact) {
-        UserInfo data = null;
+        UserInfo data;
         if (isConnected()) {
             data = getConnection().getUserInfo((ObimpContact) contact);
             data.createProfileView(contact.getName());
@@ -180,8 +179,6 @@ public class Obimp extends Protocol {
     @Override
     public void showStatus(Contact contact) {
         StatusView statusView = ContactList.getInstance().getStatusView();
-        MenuModel menu = new MenuModel();
-
         statusView.init(this, contact);
         statusView.initUI();
         statusView.addContactStatus();

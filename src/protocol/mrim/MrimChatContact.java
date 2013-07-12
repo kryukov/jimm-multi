@@ -40,7 +40,8 @@ public final class MrimChatContact extends MrimContact {
     public boolean isSingleUserContact() {
         return false;
     }
-    protected void initContextMenu(Protocol protocol, MenuModel contactMenu) {
+    @Override
+    public void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         if (isTemp()) {
             contactMenu.addItem("connect", USER_MENU_ADD_USER);
             contactMenu.setDefaultItemCode(USER_MENU_ADD_USER);

@@ -382,8 +382,8 @@ abstract public class Contact implements TreeNode, Sortable {
     public static final int CONFERENCE_DISCONNECT = 1040;
 
 ///////////////////////////////////////////////////////////////////////////
-    protected abstract void initManageContactMenu(Protocol protocol, MenuModel menu);
-    protected void initContextMenu(Protocol protocol, MenuModel contactMenu) {
+    public abstract void initManageContactMenu(Protocol protocol, MenuModel menu);
+    public void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         addChatItems(contactMenu);
         addGeneralItems(protocol, contactMenu);
     }

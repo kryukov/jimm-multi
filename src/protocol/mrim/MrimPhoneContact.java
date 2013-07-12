@@ -45,7 +45,8 @@ public class MrimPhoneContact extends MrimContact {
             new ContactMenu(p, this).doAction(USER_MENU_SEND_SMS);
         }
     }
-    protected void initContextMenu(Protocol protocol, MenuModel contactMenu) {
+    @Override
+    public void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         contactMenu.addItem("send_sms", USER_MENU_SEND_SMS);
         contactMenu.addItem("info", Contact.USER_MENU_USER_INFO);
         if ((protocol.getGroupItems().size() > 1) && !isTemp()) {

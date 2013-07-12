@@ -213,7 +213,7 @@ public class Mrim extends Protocol {
         connection.grandAuth(uin);
     }
     @Override
-    protected void denyAuth(String userId) {
+    public void denyAuth(String userId) {
     }
     @Override
     protected void s_removeContact(Contact contact) {
@@ -311,7 +311,7 @@ public class Mrim extends Protocol {
     }
 
     @Override
-    protected void doAction(Contact c, int action) {
+    public void doAction(Contact c, int action) {
         MrimContact contact = (MrimContact)c;
         switch (action) {
             case MrimContact.USER_MENU_SEND_SMS:

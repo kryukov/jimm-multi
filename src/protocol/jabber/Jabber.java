@@ -500,7 +500,7 @@ public final class Jabber extends Protocol implements FormListener {
     }
 
     @Override
-    protected void doAction(Contact c, int cmd) {
+    public void doAction(Contact c, int cmd) {
         JabberContact contact = (JabberContact) c;
         switch (cmd) {
             case JabberServiceContact.GATE_CONNECT:

@@ -115,7 +115,7 @@ public class ContactMenu implements SelectListener {
                 break;
 
             case Contact.USER_MENU_REQU_AUTH: /* Request auth */
-                protocol.requestAuth(contact.getUserId());
+                protocol.requestAuth(contact);
                 Jimm.getJimm().getDisplay().closeMenus();
                 break;
 

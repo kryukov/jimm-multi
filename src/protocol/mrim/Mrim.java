@@ -254,8 +254,8 @@ public class Mrim extends Protocol {
     }
 
     public MrimContact getContactByPhone(String phone) {
-        for (int i = contacts.size() - 1; i >= 0; i--) {
-            MrimContact contact = (MrimContact)contacts.elementAt(i);
+        for (int i = roster.contacts.size() - 1; i >= 0; i--) {
+            MrimContact contact = (MrimContact)roster.contacts.elementAt(i);
             String phones = contact.getPhones();
             if ((null != phones) && (-1 != phones.indexOf(phone))) {
                 return contact;

@@ -159,7 +159,7 @@ public class ObimpConnection extends ClientConnection {
                     authinfo.skipWtld();
                 }
                 if (auth) {
-                    Contact c = obimp.getItemByUIN(from);
+                    Contact c = obimp.getItemByUID(from);
                     if (null != c) {
                         c.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
                         obimp.ui_changeContactStatus(c);
@@ -177,7 +177,7 @@ public class ObimpConnection extends ClientConnection {
                     }
                     authinfo.skipWtld();
                 }
-                Contact c = obimp.getItemByUIN(from);
+                Contact c = obimp.getItemByUID(from);
                 if (null != c) {
                     c.setBooleanValue(Contact.CONTACT_NO_AUTH, true);
                     obimp.ui_changeContactStatus(c);
@@ -218,7 +218,7 @@ public class ObimpConnection extends ClientConnection {
                 String statusText = prsinfo.getWtld_str(3);
                 long xstatus = prsinfo.getWtld_dword(4) - 1;
                 String xstatusDesc = prsinfo.getWtld_str(5);
-                ObimpContact c = (ObimpContact)obimp.getItemByUIN(uid);
+                ObimpContact c = (ObimpContact)obimp.getItemByUID(uid);
                 if (null != c) {
                     obimp.setContactStatus(c, status2index(status), statusText);
                     c.setXStatus(xstatus, xstatusDesc);
@@ -227,7 +227,7 @@ public class ObimpConnection extends ClientConnection {
 
             } else if (0x0007 == pkt.getSubType()) {// OBIMP_BEX_PRES_SRV_CONTACT_OFFLINE
                 String uid = toStr(pkt.getData().getWtldData());
-                Contact c = obimp.getItemByUIN(uid);
+                Contact c = obimp.getItemByUID(uid);
                 if (null != c) {
                     c.setOfflineStatus();
                     obimp.ui_changeContactStatus(c);

@@ -88,7 +88,7 @@ final class JabberForm implements FormListener {
         } else {
             switch (type) {
                 case TYPE_CAPTCHA:
-                    Contact c = jabber.getItemByUIN(jid);
+                    Contact c = jabber.getItemByUID(jid);
                     ContactList.getInstance().activate(c);
                     return;
             }
@@ -102,7 +102,7 @@ final class JabberForm implements FormListener {
     }
 
     void success() {
-        ContactList.getInstance().activate(jabber.getItemByUIN(jid));
+        ContactList.getInstance().activate(jabber.getItemByUID(jid));
     }
 
     private String getCaptchaXml() {
@@ -135,12 +135,12 @@ final class JabberForm implements FormListener {
 
             case TYPE_CAPTCHA:
                 jabber.getConnection().requestRawXml(getCaptchaXml());
-                ContactList.getInstance().activate(jabber.getItemByUIN(jid));
+                ContactList.getInstance().activate(jabber.getItemByUID(jid));
                 break;
 
             case TYPE_OWNER:
                 jabber.getConnection().requestRawXml(getOwnerXml());
-                ContactList.getInstance().activate(jabber.getItemByUIN(jid));
+                ContactList.getInstance().activate(jabber.getItemByUID(jid));
                 break;
 
             case TYPE_NONE:

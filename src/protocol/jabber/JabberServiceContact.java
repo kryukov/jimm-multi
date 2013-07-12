@@ -135,7 +135,7 @@ public class JabberServiceContact extends JabberContact {
                 baseMyNick = newNick;
             }
             String jid = Jid.realJidToJimmJid(getUserId() + "/" + oldNick);
-            JabberServiceContact c = (JabberServiceContact)jabber.getItemByUIN(jid);
+            JabberServiceContact c = (JabberServiceContact)jabber.getItemByUID(jid);
             if (null != c) {
                 c.nickChainged(jabber, oldNick, newNick);
             }
@@ -351,7 +351,7 @@ public class JabberServiceContact extends JabberContact {
                 menu.addItem("remove_me", USER_MENU_REMOVE_ME);
             }
         }
-        if (protocol.inContactList(this)) {
+        if (protocol.hasContact(this)) {
             if (!isPrivate) {
                 menu.addItem("rename", USER_MENU_RENAME);
             }

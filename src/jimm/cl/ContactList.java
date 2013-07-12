@@ -202,7 +202,7 @@ public final class ContactList implements ContactListListener {
     public Protocol getProtocol(Contact c) {
         ContactListModel model = contactList.getModel();
         for (int i = 0; i < model.getProtocolCount(); ++i) {
-            if (model.getProtocol(i).inContactList(c)) {
+            if (model.getProtocol(i).hasContact(c)) {
                 return model.getProtocol(i);
             }
         }

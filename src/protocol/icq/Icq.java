@@ -436,14 +436,14 @@ public class Icq extends Protocol {
         if (id == privateStatusId) {
             return true;
         }
-        for (int i = groups.size() - 1; i >= 0; --i) {
-            Group group = (Group)groups.elementAt(i);
+        for (int i = roster.groups.size() - 1; i >= 0; --i) {
+            Group group = (Group)roster.groups.elementAt(i);
             if (group.getId() == id) {
                 return true;
             }
         }
-        for (int i = contacts.size() - 1; i >= 0; --i) {
-            IcqContact item = (IcqContact)contacts.elementAt(i);
+        for (int i = roster.contacts.size() - 1; i >= 0; --i) {
+            IcqContact item = (IcqContact)roster.contacts.elementAt(i);
             if ((item.getContactId() == id)) {
                 return true;
             }

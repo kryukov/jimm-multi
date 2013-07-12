@@ -90,7 +90,7 @@ public class IcqContact extends Contact {
     public void initManageContactMenu(Protocol protocol, MenuModel menu) {
         boolean connected = protocol.isConnected();
         boolean temp = isTemp();
-        boolean inList = protocol.inContactList(this);
+        boolean inList = protocol.hasContact(this);
         if (connected) {
             // #sijapp cond.if modules_SERVERLISTS is "true" #
             initPrivacyMenu(menu);

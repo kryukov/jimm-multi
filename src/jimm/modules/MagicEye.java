@@ -69,7 +69,7 @@ public final class MagicEye implements SelectListener {
 
         String date = Util.getLocalDateString(Jimm.getCurrentGmtTime(), true);
         action = JLocale.getString(action);
-        Contact contact = protocol.getItemByUIN(userId);
+        Contact contact = protocol.getItemByUID(userId);
 
         Parser record = model.createNewParser(true);
         record.useMinHeight();

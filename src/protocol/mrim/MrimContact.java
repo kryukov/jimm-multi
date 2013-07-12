@@ -123,7 +123,7 @@ public class MrimContact extends Contact {
                 menu.addItem("rename", USER_MENU_RENAME);
             }
         }
-        if ((protocol.isConnected() || isTemp()) && protocol.inContactList(this)) {
+        if ((protocol.isConnected() || isTemp()) && protocol.hasContact(this)) {
             menu.addSeparator();
             menu.addItem("remove", USER_MENU_USER_REMOVE);
         }

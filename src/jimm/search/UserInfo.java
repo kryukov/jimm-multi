@@ -133,7 +133,7 @@ public class UserInfo implements
 ///////////////////////////////////////////////////////////////////////////
 
     public void setOptimalName() {
-        Contact contact = protocol.getItemByUIN(uin);
+        Contact contact = protocol.getItemByUID(uin);
         if (null != contact) {
             String name = contact.getName();
             if (name.equals(contact.getUserId()) || name.equals(protocol.getUniqueUserId(contact))) {

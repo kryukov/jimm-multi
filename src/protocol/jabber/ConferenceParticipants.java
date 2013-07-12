@@ -266,7 +266,7 @@ public final class ConferenceParticipants extends VirtualList {
                 height = Math.max(height, client.getHeight());
             }
             // #sijapp cond.end #
-            Icon icon = protocol.getStatusInfo().getIcon(c.status);
+            Icon icon = InfoFactory.factory.getStatusInfo(protocol).getIcon(c.status);
             if (null != icon) {
                 height = Math.max(height, icon.getHeight());
             }
@@ -282,7 +282,7 @@ public final class ConferenceParticipants extends VirtualList {
         if (o instanceof JabberContact.SubContact) {
             JabberContact.SubContact c = (JabberContact.SubContact)o;
             g.setFont(getDefaultFont());
-            leftIcons[0] = protocol.getStatusInfo().getIcon(c.status);
+            leftIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(c.status);
             leftIcons[1] = affiliationIcons.iconAt(c.priority & JabberServiceContact.AFFILIATION_MASK);
             // #sijapp cond.if modules_CLIENTS is "true" #
             rightIcons[0] = InfoFactory.factory.getClientInfo(protocol).getIcon(c.client);
@@ -305,7 +305,7 @@ public final class ConferenceParticipants extends VirtualList {
     }
     private void nickSelected(String nick) {
         String jid = Jid.realJidToJimmJid(conference.getUserId() + "/" + nick);
-        JabberServiceContact c = (JabberServiceContact)protocol.getItemByUIN(jid);
+        JabberServiceContact c = (JabberServiceContact)protocol.getItemByUID(jid);
         if (null == c) {
             c = (JabberServiceContact)protocol.createTempContact(jid);
             protocol.addTempContact(c);

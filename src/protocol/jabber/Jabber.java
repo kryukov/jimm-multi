@@ -23,6 +23,7 @@ import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.ui.InfoFactory;
 import protocol.ui.StatusInfo;
 import protocol.ui.StatusView;
 import protocol.ui.XStatusInfo;
@@ -66,7 +67,7 @@ public final class Jabber extends Protocol implements FormListener {
     public void rejoin() {
         for (int i = 0; i < rejoinList.size(); ++i) {
             String jid = (String) rejoinList.elementAt(i);
-            JabberServiceContact conf = (JabberServiceContact) getItemByUIN(jid);
+            JabberServiceContact conf = (JabberServiceContact) getItemByUID(jid);
             if ((null != conf) && !conf.isOnline()) {
                 join(conf);
             }
@@ -142,8 +143,8 @@ public final class Jabber extends Protocol implements FormListener {
     private int getNextGroupId() {
         while (true) {
             int id = Util.nextRandInt() % 0x1000;
-            for (int i = groups.size() - 1; i >= 0; --i) {
-                Group group = (Group) groups.elementAt(i);
+            for (int i = roster.groups.size() - 1; i >= 0; --i) {
+                Group group = (Group) roster.groups.elementAt(i);
                 if (group.getId() == id) {
                     id = -1;
                     break;
@@ -204,7 +205,7 @@ public final class Jabber extends Protocol implements FormListener {
                 c.setMyName(getDefaultName());
 
             } else if (isConference /* private */) {
-                JabberServiceContact conf = (JabberServiceContact) getItemByUIN(Jid.getBareJid(jid));
+                JabberServiceContact conf = (JabberServiceContact) getItemByUID(Jid.getBareJid(jid));
                 if (null != conf) {
                     c.setPrivateContactStatus(conf);
                     c.setMyName(conf.getMyName());
@@ -247,7 +248,7 @@ public final class Jabber extends Protocol implements FormListener {
         connection.setStatus(getProfile().statusIndex, "", PRIORITY);
         for (int i = 0; i < rejoinList.size(); ++i) {
             String jid = (String) rejoinList.elementAt(i);
-            JabberServiceContact c = (JabberServiceContact) getItemByUIN(jid);
+            JabberServiceContact c = (JabberServiceContact) getItemByUID(jid);
             if (null != c) {
                 connection.sendPresence(c);
             }
@@ -297,7 +298,7 @@ public final class Jabber extends Protocol implements FormListener {
     @Override
     protected final void s_renameGroup(Group group, String name) {
         group.setName(name);
-        connection.updateContacts(contacts);
+        connection.updateContacts(roster.contacts);
     }
 
     @Override
@@ -582,7 +583,7 @@ public final class Jabber extends Protocol implements FormListener {
     private void showListOfSubcontacts(JabberContact c) {
         MenuModel sublist = new MenuModel();
         int selected = 0;
-        StatusInfo statusInfo = getStatusInfo();
+        StatusInfo statusInfo = InfoFactory.factory.getStatusInfo(this);
         for (int i = 0; i < c.subContacts.size(); ++i) {
             JabberContact.SubContact contact = (JabberContact.SubContact) c.subContacts.elementAt(i);
             sublist.addRawItem(contact.resource, statusInfo.getIcon(contact.status), i);
@@ -604,7 +605,7 @@ public final class Jabber extends Protocol implements FormListener {
 
         String realJid = contact.getUserId();
         if (Jid.isConference(realJid) && (-1 != realJid.indexOf('/'))) {
-            JabberServiceContact conference = (JabberServiceContact) getItemByUIN(Jid.getBareJid(realJid));
+            JabberServiceContact conference = (JabberServiceContact) getItemByUID(Jid.getBareJid(realJid));
             String r = conference.getRealJid(Jid.getResource(realJid, ""));
             if (!StringConvertor.isEmpty(r)) {
                 realJid = r;

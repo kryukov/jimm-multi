@@ -84,12 +84,12 @@ public class JabberContact extends Contact implements SelectListener {
                 menu.addItem("rename", USER_MENU_RENAME);
             }
         }
-        if (protocol.isConnected() || (isTemp() && protocol.inContactList(this))) {
+        if (protocol.isConnected() || (isTemp() && protocol.hasContact(this))) {
             menu.addSeparator();
             if (protocol.isConnected()) {
                 menu.addItem("remove_me", USER_MENU_REMOVE_ME);
             }
-            if (protocol.inContactList(this)) {
+            if (protocol.hasContact(this)) {
                 menu.addItem("remove", USER_MENU_USER_REMOVE);
             }
         }

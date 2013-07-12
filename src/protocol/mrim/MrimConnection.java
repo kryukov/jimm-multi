@@ -300,7 +300,7 @@ public final class MrimConnection extends ClientConnection {
         int type = (int)packetData.getDWord(); // maybe rights
         String chatName = packetData.getUcs2String();
 
-        MrimChatContact chat = (MrimChatContact)mrim.getItemByUIN(from);
+        MrimChatContact chat = (MrimChatContact)mrim.getItemByUID(from);
         if (null == chat) {
             chat = (MrimChatContact)mrim.createTempContact(from);
             mrim.addTempContact(chat);
@@ -417,7 +417,7 @@ public final class MrimConnection extends ClientConnection {
                 return;
             }
 
-            MrimContact c = (MrimContact)mrim.getItemByUIN(from);
+            MrimContact c = (MrimContact)mrim.getItemByUID(from);
             if (null != c) {
                 beginTyping(c, (MrimPacket.MESSAGE_FLAG_NOTIFY & flags) != 0);
             }
@@ -474,7 +474,7 @@ public final class MrimConnection extends ClientConnection {
 
             //System.out.println("***xstatus " + xstatus + " " + status + " 0x" + Integer.toHexString(clientCaps));
 
-            MrimContact contact = (MrimContact)mrim.getItemByUIN(user);
+            MrimContact contact = (MrimContact)mrim.getItemByUID(user);
             if ((null != contact) && !(contact instanceof MrimPhoneContact)) {
                 final int oldStatusIndex = contact.getStatusIndex();
 

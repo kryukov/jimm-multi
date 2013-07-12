@@ -118,7 +118,7 @@ public abstract class Message {
 
     // Returns the receiver
     protected final Contact getRcvr() {
-        return (null == contact) ? protocol.getItemByUIN(contactId) : contact;
+        return (null == contact) ? protocol.getItemByUID(contactId) : contact;
     }
 
     public boolean isOffline() {

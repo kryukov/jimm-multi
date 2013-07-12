@@ -223,8 +223,8 @@ public final class ChatHistory implements SelectListener {
             if (p != chat.getProtocol()) {
                 continue;
             }
-            if (!p.inContactList(contact)) {
-                Contact newContact = p.getItemByUIN(contact.getUserId());
+            if (!p.hasContact(contact)) {
+                Contact newContact = p.getItemByUID(contact.getUserId());
                 if (null != newContact) {
                     chat.contact = newContact;
                     contact.updateChatState(null);

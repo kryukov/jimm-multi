@@ -92,7 +92,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
         }
 
         String date = Util.getLocalDateString(gmtTime, false);
-        Contact contact = mrim.getItemByUIN(from);
+        Contact contact = mrim.getItemByUID(from);
         emails.addElement(from);
         ids.addElement(postid);
 

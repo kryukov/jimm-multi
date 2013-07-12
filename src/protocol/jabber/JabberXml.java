@@ -690,7 +690,7 @@ public final class JabberXml extends ClientConnection {
                         return;
                     }
                     jabber.setContactList(roster.getGroups(), roster.mergeContacts());
-                    Contact selfContact = jabber.getItemByUIN(jabber.getUserId());
+                    Contact selfContact = jabber.getItemByUID(jabber.getUserId());
                     if (null != selfContact) {
                         selfContact.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
                         jabber.ui_updateContact(selfContact);
@@ -716,7 +716,7 @@ public final class JabberXml extends ClientConnection {
                         if (Jid.isConference(jid)) {
 
                         } else if ((S_REMOVE).equals(subscription)) {
-                            jabber.removeLocalContact(jabber.getItemByUIN(jid));
+                            jabber.removeLocalContact(jabber.getItemByUID(jid));
 
                         } else {
                             String name = itemNode.getAttribute(XmlNode.S_NAME);
@@ -732,7 +732,7 @@ public final class JabberXml extends ClientConnection {
                             jabber.addLocalContact(contact);
                         }
                     }
-                    Contact selfContact = jabber.getItemByUIN(jabber.getUserId());
+                    Contact selfContact = jabber.getItemByUID(jabber.getUserId());
                     if (null != selfContact) {
                         selfContact.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
                         jabber.ui_updateContact(selfContact);
@@ -907,7 +907,7 @@ public final class JabberXml extends ClientConnection {
             String xmlns = iqQuery.getXmlns();
             if ("http://jabber.org/protocol/rosterx".equals(xmlns)) {
                 if (Jid.isGate(from)) {
-            	    Contact c = getJabber().getItemByUIN(from);
+            	    Contact c = getJabber().getItemByUID(from);
             	    if ((null != c) && !c.isTemp() && c.isAuth()) {
                         putPacketIntoQueue("<iq type='result' to='"
                                 + Util.xmlEscape(from) + "' id='" + Util.xmlEscape(id) + "' />");
@@ -972,7 +972,7 @@ public final class JabberXml extends ClientConnection {
         userInfo.auth = false;
         userInfo.uin = from;
         if (Jid.isConference(from)) {
-            Contact c = getJabber().getItemByUIN(Jid.getBareJid(from));
+            Contact c = getJabber().getItemByUID(Jid.getBareJid(from));
             if (c instanceof JabberServiceContact) {
                 JabberContact.SubContact sc = ((JabberServiceContact)c).getExistSubContact(Jid.getResource(from, null));
                 if ((null != sc) && (null != sc.realJid)) {
@@ -1098,7 +1098,7 @@ public final class JabberXml extends ClientConnection {
 
             boolean showError = Jid.isGate(from);
             if (Jid.isConference(from)) {
-                JabberServiceContact conf = (JabberServiceContact)getJabber().getItemByUIN(from);
+                JabberServiceContact conf = (JabberServiceContact)getJabber().getItemByUID(from);
                 if (null != conf) {
                     int code = Util.strToIntDef(errorNode.getAttribute(S_CODE), -1);
                     conf.nickError(getJabber(), fromRes, code, getError(errorNode));
@@ -1110,7 +1110,7 @@ public final class JabberXml extends ClientConnection {
                         SystemNotice.TYPE_NOTICE_ERROR, from, getError(errorNode)));
             }
 
-            Contact c = getJabber().getItemByUIN(from);
+            Contact c = getJabber().getItemByUID(from);
             if (null == c) {
                 return;
             }
@@ -1125,7 +1125,7 @@ public final class JabberXml extends ClientConnection {
             } else {
                 getJabber().addMessage(new SystemNotice(getJabber(), SystemNotice.TYPE_NOTICE_AUTHREQ, from, null));
             }
-            Contact c = getJabber().getItemByUIN(from);
+            Contact c = getJabber().getItemByUID(from);
             autoRenameContact(c, x);
             autoMoveContact(c, x);
             return;
@@ -1134,7 +1134,7 @@ public final class JabberXml extends ClientConnection {
             if (!isAutoGateContact(from)) {
                 getJabber().setAuthResult(from, true);
             }
-            autoRenameContact(getJabber().getItemByUIN(from), x);
+            autoRenameContact(getJabber().getItemByUID(from), x);
             return;
         }
         if (("unsubscr" + "ibed").equals(type)) {
@@ -1148,10 +1148,10 @@ public final class JabberXml extends ClientConnection {
             type = "";
         }
 
-        JabberContact contact = (JabberContact)getJabber().getItemByUIN(from);
+        JabberContact contact = (JabberContact)getJabber().getItemByUID(from);
         if (null == contact) {
             String fullJid = Jid.realJidToJimmJid(fromFull);
-            contact = (JabberContact)getJabber().getItemByUIN(fullJid);
+            contact = (JabberContact)getJabber().getItemByUID(fullJid);
             if (null == contact) {
                 return;
             }
@@ -1316,7 +1316,7 @@ public final class JabberXml extends ClientConnection {
         if (null == eventNode) {
             return;
         }
-        JabberContact contact = (JabberContact)getJabber().getItemByUIN(Jid.getBareJid(fullJid));
+        JabberContact contact = (JabberContact)getJabber().getItemByUID(Jid.getBareJid(fullJid));
         if (null == contact) {
             return;
         }
@@ -1411,7 +1411,7 @@ public final class JabberXml extends ClientConnection {
 
     private void prepareFirstPrivateMessage(String jid) {
         final JabberServiceContact conf =
-                (JabberServiceContact)getJabber().getItemByUIN(Jid.getBareJid(jid));
+                (JabberServiceContact)getJabber().getItemByUID(Jid.getBareJid(jid));
         if (null == conf) { // don't have conference
             return;
         }
@@ -1530,7 +1530,7 @@ public final class JabberXml extends ClientConnection {
         }
         text = StringConvertor.trim(text);
 
-        final JabberContact c = (JabberContact)getJabber().getItemByUIN(from);
+        final JabberContact c = (JabberContact)getJabber().getItemByUID(from);
 
         if (msg.contains(S_ERROR)) {
             final String errorText = getError(msg.getFirstNode(S_ERROR));
@@ -1981,14 +1981,14 @@ public final class JabberXml extends ClientConnection {
 
     private void updateConfPrivate(JabberServiceContact conf, String resource) {
         String privateJid = Jid.realJidToJimmJid(conf.getUserId() + '/' + resource);
-        Contact privateContact = getJabber().getItemByUIN(privateJid);
+        Contact privateContact = getJabber().getItemByUID(privateJid);
         if (null != privateContact) {
             ((JabberServiceContact)privateContact).setPrivateContactStatus(conf);
             getJabber().ui_changeContactStatus(privateContact);
         }
     }
 
-    public void updateContacts(Vector contacts) {
+    public void updateContacts(Vector<Contact> contacts) {
         StringBuffer xml = new StringBuffer();
 
         int itemCount = 0;
@@ -2031,7 +2031,7 @@ public final class JabberXml extends ClientConnection {
             boolean isDelete = item.getAttribute("a" + "ction").equals("d" + "elete");
             boolean isModify = item.getAttribute("a" + "ction").equals("m" + "odify");
 
-            JabberContact contact = (JabberContact)j.getItemByUIN(jid);
+            JabberContact contact = (JabberContact)j.getItemByUID(jid);
             if (null == contact) {
                 if (isModify || isDelete) {
                     continue;
@@ -2273,7 +2273,7 @@ public final class JabberXml extends ClientConnection {
      */
     void sendMessage(PlainMessage message) {
         String to = message.getRcvrUin();
-        JabberContact toContact = (JabberContact)protocol.getItemByUIN(to);
+        JabberContact toContact = (JabberContact)protocol.getItemByUID(to);
         if (null != toContact) {
             to = toContact.getReciverJid();
         }

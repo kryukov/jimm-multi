@@ -61,7 +61,7 @@ public abstract class ContactListModel {
 
     Protocol getContactProtocol(Contact c) {
         for (int i = 0; i < getProtocolCount(); ++i) {
-            if (getProtocol(i).inContactList(c)) {
+            if (getProtocol(i).hasContact(c)) {
                 return getProtocol(i);
             }
         }

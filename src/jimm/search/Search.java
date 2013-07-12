@@ -385,7 +385,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
             uin = uin.replace('@', '%') + '@' + jabberGate;
         }
         // #sijapp cond.end #
-        Contact contact = protocol.getItemByUIN(uin);
+        Contact contact = protocol.getItemByUID(uin);
         if (null == contact) {
             contact = protocol.createTempContact(uin);
             contact.setBooleanValue(Contact.CONTACT_NO_AUTH, true);

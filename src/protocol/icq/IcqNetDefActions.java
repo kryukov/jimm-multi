@@ -248,7 +248,7 @@ public final class IcqNetDefActions {
                     if (granted) {
                         getIcq().setAuthResult(uin, true);
                     } else {
-                        Contact c = getIcq().getItemByUIN(uin);
+                        Contact c = getIcq().getItemByUID(uin);
                         if ((null != c) && !c.isTemp()) {
                             // #sijapp cond.if modules_MAGIC_EYE is "true" #
                             MagicEye.addAction(getIcq(), uin,
@@ -266,7 +266,7 @@ public final class IcqNetDefActions {
                     buf.skip(4);
                     int type = buf.getWordBE();
                     if (0 == type) {
-                        Contact c = getIcq().getItemByUIN(uin);
+                        Contact c = getIcq().getItemByUID(uin);
                         if ((null != c) && !c.isTemp()) {
                             c.setTempFlag(true);
                             String message = JLocale.getString("contact_has_been_removed");
@@ -734,7 +734,7 @@ public final class IcqNetDefActions {
         // Get UIN of the contact that goes offline
         String uin = getUinByByteLen(snacPacket.getReader());
 
-        IcqContact item = (IcqContact)getIcq().getItemByUIN(uin);
+        IcqContact item = (IcqContact)getIcq().getItemByUID(uin);
         if (null != item) {
             boolean hasBeenOffline = !item.isOnline();
             // #sijapp cond.if modules_MAGIC_EYE is "true" #
@@ -854,7 +854,7 @@ public final class IcqNetDefActions {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         DebugLog.println("mood for " + uin + " " + mood + " " + statusText);
         // #sijapp cond.end #
-        IcqContact contact = (IcqContact)getIcq().getItemByUIN(uin);
+        IcqContact contact = (IcqContact)getIcq().getItemByUID(uin);
         if (contact != null) {
             // TODO: happy flag
             int flags = (status >> 16) & 0xFFFF;
@@ -932,7 +932,7 @@ public final class IcqNetDefActions {
     private static String[] tags = Util.explode("title|desc", '|');
     private XtrazMessagePlugin parseXtrazMessage(String uin, ArrayReader reader) {
         Icq icq = getIcq();
-        IcqContact contact = (IcqContact)icq.getItemByUIN(uin);
+        IcqContact contact = (IcqContact)icq.getItemByUID(uin);
         reader.skip(4);
         int xmlLen = (int)reader.getDWordLE();
         xmlLen = Math.min(xmlLen, reader.getBuffer().length - reader.getOffset());

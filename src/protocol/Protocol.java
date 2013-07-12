@@ -23,7 +23,6 @@ import jimm.search.*;
 import jimm.util.JLocale;
 import jimmui.view.base.UIUpdater;
 import protocol.jabber.*;
-import protocol.ui.InfoFactory;
 import protocol.ui.StatusInfo;
 
             /**
@@ -31,8 +30,7 @@ import protocol.ui.StatusInfo;
  * @author vladimir
  */
 abstract public class Protocol {
-    protected Vector<Contact> contacts = new Vector<Contact>();
-    protected Vector<Group> groups = new Vector<Group>();
+    protected Roster roster;
     private Profile profile;
     private String password;
     private String userid = "";
@@ -145,24 +143,20 @@ abstract public class Protocol {
 
     public final void setContactListStub() {
         synchronized (rosterLockObject) {
-            contacts = new Vector<Contact>();
-            groups = new Vector<Group>();
+            this.roster = new Roster(new Vector<Group>(), new Vector<Contact>());
         }
     }
     public final void setContactList(Vector<Group> groups, Vector<Contact> contacts) {
-        Vector<Group> oldGroups;
-        Vector<Contact> oldContacts;
+        Roster oldRoster;
         synchronized (rosterLockObject) {
-            oldContacts = this.contacts;
-            oldGroups = this.groups;
-            Util.removeAll(oldGroups, groups);
-            Util.removeAll(oldContacts, contacts);
-            this.contacts = contacts;
-            this.groups = groups;
+            oldRoster = this.roster;
+            Util.removeAll(oldRoster.groups, groups);
+            Util.removeAll(oldRoster.contacts, contacts);
+            this.roster = new Roster(groups, contacts);
         }
         ChatHistory.instance.restoreContactsWithChat(this);
 
-        getContactList().getUpdater().updateProtocol(this, oldGroups, oldContacts);
+        getContactList().getUpdater().updateProtocol(this, oldRoster.groups, oldRoster.contacts);
         needSave();
     }
     // #sijapp cond.if protocols_JABBER is "true" #
@@ -368,14 +362,14 @@ abstract public class Protocol {
         baos.reset();
 
         // Iterate through all contact items
-        int cItemsCount = contacts.size();
-        int totalCount  = cItemsCount + groups.size();
+        int cItemsCount = roster.contacts.size();
+        int totalCount  = cItemsCount + roster.groups.size();
         for (int i = 0; i < totalCount; ++i) {
             if (i < cItemsCount) {
-                saveContact(dos, (Contact)contacts.elementAt(i));
+                saveContact(dos, (Contact)roster.contacts.elementAt(i));
             } else {
                 dos.writeByte(1);
-                saveGroup(dos, (Group)groups.elementAt(i - cItemsCount));
+                saveGroup(dos, (Group)roster.groups.elementAt(i - cItemsCount));
             }
 
             // Start new record if it exceeds 4000 bytes
@@ -448,7 +442,7 @@ abstract public class Protocol {
         if (StringConvertor.isEmpty(name)) {
             return;
         }
-        if (!inContactList(contact)) {
+        if (!hasContact(contact)) {
             contact.setName(name);
             return;
         }
@@ -488,7 +482,7 @@ abstract public class Protocol {
     abstract protected void s_removeGroup(Group group);
     public final void removeGroup(Group group) {
         s_removeGroup(group);
-        groups.removeElement(group);
+        roster.groups.removeElement(group);
         getContactList().getUpdater().removeGroup(this, group);
         needSave();
     }
@@ -505,11 +499,11 @@ abstract public class Protocol {
     public final void addGroup(Group group) {
         s_addGroup(group);
         // #sijapp cond.if modules_DEBUGLOG is "true" #
-        if (-1 != Util.getIndex(groups, group)) {
+        if (-1 != Util.getIndex(roster.groups, group)) {
             DebugLog.panic("Group '" + group.getName() + "' already added");
         }
         // #sijapp cond.end #
-        groups.addElement(group);
+        roster.groups.addElement(group);
         getContactList().getUpdater().addGroup(this, group);
         getContactList().getUpdater().update(group);
         needSave();
@@ -546,7 +540,7 @@ abstract public class Protocol {
     abstract public Group createGroup(String name);
     abstract protected Contact createContact(String uin, String name);
     public final Contact createTempContact(String uin, String name) {
-        Contact contact = getItemByUIN(uin);
+        Contact contact = getItemByUID(uin);
         if (null != contact) {
             return contact;
         }
@@ -565,21 +559,21 @@ abstract public class Protocol {
         s_searchUsers(cont);
     }
     public final Search getSearchForm() {
-        if (groups.isEmpty()) {
+        if (roster.groups.isEmpty()) {
             return null;
         }
         return new Search(this);
     }
 
     public final Vector<Contact> getContactItems() {
-        return contacts;
+        return roster.contacts;
     }
     public final Vector<Group> getGroupItems() {
-        return groups;
+        return roster.groups;
     }
     // #sijapp cond.if modules_SOUND is "true" #
     public final void beginTyping(String uin, boolean type) {
-        Contact item = getItemByUIN(uin);
+        Contact item = getItemByUID(uin);
         if (null != item) {
             beginTyping(item, type);
         }
@@ -604,59 +598,37 @@ abstract public class Protocol {
     // #sijapp cond.end #
 
     protected final void setStatusesOffline() {
-        for (int i = contacts.size() - 1; i >= 0; --i) {
-            Contact c = (Contact)contacts.elementAt(i);
+        for (int i = roster.contacts.size() - 1; i >= 0; --i) {
+            Contact c = (Contact)roster.contacts.elementAt(i);
             c.setOfflineStatus();
         }
         getContactList().getUpdater().setOffline(this);
     }
 
-    public final Contact getItemByUIN(String uin) {
-        for (int i = contacts.size() - 1; i >= 0; --i) {
-            Contact contact = (Contact)contacts.elementAt(i);
-            if (contact.getUserId().equals(uin)) {
-                return contact;
-            }
-        }
-        return null;
+    public final Contact getItemByUID(String uin) {
+        return roster.getItemByUIN(uin);
     }
     public final Group getGroupById(int id) {
         synchronized (rosterLockObject) {
-            for (int i = groups.size() - 1; 0 <= i; --i) {
-                Group group = (Group)groups.elementAt(i);
-                if (group.getId() == id) {
-                    return group;
-                }
-            }
+            return roster.getGroupById(id);
         }
-        return null;
     }
     public final Group getGroup(Contact contact) {
-        return getGroupById(contact.getGroupId());
+        return roster.getGroup(contact);
     }
 
     public final Group getGroup(String name) {
         synchronized (rosterLockObject) {
-            for (int i = groups.size() - 1; 0 <= i; --i) {
-                Group group = (Group)groups.elementAt(i);
-                if (group.getName().equals(name)) {
-                    return group;
-                }
-            }
+            return roster.getGroup(name);
         }
-        return null;
     }
+    public final boolean hasContact(Contact contact) {
+        return roster.hasContact(contact);
+    }
+
 
     public final ContactList getContactList() {
         return ContactList.getInstance();
-    }
-
-    public final boolean inContactList(Contact contact) {
-        return -1 != Util.getIndex(contacts, contact);
-    }
-
-    public final StatusInfo getStatusInfo() {
-        return InfoFactory.factory.getStatusInfo(this);
     }
 
     protected abstract void s_updateOnlineStatus();
@@ -738,9 +710,9 @@ abstract public class Protocol {
             return;
         }
         Group g = getGroup(contact);
-        boolean hasnt = !inContactList(contact);
+        boolean hasnt = !hasContact(contact);
         if (hasnt) {
-            contacts.addElement(contact);
+            roster.contacts.addElement(contact);
         }
         ui_addContactToGroup(contact, g);
     }
@@ -752,9 +724,9 @@ abstract public class Protocol {
         if (null == contact) {
             return;
         }
-        boolean inCL = inContactList(contact);
+        boolean inCL = hasContact(contact);
         if (inCL) {
-            contacts.removeElement(contact);
+            roster.contacts.removeElement(contact);
             ui_removeFromAnyGroup(contact);
         }
         if (contact.hasChat()) {
@@ -789,7 +761,7 @@ abstract public class Protocol {
         addMessage(message, false);
     }
     public final void addMessage(Message message, boolean silent) {
-        Contact contact = (Contact)getItemByUIN(message.getSndrUin());
+        Contact contact = (Contact) getItemByUID(message.getSndrUin());
         // #sijapp cond.if modules_ANTISPAM is "true" #
         if ((null == contact) && AntiSpam.isSpam(this, message)) {
             return;
@@ -919,7 +891,7 @@ abstract public class Protocol {
     }
 
     public final void setAuthResult(String uin, boolean auth) {
-        Contact c = getItemByUIN(uin);
+        Contact c = getItemByUID(uin);
         if (null == c) {
             return;
         }
@@ -1006,8 +978,9 @@ abstract public class Protocol {
         ChatHistory.instance.unregisterChats(this);
         safeSave();
         profile = null;
-        contacts = null;
-        groups = null;
+        roster.contacts = null;
+        roster.groups = null;
+        roster = null;
     }
 
     public void autoDenyAuth(String uin) {
@@ -1086,7 +1059,7 @@ abstract public class Protocol {
         ChatModel chat = ChatHistory.instance.getChatModel(contact);
         if (null == chat) {
             chat = ChatHistory.instance.getUpdater().createModel(this, contact);
-            if (!inContactList(contact)) {
+            if (!hasContact(contact)) {
                 contact.setTempFlag(true);
                 addLocalContact(contact);
             }

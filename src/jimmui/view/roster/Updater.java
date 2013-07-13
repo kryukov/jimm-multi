@@ -7,6 +7,7 @@ import jimm.comm.Util;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
+import protocol.Roster;
 
 import java.util.Vector;
 
@@ -37,11 +38,11 @@ public class Updater {
     }
 
 
-    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+    public void updateProtocol(Protocol protocol, Roster oldRoster) {
         if (model.hasProtocol(protocol)) {
 
             synchronized (protocol.getRosterLockObject()) {
-                model.updateProtocol(protocol, oldGroups, oldContacts);
+                model.updateProtocol(protocol, oldRoster);
             }
             update();
         }
@@ -71,6 +72,9 @@ public class Updater {
 
     private void update(Contact contact) {
         update();
+    }
+    public void repaint() {
+        ContactList.getInstance().getManager().invalidate();
     }
 
     public void typing(Protocol protocol, Contact item) {
@@ -174,6 +178,12 @@ public class Updater {
     public void addProtocols(Vector<Protocol> protocols) {
         model.addProtocols(protocols);
         chatModel.addProtocols(protocols);
+    }
+
+    public void updateConnectionStatus() {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        ru.net.jimm.JimmActivity.getInstance().service.updateConnectionState();
+        // #sijapp cond.end #
     }
 
     public static class Update {

@@ -295,7 +295,7 @@ public final class Chat extends VirtualList {
 
             // #sijapp cond.if modules_FILES="true"#
             case ACTION_FT_CANCEL:
-                ContactList.getInstance().removeTransfer(getCurrentMsgData(), true);
+                Jimm.getJimm().jimmModel.removeTransfer(getCurrentMsgData(), true);
                 break;
             // #sijapp cond.end#
 

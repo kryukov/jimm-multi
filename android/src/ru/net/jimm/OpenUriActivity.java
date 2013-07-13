@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
+import jimm.Jimm;
 import jimm.cl.ContactList;
 import protocol.Contact;
 import protocol.Protocol;
@@ -78,7 +79,7 @@ public class OpenUriActivity extends Activity {
     }
 
     private Jabber getFirstJabber() {
-        for (Protocol p : ContactList.getInstance().getProtocols()) {
+        for (Protocol p : Jimm.getJimm().jimmModel.getProtocols()) {
             if (p instanceof Jabber) return (Jabber) p;
         }
         return null;

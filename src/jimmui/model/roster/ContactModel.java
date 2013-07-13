@@ -1,6 +1,5 @@
 package jimmui.model.roster;
 
-import protocol.Group;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
@@ -8,6 +7,7 @@ import jimmui.view.roster.Updater;
 import jimm.comm.Util;
 import protocol.Contact;
 import protocol.Protocol;
+import protocol.Roster;
 
 import java.util.Vector;
 
@@ -61,7 +61,7 @@ public class ContactModel extends ContactListModel {
         return false;
     }
 
-    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+    public void updateProtocol(Protocol protocol, Roster oldRoster) {
         contacts.removeAllElements();
         for (int i = 0; i < getProtocolCount(); ++i) {
             Util.addAll(contacts, getProtocol(i).getContactItems());

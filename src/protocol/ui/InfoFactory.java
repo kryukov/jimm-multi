@@ -33,6 +33,7 @@ public class InfoFactory {
     // #sijapp cond.if modules_CLIENTS is "true" #
     private ClientInfo[] clientInfo = new ClientInfo[21];
     // #sijapp cond.end #
+    public final StatusInfo global = createGlobalStatusInfo();
 
 
     // #sijapp cond.if modules_SERVERLISTS is "true" #
@@ -233,6 +234,13 @@ public class InfoFactory {
         return new XStatusInfo(icons, names);
     }
     // #sijapp cond.end #
+    private static StatusInfo createGlobalStatusInfo() {
+        final ImageList icons = ImageList.createImageList("/global-status.png");
+        final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
+        return new StatusInfo(icons, statusIconIndex, globalStatuses);
+    }
+
+
 
     private static final byte[] icqStatuses = {
             StatusInfo.STATUS_CHAT,
@@ -275,6 +283,11 @@ public class InfoFactory {
             StatusInfo.STATUS_WORK,
             StatusInfo.STATUS_INVISIBLE,
             StatusInfo.STATUS_INVIS_ALL};
+
+    private static final byte[] globalStatuses = {
+            StatusInfo.STATUS_CHAT,
+            StatusInfo.STATUS_ONLINE,
+            StatusInfo.STATUS_AWAY};
 
     private static final byte[] vkApiStatuses = {StatusInfo.STATUS_ONLINE};
 }

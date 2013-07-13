@@ -40,7 +40,7 @@ public abstract class ContactListModel {
         protocolList.removeAllElements();
         for (int i = 0; i < protocols.size(); ++i) {
             protocolList.addElement(protocols.elementAt(i));
-            updateProtocol((Protocol) protocols.elementAt(i), null, null);
+            updateProtocol((Protocol) protocols.elementAt(i), null);
         }
     }
     public final void setAlwaysVisibleNode(TreeNode node) {
@@ -119,7 +119,7 @@ public abstract class ContactListModel {
         }
     }
 
-    public abstract void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts);
+    public abstract void updateProtocol(Protocol protocol, Roster oldRoster);
 
     public abstract void addGroup(Updater.Update u);
     public abstract void removeGroup(Updater.Update u);

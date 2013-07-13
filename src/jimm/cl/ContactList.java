@@ -47,10 +47,6 @@ public final class ContactList implements ContactListListener {
     private VirtualContactList contactList;
     private final StatusView statusView = new StatusView();
     private Contact currentContact;
-    // #sijapp cond.if modules_FILES="true"#
-    private Vector transfers = new Vector();
-    // #sijapp cond.end#
-    public JimmModel jimmModel = new JimmModel();
 
     public ContactList() {
     }
@@ -62,24 +58,8 @@ public final class ContactList implements ContactListListener {
         editor = new MessageEditor();
     }
 
-    public byte getProtocolType(Profile account) {
-        for (int i = 0; i < Profile.protocolTypes.length; ++i) {
-            if (account.protocolType == Profile.protocolTypes[i]) {
-                return account.protocolType;
-            }
-        }
-        return Profile.protocolTypes[0];
-    }
-    private boolean is(Protocol protocol, Profile profile) {
-        Profile exist = protocol.getProfile();
-        if (exist == profile) {
-            return true;
-        }
-        return (exist.protocolType == profile.protocolType)
-                && exist.userId.equals(profile.userId);
-    }
     public void updateAccounts() {
-        Protocol[] oldProtocols = getProtocols();
+        Protocol[] oldProtocols = Jimm.getJimm().jimmModel.getProtocols();
         Vector<Protocol> newProtocols = new Vector<Protocol>();
         // #sijapp cond.if modules_MULTI is "true" #
         int accountCount = Options.getAccountCount();
@@ -88,7 +68,7 @@ public final class ContactList implements ContactListListener {
             if (!profile.isActive) continue;
             for (int j = 0; j < oldProtocols.length; ++j) {
                 Protocol protocol = oldProtocols[j];
-                if ((null != protocol) && is(protocol, profile)) {
+                if ((null != protocol) && profile.equalsTo(protocol.getProfile())) {
                     if (protocol.getProfile() != profile) {
                         protocol.setProfile(profile);
                     }
@@ -119,7 +99,7 @@ public final class ContactList implements ContactListListener {
                 protocol.dismiss();
             }
         }
-        jimmModel.protocols = newProtocols;
+        Jimm.getJimm().jimmModel.protocols = newProtocols;
         updateModel();
         updateMainMenu();
     }
@@ -166,47 +146,8 @@ public final class ContactList implements ContactListListener {
         return protocol;
     }
 
-    public Protocol getProtocol(Profile profile) {
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            if (p.getProfile() == profile) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    public Protocol getProtocol(String account) {
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            if (p.getUserId().equals(account)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     public static ContactList getInstance() {
         return instance;
-    }
-    public Protocol[] getProtocols() {
-        Protocol[] all = new Protocol[jimmModel.protocols.size()];
-        for (int i = 0; i < all.length; ++i) {
-            all[i] = (Protocol) jimmModel.protocols.elementAt(i);
-        }
-        return all;
-    }
-
-    public Protocol getProtocol(Contact c) {
-        ContactListModel model = contactList.getModel();
-        for (int i = 0; i < model.getProtocolCount(); ++i) {
-            if (model.getProtocol(i).hasContact(c)) {
-                return model.getProtocol(i);
-            }
-        }
-        return null;
     }
 
     public void activate() {
@@ -251,9 +192,9 @@ public final class ContactList implements ContactListListener {
             return;
         }
         // #sijapp cond.end#
-        int count = contactList.getModel().getProtocolCount();
+        int count = Jimm.getJimm().jimmModel.protocols.size();
         for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
+            Protocol p = (Protocol) Jimm.getJimm().jimmModel.protocols.elementAt(i);
             if (!"".equals(p.getPassword()) && p.getProfile().isConnected()) {
                 p.connect();
             }
@@ -270,64 +211,6 @@ public final class ContactList implements ContactListListener {
     final static public int SORT_BY_NAME   = 2;
 
     /* *********************************************************** */
-    // #sijapp cond.if modules_FILES="true"#
-    public void addTransfer(FileTransfer ft) {
-        transfers.addElement(ft);
-    }
-    public void removeTransfer(MessData par, boolean cancel) {
-        for (int i = 0; i < transfers.size(); ++i) {
-            FileTransfer ft = (FileTransfer)transfers.elementAt(i);
-            if (ft.is(par)) {
-                transfers.removeElementAt(i);
-                if (cancel) {
-                    ft.cancel();
-                }
-                return;
-            }
-        }
-    }
-    // #sijapp cond.end#
-
-    public boolean isConnected() {
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            if (p.isConnected() && !p.isConnecting()) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean isConnecting() {
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            if (p.isConnecting()) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean disconnect() {
-        boolean disconnecting = false;
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            if (p.isConnected()) {
-                p.disconnect(false);
-                disconnecting = true;
-            }
-        }
-        return disconnecting;
-    }
-
-    public void safeSave() {
-        int count = contactList.getModel().getProtocolCount();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = contactList.getModel().getProtocol(i);
-            p.safeSave();
-        }
-    }
 
     public VirtualContactList getManager() {
         return contactList;
@@ -367,9 +250,9 @@ public final class ContactList implements ContactListListener {
         if (0 < contactListSaveDelay) {
             contactListSaveDelay--;
             if (0 == contactListSaveDelay) {
-                int count = contactList.getModel().getProtocolCount();
+                int count = Jimm.getJimm().jimmModel.protocols.size();
                 for (int i = 0; i < count; ++i) {
-                    Protocol p = contactList.getModel().getProtocol(i);
+                    Protocol p = (Protocol) Jimm.getJimm().jimmModel.protocols.elementAt(i);
                     p.safeSave();
                 }
             }
@@ -383,7 +266,12 @@ public final class ContactList implements ContactListListener {
         }
         updateUnreadMessageCount();
     }
-    public final void markMessages(Contact contact) {
+    public final void markMessages(Protocol protocol, Contact contact) {
+        if (null != contact) {
+            if (Options.getBoolean(Options.OPTION_SORT_UP_WITH_MSG)) {
+                getUpdater().updateContact(protocol, protocol.getGroup(contact), contact);
+            }
+        }
         if (null != MyActionBar.getMessageIcon()) {
             updateUnreadMessageCount();
         }
@@ -398,14 +286,6 @@ public final class ContactList implements ContactListListener {
         ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon();
         // #sijapp cond.end #
     }
-
-    public void updateConnectionStatus() {
-        // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().service.updateConnectionState();
-        // #sijapp cond.end #
-    }
-
-
 
     public final Contact getCurrentContact() {
         return currentContact;
@@ -468,7 +348,7 @@ public final class ContactList implements ContactListListener {
 
     public void updateModel() {
         contactList.setModel(contactList.getUpdater().createModel());
-        contactList.getUpdater().addProtocols(jimmModel.protocols);
+        contactList.getUpdater().addProtocols(Jimm.getJimm().jimmModel.protocols);
         contactList.updateOption();
     }
 }

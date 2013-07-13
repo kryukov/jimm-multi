@@ -1,11 +1,10 @@
 package jimm.history;
 
-import jimm.cl.ContactList;
+import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import ru.net.jimm.config.HomeDirectory;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
@@ -79,7 +78,7 @@ public class AndroidHistoryStorage {
         cachedRecord.date = header.substring(loginTimeDelim + 1);
         cachedRecord.text = msg.substring(msg.indexOf("]\n") + 2);
         cachedRecord.type = 0;
-        if (ContactList.getInstance().getProtocol(historyStorage.getContact())
+        if (Jimm.getJimm().jimmModel.getProtocol(historyStorage.getContact())
                 .getNick().equals(cachedRecord.from)) {
             cachedRecord.type = 1;
         }

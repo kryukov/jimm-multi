@@ -97,7 +97,7 @@ public class Obimp extends Protocol {
     protected void startConnection() {
         ObimpConnection c = new ObimpConnection(this);
         connection = c;
-        new Thread(c).start();
+        c.start();
     }
 
     protected void closeConnection() {

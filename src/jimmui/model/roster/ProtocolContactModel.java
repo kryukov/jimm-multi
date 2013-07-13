@@ -8,6 +8,7 @@ import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
 import jimmui.view.roster.Updater;
 import protocol.Protocol;
+import protocol.Roster;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -71,7 +72,7 @@ public class ProtocolContactModel extends ContactListModel {
         return false;
     }
 
-    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+    public void updateProtocol(Protocol protocol, Roster oldRoster) {
         ProtocolBranch protocolBranch = new ProtocolBranch(protocol);
         protos.put(protocol, protocolBranch);
         Util.addAll(protocolBranch.getSortedContacts(), protocol.getContactItems());

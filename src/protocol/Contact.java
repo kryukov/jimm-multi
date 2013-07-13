@@ -82,7 +82,7 @@ abstract public class Contact implements TreeNode, Sortable {
         return null;
     }
     private Protocol getProtocol() {
-        return ContactList.getInstance().getProtocol(this);
+        return Jimm.getJimm().jimmModel.getProtocol(this);
     }
 
 ///////////////////////////////////////////////////////////////////////////

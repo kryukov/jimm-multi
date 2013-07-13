@@ -2,7 +2,8 @@ package ru.net.jimm.service;
 
 import android.content.Context;
 import android.os.PowerManager;
-import jimm.cl.ContactList;
+import jimm.Jimm;
+import jimm.cl.JimmModel;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,8 +27,8 @@ public class WakeControl {
         wakeLock = null;
     }
     public void updateLock() {
-        ContactList cl = ContactList.getInstance();
-        boolean need = cl.isConnected() || cl.isConnected();
+        JimmModel cl = Jimm.getJimm().jimmModel;
+        boolean need = cl.isConnected() || cl.isConnecting();
         if (need) {
             if (!isHeld()) acquire();
         } else {

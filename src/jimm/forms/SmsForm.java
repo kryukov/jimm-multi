@@ -19,7 +19,7 @@ import javax.wireless.messaging.*;
 // #sijapp cond.end#
 // #sijapp cond.end #
 // #sijapp cond.end #
-import jimm.cl.ContactList;
+import jimm.Jimm;
 import jimmui.view.form.*;
 import jimm.util.JLocale;
 import protocol.mrim.*;
@@ -37,7 +37,7 @@ public class SmsForm implements FormListener {
 
         Protocol[] protos;
         if (null == protocol) {
-            protos = ContactList.getInstance().getProtocols();
+            protos = Jimm.getJimm().jimmModel.getProtocols();
 
         } else {
             protos = new Protocol[] {protocol};

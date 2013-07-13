@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import protocol.Contact;
 import protocol.Group;
+import protocol.Roster;
 import protocol.vk.api.VkApp;
 
 import java.util.*;
@@ -121,7 +122,7 @@ public class VkConnection implements Runnable {
         try {
             Vector<Contact> contacts = to(api.getFriends().getJSONArray("response"));
             Vector<Group> groups = groups();
-            vk.setContactList(groups, contacts);
+            vk.setContactList(new Roster(groups, contacts));
         } catch (Exception ignored) {
         }
     }

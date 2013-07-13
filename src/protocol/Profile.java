@@ -147,4 +147,9 @@ public final class Profile {
         // #sijapp cond.end #
         return protocolType;
     }
+
+    public boolean equalsTo(Profile profile) {
+        return this == profile
+                || ((protocolType == profile.protocolType) && userId.equals(profile.userId));
+    }
 }

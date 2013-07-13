@@ -238,7 +238,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         progressInstance = ChatHistory.instance.getUpdater().addFileProgress(chat,
                 JLocale.getEllipsisString("sending_file"), getProgressText());
         ChatHistory.instance.getUpdater().activate(chat);
-        ContactList.getInstance().addTransfer(this);
+        Jimm.getJimm().jimmModel.addTransfer(this);
     }
     public void setProgress(int percent) {
         try {
@@ -257,7 +257,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             return;
         }
         if (100 == percent) {
-            ContactList.getInstance().removeTransfer(progressInstance, false);
+            Jimm.getJimm().jimmModel.removeTransfer(progressInstance, false);
             changeFileProgress("complete");
             return;
         }
@@ -287,7 +287,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     public void destroy() {
         try {
             closeFile();
-            ContactList.getInstance().removeTransfer(progressInstance, false);
+            Jimm.getJimm().jimmModel.removeTransfer(progressInstance, false);
             // #sijapp cond.if modules_ANDROID isnot "true" #
             if (null != vf) {
                 vf.dismiss();

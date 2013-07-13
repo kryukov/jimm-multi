@@ -1,13 +1,12 @@
 package jimmui.model.roster;
 
-import jimm.cl.ContactList;
-import protocol.Contact;
-import protocol.Group;
+import jimm.Jimm;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
 import jimmui.view.roster.Updater;
 import protocol.Protocol;
+import protocol.Roster;
 
 import java.util.Vector;
 
@@ -21,7 +20,7 @@ import java.util.Vector;
 public class ChatModel extends ContactListModel {
     @Override
     public void buildFlatItems(Vector items) {
-        Vector<jimm.chat.ChatModel> chats = ContactList.getInstance().jimmModel.chats;
+        Vector<jimm.chat.ChatModel> chats = Jimm.getJimm().jimmModel.chats;
         for (int i = 0; i < chats.size(); ++i) {
             items.addElement(((jimm.chat.ChatModel)chats.elementAt(i)).getContact());
         }
@@ -32,7 +31,7 @@ public class ChatModel extends ContactListModel {
     }
 
     @Override
-    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+    public void updateProtocol(Protocol protocol, Roster oldRoster) {
     }
 
     @Override

@@ -20,6 +20,10 @@ public class Roster {
         this.contacts = contacts;
     }
 
+    public Roster() {
+        this(new Vector<Group>(), new Vector<Contact>());
+    }
+
     public final Vector<Contact> getContactItems() {
         return contacts;
     }
@@ -27,7 +31,7 @@ public class Roster {
         return groups;
     }
 
-    public final Contact getItemByUIN(String uin) {
+    public final Contact getItemByUID(String uin) {
         for (int i = contacts.size() - 1; i >= 0; --i) {
             Contact contact = (Contact)contacts.elementAt(i);
             if (contact.getUserId().equals(uin)) {

@@ -27,7 +27,8 @@ package jimm.history;
 
 // #sijapp cond.if modules_HISTORY is "true" #
 import javax.microedition.rms.*;
-import jimm.cl.ContactList;
+
+import jimm.Jimm;
 import jimm.io.Storage;
 import java.io.*;
 import jimm.comm.*;
@@ -56,7 +57,7 @@ public class HistoryStorage {
 
     public HistoryStorage(Contact contact) {
         this.contact = contact;
-        uniqueUserId = ContactList.getInstance().getProtocol(contact).getUniqueUserId(contact);
+        uniqueUserId = Jimm.getJimm().jimmModel.getProtocol(contact).getUniqueUserId(contact);
         storageName = getRSName();
         // #sijapp cond.if modules_ANDROID is "true" #
         androidStorage = new AndroidHistoryStorage(this);

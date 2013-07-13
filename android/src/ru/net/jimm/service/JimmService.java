@@ -4,13 +4,15 @@ package ru.net.jimm.service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.*;
 import android.util.Log;
+import jimm.Jimm;
 import jimm.chat.ChatHistory;
-import jimm.cl.ContactList;
+import jimm.cl.JimmModel;
 import org.bombusmod.scrobbler.MusicReceiver;
+import protocol.Protocol;
+import protocol.ProtocolHelper;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
 import ru.net.jimm.Tray;
@@ -24,9 +26,11 @@ public class JimmService extends Service {
     private MusicReceiver musicReceiver;
     private Tray tray = null;
     private WakeControl wakeLock;
+    private JimmModel jimmModel;
 
     public static final int UPDATE_APP_ICON = 1;
     public static final int UPDATE_CONNECTION_STATUS = 2;
+    public static final int CONNECT = 3;
 
     @Override
     public void onCreate() {
@@ -35,6 +39,7 @@ public class JimmService extends Service {
         wakeLock = new WakeControl(this);
 
         tray = new Tray(this);
+        jimmModel = Jimm.getJimm().jimmModel;
         //Foreground Service
         //tray.startForegroundCompat(R.string.app_name, getNotification());
 
@@ -51,6 +56,7 @@ public class JimmService extends Service {
         wakeLock.release();
         //this.unregisterReceiver(musicReceiver);
         tray.stopForegroundCompat(R.string.app_name);
+        jimmModel = null;
     }
 
     @Override
@@ -67,12 +73,12 @@ public class JimmService extends Service {
         final int icon;
         if (0 < allUnread) {
             icon = version2 ? R.drawable.ic2_tray_msg : R.drawable.ic3_tray_msg;
-        } else if (ContactList.getInstance().isConnected()) {
+        } else if (Jimm.getJimm().jimmModel.isConnected()) {
             icon = version2 ? R.drawable.ic2_tray_on : R.drawable.ic3_tray_on;
             stateMsg = getText(R.string.online);
         } else {
             icon = version2 ? R.drawable.ic2_tray_off : R.drawable.ic3_tray_off;
-            if (ContactList.getInstance().isConnecting()) {
+            if (Jimm.getJimm().jimmModel.isConnecting()) {
                 stateMsg = getText(R.string.connecting);
             } else {
                 stateMsg = getText(R.string.offline);
@@ -104,6 +110,9 @@ public class JimmService extends Service {
                 break;
             case UPDATE_APP_ICON:
                 tray.startForegroundCompat(R.string.app_name, getNotification());
+                break;
+            case CONNECT:
+                ProtocolHelper.connect((Protocol) jimmModel.protocols.elementAt(msg.arg1));
                 break;
             default:
                 return false;

@@ -1,12 +1,12 @@
 package jimm.cl;
 
+import jimm.Jimm;
 import jimmui.view.icons.Icon;
-import jimmui.view.icons.ImageList;
-import jimmui.view.roster.ContactListModel;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 import jimmui.view.menu.SelectListener;
 import protocol.Protocol;
+import protocol.ui.InfoFactory;
 import protocol.ui.StatusInfo;
 
 /**
@@ -17,41 +17,14 @@ import protocol.ui.StatusInfo;
  * @author vladimir
  */
 public class GlobalStatusForm implements SelectListener {
-    public static final StatusInfo global = getStatusInfo();
 
-    private static StatusInfo getStatusInfo() {
-        final ImageList icons = ImageList.createImageList("/global-status.png");
-        final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
-        final byte[] statuses = {
-                StatusInfo.STATUS_CHAT,
-                StatusInfo.STATUS_ONLINE,
-                StatusInfo.STATUS_AWAY};
-        return new StatusInfo(icons, statusIconIndex, statuses);
-    }
-
-    private static byte getGlobalStatus() {
-        ContactListModel model = ContactList.getInstance().getManager().getModel();
-        byte globalStatus = StatusInfo.STATUS_OFFLINE;
-        int globalStatusWidth = StatusInfo.getWidth(globalStatus);
-        for (int i = 0; i < model.getProtocolCount(); ++i) {
-            byte status = model.getProtocol(i).getProfile().statusIndex;
-            if (StatusInfo.getWidth(status) < globalStatusWidth) {
-                globalStatus = status;
-                globalStatusWidth = StatusInfo.getWidth(globalStatus);
-            }
-        }
-        if (null == global.getIcon(globalStatus)) {
-            globalStatus = StatusInfo.STATUS_ONLINE;
-        }
-        return globalStatus;
-    }
     public static Icon getGlobalStatusIcon() {
-        return global.getIcon(getGlobalStatus());
+        return InfoFactory.factory.global.getIcon(Jimm.getJimm().jimmModel.getGlobalStatus());
     }
 
     public void show() {
         MenuModel menu = new MenuModel();
-        StatusInfo info = global;
+        StatusInfo info = InfoFactory.factory.global;
 
         byte[] statuses = info.applicableStatuses;
         final byte offline = StatusInfo.STATUS_OFFLINE;
@@ -59,7 +32,7 @@ public class GlobalStatusForm implements SelectListener {
         for (int i = 0; i < statuses.length; ++i) {
             menu.addItem(info.getName(statuses[i]), info.getIcon(statuses[i]), statuses[i]);
         }
-        menu.setDefaultItemCode(getGlobalStatus());
+        menu.setDefaultItemCode(Jimm.getJimm().jimmModel.getGlobalStatus());
         menu.setActionListener(this);
         new Select(menu).show();
     }
@@ -70,7 +43,7 @@ public class GlobalStatusForm implements SelectListener {
     }
 
     private void setGlobalStatus(int status) {
-        Protocol[] all = ContactList.getInstance().getProtocols();
+        Protocol[] all = Jimm.getJimm().jimmModel.getProtocols();
         for (int i = 0; i < all.length; ++i) {
             all[i].setStatus(status, "");
         }

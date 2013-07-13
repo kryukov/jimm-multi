@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.Message;
+import jimm.Jimm;
+import protocol.Protocol;
 import ru.net.jimm.service.JimmService;
 
 /**
@@ -37,5 +39,11 @@ public class JimmServiceConnection implements ServiceConnection {
     }
     public void updateConnectionState() {
         send(Message.obtain(null, JimmService.UPDATE_CONNECTION_STATUS));
+    }
+    public void connect(Protocol p) {
+        int protocolIndex = Jimm.getJimm().jimmModel.protocols.indexOf(p);
+        if (0 <= protocolIndex) {
+            send(Message.obtain(null, JimmService.CONNECT, protocolIndex, 0));
+        }
     }
 }

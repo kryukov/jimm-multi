@@ -45,6 +45,7 @@ public class Jimm extends MIDlet implements Runnable {
     public static final String VERSION = "###VERSION###";
     public static String lastDate;
     private Display display;
+    public JimmModel jimmModel;
 
     private boolean locked = false;
     private long lastLockTime = 0;
@@ -393,12 +394,21 @@ public class Jimm extends MIDlet implements Runnable {
         backgroundLoading();
 
         // init contact list
-        splash.setProgress(10);
-        Options.loadAccounts();
-        splash.setProgress(50);
-        ContactList.getInstance().initUI();
-        splash.setProgress(60);
-        ContactList.getInstance().updateAccounts();
+        if (null == jimmModel) {
+            splash.setProgress(10);
+            jimmModel = new JimmModel();
+            splash.setProgress(20);
+            Options.loadAccounts();
+            splash.setProgress(50);
+            ContactList.getInstance().initUI();
+            splash.setProgress(60);
+            ContactList.getInstance().updateAccounts();
+        } else {
+            splash.setProgress(50);
+            ContactList.getInstance().initUI();
+            splash.setProgress(60);
+            ContactList.getInstance().updateAccounts();
+        }
 
         // #sijapp cond.if modules_ACTIVITYUI is "true"#
         if (isPhone(PHONE_SE) && (750 <= getSeVersion())) {
@@ -468,7 +478,7 @@ public class Jimm extends MIDlet implements Runnable {
     public void pauseApp() {
         try {
             hideApp();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
     public void hideApp() {
@@ -485,10 +495,9 @@ public class Jimm extends MIDlet implements Runnable {
     }
 
     public void quit() {
-        ContactList cl = ContactList.getInstance();
         boolean wait;
         try {
-            wait = cl.disconnect();
+            wait = jimmModel.disconnect();
         } catch (Exception e) {
             return;
         }
@@ -497,7 +506,7 @@ public class Jimm extends MIDlet implements Runnable {
         } catch (InterruptedException e1) {
             /* Do nothing */
         }
-        cl.safeSave();
+        jimmModel.safeSave();
         if (wait) {
             try {
                 Thread.sleep(500);
@@ -579,7 +588,7 @@ public class Jimm extends MIDlet implements Runnable {
         System.gc();
         try {
             Thread.sleep(50);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

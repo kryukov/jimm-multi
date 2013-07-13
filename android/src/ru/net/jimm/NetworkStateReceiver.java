@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import jimm.Jimm;
 import jimm.cl.ContactList;
 import org.microemu.MIDletBridge;
 import protocol.Protocol;
@@ -67,7 +68,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     private void resetConnections() {
-        for (Protocol p : ContactList.getInstance().getProtocols()) {
+        for (Protocol p : Jimm.getJimm().jimmModel.getProtocols()) {
             p.disconnect(false);
         }
     }

@@ -1,6 +1,7 @@
 package jimm.chat;
 
 import jimm.chat.message.Message;
+import jimm.cl.ContactList;
 import jimm.comm.Util;
 import jimmui.view.icons.Icon;
 import protocol.Contact;
@@ -77,7 +78,7 @@ public class ChatModel {
         authRequestCounter = 0;
         if (notEmpty) {
             contact.updateChatState(this);
-            protocol.markMessages(contact);
+            ContactList.getInstance().markMessages(protocol, contact);
         }
     }
 
@@ -90,7 +91,7 @@ public class ChatModel {
         sysNoticeCounter = 0;
         if (notEmpty) {
             contact.updateChatState(this);
-            protocol.markMessages(contact);
+            ContactList.getInstance().markMessages(protocol, contact);
         }
     }
 

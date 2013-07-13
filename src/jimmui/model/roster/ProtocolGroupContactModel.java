@@ -1,13 +1,13 @@
 package jimmui.model.roster;
 
 import jimm.comm.Util;
-import protocol.Contact;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
 import jimmui.view.roster.Updater;
 import protocol.Group;
 import protocol.Protocol;
+import protocol.Roster;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -87,14 +87,14 @@ public class ProtocolGroupContactModel extends ContactListModel {
         return true;
     }
 
-    public void updateProtocol(Protocol protocol, Vector<Group> oldGroups, Vector<Contact> oldContacts) {
+    public void updateProtocol(Protocol protocol, Roster oldRoster) {
         ProtocolBranch protocolBranch = new ProtocolBranch(protocol);
         protos.put(protocol, protocolBranch);
 
         Updater.Update u = new Updater.Update(protocol,  null, null, Updater.Update.GROUP_REMOVE);
-        if (null != oldGroups) {
-            for (int i = 0; i < oldGroups.size(); ++i) {
-                u.group = (Group) oldGroups.elementAt(i);
+        if (null != oldRoster) {
+            for (int i = 0; i < oldRoster.groups.size(); ++i) {
+                u.group = (Group) oldRoster.groups.elementAt(i);
                 removeGroup(u);
             }
             u.group = null;

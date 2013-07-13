@@ -86,7 +86,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         accountList.setModel(accountListModel, curItem);
 
         accountMenu = new MenuModel();
-        boolean connected = ContactList.getInstance().isConnected();
+        boolean connected = Jimm.getJimm().jimmModel.isConnected();
         // #sijapp cond.if modules_MULTI is "true" #
         connected = false;
         // #sijapp cond.end #
@@ -219,7 +219,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         }
         // #sijapp cond.if modules_MULTI is "true" #
         Profile account = Options.getAccount(num);
-        Protocol p = ContactList.getInstance().getProtocol(account);
+        Protocol p = Jimm.getJimm().jimmModel.getProtocol(account);
         if ((null != p) && p.isConnected()) {
             return;
         }

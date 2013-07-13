@@ -50,10 +50,10 @@ public final class ChatHistory implements SelectListener {
     }
 
     private int getTotal() {
-        return ContactList.getInstance().jimmModel.chats.size();
+        return Jimm.getJimm().jimmModel.chats.size();
     }
     private ChatModel chatModelAt(int index) {
-        return (ChatModel) ContactList.getInstance().jimmModel.chats.elementAt(index);
+        return (ChatModel) Jimm.getJimm().jimmModel.chats.elementAt(index);
     }
 
     private Contact contactAt(int index) {
@@ -63,7 +63,7 @@ public final class ChatHistory implements SelectListener {
     public ChatModel getChatModel(Contact c) {
         for (int i = getTotal() - 1; 0 <= i; --i) {
             if (c == contactAt(i)) {
-                return (ChatModel) ContactList.getInstance().jimmModel.chats.elementAt(i);
+                return (ChatModel) Jimm.getJimm().jimmModel.chats.elementAt(i);
             }
         }
         return null;
@@ -150,7 +150,7 @@ public final class ChatHistory implements SelectListener {
     }
 
     public boolean registerChat(ChatModel item) {
-        if (ContactList.getInstance().jimmModel.registerChat(item)) {
+        if (Jimm.getJimm().jimmModel.registerChat(item)) {
             ContactList.getInstance().getUpdater().registerChat(item);
             return true;
         }
@@ -161,21 +161,21 @@ public final class ChatHistory implements SelectListener {
         for (int i = getTotal() - 1; 0 <= i; --i) {
             ChatModel key = chatModelAt(i);
             if (key.getProtocol() == p) {
-                ContactList.getInstance().jimmModel.unregisterChat(key);
+                Jimm.getJimm().jimmModel.unregisterChat(key);
                 ContactList.getInstance().getUpdater().unregisterChat(key);
             }
         }
-        ContactList.getInstance().markMessages(null);
+        ContactList.getInstance().markMessages(null, null);
     }
     public void unregisterChat(ChatModel item) {
         if (null == item) return;
-        ContactList.getInstance().jimmModel.unregisterChat(item);
+        Jimm.getJimm().jimmModel.unregisterChat(item);
         ContactList.getInstance().getUpdater().unregisterChat(item);
         Contact c = item.getContact();
         c.updateChatState(null);
         item.getProtocol().ui_updateContact(c);
         if (0 < item.getUnreadMessageCount()) {
-            ContactList.getInstance().markMessages(c);
+            ContactList.getInstance().markMessages(item.protocol, c);
         }
     }
 
@@ -265,7 +265,7 @@ public final class ChatHistory implements SelectListener {
     }
     // shows next or previos chat
     public void showNextPrevChat(ChatModel item, boolean next) {
-        int chatNum = ContactList.getInstance().jimmModel.chats.indexOf(item);
+        int chatNum = Jimm.getJimm().jimmModel.chats.indexOf(item);
         if (-1 == chatNum) {
             return;
         }
@@ -353,7 +353,7 @@ public final class ChatHistory implements SelectListener {
                 String nick = in.readUTF();
                 String text = in.readUTF();
                 long time = in.readLong();
-                Protocol protocol = ContactList.getInstance().getProtocol(account);
+                Protocol protocol = Jimm.getJimm().jimmModel.getProtocol(account);
                 if (null == protocol) {
                     continue;
                 }

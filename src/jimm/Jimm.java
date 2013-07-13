@@ -84,9 +84,9 @@ public class Jimm extends MIDlet implements Runnable {
         // #sijapp cond.if target is "MIDP2" #
         if (null == platform) {
             try {
-                Class.forName("com.nokia.mid.jimmui.ui.DeviceControl");
+                Class.forName("com.nokia.mid.ui.DeviceControl");
                 return "Nokia";
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         // #sijapp cond.end #
@@ -416,7 +416,7 @@ public class Jimm extends MIDlet implements Runnable {
         }
         // #sijapp cond.end#
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon();
+        ru.net.jimm.JimmActivity.getInstance().service.started();
         // #sijapp cond.end #
     }
 
@@ -514,6 +514,9 @@ public class Jimm extends MIDlet implements Runnable {
                 /* Do nothing */
             }
         }
+        // #sijapp cond.if modules_ANDROID is "true" #
+        ru.net.jimm.JimmActivity.getInstance().service.quit();
+        // #sijapp cond.end #
         try {
             Jimm.getJimm().destroyApp(true);
         } catch (Exception e) {

@@ -18,11 +18,11 @@ import ru.net.jimm.R;
 import ru.net.jimm.Tray;
 
 public class JimmService extends Service {
-    public static final String ACTION_FOREGROUND = "FOREGROUND";
-
     private static final String LOG_TAG = "JimmService";
 
+    private final Messenger messenger = new Messenger(new Handler(new IncomingMessageHandler()));
     private final Binder localBinder = new LocalBinder();
+
     private MusicReceiver musicReceiver;
     private Tray tray = null;
     private WakeControl wakeLock;
@@ -31,6 +31,8 @@ public class JimmService extends Service {
     public static final int UPDATE_APP_ICON = 1;
     public static final int UPDATE_CONNECTION_STATUS = 2;
     public static final int CONNECT = 3;
+    public static final int STARTED = 4;
+    public static final int QUIT = 5;
 
     @Override
     public void onCreate() {
@@ -39,7 +41,6 @@ public class JimmService extends Service {
         wakeLock = new WakeControl(this);
 
         tray = new Tray(this);
-        jimmModel = Jimm.getJimm().jimmModel;
         //Foreground Service
         //tray.startForegroundCompat(R.string.app_name, getNotification());
 
@@ -61,6 +62,8 @@ public class JimmService extends Service {
 
     @Override
     public IBinder onBind(Intent arg0) {
+        System.out.println("service obBind " + arg0);
+        //return messenger.getBinder();
         return localBinder;
     }
 
@@ -114,6 +117,12 @@ public class JimmService extends Service {
             case CONNECT:
                 ProtocolHelper.connect((Protocol) jimmModel.protocols.elementAt(msg.arg1));
                 break;
+            case STARTED:
+                jimmModel = Jimm.getJimm().jimmModel;
+                tray.startForegroundCompat(R.string.app_name, getNotification());
+                break;
+            case QUIT:
+                break;
             default:
                 return false;
         }
@@ -128,6 +137,16 @@ public class JimmService extends Service {
     public class LocalBinder extends Binder {
         public JimmService getService() {
             return JimmService.this;
+        }
+    }
+
+    private class IncomingMessageHandler implements Handler.Callback {
+        public boolean handleMessage(Message msg) {
+            try {
+                return JimmService.this.handleMessage(msg);
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 

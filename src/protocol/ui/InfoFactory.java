@@ -18,7 +18,6 @@ import protocol.mrim.MrimClient;
  * @author vladimir
  */
 public class InfoFactory {
-    public static InfoFactory factory = new InfoFactory();
     // #sijapp cond.if modules_SERVERLISTS is "true" #
     private final ImageList serverListsIcons = ImageList.createImageList("/serverlists.png");
     // #sijapp cond.end #
@@ -34,7 +33,6 @@ public class InfoFactory {
     private ClientInfo[] clientInfo = new ClientInfo[21];
     // #sijapp cond.end #
     public final StatusInfo global = createGlobalStatusInfo();
-
 
     // #sijapp cond.if modules_SERVERLISTS is "true" #
     public Icon getServerListIcon(Contact contact) {
@@ -290,4 +288,6 @@ public class InfoFactory {
             StatusInfo.STATUS_AWAY};
 
     private static final byte[] vkApiStatuses = {StatusInfo.STATUS_ONLINE};
+
+    public static InfoFactory factory = new InfoFactory();
 }

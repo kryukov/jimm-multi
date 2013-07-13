@@ -51,6 +51,7 @@ import org.microemu.android.MicroEmulatorActivity;
 import android.content.Intent;
 import android.util.Log;
 import org.microemu.cldc.file.FileSystem;
+import ru.net.jimm.client.JimmServiceCommands;
 
 public class JimmActivity extends MicroEmulatorActivity {
 
@@ -385,14 +386,14 @@ public class JimmActivity extends MicroEmulatorActivity {
         try {
             startService(new Intent(this, ru.net.jimm.service.JimmService.class));
             registerReceiver(networkStateReceiver, networkStateReceiver.getFilter());
-            bindService(new Intent(this, ru.net.jimm.service.JimmService.class), service, BIND_AUTO_CREATE);
+            bindService(new Intent(this, ru.net.jimm.service.JimmService.class), service.connection, BIND_AUTO_CREATE);
         } catch (Exception e) {
             error(e);
         }
     }
     public void notifyMIDletDestroyed() {
         try {
-            unbindService(service);
+            unbindService(service.connection);
         } catch (Exception e) {
             // do nothing
         }
@@ -420,5 +421,5 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     public final Clipboard clipboard = new Clipboard();
 
-    public final JimmServiceConnection service = new JimmServiceConnection();
+    public final JimmServiceCommands service = new JimmServiceCommands();
 }

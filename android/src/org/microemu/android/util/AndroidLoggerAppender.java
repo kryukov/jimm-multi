@@ -51,12 +51,15 @@ public class AndroidLoggerAppender implements LoggerAppender {
     	if (event.hasData()) {
     		data = " [" + event.getFormatedData() + "]";
     	}
-		Log.v(JimmActivity.LOG_TAG, event.getMessage() + data +  "\n\t  " + formatLocation(event.getLocation()));
+		Log.v(JimmActivity.LOG_TAG, event.getMessage() + " " + data +  "\n\t  " + formatLocation(event.getLocation()),
+                event.getThrowable());
+    	/*
     	if (event.getThrowable() != null) {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream();
     		event.getThrowable().printStackTrace(new PrintStream(baos));
     		Log.v(JimmActivity.LOG_TAG, baos.toString());
     	}
+    	*/
 
 	}
 

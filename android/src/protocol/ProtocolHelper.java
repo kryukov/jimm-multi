@@ -9,6 +9,7 @@ package protocol;
  */
 public class ProtocolHelper {
     public static void connect(Protocol p) {
+        jimm.modules.DebugLog.println("connecting to " + p.getUserId());
         p.startConnection();
     }
 }

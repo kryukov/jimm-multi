@@ -504,7 +504,7 @@ abstract public class Protocol {
     public final void addGroup(Group group) {
         s_addGroup(group);
         // #sijapp cond.if modules_DEBUGLOG is "true" #
-        if (-1 != Util.getIndex(roster.groups, group)) {
+        if ((null != roster) && -1 != Util.getIndex(roster.groups, group)) {
             DebugLog.panic("Group '" + group.getName() + "' already added");
         }
         // #sijapp cond.end #

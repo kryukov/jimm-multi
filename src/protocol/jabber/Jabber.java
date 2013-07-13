@@ -143,11 +143,13 @@ public final class Jabber extends Protocol implements FormListener {
     private int getNextGroupId() {
         while (true) {
             int id = Util.nextRandInt() % 0x1000;
-            for (int i = roster.groups.size() - 1; i >= 0; --i) {
-                Group group = (Group) roster.groups.elementAt(i);
-                if (group.getId() == id) {
-                    id = -1;
-                    break;
+            if (null != roster) {
+                for (int i = roster.groups.size() - 1; i >= 0; --i) {
+                    Group group = (Group) roster.groups.elementAt(i);
+                    if (group.getId() == id) {
+                        id = -1;
+                        break;
+                    }
                 }
             }
             if (0 <= id) {
@@ -201,7 +203,6 @@ public final class Jabber extends Protocol implements FormListener {
         if (isGate || isConference) {
             JabberServiceContact c = new JabberServiceContact(jid, name);
             if (c.isConference()) {
-                c.setGroup(getOrCreateGroup(c.getDefaultGroupName()));
                 c.setMyName(getDefaultName());
 
             } else if (isConference /* private */) {

@@ -41,17 +41,10 @@ public final class Jabber extends Protocol implements FormListener {
     // #sijapp cond.if modules_XSTATUSES is "true" #
     public static final JabberXStatus xStatus = new JabberXStatus();
     // #sijapp cond.end#
-    private final Vector<String> bots = new Vector<String>();
+    private static final String[] bots = {"juick@juick.com", "psto@psto.net"};
 
     public Jabber() {
     }
-
-    @Override
-    protected void initStatusInfo() {
-        bots.addElement("juick@juick.com");
-        bots.addElement("psto@psto.net");
-    }
-
 
 
     public void addRejoin(String jid) {
@@ -86,7 +79,10 @@ public final class Jabber extends Protocol implements FormListener {
 
     @Override
     public final boolean isBlogBot(String jid) {
-        return -1 < bots.indexOf(jid);
+        for (int i = 0; i < bots.length; ++i) {
+            if (bots[i].equals(jid)) return true;
+        }
+        return true;
     }
 
     @Override

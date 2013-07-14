@@ -109,22 +109,21 @@ public class Jimm extends MIDlet implements Runnable {
         device = device.toLowerCase();
         // #sijapp cond.if target is "MIDP2" #
         // #sijapp cond.if modules_ANDROID is "true" #
-        if (-1 != device.indexOf("android")) {
+        if (hasSubStr(device, "android")) {
             return PHONE_ANDROID;
         }
         // #sijapp cond.end#
-        if (device.indexOf("ericsson") != -1) {
-            if ((-1 != getSystemProperty("com.sonyericsson.java.platform", "")
-                        .toLowerCase().indexOf("sjp"))) {
+        if (hasSubStr(device, "ericsson")) {
+            if (hasSubStr(getSystemProperty("com.sonyericsson.java.platform", "").toLowerCase(), "sjp")) {
                 return PHONE_SE_SYMBIAN;
             }
             return PHONE_SE;
         }
-        if (-1 != device.indexOf("platform=s60")) {
+        if (hasSubStr(device, "platform=s60")) {
             return PHONE_NOKIA_S60;
         }
-        if (device.indexOf("nokia") != -1) {
-            if (device.indexOf("nokian80") != -1) {
+        if (hasSubStr(device, "nokia")) {
+            if (hasSubStr(device, "nokian80")) {
                 return PHONE_NOKIA_N80;
             }
             if (null != getSystemProperty("com.nokia.memoryramfree", null)) {
@@ -133,7 +132,7 @@ public class Jimm extends MIDlet implements Runnable {
             }
             String dir = getSystemProperty("fileconn.dir.private", "");
             // s40 (6233) does not have this property
-            if (-1 != dir.indexOf("/private/")) {
+            if (hasSubStr(dir, "/private/")) {
                 // it is s60 v3 fp1
                 return PHONE_NOKIA_S60;
             }
@@ -142,17 +141,21 @@ public class Jimm extends MIDlet implements Runnable {
             }
             return PHONE_NOKIA_S40;
         }
-        if (device.indexOf("samsung") != -1) {
+        if (hasSubStr(device, "samsung")) {
             return PHONE_SAMSUNG;
         }
-        if (device.indexOf("jbed") != -1) {
+        if (hasSubStr(device, "jbed")) {
             return PHONE_JBED;
         }
-        if (device.indexOf("intent") != -1) {
+        if (hasSubStr(device, "intent")) {
             return PHONE_INTENT_JTE;
         }
         // #sijapp cond.end #
         return -1;
+    }
+    private static boolean hasSubStr(String str, String subStr) {
+        int index = str.indexOf(subStr);
+        return -1 != index;
     }
     public static boolean isPhone(final byte phone) {
         // #sijapp cond.if target is "MIDP2" #
@@ -237,7 +240,7 @@ public class Jimm extends MIDlet implements Runnable {
         String res = null;
         try {
             res = instance.getAppProperty(key);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return StringConvertor.isEmpty(res) ? defval : res;
     }
@@ -249,7 +252,7 @@ public class Jimm extends MIDlet implements Runnable {
         String res = null;
         try {
             res = System.getProperty(key);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return StringConvertor.isEmpty(res) ? defval : res;
     }
@@ -257,7 +260,7 @@ public class Jimm extends MIDlet implements Runnable {
     // #sijapp cond.if target is "MIDP2"#
     public static boolean isS60v5() {
         String platform = StringConvertor.notNull(Jimm.microeditionPlatform);
-        return -1 != platform.indexOf("sw_platform_version=5.");
+        return hasSubStr(platform, "sw_platform_version=5.");
     }
     // #sijapp cond.end#
     private static void platformRequestUrl(String url) throws ConnectionNotFoundException {
@@ -272,12 +275,10 @@ public class Jimm extends MIDlet implements Runnable {
         }
         // #sijapp cond.end #
         if (url.equals("jimm:update")) {
-            StringBuffer url_ = new StringBuffer();
-            url_.append("http://jimm.net.ru/go.xhtml?act=update&lang=");
-            url_.append(JLocale.getCurrUiLanguage());
-            url_.append("&protocols=###PROTOCOLS###&cdata=");
-            url_.append(Config.loadResource("build.dat"));
-            url = url_.toString();
+            url = "http://jimm.net.ru/go.xhtml?act=update&lang="
+                    + JLocale.getCurrUiLanguage()
+                    + "&protocols=###PROTOCOLS###&cdata="
+                    + Config.loadResource("build.dat");
         }
         Jimm.getJimm().platformRequest(url.trim());
     }
@@ -310,7 +311,7 @@ public class Jimm extends MIDlet implements Runnable {
             }
         }
         // #sijapp cond.else #
-        in = new Object().getClass().getResourceAsStream(name);
+        in = Object.class.getResourceAsStream(name);
         // #sijapp cond.end #
 
         return in;
@@ -533,17 +534,14 @@ public class Jimm extends MIDlet implements Runnable {
             // Save traffic
             Traffic.getInstance().safeSave();
             // #sijapp cond.end#
+            instance.display.hide();
+            instance = null;
         }
-        instance.display.hide();
-        instance = null;
         notifyDestroyed();
     }
 
     public static boolean isPaused() {
-        if (instance.paused) {
-            return true;
-        }
-        return instance.display.isPaused();
+        return instance.paused || instance.display.isPaused();
     }
 
     public static boolean isLocked() {

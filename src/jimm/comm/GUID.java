@@ -39,7 +39,7 @@ public final class GUID {
     private static GUID getJimmGuid() {
         // init CAP_JIMM
         byte[] guid = new byte[]{'J', 'i', 'm', 'm', ' ', (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00};
-        byte[] ver = StringConvertor.stringToByteArray(Jimm.VERSION);
+        byte[] ver = StringConvertor.stringToByteArray(Jimm.getJimm().VERSION);
         System.arraycopy(ver, 0, guid, 5, Math.min(ver.length, 10));
         return new GUID(guid);
     }

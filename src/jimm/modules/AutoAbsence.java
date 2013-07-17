@@ -104,10 +104,10 @@ public final class AutoAbsence {
                         doAway();
                         activityOutTime = -1;
                     }
-                } else if (Jimm.isPaused()) {
+                } else if (Jimm.getJimm().isPaused()) {
                     away();
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -126,7 +126,7 @@ public final class AutoAbsence {
     }
     public final void userActivity() {
         try {
-            if (!Jimm.isLocked() && !Jimm.isPaused()) {
+            if (!Jimm.getJimm().isLocked() && !Jimm.getJimm().isPaused()) {
                 int init = Options.getInt(Options.OPTION_AA_TIME) * 60; // seconds
                 if (0 < init) {
                     activityOutTime = Jimm.getCurrentGmtTime() + init;
@@ -137,7 +137,7 @@ public final class AutoAbsence {
                     doRestore();
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

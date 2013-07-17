@@ -835,7 +835,7 @@ public final class JabberXml extends ClientConnection {
                             + "<query xmlns='jabber:iq:version'><name>Jimm</name><version>"
                             + Util.xmlEscape(jimm.Jimm.VERSION + " (###DATE###)")
                             + "</version><os>"
-                            + Util.xmlEscape(jimm.Jimm.microeditionPlatform)
+                            + Util.xmlEscape(Jimm.phone.microeditionPlatform)
                             + "</os></query></iq>");
                     // #sijapp cond.if modules_MAGIC_EYE is "true" #
                     String jid = Jid.isConference(from) ? from : Jid.getBareJid(from);
@@ -1624,7 +1624,7 @@ public final class JabberXml extends ClientConnection {
                 c.setActiveResource(fromRes);
             }
         }
-
+        jimm.modules.DebugLog.println("xmpp jabber " + fromRes);
         getJabber().addMessage(message, S_HEADLINE.equals(type));
     }
     private void parseBlogMessage(String to, XmlNode msg, String text, String botNick) {

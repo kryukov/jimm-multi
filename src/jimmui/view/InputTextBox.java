@@ -48,15 +48,15 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
     private TextBoxListener listener;
 
     private int getBackType() {
-        return Jimm.isPhone(Jimm.PHONE_SE_SYMBIAN) ? Command.CANCEL : Command.BACK;
+        return Jimm.phone.isPhone(PhoneInfo.PHONE_SE_SYMBIAN) ? Command.CANCEL : Command.BACK;
     }
 
     private int getItemType() {
-        return Jimm.isPhone(jimm.Jimm.PHONE_NOKIA) ? Command.SCREEN : Command.ITEM;
+        return Jimm.phone.isPhone(jimm.PhoneInfo.PHONE_NOKIA) ? Command.SCREEN : Command.ITEM;
     }
     private TextBox createTextBox() {
         TextBox box = null;
-        final int MAX_CHAR_PER_PAGE = Jimm.isPhone(Jimm.PHONE_SE) ? 9000 : 3000;
+        final int MAX_CHAR_PER_PAGE = Jimm.phone.isPhone(PhoneInfo.PHONE_SE) ? 9000 : 3000;
         final int MIN_CHAR_PER_PAGE = 1000;
         try {
             box = new TextBox(caption, "", Math.min(MAX_CHAR_PER_PAGE, textLimit), inputType);
@@ -90,7 +90,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
             cancelType = getItemType();
         }
         // #sijapp cond.if target is "MIDP2"#
-        if (Jimm.isS60v5()) {
+        if (Jimm.phone.isS60v5()) {
             cancelIndex = 7;
         }
         // #sijapp cond.end #
@@ -102,7 +102,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
     }
     private InputTextBox create(String title, int len, int type, String okCaption) {
         // #sijapp cond.if target is "MIDP2"#
-        if (Jimm.isPhone(Jimm.PHONE_NOKIA_S60v8)) {
+        if (Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S60v8)) {
             type = TextField.ANY;
         }
         // #sijapp cond.end#
@@ -116,7 +116,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         addDefaultCommands();
         textBox.setCommandListener(this);
         // #sijapp cond.if target is "MIDP2"#
-        if (Jimm.isPhone(Jimm.PHONE_SE)) {
+        if (Jimm.phone.isPhone(PhoneInfo.PHONE_SE)) {
             Jimm.gc();
         }
         // #sijapp cond.end#
@@ -309,8 +309,8 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
     }
 
     public void setTicker(String text) {
-        boolean hasTicker = Jimm.isPhone(Jimm.PHONE_ANDROID)
-                || Jimm.isPhone(Jimm.PHONE_NOKIA);
+        boolean hasTicker = Jimm.phone.isPhone(PhoneInfo.PHONE_ANDROID)
+                || Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA);
         if (hasTicker) {
             textBox.setTicker((null == text) ? null : new Ticker(text));
         }
@@ -341,7 +341,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         if (null != text) {
             // #sijapp cond.if target is "MIDP2"#
             try {
-                if (Jimm.isPhone(Jimm.PHONE_NOKIA)) {
+                if (Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA)) {
                     textBox.setString("");
                     textBox.insert(text, getCaretPosition());
                     return;

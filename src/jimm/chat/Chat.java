@@ -626,7 +626,7 @@ public final class Chat extends VirtualList {
 
     public boolean isVisibleChat() {
         return (this == Jimm.getJimm().getDisplay().getCurrentDisplay())
-                && !Jimm.isPaused();
+                && !Jimm.getJimm().isPaused();
     }
 
 

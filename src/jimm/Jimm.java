@@ -24,10 +24,8 @@
 
 package jimm;
 
-import jimmui.view.icons.Icon;
 import java.io.*;
 import javax.microedition.io.*;
-import javax.microedition.midlet.*;
 import jimm.chat.ChatHistory;
 import jimm.cl.*;
 import jimm.comm.*;
@@ -41,228 +39,44 @@ import jimmui.view.notify.*;
 import jimm.util.JLocale;
 
 
-public class Jimm extends MIDlet implements Runnable {
-    public static final String VERSION = "###VERSION###";
-    public static String lastDate;
+public class Jimm {
     private Display display;
     public JimmModel jimmModel;
 
     private boolean locked = false;
     private long lastLockTime = 0;
-
-    // Application main object
-    private static Jimm instance = null;
-    public static Jimm getJimm() {
-        return instance;
-    }
-
-    public static final String microeditionPlatform = getPhone();
-    public static final String microeditionProfiles = getSystemProperty("microedition.profiles", null);
-    public static final byte generalPhoneType = getGeneralPhone();
     public SplashCanvas splash;
     private boolean paused = true;
     // #sijapp cond.if modules_ACTIVITYUI is "true"#
     private ActivityUI activity;
     // #sijapp cond.end#
 
+    // Application main object
+    private static final Jimm instance = new Jimm();
+    public static Jimm getJimm() {
+        return instance;
+    }
+    public static PhoneInfo phone = new PhoneInfo();
+
+    public static final String VERSION = "###VERSION###";
+    public static String lastDate;
+
     /****************************************************************************/
-
-    public static final byte PHONE_SE             = 0;
-    public static final byte PHONE_SE_SYMBIAN     = 1;
-    public static final byte PHONE_NOKIA          = 2;
-    public static final byte PHONE_NOKIA_S40      = 3;
-    public static final byte PHONE_NOKIA_S60      = 4;
-    public static final byte PHONE_NOKIA_S60v8    = 5;
-    public static final byte PHONE_NOKIA_N80      = 6;
-    public static final byte PHONE_INTENT_JTE     = 7;
-    public static final byte PHONE_JBED           = 8;
-    public static final byte PHONE_SAMSUNG        = 9;
-    public static final byte PHONE_ANDROID        = 10;
-
-    private static String getPhone() {
-        final String platform = getSystemProperty("microedition.platform", null);
-        // #sijapp cond.if target is "MIDP2" #
-        if (null == platform) {
-            try {
-                Class.forName("com.nokia.mid.ui.DeviceControl");
-                return "Nokia";
-            } catch (Exception ignored) {
-            }
-        }
-        // #sijapp cond.end #
-        // #sijapp cond.if modules_ANDROID is "true" #
-        String android = getSystemProperty("device.model", "")
-                + "/" + getSystemProperty("device.software.version", "")
-                + "/" +  getSystemProperty("device.id", "");
-        if (2 < android.length()) {
-            return "android/" + android;
-        }
-        // #sijapp cond.end #
-        return platform;
-    }
-
-    private static byte getGeneralPhone() {
-        String device = getPhone();
-        if (null == device) {
-            return -1;
-        }
-        device = device.toLowerCase();
-        // #sijapp cond.if target is "MIDP2" #
-        // #sijapp cond.if modules_ANDROID is "true" #
-        if (hasSubStr(device, "android")) {
-            return PHONE_ANDROID;
-        }
-        // #sijapp cond.end#
-        if (hasSubStr(device, "ericsson")) {
-            if (hasSubStr(getSystemProperty("com.sonyericsson.java.platform", "").toLowerCase(), "sjp")) {
-                return PHONE_SE_SYMBIAN;
-            }
-            return PHONE_SE;
-        }
-        if (hasSubStr(device, "platform=s60")) {
-            return PHONE_NOKIA_S60;
-        }
-        if (hasSubStr(device, "nokia")) {
-            if (hasSubStr(device, "nokian80")) {
-                return PHONE_NOKIA_N80;
-            }
-            if (null != getSystemProperty("com.nokia.memoryramfree", null)) {
-                // S60 3rd Edition
-                return PHONE_NOKIA_S60;
-            }
-            String dir = getSystemProperty("fileconn.dir.private", "");
-            // s40 (6233) does not have this property
-            if (hasSubStr(dir, "/private/")) {
-                // it is s60 v3 fp1
-                return PHONE_NOKIA_S60;
-            }
-            if (-1 != device.indexOf(';')) {
-                return PHONE_NOKIA_S60;
-            }
-            return PHONE_NOKIA_S40;
-        }
-        if (hasSubStr(device, "samsung")) {
-            return PHONE_SAMSUNG;
-        }
-        if (hasSubStr(device, "jbed")) {
-            return PHONE_JBED;
-        }
-        if (hasSubStr(device, "intent")) {
-            return PHONE_INTENT_JTE;
-        }
-        // #sijapp cond.end #
-        return -1;
-    }
-    private static boolean hasSubStr(String str, String subStr) {
-        int index = str.indexOf(subStr);
-        return -1 != index;
-    }
-    public static boolean isPhone(final byte phone) {
-        // #sijapp cond.if target is "MIDP2" #
-        if (PHONE_NOKIA_S60v8 == phone) {
-            return (PHONE_NOKIA_S60 == generalPhoneType)
-                    && (-1 == microeditionPlatform.indexOf(';'));
-        }
-        if (PHONE_NOKIA == phone) {
-            return (PHONE_NOKIA_S40 == generalPhoneType)
-                    || (PHONE_NOKIA_S60 == generalPhoneType)
-                    || (PHONE_NOKIA_N80 == generalPhoneType);
-        }
-        if (PHONE_SE == phone) {
-            return (PHONE_SE_SYMBIAN == generalPhoneType)
-                    || (PHONE_SE == generalPhoneType);
-        }
-        // #sijapp cond.end #
-        return phone == generalPhoneType;
-    }
 
     public static long getCurrentGmtTime() {
         return System.currentTimeMillis() / 1000
                 + Options.getInt(Options.OPTION_LOCAL_OFFSET) * 3600;
     }
 
-    private int getSeVersion() {
-        String sJava = getSystemProperty("com.sonyericsson.java.platform", "");
-        // sJava has format "JP-x.x" or "JP-x.x.x", e.g. "JP-8.5" or "JP-8.5.2".
-        // The next code also correct parse string with format "JP-x".
-        // On all uncorrect strings, sonyJava set to 0.
-        if ((null != sJava) && sJava.startsWith("JP-")) {
-            int major = 0;
-            int minor = 0;
-            int micro = 0;
-
-
-            if (sJava.length() >= 4) {
-                major = sJava.charAt(3) - '0';
-            }
-            if (sJava.length() >= 6) {
-                minor = sJava.charAt(5) - '0';
-            }
-            if (sJava.length() >= 8) {
-                micro = sJava.charAt(7) - '0';
-            }
-
-
-            if ((0 <= major) && (major <= 9)
-                    && (0 <= minor) && (minor <= 9)
-                    && (0 <= micro) && (micro <= 9)) {
-                return major * 100 + minor * 10 + micro;
-            }
-        }
-        return 0;
-    }
-    public static boolean hasMemory(int requared) {
-        // #sijapp cond.if target is "MIDP2" #
-        if (isPhone(PHONE_SE)) {
-            return true;
-        }
-        if (isPhone(PHONE_NOKIA_S60)) {
-            return true;
-        }
-        if (isPhone(PHONE_JBED)) {
-            return true;
-        }
-        if (isPhone(PHONE_INTENT_JTE)) {
-            return true;
-        }
-        // #sijapp cond.if modules_ANDROID is "true" #
-        if (isPhone(PHONE_ANDROID)) {
-            return true;
-        }
-        // #sijapp cond.end #
-        // #sijapp cond.end #
-        Jimm.gc();
-        long free = Runtime.getRuntime().freeMemory();
-        return (requared < free);
-    }
-
-    public static String getAppProperty(String key, String defval) {
+    public static String getAppProperty(String key, String defVal) {
         String res = null;
         try {
-            res = instance.getAppProperty(key);
+            res = JimmMidlet.getMidlet().getAppProperty(key);
         } catch (Exception ignored) {
         }
-        return StringConvertor.isEmpty(res) ? defval : res;
-    }
-    public static boolean isSetAppProperty(String key) {
-        String res = getAppProperty(key, "");
-        return "yes".equals(res) || "true".equals(res);
-    }
-    private static String getSystemProperty(String key, String defval) {
-        String res = null;
-        try {
-            res = System.getProperty(key);
-        } catch (Exception ignored) {
-        }
-        return StringConvertor.isEmpty(res) ? defval : res;
+        return StringConvertor.isEmpty(res) ? defVal : res;
     }
 
-    // #sijapp cond.if target is "MIDP2"#
-    public static boolean isS60v5() {
-        String platform = StringConvertor.notNull(Jimm.microeditionPlatform);
-        return hasSubStr(platform, "sw_platform_version=5.");
-    }
-    // #sijapp cond.end#
     private static void platformRequestUrl(String url) throws ConnectionNotFoundException {
         // #sijapp cond.if protocols_JABBER is "true" #
         if (-1 == url.indexOf(':')) {
@@ -280,7 +94,7 @@ public class Jimm extends MIDlet implements Runnable {
                     + "&protocols=###PROTOCOLS###&cdata="
                     + Config.loadResource("build.dat");
         }
-        Jimm.getJimm().platformRequest(url.trim());
+        JimmMidlet.getMidlet().platformRequest(url.trim());
     }
     public static void openUrl(String url) {
         try {
@@ -317,21 +131,6 @@ public class Jimm extends MIDlet implements Runnable {
         return in;
     }
 
-    public void addEvent(String title, String desc, Icon icon) {
-        // #sijapp cond.if modules_ACTIVITYUI is "true"#
-        if (null != activity) {
-            activity.addEvent(title, desc, null);
-        }
-        // #sijapp cond.end#
-    }
-
-
-    public void run() {
-        try {
-            backgroundLoading();
-        } catch (Exception ignored) {
-        }
-    }
     private void backgroundLoading() {
         // #sijapp cond.if modules_TRAFFIC is "true" #
         // Create traffic Object (and update progress indicator)
@@ -395,24 +194,17 @@ public class Jimm extends MIDlet implements Runnable {
         backgroundLoading();
 
         // init contact list
-        if (null == jimmModel) {
-            splash.setProgress(10);
-            jimmModel = new JimmModel();
-            splash.setProgress(20);
-            Options.loadAccounts();
-            splash.setProgress(50);
-            ContactList.getInstance().initUI();
-            splash.setProgress(60);
-            ContactList.getInstance().updateAccounts();
-        } else {
-            splash.setProgress(50);
-            ContactList.getInstance().initUI();
-            splash.setProgress(60);
-            ContactList.getInstance().updateAccounts();
-        }
+        splash.setProgress(10);
+        jimmModel = new JimmModel();
+        splash.setProgress(20);
+        Options.loadAccounts();
+        splash.setProgress(50);
+        ContactList.getInstance().initUI();
+        splash.setProgress(60);
+        ContactList.getInstance().updateAccounts();
 
         // #sijapp cond.if modules_ACTIVITYUI is "true"#
-        if (isPhone(PHONE_SE) && (750 <= getSeVersion())) {
+        if (phone.isPhone(PhoneInfo.PHONE_SE) && (750 <= phone.getSeVersion())) {
             activity = new ActivityUI();
         }
         // #sijapp cond.end#
@@ -430,10 +222,10 @@ public class Jimm extends MIDlet implements Runnable {
         // #sijapp cond.end #
         wakeUp();
         // #sijapp cond.if target is "MIDP2"#
-        if (isS60v5()) {
+        if (phone.isS60v5()) {
             display.hide();
         }
-        if (isPhone(PHONE_SE)) {
+        if (phone.isPhone(PhoneInfo.PHONE_SE)) {
             display.hideIfNeed();
         }
         // #sijapp cond.end#
@@ -445,21 +237,18 @@ public class Jimm extends MIDlet implements Runnable {
     }
 
 
+    public void restoreJimm() {
+        if (!paused) {
+            return;
+        }
+        restore(display.getCurrentDisplay());
+    }
     // Start Jimm
-    public void startApp() throws MIDletStateChangeException {
-        if (!paused && (null != Jimm.instance)) {
+    public void startJimm() {
+        if (!paused) {
             return;
         }
-        if (null == display) {
-            display = new Display(this);
-        }
-        // Return if MIDlet has already been initialized
-        if (null != Jimm.instance) {
-            restore(display.getCurrentDisplay());
-            return;
-        }
-        // Save MIDlet reference
-        Jimm.instance = this;
+        display = new Display();
         locked = false;
         wakeUp();
         initBasic();
@@ -475,13 +264,6 @@ public class Jimm extends MIDlet implements Runnable {
         }
     }
 
-    // Pause
-    public void pauseApp() {
-        try {
-            hideApp();
-        } catch (Exception ignored) {
-        }
-    }
     public void hideApp() {
         Object currentScreen = display.getCurrentDisplay();
         if (currentScreen instanceof InputTextBox) {
@@ -519,7 +301,7 @@ public class Jimm extends MIDlet implements Runnable {
         ru.net.jimm.JimmActivity.getInstance().service.quit();
         // #sijapp cond.end #
         try {
-            Jimm.getJimm().destroyApp(true);
+            JimmMidlet.getMidlet().destroyApp(true);
         } catch (Exception e) {
             /* Do nothing */
         }
@@ -527,41 +309,38 @@ public class Jimm extends MIDlet implements Runnable {
     /**
      * Destroy Jimm
      */
-    public void destroyApp(boolean unconditional) throws MIDletStateChangeException {
-        if (null != instance) {
-            ChatHistory.instance.saveUnreadMessages();
-            // #sijapp cond.if modules_TRAFFIC is "true" #
-            // Save traffic
-            Traffic.getInstance().safeSave();
-            // #sijapp cond.end#
-            instance.display.hide();
-            instance = null;
-        }
-        notifyDestroyed();
+    public void destroyJimm() {
+        ChatHistory.instance.saveUnreadMessages();
+        // #sijapp cond.if modules_TRAFFIC is "true" #
+        // Save traffic
+        Traffic.getInstance().safeSave();
+        // #sijapp cond.end#
+        display.hide();
+//        JimmMidlet.getMidlet().notifyDestroyed();
     }
 
-    public static boolean isPaused() {
-        return instance.paused || instance.display.isPaused();
+    public boolean isPaused() {
+        return paused || display.isPaused();
     }
 
-    public static boolean isLocked() {
-        return instance.locked;
+    public boolean isLocked() {
+        return locked;
     }
 
-    public static void lockJimm() {
+    public void lockJimm() {
         final long now = Jimm.getCurrentGmtTime();
         final int WAITING_INTERVAL = 3; // sec
-        if (instance.lastLockTime + WAITING_INTERVAL  < now) {
-            instance.locked = true;
-            instance.splash.lockJimm();
+        if (lastLockTime + WAITING_INTERVAL  < now) {
+            locked = true;
+            splash.lockJimm();
             // #sijapp cond.if modules_ABSENCE is "true" #
             AutoAbsence.instance.away();
             // #sijapp cond.end #
         }
     }
-    public static void unlockJimm() {
-        instance.lastLockTime = Jimm.getCurrentGmtTime();
-        instance.locked = false;
+    public void unlockJimm() {
+        lastLockTime = Jimm.getCurrentGmtTime();
+        locked = false;
         ContactList.getInstance().activate();
         UIUpdater.refreshClock();
         // #sijapp cond.if modules_ABSENCE is "true" #

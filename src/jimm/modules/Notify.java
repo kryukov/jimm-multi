@@ -132,12 +132,12 @@ public class Notify implements Runnable
         } else {
 
             int vibraKind = Options.getInt(Options.OPTION_VIBRATOR);
-            if ((VIBRA_LOCKED_ONLY == vibraKind) && !Jimm.isLocked()) {
+            if ((VIBRA_LOCKED_ONLY == vibraKind) && !Jimm.getJimm().isLocked()) {
                 vibraKind = VIBRA_OFF;
             }
             if ((VIBRA_OFF != vibraKind)
                     && ((NOTIFY_MESSAGE == notType) || (NOTIFY_MULTIMESSAGE == notType))) {
-                vibrate = Jimm.isPaused() ? 700 : 200;
+                vibrate = Jimm.getJimm().isPaused() ? 700 : 200;
             }
         }
 

@@ -263,7 +263,7 @@ public final class MrimConnection extends ClientConnection {
 
             } else {
                 // #sijapp cond.if target is "MIDP2" #
-                if (Jimm.isPaused()) {
+                if (Jimm.getJimm().isPaused()) {
                     Jimm.maximize();
                 }
                 // #sijapp cond.end #

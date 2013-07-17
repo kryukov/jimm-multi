@@ -44,8 +44,8 @@ import protocol.*;
 
 public final class MicroBlog extends TextListController implements TextBoxListener {
     private TextListModel model = new TextListModel();
-    private Vector emails = new Vector();
-    private Vector ids = new Vector();
+    private Vector<String> emails = new Vector<String>();
+    private Vector<String> ids = new Vector<String>();
     private Mrim mrim;
     private boolean hasNewMessage;
 

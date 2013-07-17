@@ -2,7 +2,6 @@ package protocol.jabber;
 
 // #sijapp cond.if protocols_JABBER is "true" #
 import jimm.Jimm;
-import jimm.modules.DebugLog;
 import jimm.search.UserInfo;
 
 import javax.microedition.lcdui.Image;
@@ -30,7 +29,7 @@ public class AvatarLoader implements Runnable {
                 : bs64photo.popBinValue();
         bs64photo = null;
         try {
-            if ((null != avatarBytes) && Jimm.hasMemory(avatarBytes.length * 2)) {
+            if ((null != avatarBytes) && Jimm.phone.hasMemory(avatarBytes.length * 2)) {
                 Image avatar = Image.createImage(avatarBytes, 0, avatarBytes.length);
                 avatarBytes = null;
                 userInfo.setAvatar(avatar);

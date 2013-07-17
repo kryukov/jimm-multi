@@ -488,7 +488,7 @@ public class Options {
 
         setInt    (Options.OPTION_VIBRATOR,           1);
         // #sijapp cond.if target is "MIDP2"#
-        if (Jimm.isS60v5()) {
+        if (Jimm.phone.isS60v5()) {
             setBoolean(Options.OPTION_SWAP_SEND_AND_BACK, true);
         }
         // #sijapp cond.end #
@@ -550,7 +550,7 @@ public class Options {
         setInt    (Options.OPTION_LOCAL_OFFSET,      0);
 
         setBoolean(OPTION_ALARM, true);
-        setBoolean(OPTION_RECREATE_TEXTBOX, Jimm.isPhone(Jimm.PHONE_SE));
+        setBoolean(OPTION_RECREATE_TEXTBOX, Jimm.phone.isPhone(PhoneInfo.PHONE_SE));
     }
 
 //    /* Experimental */

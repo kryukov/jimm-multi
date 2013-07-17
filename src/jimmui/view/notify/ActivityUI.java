@@ -16,7 +16,7 @@ public class ActivityUI {
     private PhoneActivity activity;
 
     public ActivityUI() {
-        if (Jimm.isPhone(Jimm.PHONE_SE)) {
+        if (Jimm.phone.isPhone(PhoneInfo.PHONE_SE)) {
             activity = new SeActivity().init();
         }
     }

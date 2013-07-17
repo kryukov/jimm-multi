@@ -208,7 +208,7 @@ public class ProtocolMenu implements SelectListener {
                 break;
 
             case MENU_KEYLOCK:
-                Jimm.lockJimm();
+                Jimm.getJimm().lockJimm();
                 break;
 
             // #sijapp cond.if modules_MULTI is "true" #

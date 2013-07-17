@@ -11,7 +11,7 @@ package jimmui.view.base;
 
 import java.util.Vector;
 import javax.microedition.lcdui.*;
-import jimm.Jimm;
+import jimm.JimmMidlet;
 import jimm.chat.Chat;
 import jimm.comm.Util;
 import jimm.modules.*;
@@ -24,13 +24,13 @@ import jimmui.view.*;
 public class Display {
     private javax.microedition.lcdui.Display display;
     private Object currentScreen = null;
-    private Vector stack = new Vector();
+    private Vector<Object> stack = new Vector<Object>();
     public static final long LONG_INTERVAL = 700;
     private DisplayableEx main;
 
     /** Creates a new instance of Display */
-    public Display(Jimm jimm) {
-        display = javax.microedition.lcdui.Display.getDisplay(jimm);
+    public Display() {
+        display = javax.microedition.lcdui.Display.getDisplay(JimmMidlet.getMidlet());
     }
     public javax.microedition.lcdui.Display getNativeDisplay() {
         return display;

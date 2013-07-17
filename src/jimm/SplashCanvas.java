@@ -94,7 +94,7 @@ public final class SplashCanvas extends CanvasEx {
     }
 
     protected void stylusXMoving(int fromX, int fromY, int toX, int toY) {
-        if (Jimm.isLocked()) {
+        if (Jimm.getJimm().isLocked()) {
             int region = Math.max(getProgressHeight(), minItemHeight);
             int minY = getHeight() - region;
             if ((fromY < minY) || (toY < minY)) {
@@ -121,8 +121,8 @@ public final class SplashCanvas extends CanvasEx {
         int x1 = Math.min(fromX, toX);
         int x2 = Math.max(fromX, toX);
         if ((x1 < region) && (getWidth() - region < x2)) {
-            if (Jimm.isLocked()) {
-                Jimm.unlockJimm();
+            if (Jimm.getJimm().isLocked()) {
+                Jimm.getJimm().unlockJimm();
                 return;
             }
             ContactList.getInstance().activate();
@@ -134,7 +134,7 @@ public final class SplashCanvas extends CanvasEx {
 
     // Called when a key is pressed
     protected void doKeyReaction(int keyCode, int actionCode, int type) {
-        if (!Jimm.isLocked()) return;
+        if (!Jimm.getJimm().isLocked()) return;
         if (Canvas.KEY_POUND == keyCode) {
             long now = System.currentTimeMillis();
 
@@ -150,7 +150,7 @@ public final class SplashCanvas extends CanvasEx {
                 }
                 setProgress((int) Math.min(delta * 100 / max, 100));
                 if (delta > max) {
-                    Jimm.unlockJimm();
+                    Jimm.getJimm().unlockJimm();
                     poundPressTime = 0;
                 }
             }
@@ -264,7 +264,7 @@ public final class SplashCanvas extends CanvasEx {
                     width / 2, 13 + fontHeight, Graphics.TOP | Graphics.HCENTER);
 
             // Display message icon, if keylock is enabled
-            if (Jimm.isLocked()) {
+            if (Jimm.getJimm().isLocked()) {
                 if (0 < availableMessages) {
                     Icon icon = iconOfMessages;
                     if (null != icon) {

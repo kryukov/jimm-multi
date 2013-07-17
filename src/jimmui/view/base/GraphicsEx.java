@@ -468,16 +468,16 @@ public final class GraphicsEx {
 
     // #sijapp cond.if target is "MIDP2"#
     static {
-        if (jimm.Jimm.isPhone(jimm.Jimm.PHONE_NOKIA_N80)) {
+        if (jimm.Jimm.phone.isPhone(jimm.PhoneInfo.PHONE_NOKIA_N80)) {
             captionOffset = 30;
-        } else if (jimm.Jimm.isPhone(jimm.Jimm.PHONE_NOKIA)) {
+        } else if (jimm.Jimm.phone.isPhone(jimm.PhoneInfo.PHONE_NOKIA)) {
             captionOffset = 20;
         } else {
             captionOffset = 0;
         }
-        if (jimm.Jimm.isPhone(jimm.Jimm.PHONE_SE)) {
+        if (jimm.Jimm.phone.isPhone(jimm.PhoneInfo.PHONE_SE)) {
             captionWidthFix = 25;
-        } else if (jimm.Jimm.isPhone(jimm.Jimm.PHONE_SAMSUNG)) {
+        } else if (jimm.Jimm.phone.isPhone(jimm.PhoneInfo.PHONE_SAMSUNG)) {
             captionWidthFix = 20;
         } else {
             captionWidthFix = 0;

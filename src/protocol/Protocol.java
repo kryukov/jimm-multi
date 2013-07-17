@@ -129,13 +129,12 @@ abstract public class Protocol {
         return uin;
     }
     public final void init() {
-        // Status info
-        initStatusInfo();
+        initThat();
 
         // Status
         initStatus();
     }
-    protected void initStatusInfo() {
+    protected void initThat() {
     }
 
     public boolean hasVCardEditor() {
@@ -835,7 +834,7 @@ abstract public class Protocol {
 
         boolean isPaused = false;
         // #sijapp cond.if target is "MIDP2" #
-        isPaused = Jimm.isPaused() && ContactList.getInstance().isCollapsible();
+        isPaused = Jimm.getJimm().isPaused() && ContactList.getInstance().isCollapsible();
         if (isPaused && isPersonal && isHuman) {
             if (Options.getBoolean(Options.OPTION_BRING_UP)) {
                 ChatModel model = getChatModel(contact);
@@ -971,7 +970,7 @@ abstract public class Protocol {
         // #sijapp cond.if modules_LIGHT is "true" #
         CustomLight.setLightMode(CustomLight.ACTION_ERROR);
         // #sijapp cond.end#
-        Jimm.unlockJimm();
+        Jimm.getJimm().unlockJimm();
         getContactList().activateWithMsg(getUserId() + "\n" + e.getMessage());
     }
 

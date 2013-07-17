@@ -33,9 +33,9 @@ import protocol.jabber.*;
 import protocol.mrim.*;
 // #sijapp cond.if protocols_OBIMP is "true" #
 import protocol.obimp.*;
+// #sijapp cond.end #
 import protocol.ui.InfoFactory;
 import protocol.ui.StatusInfo;
-// #sijapp cond.end #
 
 
 /**

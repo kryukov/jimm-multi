@@ -172,7 +172,7 @@ public final class JimmUI {
             return false;
         }
         if (Options.HOTKEY_LOCK == actionNum) {
-            Jimm.lockJimm();
+            Jimm.getJimm().lockJimm();
             return true;
         }
         ContactList cl = ContactList.getInstance();

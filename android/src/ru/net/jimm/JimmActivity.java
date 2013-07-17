@@ -30,6 +30,7 @@ import android.app.KeyguardManager;
 import android.os.*;
 import android.view.*;
 import jimm.Jimm;
+import jimm.JimmMidlet;
 import jimmui.view.base.KeyEmulator;
 import jimmui.view.base.NativeCanvas;
 import jimmui.view.menu.Select;
@@ -146,6 +147,7 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     @Override
     protected void onDestroy() {
+// TODO: hide
         if (null != Jimm.getJimm()) Jimm.getJimm().quit();
         Log.i(LOG_TAG, "onDestroy();");
         super.onDestroy();
@@ -361,7 +363,9 @@ public class JimmActivity extends MicroEmulatorActivity {
             networkStateReceiver.updateNetworkState(this);
 
             common.initMIDlet();
-            new Jimm().initMidlet();
+            JimmMidlet jimm = JimmMidlet.getMidlet();
+            if (null == jimm) jimm = new JimmMidlet();
+            jimm.initMidlet();
             common.notifyImplementationMIDletStart();
         } catch (Exception e) {
             error(e);
@@ -407,6 +411,8 @@ public class JimmActivity extends MicroEmulatorActivity {
     }
 
     public void minimizeApp() {
+// TODO: hide
+//        super.onBackPressed();
         Intent startMain = new Intent(Intent.ACTION_MAIN);
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

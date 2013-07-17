@@ -48,7 +48,7 @@ public class Mrim extends Protocol {
     }
 
     @Override
-    protected void initStatusInfo() {
+    protected void initThat() {
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
         microBlog = new MicroBlog(this);
         // #sijapp cond.end #

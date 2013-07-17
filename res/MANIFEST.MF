@@ -8,7 +8,7 @@ MicroEdition-Profile: ###MIDP-PROFILE###
 MicroEdition-Configuration: CLDC-1.0
 MIDlet-Description: J2ME IM-client
 MIDlet-Info-URL: http://jimm.net.ru/
-MIDlet-1: ###MIDLET-NAME###,/icon.png,jimm.Jimm
+MIDlet-1: ###MIDLET-NAME###,/icon.png,jimm.JimmMidlet
 Jimm-Version: ###VERSION###
 Jimm-Date: ###DATE###
 Background: True

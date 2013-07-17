@@ -216,6 +216,9 @@ public final class ContactList implements ContactListListener {
         return contactList;
     }
     public Updater getUpdater() {
+//        // #sijapp cond.if modules_ANDROID is "true" #
+//        if (Jimm.isPaused()) return new EmptyUpdater();
+//        // #sijapp cond.end #
         return contactList.getUpdater();
     }
 
@@ -261,7 +264,7 @@ public final class ContactList implements ContactListListener {
 
     public final void receivedMessage(Contact contact) {
         // Notify splash canvas
-        if (Jimm.isLocked()) {
+        if (Jimm.getJimm().isLocked()) {
             Jimm.getJimm().splash.messageAvailable();
         }
         updateUnreadMessageCount();
@@ -304,7 +307,7 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.if modules_ANDROID is "true" #
         if (true) return true;
         // #sijapp cond.end #
-        return Jimm.isPhone(Jimm.PHONE_SE) || Jimm.isPhone(Jimm.PHONE_NOKIA_S60);
+        return Jimm.phone.isPhone(PhoneInfo.PHONE_SE) || Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S60);
     }
 
 

@@ -54,7 +54,7 @@ public final class IcqNetDefActions {
         long msgId = packet.getReader().getDWordBE() & 0xFFFFFFFFL;
         boolean toClient = (packet.getCommand() != 0x000C);
         int notifyType = toClient ? PlainMessage.NOTIFY_FROM_CLIENT : PlainMessage.NOTIFY_FROM_SERVER;
-        connection.markMessageSended(msgId, notifyType);
+        connection.markMessageSent(msgId, notifyType);
     }
     /** ************************************************************************* */
     private void processOfflineMessage(ArrayReader reader) {

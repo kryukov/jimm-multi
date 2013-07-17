@@ -750,7 +750,7 @@ public class ObimpConnection extends ClientConnection {
     }
 
     private void setMessageSended(long msgId) {
-        markMessageSended(msgId, PlainMessage.NOTIFY_FROM_CLIENT);
+        markMessageSent(msgId, PlainMessage.NOTIFY_FROM_CLIENT);
     }
 }
 // #sijapp cond.end #

@@ -934,7 +934,7 @@ public final class MrimConnection extends ClientConnection {
 
     private void setMessageSended(long msgId, long status) {
         if (MrimPacket.MESSAGE_DELIVERED == status) {
-            markMessageSended(msgId, PlainMessage.NOTIFY_FROM_CLIENT);
+            markMessageSent(msgId, PlainMessage.NOTIFY_FROM_CLIENT);
         }
     }
 

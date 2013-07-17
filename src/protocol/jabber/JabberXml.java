@@ -1371,12 +1371,12 @@ public final class JabberXml extends ClientConnection {
         }
         if (messageEvent.contains("offl" + "ine")) {
             // <x><offline/><id/></x>
-            setMessageSended(messageEvent.getFirstNodeValue(XmlNode.S_ID),
+            setMessageSent(messageEvent.getFirstNodeValue(XmlNode.S_ID),
                     PlainMessage.NOTIFY_FROM_SERVER);
             return;
         }
         if (messageEvent.contains("deli" + "vered")) {
-            setMessageSended(messageEvent.getFirstNodeValue(XmlNode.S_ID),
+            setMessageSent(messageEvent.getFirstNodeValue(XmlNode.S_ID),
                     PlainMessage.NOTIFY_FROM_CLIENT);
             return;
         }
@@ -1498,7 +1498,7 @@ public final class JabberXml extends ClientConnection {
             }
         }
         // #sijapp cond.if modules_SOUND is "true" #
-        if (isConference ? !isGroupchat : true) {
+        if (!isConference || !isGroupchat) {
             parseChatState(msg, from);
         }
         // #sijapp cond.end #
@@ -1510,7 +1510,7 @@ public final class JabberXml extends ClientConnection {
                 if (null == id) {
                     id = msg.getId();
                 }
-                setMessageSended(id, PlainMessage.NOTIFY_FROM_CLIENT);
+                setMessageSent(id, PlainMessage.NOTIFY_FROM_CLIENT);
                 return;
             }
             if (!Jid.isConference(from) && !isError) {
@@ -1560,6 +1560,8 @@ public final class JabberXml extends ClientConnection {
                 }
             }
 
+            jimm.modules.DebugLog.println("sent " + msg.getId() + " "
+                + (!isGroupchat && msg.contains("reques" + "t") && (null != msg.getId())));
             if (!isGroupchat && msg.contains("reques" + "t") && (null != msg.getId())) {
                 putPacketIntoQueue("<message to='" + Util.xmlEscape(fullJid)
                     + "' id='" + Util.xmlEscape(msg.getId())
@@ -1609,8 +1611,7 @@ public final class JabberXml extends ClientConnection {
                 if (isGroupchat && (null != fromRes)) {
                     if (isOnlineMessage && fromRes.equals(conf.getMyName())) {
                         if (isMessageExist(msg.getId())) {
-                            setMessageSended(msg.getId(),
-                                    PlainMessage.NOTIFY_FROM_CLIENT);
+                            setMessageSent(msg.getId(), PlainMessage.NOTIFY_FROM_CLIENT);
                             return;
                         }
                         if (Jid.isIrcConference(fullJid)) {
@@ -2600,11 +2601,11 @@ public final class JabberXml extends ClientConnection {
     private boolean isMessageExist(String id) {
         return isMessageExist(Util.strToIntDef(id, -1));
     }
-    private void setMessageSended(String id, int state) {
-        markMessageSended(Util.strToIntDef(id, -1), state);
+    private void setMessageSent(String id, int state) {
+        markMessageSent(Util.strToIntDef(id, -1), state);
     }
 
-    void resetAdhoc() {
+    void resetAdHoc() {
         adhoc = null;
     }
     void requestCommand(AdHoc adhoc, String node) {

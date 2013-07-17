@@ -82,7 +82,7 @@ public final class Jabber extends Protocol implements FormListener {
         for (int i = 0; i < bots.length; ++i) {
             if (bots[i].equals(jid)) return true;
         }
-        return true;
+        return false;
     }
 
     @Override

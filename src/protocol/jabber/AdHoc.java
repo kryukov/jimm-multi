@@ -180,7 +180,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
         String status = commandXml.getAttribute("s" + "tatus");
         if (("c" + "anceled").equals(status) || ("co" + "mpleted").equals(status)) {
             String text = commandXml.getFirstNodeValue("n" + "ote");
-            protocol.getConnection().resetAdhoc();
+            protocol.getConnection().resetAdHoc();
             commandForm = null;
             if (!StringConvertor.isEmpty(text)) {
                 new Popup(text).show();

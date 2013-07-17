@@ -24,7 +24,7 @@ public abstract class ClientConnection implements Runnable {
     private long keepAliveInterv;
     private boolean usePong;
     protected boolean connect;
-    private Vector messages = new Vector();
+    private Vector<PlainMessage> messages = new Vector<PlainMessage>();
 
     // ping only
     private long nextPingTime;
@@ -148,29 +148,24 @@ public abstract class ClientConnection implements Runnable {
 
     public final void addMessage(PlainMessage msg) {
         messages.addElement(msg);
-        markMessageSended(-1, -1);
+        markMessageSent(-1, -1);
     }
-    public final boolean isMessageExist(long msgId) {
+    private PlainMessage getMessage(long msgId) {
         if (-1 < msgId) {
-            PlainMessage msg = null;
             for (int i = 0; i < messages.size(); ++i) {
                 PlainMessage m = (PlainMessage)messages.elementAt(i);
                 if (m.getMessageId() == msgId) {
-                    return true;
+                    return m;
                 }
             }
         }
-        return false;
+        return null;
     }
-    public final void markMessageSended(long msgId, int status) {
-        PlainMessage msg = null;
-        for (int i = 0; i < messages.size(); ++i) {
-            PlainMessage m = (PlainMessage)messages.elementAt(i);
-            if (m.getMessageId() == msgId) {
-                msg = m;
-                break;
-            }
-        }
+    public final boolean isMessageExist(long msgId) {
+        return null != getMessage(msgId);
+    }
+    public final void markMessageSent(long msgId, int status) {
+        PlainMessage msg = getMessage(msgId);
         if (null != msg) {
             msg.setSendingState(status);
             if (PlainMessage.NOTIFY_FROM_CLIENT == status) {

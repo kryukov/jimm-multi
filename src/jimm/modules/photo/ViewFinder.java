@@ -87,10 +87,10 @@ public class ViewFinder extends Canvas implements Runnable {
         }
     }
     private static int getPhotoSize() {
-        if (Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA)) {
+        if (Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA)) {
             return 1;
         }
-        if (Jimm.phone.isPhone(PhoneInfo.PHONE_SE)) {
+        if (Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_SE)) {
             return 3;
         }
         return 0;
@@ -198,7 +198,7 @@ public class ViewFinder extends Canvas implements Runnable {
             // Create the player
             // #sijapp cond.if target is "MIDP2" #
             try {
-                if (Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S40)) {
+                if (Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA_S40)) {
                     vControl = createPlayer("capture://image");
                 }
             } catch (Exception ignored) {
@@ -256,7 +256,7 @@ public class ViewFinder extends Canvas implements Runnable {
                 videoControl.setVisible(false);
                 // Remove video control at SE phones placing it beyond screen border
                 // #sijapp cond.if target is "MIDP2" #
-                if (Jimm.phone.isPhone(PhoneInfo.PHONE_SE)) {
+                if (Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_SE)) {
                     videoControl.setDisplayLocation(1000, 1000);
                 }
                 // #sijapp cond.end #

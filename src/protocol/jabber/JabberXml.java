@@ -835,7 +835,7 @@ public final class JabberXml extends ClientConnection {
                             + "<query xmlns='jabber:iq:version'><name>Jimm</name><version>"
                             + Util.xmlEscape(jimm.Jimm.getJimm().VERSION + " (###DATE###)")
                             + "</version><os>"
-                            + Util.xmlEscape(Jimm.phone.microeditionPlatform)
+                            + Util.xmlEscape(Jimm.getJimm().phone.microeditionPlatform)
                             + "</os></query></iq>");
                     // #sijapp cond.if modules_MAGIC_EYE is "true" #
                     String jid = Jid.isConference(from) ? from : Jid.getBareJid(from);

@@ -163,9 +163,9 @@ public final class SysTextList extends TextListController {
 
         addPlainText("\n", CanvasEx.THEME_TEXT);
 
-        String midpInfo = Jimm.phone.microeditionPlatform;
-        if (null != Jimm.phone.microeditionProfiles) {
-            midpInfo += commaAndSpace + Jimm.phone.microeditionProfiles;
+        String midpInfo = Jimm.getJimm().phone.microeditionPlatform;
+        if (null != Jimm.getJimm().phone.microeditionProfiles) {
+            midpInfo += commaAndSpace + Jimm.getJimm().phone.microeditionProfiles;
         }
         String locale = System.getProperty("microedition.locale");
         if (null != locale) {

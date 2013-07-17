@@ -307,7 +307,7 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.if modules_ANDROID is "true" #
         if (true) return true;
         // #sijapp cond.end #
-        return Jimm.phone.isPhone(PhoneInfo.PHONE_SE) || Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S60);
+        return Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_SE) || Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA_S60);
     }
 
 

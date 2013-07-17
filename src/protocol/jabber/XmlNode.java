@@ -105,10 +105,10 @@ public final class XmlNode {
 
     private int getMaxDataSize(String name) {
         if (S_BINVAL.equals(name)) {
-            if (jimm.Jimm.phone.hasMemory(MAX_BIN_VALUE_SIZE * 2 * 2)) {
+            if (jimm.Jimm.getJimm().phone.hasMemory(MAX_BIN_VALUE_SIZE * 2 * 2)) {
                 return MAX_BIN_VALUE_SIZE * 2;
             }
-            if (jimm.Jimm.phone.hasMemory(MAX_BIN_VALUE_SIZE * 2)) {
+            if (jimm.Jimm.getJimm().phone.hasMemory(MAX_BIN_VALUE_SIZE * 2)) {
                 return MAX_BIN_VALUE_SIZE;
             }
         }

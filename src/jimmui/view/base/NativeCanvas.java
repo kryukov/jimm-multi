@@ -162,7 +162,7 @@ public class NativeCanvas extends Canvas {
     public static final int JIMM_ACTIVATE = 0x00100013;
     private int getKey(int code) {
         // #sijapp cond.if modules_ANDROID is "true" #
-        if (Jimm.phone.isPhone(PhoneInfo.PHONE_ANDROID)) {
+        if (Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_ANDROID)) {
             if (-4 == code) {
                 return CLOSE_KEY;
             }
@@ -238,7 +238,7 @@ public class NativeCanvas extends Canvas {
                 || code == 0xFFBD) {
             return LEFT_SOFT;
         }
-        if (!Jimm.phone.isPhone(PhoneInfo.PHONE_SE)) {
+        if (!Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_SE)) {
             if (-22 == code) {
                 return RIGHT_SOFT;
             }
@@ -473,7 +473,7 @@ public class NativeCanvas extends Canvas {
             int jimmAction = mapToJimmAction(c, keyCode);
             if (0 < jimmAction) {
                 if ((NativeCanvas.CLOSE_KEY == keyCode)
-                        && Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S60)
+                        && Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA_S60)
                         && hasPointerEvents()) {
                     return;
                 }

@@ -33,7 +33,7 @@ public class PhoneInfo {
     }
     // #sijapp cond.if target is "MIDP2"#
     public boolean isS60v5() {
-        String platform = StringConvertor.notNull(Jimm.phone.microeditionPlatform);
+        String platform = StringConvertor.notNull(Jimm.getJimm().phone.microeditionPlatform);
         return hasSubStr(platform, "sw_platform_version=5.");
     }
     // #sijapp cond.end#

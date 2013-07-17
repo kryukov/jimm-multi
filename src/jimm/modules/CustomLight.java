@@ -137,7 +137,7 @@ public final class CustomLight extends TimerTask {
         }
         prevLightLevel = level;
         // #sijapp cond.if target is "MIDP2" #
-        if ((0 < level) && Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S40)) {
+        if ((0 < level) && Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA_S40)) {
             setHardwareLight(0);
         }
         // #sijapp cond.end #
@@ -231,7 +231,7 @@ public final class CustomLight extends TimerTask {
             if (!on) {
                 instance.timer.cancel();
                 // #sijapp cond.if target is "MIDP2" #
-                instance.setLight(Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S60) ? 40 : 0);
+                instance.setLight(Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA_S60) ? 40 : 0);
                 // #sijapp cond.else #
                 instance.setLight(0);
                 // #sijapp cond.end #

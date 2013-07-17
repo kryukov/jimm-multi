@@ -29,7 +29,7 @@ public class AvatarLoader implements Runnable {
                 : bs64photo.popBinValue();
         bs64photo = null;
         try {
-            if ((null != avatarBytes) && Jimm.phone.hasMemory(avatarBytes.length * 2)) {
+            if ((null != avatarBytes) && Jimm.getJimm().phone.hasMemory(avatarBytes.length * 2)) {
                 Image avatar = Image.createImage(avatarBytes, 0, avatarBytes.length);
                 avatarBytes = null;
                 userInfo.setAvatar(avatar);

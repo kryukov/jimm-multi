@@ -51,7 +51,7 @@ public class Jimm {
     private ActivityUI activity;
     // #sijapp cond.end#
 
-    public static PhoneInfo phone = new PhoneInfo();
+    public PhoneInfo phone = new PhoneInfo();
 
     public final String VERSION = "###VERSION###";
     public String lastDate;

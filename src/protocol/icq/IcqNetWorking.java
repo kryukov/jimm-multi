@@ -147,7 +147,7 @@ public final class IcqNetWorking extends ClientConnection {
     }
 
     private boolean isShadowNeeded() {
-        return Jimm.phone.isPhone(PhoneInfo.PHONE_NOKIA_S40);
+        return Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA_S40);
     }
 
     protected void connect() throws JimmException {

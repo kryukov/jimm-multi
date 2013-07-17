@@ -60,7 +60,7 @@ public final class ChatHistory implements SelectListener {
     public ChatModel getChatModel(Contact c) {
         for (int i = getTotal() - 1; 0 <= i; --i) {
             if (c == chatModelAt(i).contact) {
-                return (ChatModel) Jimm.getJimm().jimmModel.chats.elementAt(i);
+                return chatModelAt(i);
             }
         }
         return null;

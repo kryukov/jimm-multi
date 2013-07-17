@@ -57,13 +57,9 @@ public final class ChatHistory implements SelectListener {
         return (ChatModel) Jimm.getJimm().jimmModel.chats.elementAt(index);
     }
 
-    private Contact contactAt(int index) {
-        return chatModelAt(index).getContact();
-    }
-
     public ChatModel getChatModel(Contact c) {
         for (int i = getTotal() - 1; 0 <= i; --i) {
-            if (c == contactAt(i)) {
+            if (c == chatModelAt(i).contact) {
                 return (ChatModel) Jimm.getJimm().jimmModel.chats.elementAt(i);
             }
         }
@@ -219,8 +215,8 @@ public final class ChatHistory implements SelectListener {
     public void restoreContactsWithChat(Protocol p) {
         int total = getTotal();
         for (int i = 0; i < total; ++i) {
-            Contact contact = contactAt(i);
             ChatModel chat = chatModelAt(i);
+            Contact contact = chat.contact;
             if (p != chat.getProtocol()) {
                 continue;
             }

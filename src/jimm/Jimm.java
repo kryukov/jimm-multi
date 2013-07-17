@@ -40,13 +40,13 @@ import jimm.util.JLocale;
 
 
 public class Jimm {
-    private Display display;
-    public JimmModel jimmModel;
-
     private boolean locked = false;
     private long lastLockTime = 0;
-    public SplashCanvas splash;
     private boolean paused = true;
+    private Display display;
+    public JimmModel jimmModel;
+    public SplashCanvas splash;
+
     // #sijapp cond.if modules_ACTIVITYUI is "true"#
     private ActivityUI activity;
     // #sijapp cond.end#
@@ -282,7 +282,6 @@ public class Jimm {
         Traffic.getInstance().safeSave();
         // #sijapp cond.end#
         display.hide();
-//        JimmMidlet.getMidlet().notifyDestroyed();
     }
 
     public boolean isPaused() {
@@ -342,7 +341,7 @@ public class Jimm {
             }
         }
         // #sijapp cond.else #
-        in = Object.class.getResourceAsStream(name);
+        in = new Object().getClass().getResourceAsStream(name);
         // #sijapp cond.end #
 
         return in;

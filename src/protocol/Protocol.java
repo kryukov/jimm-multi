@@ -300,7 +300,7 @@ abstract public class Protocol {
             buf = cl.getRecord(1);
             bais = new ByteArrayInputStream(buf);
             dis = new DataInputStream(bais);
-            if (!dis.readUTF().equals(Jimm.VERSION)) {
+            if (!dis.readUTF().equals(Jimm.getJimm().VERSION)) {
                 throw new Exception();
             }
 
@@ -353,7 +353,7 @@ abstract public class Protocol {
         // Add version info to record store
         baos = new ByteArrayOutputStream();
         dos = new DataOutputStream(baos);
-        dos.writeUTF(Jimm.VERSION);
+        dos.writeUTF(Jimm.getJimm().VERSION);
         buf = baos.toByteArray();
         cl.addRecord(buf, 0, buf.length);
 

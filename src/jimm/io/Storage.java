@@ -109,7 +109,7 @@ public final class Storage {
         // Add empty records if necessary
         if (rs.getNumRecords() < count) {
             if ((1 < count) && (0 == rs.getNumRecords())) {
-                byte[] version = StringConvertor.stringToByteArrayUtf8(Jimm.VERSION);
+                byte[] version = StringConvertor.stringToByteArrayUtf8(Jimm.getJimm().VERSION);
                 rs.addRecord(version, 0, version.length);
             }
             while (rs.getNumRecords() < count) {

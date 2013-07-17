@@ -136,7 +136,7 @@ final class MrimPacket {
         out.putStatusInfo(mrim);
 
         String version = "client=\"jimm aspro\" title=\"jimm aspro\" "
-                + "version=\"" + Jimm.VERSION + "\"";
+                + "version=\"" + Jimm.getJimm().VERSION + "\"";
         out.putString(version);
         out.putString("ru");
         out.putDWord(0);

@@ -178,8 +178,8 @@ public final class SysTextList extends TextListController {
         addAboutParam("total_mem", (Runtime.getRuntime().totalMemory() / 1024)
                 + JLocale.getString("kb"));
 
-        if (null != Jimm.lastDate) {
-            addAboutParam("latest_ver", Jimm.lastDate);
+        if (null != Jimm.getJimm().lastDate) {
+            addAboutParam("latest_ver", Jimm.getJimm().lastDate);
         }
 
         // #sijapp cond.if modules_TRAFFIC is "true" #

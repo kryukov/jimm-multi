@@ -51,18 +51,18 @@ public class Jimm {
     private ActivityUI activity;
     // #sijapp cond.end#
 
+    public static PhoneInfo phone = new PhoneInfo();
+
+    public final String VERSION = "###VERSION###";
+    public String lastDate;
+
     // Application main object
     private static final Jimm instance = new Jimm();
+    /****************************************************************************/
+
     public static Jimm getJimm() {
         return instance;
     }
-    public static PhoneInfo phone = new PhoneInfo();
-
-    public static final String VERSION = "###VERSION###";
-    public static String lastDate;
-
-    /****************************************************************************/
-
     public static long getCurrentGmtTime() {
         return System.currentTimeMillis() / 1000
                 + Options.getInt(Options.OPTION_LOCAL_OFFSET) * 3600;

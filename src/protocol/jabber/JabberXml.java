@@ -833,7 +833,7 @@ public final class JabberXml extends ClientConnection {
                     putPacketIntoQueue("<iq type='result' to='"
                             + Util.xmlEscape(from) + "' id='" + Util.xmlEscape(id) + "'>"
                             + "<query xmlns='jabber:iq:version'><name>Jimm</name><version>"
-                            + Util.xmlEscape(jimm.Jimm.VERSION + " (###DATE###)")
+                            + Util.xmlEscape(jimm.Jimm.getJimm().VERSION + " (###DATE###)")
                             + "</version><os>"
                             + Util.xmlEscape(Jimm.phone.microeditionPlatform)
                             + "</os></query></iq>");

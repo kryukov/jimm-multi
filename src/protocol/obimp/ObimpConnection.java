@@ -442,8 +442,8 @@ public class ObimpConnection extends ClientConnection {
         byte[] version = new byte[] {00, 00,  00, 00,  00, 00,  00, 00};
         int index = 0;
         int value = 0;
-        for (int i = 0; i < Jimm.VERSION.length(); ++i) {
-            char ch = Jimm.VERSION.charAt(i);
+        for (int i = 0; i < Jimm.getJimm().VERSION.length(); ++i) {
+            char ch = Jimm.getJimm().VERSION.charAt(i);
             if ('.' == ch) {
                 Util.putWordBE(version, index * 2, value);
                 index++;

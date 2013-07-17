@@ -201,4 +201,7 @@ public class PhoneInfo {
         return (requared < free);
     }
 
+    public boolean isCedar() {
+        return hasSubStr(StringConvertor.notNull(microeditionPlatform), "EricssonJ108i");
+    }
 }

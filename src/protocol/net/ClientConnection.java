@@ -13,7 +13,6 @@ import java.util.Vector;
 import jimm.Jimm;
 import jimm.JimmException;
 import jimm.chat.message.PlainMessage;
-import jimm.comm.StringConvertor;
 import jimm.modules.*;
 import protocol.Protocol;
 
@@ -43,7 +42,7 @@ public abstract class ClientConnection implements Runnable {
         return keepAliveInterv;
     }
     protected final void usePong() {
-        if (-1 < StringConvertor.notNull(Jimm.getJimm().phone.microeditionPlatform).indexOf("EricssonJ108i")) {
+        if (Jimm.getJimm().phone.isCedar()) {
             return;
         }
         usePong = true;

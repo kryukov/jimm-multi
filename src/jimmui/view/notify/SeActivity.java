@@ -29,7 +29,7 @@ public class SeActivity implements com.sonyericsson.ui.UIEventListener, PhoneAct
      */
     public void eventAction(int eventId) {
         //Handle the event...
-        Jimm.maximize();
+        Jimm.getJimm().maximize();
     }
 
     /**

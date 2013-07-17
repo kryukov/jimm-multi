@@ -839,7 +839,7 @@ abstract public class Protocol {
             if (Options.getBoolean(Options.OPTION_BRING_UP)) {
                 ChatModel model = getChatModel(contact);
                 Chat view = ChatHistory.instance.getOrCreateChat(model);
-                Jimm.maximize(view);
+                Jimm.getJimm().maximize(view);
                 isPaused = false;
             }
         }

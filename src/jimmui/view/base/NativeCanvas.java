@@ -75,7 +75,7 @@ public class NativeCanvas extends Canvas {
     // #sijapp cond.if target="MIDP2" #
     protected void showNotify() {
         if (Jimm.getJimm().isPaused()) {
-            Jimm.wakeUp();
+            Jimm.getJimm().wakeUp();
         }
         updateMetrix(getWidth(), getHeight());
         canvas.restoring();

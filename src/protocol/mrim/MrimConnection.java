@@ -264,7 +264,7 @@ public final class MrimConnection extends ClientConnection {
             } else {
                 // #sijapp cond.if target is "MIDP2" #
                 if (Jimm.getJimm().isPaused()) {
-                    Jimm.maximize();
+                    Jimm.getJimm().maximize();
                 }
                 // #sijapp cond.end #
                 ContactList.getInstance().activateWithMsg(from + " (SMS):\n" + msg);

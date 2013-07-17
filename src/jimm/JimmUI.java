@@ -229,7 +229,7 @@ public final class JimmUI {
                 return true;
 
             case Options.HOTKEY_MINIMIZE:
-                Jimm.minimize();
+                Jimm.getJimm().minimize();
                 return true;
 
                 // #sijapp cond.if modules_SOUND is "true" #

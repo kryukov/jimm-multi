@@ -32,19 +32,19 @@ public class NokiaActivity implements SoftNotificationListener, PhoneActivity {
             iSoftNotification.setSoftkeyLabels(JLocale.getString("ok"),
                     JLocale.getString("back"));
             iSoftNotification.post();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
     public void notificationSelected(SoftNotification notification) {
         //Handle the event...
-        Jimm.maximize();
+        Jimm.getJimm().maximize();
     }
 
     public void notificationDismissed(SoftNotification notification) {
         try {
             iSoftNotification.remove();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

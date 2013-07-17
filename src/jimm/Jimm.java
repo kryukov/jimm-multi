@@ -348,20 +348,20 @@ public class Jimm {
         // #sijapp cond.end #
     }
 
-    public static void maximize() {
-        instance.restore(instance.display.getCurrentDisplay());
+    public void maximize() {
+        restore(display.getCurrentDisplay());
         wakeUp();
     }
-    public static void maximize(CanvasEx screen) {
-        instance.restore(screen);
+    public void maximize(CanvasEx screen) {
+        restore(screen);
         wakeUp();
     }
     // Set the minimize state of midlet
-    public static void minimize() {
+    public void minimize() {
         instance.hideApp();
         instance.display.hide();
     }
-    public static void wakeUp() {
+    public void wakeUp() {
         instance.paused = false;
     }
     public static void gc() {

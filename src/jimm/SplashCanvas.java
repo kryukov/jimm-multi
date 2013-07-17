@@ -31,6 +31,7 @@ import jimm.chat.message.Message;
 import jimm.cl.*;
 import jimmui.view.base.*;
 import jimm.util.*;
+import protocol.ui.InfoFactory;
 
 public final class SplashCanvas extends CanvasEx {
 
@@ -272,7 +273,7 @@ public final class SplashCanvas extends CanvasEx {
                     }
                     g.setThemeColor(THEME_SPLASH_MESSAGES);
                     g.setFont(font);
-                    int x = Message.msgIcons.getWidth() + 4;
+                    int x = InfoFactory.msgIcons.getWidth() + 4;
                     int y = otherHeight - fontHeight - 5;
                     g.drawString("# " + availableMessages, x, y, Graphics.LEFT | Graphics.TOP);
                 }

@@ -18,6 +18,7 @@ import protocol.mrim.MrimClient;
  * @author vladimir
  */
 public class InfoFactory {
+    public static final ImageList msgIcons = ImageList.createImageList("/msgs.png");
     // #sijapp cond.if modules_SERVERLISTS is "true" #
     private final ImageList serverListsIcons = ImageList.createImageList("/serverlists.png");
     // #sijapp cond.end #

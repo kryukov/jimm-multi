@@ -37,6 +37,7 @@ import jimm.chat.message.PlainMessage;
 import jimm.io.Storage;
 import protocol.Contact;
 import jimmui.view.roster.VirtualContactList;
+import protocol.ui.InfoFactory;
 
 public final class ChatHistory implements SelectListener {
     public static final ChatHistory instance = new ChatHistory();
@@ -126,7 +127,7 @@ public final class ChatHistory implements SelectListener {
         for (int i = getTotal() - 1; 0 <= i; --i) {
             icon = getMoreImportant(icon, chatModelAt(i).getNewMessageIcon());
         }
-        return Message.msgIcons.iconAt(icon);
+        return InfoFactory.msgIcons.iconAt(icon);
     }
     public Icon getUnreadMessageIcon(Protocol p) {
         int icon = -1;
@@ -137,7 +138,7 @@ public final class ChatHistory implements SelectListener {
                 icon = getMoreImportant(icon, chat.getNewMessageIcon());
             }
         }
-        return Message.msgIcons.iconAt(icon);
+        return InfoFactory.msgIcons.iconAt(icon);
     }
     public Icon getUnreadMessageIcon(Vector contacts) {
         int icon = -1;
@@ -146,7 +147,7 @@ public final class ChatHistory implements SelectListener {
             c = (Contact)contacts.elementAt(i);
             icon = getMoreImportant(icon, c.getUnreadMessageIcon());
         }
-        return Message.msgIcons.iconAt(icon);
+        return InfoFactory.msgIcons.iconAt(icon);
     }
 
     public boolean registerChat(ChatModel item) {

@@ -10,6 +10,7 @@ import protocol.jabber.Jabber;
 import protocol.jabber.JabberContact;
 import protocol.jabber.JabberServiceContact;
 import protocol.jabber.Jid;
+import protocol.ui.InfoFactory;
 
 import javax.microedition.lcdui.Font;
 import java.util.Vector;
@@ -161,7 +162,7 @@ public class ChatModel {
         if ((null == mData) || mData.isMe()) return 0;
 
         int height = fontSet[Chat.FONT_STYLE_BOLD].getHeight();
-        Icon icon = Message.msgIcons.iconAt(mData.iconIndex);
+        Icon icon = InfoFactory.msgIcons.iconAt(mData.iconIndex);
         if (null != icon) {
             height = Math.max(height, icon.getHeight());
         }

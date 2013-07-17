@@ -41,6 +41,7 @@ import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import protocol.*;
 import protocol.ui.ContactMenu;
+import protocol.ui.InfoFactory;
 import protocol.ui.MessageEditor;
 
 import javax.microedition.lcdui.Font;
@@ -519,7 +520,7 @@ public final class Chat extends VirtualList {
     }
 
     private void drawMessageHeader(GraphicsEx g, MessData mData, int x1, int y1, int w, int h) {
-        Icon icon = Message.msgIcons.iconAt(mData.iconIndex);
+        Icon icon = InfoFactory.msgIcons.iconAt(mData.iconIndex);
         if (null != icon) {
             int iconWidth = g.drawImage(icon, x1, y1, h) + 1;
             x1 += iconWidth;

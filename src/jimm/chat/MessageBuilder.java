@@ -15,6 +15,7 @@ import jimmui.view.base.NativeCanvas;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.Par;
 import jimmui.view.text.Parser;
+import protocol.ui.InfoFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -99,7 +100,7 @@ public class MessageBuilder {
         final byte captColor = getInOutColor(incoming);
         final byte plain = CanvasEx.FONT_STYLE_PLAIN;
         if (isMe) {
-            Icon icon = Message.msgIcons.iconAt(getIcon(chat, message));
+            Icon icon = InfoFactory.msgIcons.iconAt(getIcon(chat, message));
             if (null != icon) {
                 parser.addImage(icon);
             }

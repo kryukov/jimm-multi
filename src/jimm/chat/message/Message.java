@@ -30,6 +30,7 @@ import jimmui.view.text.*;
 import jimm.chat.MessData;
 import protocol.Contact;
 import protocol.Protocol;
+import protocol.ui.InfoFactory;
 
 public abstract class Message {
     // Types of system messages
@@ -39,7 +40,6 @@ public abstract class Message {
     public static final int TYPE_NOTICE_MESSAGE = 3;
     public static final int TYPE_FILE = 4;
 
-    public static final ImageList msgIcons = ImageList.createImageList("/msgs.png");
     public static final int ICON_NONE = -1;
     public static final int ICON_SYSREQ = 0;
     public static final int ICON_SYS_OK = 1;
@@ -85,7 +85,7 @@ public abstract class Message {
     }
     public final void setSendingState(int state) {
         if (mData.isMe()) {
-            Icon icon = msgIcons.iconAt(state);
+            Icon icon = InfoFactory.msgIcons.iconAt(state);
             if ((null != par) && (null != icon)) {
                 par.replaceFirstIcon(icon);
             }

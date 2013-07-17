@@ -41,6 +41,7 @@ import jimmui.view.menu.*;
 import jimmui.view.text.TextListController;
 import jimm.util.*;
 import protocol.*;
+import protocol.ui.InfoFactory;
 
 public final class MicroBlog extends TextListController implements TextBoxListener {
     private TextListModel model = new TextListModel();
@@ -73,7 +74,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
         return menu;
     }
     public Icon getIcon() {
-        return hasNewMessage ? Message.msgIcons.iconAt(Message.ICON_IN_MSG_HI) : null;
+        return hasNewMessage ? InfoFactory.msgIcons.iconAt(Message.ICON_IN_MSG_HI) : null;
     }
 
     private void removeOldRecords() {

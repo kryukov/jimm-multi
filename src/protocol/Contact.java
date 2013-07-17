@@ -259,9 +259,9 @@ abstract public class Contact implements TreeNode, Sortable {
 
     public void getLeftIcons(Icon[] lIcons) {
         if (isTyping()) {
-            lIcons[0] = Message.msgIcons.iconAt(Message.ICON_TYPE);
+            lIcons[0] = InfoFactory.msgIcons.iconAt(Message.ICON_TYPE);
         } else {
-            lIcons[0] = Message.msgIcons.iconAt(getUnreadMessageIcon());
+            lIcons[0] = InfoFactory.msgIcons.iconAt(getUnreadMessageIcon());
         }
         Protocol protocol = getProtocol();
         if (null != protocol) {

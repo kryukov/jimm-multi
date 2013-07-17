@@ -60,14 +60,6 @@ public class Jimm {
     private static final Jimm instance = new Jimm();
     /****************************************************************************/
 
-    public static Jimm getJimm() {
-        return instance;
-    }
-    public static long getCurrentGmtTime() {
-        return System.currentTimeMillis() / 1000
-                + Options.getInt(Options.OPTION_LOCAL_OFFSET) * 3600;
-    }
-
     private void platformRequestUrl(String url) throws ConnectionNotFoundException {
         // #sijapp cond.if protocols_JABBER is "true" #
         if (-1 == url.indexOf(':')) {
@@ -103,23 +95,6 @@ public class Jimm {
         } catch (Exception e) {
             /* Do nothing */
         }
-    }
-
-    public static java.io.InputStream getResourceAsStream(String name) {
-        InputStream in = null;
-        // #sijapp cond.if modules_ANDROID is "true" #
-        in = jimm.modules.fs.FileSystem.openJimmFile(name);
-        if (null == in) {
-            try {
-                in = ru.net.jimm.JimmActivity.getInstance().getAssets().open(name.substring(1));
-            } catch (Exception ignored) {
-            }
-        }
-        // #sijapp cond.else #
-        in = Object.class.getResourceAsStream(name);
-        // #sijapp cond.end #
-
-        return in;
     }
 
     private void backgroundLoading() {
@@ -355,6 +330,33 @@ public class Jimm {
     public void wakeUp() {
         paused = false;
     }
+
+    public static java.io.InputStream getResourceAsStream(String name) {
+        InputStream in = null;
+        // #sijapp cond.if modules_ANDROID is "true" #
+        in = jimm.modules.fs.FileSystem.openJimmFile(name);
+        if (null == in) {
+            try {
+                in = ru.net.jimm.JimmActivity.getInstance().getAssets().open(name.substring(1));
+            } catch (Exception ignored) {
+            }
+        }
+        // #sijapp cond.else #
+        in = Object.class.getResourceAsStream(name);
+        // #sijapp cond.end #
+
+        return in;
+    }
+
+    public static Jimm getJimm() {
+        return instance;
+    }
+
+    public static long getCurrentGmtTime() {
+        return System.currentTimeMillis() / 1000
+                + Options.getInt(Options.OPTION_LOCAL_OFFSET) * 3600;
+    }
+
     public static void gc() {
         System.gc();
         try {

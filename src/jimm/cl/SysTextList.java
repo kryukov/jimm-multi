@@ -43,7 +43,7 @@ public final class SysTextList extends TextListController {
             String str = getCurrText();
             if (null != str) {
                 if (-1 != str.indexOf("http://")) {
-                    Jimm.openUrl(str);
+                    Jimm.getJimm().openUrl(str);
                 } else {
                     GetVersion.updateProgram();
                 }
@@ -78,7 +78,7 @@ public final class SysTextList extends TextListController {
 
             case URL_MENU_GOTO:
                 list.back();
-                Jimm.openUrl(getCurrText());
+                Jimm.getJimm().openUrl(getCurrText());
                 break;
 
             case URL_MENU_COPY:
@@ -88,7 +88,7 @@ public final class SysTextList extends TextListController {
 
             case URL_MENU_ADD:
                 list.restore();
-                Jimm.openUrl("xmpp:" + Util.getUrlWithoutProtocol(getCurrText()));
+                Jimm.getJimm().openUrl("xmpp:" + Util.getUrlWithoutProtocol(getCurrText()));
                 break;
         }
     }
@@ -161,10 +161,6 @@ public final class SysTextList extends TextListController {
             }
         }
 
-        String partner = Jimm.getAppProperty("Jimm-Partner", null);
-        if (!StringConvertor.isEmpty(partner)) {
-            addUrl("Partner", StringConvertor.cut(partner, 50));
-        }
         addPlainText("\n", CanvasEx.THEME_TEXT);
 
         String midpInfo = Jimm.phone.microeditionPlatform;

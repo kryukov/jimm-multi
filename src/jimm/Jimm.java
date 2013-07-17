@@ -68,16 +68,7 @@ public class Jimm {
                 + Options.getInt(Options.OPTION_LOCAL_OFFSET) * 3600;
     }
 
-    public static String getAppProperty(String key, String defVal) {
-        String res = null;
-        try {
-            res = JimmMidlet.getMidlet().getAppProperty(key);
-        } catch (Exception ignored) {
-        }
-        return StringConvertor.isEmpty(res) ? defVal : res;
-    }
-
-    private static void platformRequestUrl(String url) throws ConnectionNotFoundException {
+    private void platformRequestUrl(String url) throws ConnectionNotFoundException {
         // #sijapp cond.if protocols_JABBER is "true" #
         if (-1 == url.indexOf(':')) {
             url = "xmpp:" + url;
@@ -96,18 +87,18 @@ public class Jimm {
         }
         JimmMidlet.getMidlet().platformRequest(url.trim());
     }
-    public static void openUrl(String url) {
+    public void openUrl(String url) {
         try {
             platformRequestUrl(url);
         } catch (Exception e) {
             /* Do nothing */
         }
     }
-    public static void platformRequestAndExit(String url) {
+    public void platformRequestAndExit(String url) {
         try {
             platformRequestUrl(url);
             // #sijapp cond.if modules_ANDROID isnot "true" #
-            Jimm.getJimm().quit();
+            quit();
             // #sijapp cond.end #
         } catch (Exception e) {
             /* Do nothing */
@@ -358,11 +349,11 @@ public class Jimm {
     }
     // Set the minimize state of midlet
     public void minimize() {
-        instance.hideApp();
-        instance.display.hide();
+        hideApp();
+        display.hide();
     }
     public void wakeUp() {
-        instance.paused = false;
+        paused = false;
     }
     public static void gc() {
         System.gc();

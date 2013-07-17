@@ -77,7 +77,7 @@ public class GetVersion implements Runnable {
     }
 
     public static void updateProgram() {
-        Jimm.platformRequestAndExit("jimm:update");
+        Jimm.getJimm().platformRequestAndExit("jimm:update");
     }
 
     private static int[] getVersionDate(String str) {

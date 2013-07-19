@@ -586,11 +586,7 @@ abstract public class Protocol {
             if (null != chat) {
                 ChatHistory.instance.getUpdater().typing(chat, type);
             }
-            if (type && isConnected()) {
-                playNotification(Notify.NOTIFY_TYPING);
-            }
-
-            getUpdater().typing(this, item);
+            Jimm.getJimm().getCL().typing(this, item, type);
         }
     }
     // #sijapp cond.end #
@@ -805,86 +801,9 @@ abstract public class Protocol {
                 }
             }
         }
-        if (!silent) {
-            addMessageNotify(chat, contact, message);
-            if (Options.getBoolean(Options.OPTION_SORT_UP_WITH_MSG)) {
-                ui_updateContact(contact);
-            }
-        }
-        Jimm.getJimm().getCL().receivedMessage(contact);
+        Jimm.getJimm().getCL().receivedMessage(this, contact, message, silent);
     }
-    private void addMessageNotify(ChatModel chat, Contact contact, Message message) {
-        boolean isPersonal = contact.isSingleUserContact();
-        boolean isBlog = isBlogBot(contact.getUserId());
-        boolean isHuman = isBlog || chat.isHuman() || !contact.isSingleUserContact();
-        if (isBot(contact)) {
-            isHuman = false;
-        }
-        boolean isMention = false;
-        // #sijapp cond.if protocols_JABBER is "true" #
-        if (!isPersonal && !message.isOffline() && (contact instanceof JabberContact)) {
-            String msg = message.getText();
-            String myName = ((JabberServiceContact)contact).getMyName();
-            // regexp: "^nick. "
-            isPersonal = msg.startsWith(myName)
-                    && msg.startsWith(" ", myName.length() + 1);
-            isMention = MessageBuilder.isHighlight(msg, myName);
-        }
-        // #sijapp cond.end #
-
-        boolean isPaused = false;
-        // #sijapp cond.if target is "MIDP2" #
-        isPaused = Jimm.getJimm().isPaused() && Jimm.getJimm().phone.isCollapsible();
-        if (isPaused && isPersonal && isHuman) {
-            if (Options.getBoolean(Options.OPTION_BRING_UP)) {
-                ChatModel model = getChatModel(contact);
-                Chat view = ChatHistory.instance.getOrCreateChat(model);
-                Jimm.getJimm().maximize(view);
-                isPaused = false;
-            }
-        }
-//        if (isPaused && isPlainMsg && isSingleUser) {
-//            Jimm.getJimm().addEvent(message.getName(),
-//                    message.getProcessedText(), null);
-//        }
-        // #sijapp cond.end #
-
-        if (!isPaused && isHuman) {
-            if (isPersonal) {
-                Jimm.getJimm().getCL().setActiveContact(contact);
-            }
-            // #sijapp cond.if modules_LIGHT is "true" #
-            if (isPersonal || isMention) {
-                CustomLight.setLightMode(CustomLight.ACTION_MESSAGE);
-            }
-            // #sijapp cond.end#
-        }
-
-        // #sijapp cond.if modules_SOUND is "true" #
-        if (message.isOffline()) {
-            // Offline messages don't play sound
-
-        } else if (isPersonal) {
-            if (contact.isSingleUserContact()
-                    && contact.isAuth() && !contact.isTemp()
-                    && message.isWakeUp()) {
-                playNotification(Notify.NOTIFY_ALARM);
-
-            } else if (isBlog) {
-                playNotification(Notify.NOTIFY_BLOG);
-
-            } else if (isHuman) {
-                playNotification(Notify.NOTIFY_MESSAGE);
-            }
-
-            // #sijapp cond.if protocols_JABBER is "true" #
-        } else if (isMention) {
-            playNotification(Notify.NOTIFY_MULTIMESSAGE);
-            // #sijapp cond.end #
-        }
-        // #sijapp cond.end#
-    }
-    protected boolean isBlogBot(String userId) {
+    public boolean isBlogBot(String userId) {
         return false;
     }
     public final boolean isBot(Contact contact) {
@@ -921,14 +840,6 @@ abstract public class Protocol {
     public final boolean isReconnect() {
         return isReconnect;
     }
-    public final void playNotification(int type) {
-        // #sijapp cond.if modules_SOUND is "true" #
-        if (!isAway(getProfile().statusIndex)
-                || Options.getBoolean(Options.OPTION_NOTIFY_IN_AWAY)) {
-            Notify.getSound().playSoundNotification(type);
-        }
-        // #sijapp cond.end #
-    }
 
     public final void processException(JimmException e) {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
@@ -953,9 +864,7 @@ abstract public class Protocol {
                 }
                 if (isConnected() || isConnecting()) {
                     disconnect(false);
-                    // #sijapp cond.if modules_SOUND is "true" #
-                    playNotification(Notify.NOTIFY_RECONNECT);
-                    // #sijapp cond.end #
+                    Jimm.getJimm().getCL().disconnected(this);
                     startConnection();
                 }
                 return;
@@ -1048,12 +957,7 @@ abstract public class Protocol {
             if ((prev == curr) || !contact.isSingleUserContact()) {
                 return;
             }
-            // #sijapp cond.if modules_SOUND is "true" #
-            if (!isAway(curr) && isAway(prev)) {
-                playNotification(Notify.NOTIFY_ONLINE);
-            }
-            // #sijapp cond.end #
-            UIUpdater.showTopLine(this, contact, null, contact.getStatusIndex());
+            Jimm.getJimm().getCL().setContactStatus(this, contact, prev, curr);
         }
     }
 

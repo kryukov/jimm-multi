@@ -593,12 +593,7 @@ public final class MrimConnection extends ClientConnection {
             }
             // #sijapp cond.if modules_MAGIC_EYE is "true" #
             if (isConnected()) {
-                boolean added = mrim.getMicroBlog().addPost(from, nick, text, postid, reply, time);
-                if (added && !mrim.getUserId().equals(from)) {
-                    // #sijapp cond.if modules_SOUND is "true" #
-                    mrim.playNotification(Notify.NOTIFY_BLOG);
-                    // #sijapp cond.end #
-                }
+                mrim.getMicroBlog().addPost(from, nick, text, postid, reply, time);
             }
             // #sijapp cond.end #
 

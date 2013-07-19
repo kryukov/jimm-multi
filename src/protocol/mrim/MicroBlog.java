@@ -25,6 +25,7 @@ Author(s): Artyomov Denis
 // #sijapp cond.if modules_MAGIC_EYE is "true" #
 package protocol.mrim;
 
+import jimm.modules.Notify;
 import jimmui.view.text.TextListModel;
 import jimmui.view.text.TextList;
 import jimmui.view.icons.*;
@@ -34,7 +35,6 @@ import jimmui.view.base.CanvasEx;
 import jimmui.view.base.NativeCanvas;
 import java.util.Vector;
 import jimm.*;
-import jimm.cl.ContactList;
 import jimm.comm.*;
 import jimmui.view.*;
 import jimmui.view.menu.*;
@@ -121,6 +121,11 @@ public final class MicroBlog extends TextListController implements TextBoxListen
             hasNewMessage = true;
         }
         list.updateModel();
+        if (!mrim.getUserId().equals(from)) {
+            // #sijapp cond.if modules_SOUND is "true" #
+            Jimm.getJimm().getCL().playNotification(mrim, Notify.NOTIFY_BLOG);
+            // #sijapp cond.end #
+        }
         return true;
     }
 

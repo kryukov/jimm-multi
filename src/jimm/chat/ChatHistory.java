@@ -374,7 +374,7 @@ public final class ChatHistory implements SelectListener {
             }
         }
         Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
-        Jimm.getJimm().getCL().setActiveContact(chatModelAt(getPreferredItem()).getContact());
+        Jimm.getJimm().getCL().getManager().setActiveContact(chatModelAt(getPreferredItem()).getContact());
         Jimm.getJimm().getCL().getManager().show();
     }
 

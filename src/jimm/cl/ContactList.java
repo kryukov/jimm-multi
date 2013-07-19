@@ -23,6 +23,8 @@
 
 package jimm.cl;
 
+import jimm.chat.message.Message;
+import jimm.modules.*;
 import jimmui.view.icons.Icon;
 import jimmui.view.roster.*;
 import jimm.*;
@@ -31,6 +33,7 @@ import jimm.forms.*;
 import jimmui.view.menu.*;
 import jimmui.view.base.*;
 import protocol.*;
+import protocol.jabber.*;
 import protocol.ui.ContactMenu;
 
 
@@ -113,6 +116,7 @@ public final class ContactList implements ContactListListener {
             contactList.setActiveContact(contact);
         }
     }
+
     private int cursorLock = 0;
     public final void userActivity() {
         cursorLock = 4 /* * 250 = 1 sec */;
@@ -130,13 +134,100 @@ public final class ContactList implements ContactListListener {
         Jimm.getJimm().jimmModel.saveRostersIfNeed();
     }
 
-    public final void receivedMessage(Contact contact) {
+    public final void receivedMessage(Protocol protocol, Contact contact, Message message, boolean silent) {
         // Notify splash canvas
         if (Jimm.getJimm().isLocked()) {
             Jimm.getJimm().splash.messageAvailable();
         }
+        if (!silent) {
+            addMessageNotify(protocol, protocol.getChatModel(contact), contact, message);
+            if (Options.getBoolean(Options.OPTION_SORT_UP_WITH_MSG)) {
+                getUpdater().updateContact(protocol, protocol.getGroup(contact), contact);
+            }
+        }
         updateUnreadMessageCount();
     }
+
+    private void addMessageNotify(Protocol p, ChatModel chat, Contact contact, Message message) {
+        boolean isPersonal = contact.isSingleUserContact();
+        boolean isBlog = p.isBlogBot(contact.getUserId());
+        boolean isHuman = isBlog || chat.isHuman() || !contact.isSingleUserContact();
+        if (p.isBot(contact)) {
+            isHuman = false;
+        }
+        boolean isMention = false;
+        // #sijapp cond.if protocols_JABBER is "true" #
+        if (!isPersonal && !message.isOffline() && (contact instanceof JabberContact)) {
+            String msg = message.getText();
+            String myName = ((JabberServiceContact)contact).getMyName();
+            // regexp: "^nick. "
+            isPersonal = msg.startsWith(myName)
+                    && msg.startsWith(" ", myName.length() + 1);
+            isMention = MessageBuilder.isHighlight(msg, myName);
+        }
+        // #sijapp cond.end #
+
+        boolean isPaused = false;
+        // #sijapp cond.if target is "MIDP2" #
+        isPaused = Jimm.getJimm().isPaused() && Jimm.getJimm().phone.isCollapsible();
+        if (isPaused && isPersonal && isHuman) {
+            if (Options.getBoolean(Options.OPTION_BRING_UP)) {
+                Chat view = ChatHistory.instance.getOrCreateChat(chat);
+                Jimm.getJimm().maximize(view);
+                isPaused = false;
+            }
+        }
+//        if (isPaused && isPlainMsg && isSingleUser) {
+//            Jimm.getJimm().addEvent(message.getName(),
+//                    message.getProcessedText(), null);
+//        }
+        // #sijapp cond.end #
+
+        if (!isPaused && isHuman) {
+            if (isPersonal) {
+                Jimm.getJimm().getCL().setActiveContact(contact);
+            }
+            // #sijapp cond.if modules_LIGHT is "true" #
+            if (isPersonal || isMention) {
+                CustomLight.setLightMode(CustomLight.ACTION_MESSAGE);
+            }
+            // #sijapp cond.end#
+        }
+
+        // #sijapp cond.if modules_SOUND is "true" #
+        if (message.isOffline()) {
+            // Offline messages don't play sound
+
+        } else if (isPersonal) {
+            if (contact.isSingleUserContact()
+                    && contact.isAuth() && !contact.isTemp()
+                    && message.isWakeUp()) {
+                playNotification(p, Notify.NOTIFY_ALARM);
+
+            } else if (isBlog) {
+                playNotification(p, Notify.NOTIFY_BLOG);
+
+            } else if (isHuman) {
+                playNotification(p, Notify.NOTIFY_MESSAGE);
+            }
+
+            // #sijapp cond.if protocols_JABBER is "true" #
+        } else if (isMention) {
+            playNotification(p, Notify.NOTIFY_MULTIMESSAGE);
+            // #sijapp cond.end #
+        }
+        // #sijapp cond.end#
+    }
+
+    public final void playNotification(Protocol p, int type) {
+        // #sijapp cond.if modules_SOUND is "true" #
+        if (!p.isAway(p.getProfile().statusIndex)
+                || Options.getBoolean(Options.OPTION_NOTIFY_IN_AWAY)) {
+            Notify.getSound().playSoundNotification(type);
+        }
+        // #sijapp cond.end #
+    }
+
     public final void markMessages(Protocol protocol, Contact contact) {
         if (null != contact) {
             if (Options.getBoolean(Options.OPTION_SORT_UP_WITH_MSG)) {
@@ -207,5 +298,28 @@ public final class ContactList implements ContactListListener {
         contactList.setModel(contactList.getUpdater().createModel());
         contactList.getUpdater().addProtocols(Jimm.getJimm().jimmModel.protocols);
         contactList.updateOption();
+    }
+
+    public void typing(Protocol protocol, Contact item, boolean type) {
+        if (type && protocol.isConnected()) {
+            playNotification(protocol, Notify.NOTIFY_TYPING);
+        }
+
+        getUpdater().typing(protocol, item);
+    }
+
+    public void setContactStatus(Protocol protocol, Contact contact, byte prev, byte curr) {
+        // #sijapp cond.if modules_SOUND is "true" #
+        if (!protocol.isAway(curr) && protocol.isAway(prev)) {
+            playNotification(protocol, Notify.NOTIFY_ONLINE);
+        }
+        // #sijapp cond.end #
+        UIUpdater.showTopLine(protocol, contact, null, contact.getStatusIndex());
+    }
+
+    public void disconnected(Protocol protocol) {
+        // #sijapp cond.if modules_SOUND is "true" #
+        playNotification(protocol, Notify.NOTIFY_RECONNECT);
+        // #sijapp cond.end #
     }
 }

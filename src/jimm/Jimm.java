@@ -38,6 +38,7 @@ import jimmui.view.notify.*;
 // #sijapp cond.end#
 import jimm.util.JLocale;
 import protocol.ui.MessageEditor;
+import protocol.ui.StatusView;
 
 
 public class Jimm {
@@ -49,6 +50,7 @@ public class Jimm {
     public SplashCanvas splash;
     private ContactList cl;
     private MessageEditor editor;
+    private final StatusView statusView = new StatusView();
 
     // #sijapp cond.if modules_ACTIVITYUI is "true"#
     private ActivityUI activity;
@@ -374,5 +376,9 @@ public class Jimm {
 
     public MessageEditor getMessageEditor() {
         return editor;
+    }
+
+    public StatusView getStatusView() {
+        return statusView;
     }
 }

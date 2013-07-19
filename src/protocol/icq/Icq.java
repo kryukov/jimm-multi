@@ -978,7 +978,7 @@ public class Icq extends Protocol {
         data.showProfile();
     }
     public void showStatus(Contact contact) {
-        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
+        StatusView statusView = Jimm.getJimm().getStatusView();
 
         Jimm.getJimm().getCL().setCurrentContact(contact);
         _updateStatusView(statusView, contact);
@@ -992,7 +992,7 @@ public class Icq extends Protocol {
         // #sijapp cond.end #
     }
     public void updateStatusView(Contact contact) {
-        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
+        StatusView statusView = Jimm.getJimm().getStatusView();
         if (contact == statusView.getContact()) {
             _updateStatusView(statusView, contact);
         }

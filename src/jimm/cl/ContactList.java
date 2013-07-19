@@ -43,7 +43,6 @@ import protocol.ui.StatusView;
 public final class ContactList implements ContactListListener {
     private final ProtocolMenu mainMenu = new ProtocolMenu(null, true);
     private VirtualContactList contactList;
-    private final StatusView statusView = new StatusView();
     private Contact currentContact;
 
     public ContactList() {
@@ -283,10 +282,6 @@ public final class ContactList implements ContactListListener {
     public final void setCurrentContact(Contact contact) {
         currentContact = contact;
     }
-    public StatusView getStatusView() {
-        return statusView;
-    }
-
     /////////////////////////////////////////////////////////////////
 
     /** ************************************************************************* */

@@ -664,7 +664,7 @@ public final class Jabber extends Protocol implements FormListener {
 
     @Override
     public void showStatus(Contact contact) {
-        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
+        StatusView statusView = Jimm.getJimm().getStatusView();
         try {
             if (contact.isOnline() && contact.isSingleUserContact()) {
                 String jid = contact.getUserId();

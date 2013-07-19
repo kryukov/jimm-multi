@@ -178,7 +178,7 @@ public class Obimp extends Protocol {
 
     @Override
     public void showStatus(Contact contact) {
-        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
+        StatusView statusView = Jimm.getJimm().getStatusView();
         statusView.init(this, contact);
         statusView.initUI();
         statusView.addContactStatus();

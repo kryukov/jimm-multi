@@ -390,7 +390,7 @@ public class Mrim extends Protocol {
         if (contact instanceof MrimPhoneContact) {
             return;
         }
-        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
+        StatusView statusView = Jimm.getJimm().getStatusView();
         MenuModel menu = new MenuModel();
 
         statusView.init(this, contact);

@@ -894,7 +894,6 @@ abstract public class Protocol {
     public final void dismiss() {
         disconnect(false);
         userCloseConnection();
-        ChatHistory.instance.unregisterChats(this);
         safeSave();
         profile = null;
         roster.contacts = null;

@@ -1,6 +1,7 @@
 package jimm.cl;
 
 import jimm.*;
+import jimm.chat.ChatHistory;
 import jimm.chat.ChatModel;
 import jimm.chat.MessData;
 import jimm.comm.Util;
@@ -200,7 +201,8 @@ public class JimmModel {
             Protocol protocol = oldProtocols[i];
             if (null != protocol) {
                 protocol.disconnect(true);
-                protocol.needSave();
+                protocol.safeSave();
+                ChatHistory.instance.unregisterChats(protocol);
                 protocol.dismiss();
             }
         }

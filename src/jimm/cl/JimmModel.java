@@ -9,6 +9,9 @@ import protocol.Profile;
 import protocol.Protocol;
 import protocol.ui.InfoFactory;
 import protocol.ui.StatusInfo;
+import protocol.icq.*;
+import protocol.mrim.*;
+import protocol.jabber.*;
 
 import java.util.Vector;
 
@@ -159,4 +162,85 @@ public class JimmModel {
         }
     }
 
+
+    public void updateAccounts() {
+        Protocol[] oldProtocols = getProtocols();
+        Vector<Protocol> newProtocols = new Vector<Protocol>();
+        // #sijapp cond.if modules_MULTI is "true" #
+        int accountCount = Options.getAccountCount();
+        for (int i = 0; i < accountCount; ++i) {
+            Profile profile = Options.getAccount(i);
+            if (!profile.isActive) continue;
+            for (int j = 0; j < oldProtocols.length; ++j) {
+                Protocol protocol = oldProtocols[j];
+                if ((null != protocol) && profile.equalsTo(protocol.getProfile())) {
+                    if (protocol.getProfile() != profile) {
+                        protocol.setProfile(profile);
+                    }
+                    oldProtocols[j] = null;
+                    profile = null;
+                    newProtocols.addElement(protocol);
+                    break;
+                }
+            }
+            if (null != profile) {
+                newProtocols.addElement(createProtocol(profile));
+            }
+        }
+        if (0 == newProtocols.size()) {
+            Profile profile = Options.getAccount(0);
+            profile.isActive = true;
+            newProtocols.addElement(createProtocol(profile));
+        }
+        // #sijapp cond.else #
+        newProtocols.addElement(createProtocol(Options.getAccount(Options.getCurrentAccount())));
+        // #sijapp cond.end #
+        for (int i = 0; i < oldProtocols.length; ++i) {
+            Protocol protocol = oldProtocols[i];
+            if (null != protocol) {
+                protocol.disconnect(true);
+                protocol.needSave();
+                protocol.dismiss();
+            }
+        }
+        protocols = newProtocols;
+    }
+
+    private Protocol createProtocol(Profile account) {
+        Protocol protocol = null;
+        switch (account.getEffectiveType()) {
+            // #sijapp cond.if protocols_ICQ is "true" #
+            case Profile.PROTOCOL_ICQ:
+                protocol = new Icq();
+                break;
+            // #sijapp cond.end #
+            // #sijapp cond.if protocols_MRIM is "true" #
+            case Profile.PROTOCOL_MRIM:
+                protocol = new Mrim();
+                break;
+            // #sijapp cond.end #
+            // #sijapp cond.if protocols_JABBER is "true" #
+            case Profile.PROTOCOL_JABBER:
+                protocol = new Jabber();
+                break;
+            // #sijapp cond.end #
+            // #sijapp cond.if protocols_OBIMP is "true" #
+            case Profile.PROTOCOL_OBIMP:
+                protocol = new protocol.obimp.Obimp();
+                break;
+            // #sijapp cond.end #
+            // #sijapp cond.if protocols_VKAPI is "true" #
+            case Profile.PROTOCOL_VK_API:
+                protocol = new protocol.vk.Vk();
+                break;
+            // #sijapp cond.end #
+        }
+        if (null == protocol) {
+            return null;
+        }
+        protocol.setProfile(account);
+        protocol.init();
+        protocol.safeLoad();
+        return protocol;
+    }
 }

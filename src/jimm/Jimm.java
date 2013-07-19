@@ -84,18 +84,11 @@ public class Jimm {
         }
         JimmMidlet.getMidlet().platformRequest(url.trim());
     }
-    public void openUrl(String url) {
-        try {
-            platformRequestUrl(url);
-        } catch (Exception e) {
-            /* Do nothing */
-        }
-    }
-    public void platformRequestAndExit(String url) {
+    public void openUrl(String url, boolean exit) {
         try {
             platformRequestUrl(url);
             // #sijapp cond.if modules_ANDROID isnot "true" #
-            quit();
+            if (exit) quit();
             // #sijapp cond.end #
         } catch (Exception e) {
             /* Do nothing */
@@ -132,57 +125,6 @@ public class Jimm {
         // #sijapp cond.if modules_DEBUGLOG is "true"#
         DebugLog.startTests();
         // #sijapp cond.end#
-    }
-
-    private void initBasic() {
-        // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.config.HomeDirectory.init();
-        // #sijapp cond.end#
-        JLocale.loadLanguageList();
-        Scheme.load();
-
-        Options.loadOptions();
-        // #sijapp cond.if modules_ANDROID is "true" #
-        new ru.net.jimm.config.Options().load();
-        // #sijapp cond.end#
-        JLocale.setCurrUiLanguage(Options.getString(Options.OPTION_UI_LANGUAGE));
-        Scheme.setColorScheme(Options.getInt(Options.OPTION_COLOR_SCHEME));
-        GraphicsEx.setFontScheme(Options.getInt(Options.OPTION_FONT_SCHEME));
-        CanvasEx.updateUI();
-        UIUpdater.startUIUpdater();
-    }
-    private void initialize() {
-        splash = new SplashCanvas();
-
-        splash.setMessage(JLocale.getString("loading"));
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        splash.show();
-        // #sijapp cond.end #
-        splash.setProgress(5);
-
-        cl = new ContactList();
-        // back loading (traffic, sounds and light)
-        //new Thread(this).start();
-        backgroundLoading();
-
-        // init contact list
-        splash.setProgress(10);
-        jimmModel = new JimmModel();
-        splash.setProgress(20);
-        Options.loadAccounts();
-        splash.setProgress(50);
-        cl.initUI();
-        splash.setProgress(60);
-        cl.updateAccounts();
-
-        // #sijapp cond.if modules_ACTIVITYUI is "true"#
-        if (phone.isPhone(PhoneInfo.PHONE_SE) && (750 <= phone.getSeVersion())) {
-            activity = new ActivityUI();
-        }
-        // #sijapp cond.end#
-        // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().service.started();
-        // #sijapp cond.end #
     }
 
     private void restore(Object screen) {
@@ -223,9 +165,12 @@ public class Jimm {
         display = new Display();
         locked = false;
         wakeUp();
-        initBasic();
+        initDaemonPhase1();
+        initUiPhase2();
         try {
-            initialize();
+            splash = new SplashCanvas();
+            initDaemonPhase3();
+            initUiPhase4();
             cl.startUp();
             UIUpdater.refreshClock();
         } catch (Exception e) {
@@ -380,5 +325,60 @@ public class Jimm {
 
     public StatusView getStatusView() {
         return statusView;
+    }
+
+    private void initDaemonPhase1() {
+        // phase #1: daemon
+        // #sijapp cond.if modules_ANDROID is "true" #
+        ru.net.jimm.config.HomeDirectory.init();
+        // #sijapp cond.end#
+        JLocale.loadLanguageList();
+        Options.loadOptions();
+        // #sijapp cond.if modules_ANDROID is "true" #
+        new ru.net.jimm.config.Options().load();
+        // #sijapp cond.end#
+    }
+    private void initUiPhase2() {
+        // phase #2; ui
+        Scheme.load();
+        JLocale.setCurrUiLanguage(Options.getString(Options.OPTION_UI_LANGUAGE));
+        Scheme.setColorScheme(Options.getInt(Options.OPTION_COLOR_SCHEME));
+        GraphicsEx.setFontScheme(Options.getInt(Options.OPTION_FONT_SCHEME));
+        CanvasEx.updateUI();
+        UIUpdater.startUIUpdater();
+    }
+    private void initDaemonPhase3() {
+        // phase #3: daemon
+        Options.loadAccounts();
+        jimmModel = new JimmModel();
+        jimmModel.updateAccounts();
+    }
+    private void initUiPhase4() {
+        splash.setMessage(JLocale.getString("loading"));
+        // #sijapp cond.if modules_ANDROID isnot "true" #
+        splash.show();
+        // #sijapp cond.end #
+        splash.setProgress(10);
+
+        cl = new ContactList();
+        // back loading (traffic, sounds and light)
+        //new Thread(this).start();
+        backgroundLoading();
+
+        // init contact list
+        splash.setProgress(20);
+        splash.setProgress(50);
+        cl.initUI();
+        splash.setProgress(60);
+        cl.updateCl();
+
+        // #sijapp cond.if modules_ACTIVITYUI is "true"#
+        if (phone.isPhone(PhoneInfo.PHONE_SE) && (750 <= phone.getSeVersion())) {
+            activity = new ActivityUI();
+        }
+        // #sijapp cond.end#
+        // #sijapp cond.if modules_ANDROID is "true" #
+        ru.net.jimm.JimmActivity.getInstance().service.started();
+        // #sijapp cond.end #
     }
 }

@@ -40,7 +40,8 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
     }
 
     private void setCurrentProtocol() {
-        Jimm.getJimm().getCL().updateAccounts();
+        Jimm.getJimm().jimmModel.updateAccounts();
+        Jimm.getJimm().getCL().updateCl();
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -44,7 +44,7 @@ public final class SysTextList extends TextListController {
             String str = getCurrText();
             if (null != str) {
                 if (-1 != str.indexOf("http://")) {
-                    Jimm.getJimm().openUrl(str);
+                    Jimm.getJimm().openUrl(str, false);
                 } else {
                     GetVersion.updateProgram();
                 }
@@ -79,7 +79,7 @@ public final class SysTextList extends TextListController {
 
             case URL_MENU_GOTO:
                 list.back();
-                Jimm.getJimm().openUrl(getCurrText());
+                Jimm.getJimm().openUrl(getCurrText(), false);
                 break;
 
             case URL_MENU_COPY:
@@ -89,7 +89,7 @@ public final class SysTextList extends TextListController {
 
             case URL_MENU_ADD:
                 list.restore();
-                Jimm.getJimm().openUrl("xmpp:" + Util.getUrlWithoutProtocol(getCurrText()));
+                Jimm.getJimm().openUrl("xmpp:" + Util.getUrlWithoutProtocol(getCurrText()), false);
                 break;
         }
     }

@@ -109,8 +109,8 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher
         <propertycopy name="modules"  from="${build_name}_modules"            />
         <property name="build" location="${build_root}/${build_name}"         />
         <property name="dist" location="${dist_root}/${build_name}"           />
-        <property name="src" location="src"                                   />
-        <property name="res" location="res"                                   />
+        <property name="src" location="j2me/src"                              />
+        <property name="res" location="j2me/res"                              />
         <property name="res/target" location="${res}/TARGETS/${target}"       />
     
         <tstamp>
@@ -147,14 +147,6 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher
     <!--  Internal target: preprocess-source   -->
     <target name="preprocess-source" depends="init,sijapp,langs,res">
         <mkdir dir="${build}/init/src" />
-        <sijapp srcdir="src" destdir="${build}/init/src">
-            <defineList prefix="protocols" list="${protocols}"/>
-            <defineList prefix="modules" list="${modules}"/>
-            <define name="device_configuration" value="${device_configuration}" />
-            <define name="target" value="${target}" />
-            <define name="client" value="${midlet/name}"/>
-            <define name="company" value="${company}"/>
-        </sijapp>
         <sijapp srcdir="networking/src" destdir="${build}/init/src">
             <defineList prefix="protocols" list="${protocols}"/>
             <defineList prefix="modules" list="${modules}"/>

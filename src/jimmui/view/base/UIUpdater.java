@@ -27,8 +27,7 @@ public class UIUpdater extends TimerTask {
     private static final int FLASH_COUNTER = 16;
     private static final int SYS_FLASH_COUNTER = 16*3;
 
-    private static UIUpdater uiUpdater;
-    private static Timer uiTimer;
+    private Timer uiTimer;
 
     private Object displ = null;
     private String text = null;
@@ -38,17 +37,17 @@ public class UIUpdater extends TimerTask {
     private static final int FLASH_CAPTION_INTERVAL = 250;
     private int flashCaptionInterval;
 
-    public static void startUIUpdater() {
-        if (null != uiTimer) {
-            uiTimer.cancel();
-        }
+
+    public void startUIUpdater() {
         uiTimer = new Timer();
-        uiUpdater = new UIUpdater();
         refreshClock();
-        uiTimer.schedule(uiUpdater, 0, NativeCanvas.UIUPDATE_TIME);
+        uiTimer.schedule(this, 0, NativeCanvas.UIUPDATE_TIME);
+    }
+    public void stop() {
+        uiTimer.cancel();
     }
 
-    public static void showTopLine(Protocol protocol, Contact contact, String nick, byte statusIndex) {
+    public void showTopLine(Protocol protocol, Contact contact, String nick, byte statusIndex) {
         if (contact != Jimm.getJimm().getCL().getUpdater().getCurrentContact()) {
             return;
         }
@@ -66,18 +65,17 @@ public class UIUpdater extends TimerTask {
         if (null == text) return;
         if (null != nick) text = nick + ": " + text;
 
-        Object prevDisplay = uiUpdater.displ;
-        uiUpdater.displ = null;
+        Object prevDisplay = displ;
+        this.displ = null;
         if (null != prevDisplay) {
-            uiUpdater.setTicker(prevDisplay, null);
+            setTicker(prevDisplay, null);
         }
-        uiUpdater.setTicker(vis, text);
-        uiUpdater.text  = text;
-        uiUpdater.counter = (vis instanceof InputTextBox) ? SYS_FLASH_COUNTER : FLASH_COUNTER;
-        uiUpdater.flashCaptionInterval = FLASH_CAPTION_INTERVAL;
-        uiUpdater.displ = vis;
+        setTicker(vis, text);
+        this.text  = text;
+        this.counter = (vis instanceof InputTextBox) ? SYS_FLASH_COUNTER : FLASH_COUNTER;
+        this.flashCaptionInterval = FLASH_CAPTION_INTERVAL;
+        this.displ = vis;
     }
-    ///////////////////////////////////////////////////////////////////////////
 
     private void taskFlashCaption(Object curDispay) {
         flashCaptionInterval -= NativeCanvas.UIUPDATE_TIME;
@@ -125,8 +123,8 @@ public class UIUpdater extends TimerTask {
             MyActionBar.refreshClock();
         }
     }
-    public static void refreshClock() {
-        uiUpdater.refreshClock(Jimm.getCurrentGmtTime() / 60);
+    public void refreshClock() {
+        refreshClock(Jimm.getCurrentGmtTime() / 60);
     }
     private void updateClock() {
         CanvasEx c = NativeCanvas.getInstance().getCanvas();

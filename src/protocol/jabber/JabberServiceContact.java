@@ -15,7 +15,6 @@ import java.util.Vector;
 import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.chat.message.*;
-import jimmui.view.base.UIUpdater;
 import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import protocol.*;
@@ -243,7 +242,7 @@ public class JabberServiceContact extends JabberContact {
         if (hasChat()) {
             jabber.getChatModel(this).setWritable(canWrite());
         }
-        UIUpdater.showTopLine(jabber, this, nick, StatusInfo.STATUS_OFFLINE);
+        Jimm.getJimm().getCL().setContactStatus(jabber, this, nick, StatusInfo.STATUS_OFFLINE);
     }
 
     String getRealJid(String nick) {

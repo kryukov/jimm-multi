@@ -324,10 +324,10 @@ public final class ContactList implements ContactListListener {
             playNotification(protocol, Notify.NOTIFY_ONLINE);
         }
         // #sijapp cond.end #
-        UIUpdater.showTopLine(protocol, contact, null, contact.getStatusIndex());
+        Jimm.getJimm().uiUpdater.showTopLine(protocol, contact, null, contact.getStatusIndex());
     }
     public void setContactStatus(Protocol protocol, Contact contact, String nick, byte status) {
-        UIUpdater.showTopLine(protocol, contact, nick, status);
+        Jimm.getJimm().uiUpdater.showTopLine(protocol, contact, nick, status);
     }
 
     public void disconnected(Protocol protocol) {

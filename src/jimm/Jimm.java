@@ -51,7 +51,8 @@ public class Jimm {
     public SplashCanvas splash;
     private ContactList cl;
     private MessageEditor editor;
-    private final StatusView statusView = new StatusView();
+    private StatusView statusView;
+    public UIUpdater uiUpdater;
 
     // #sijapp cond.if modules_ACTIVITYUI is "true"#
     private ActivityUI activity;
@@ -94,38 +95,6 @@ public class Jimm {
         } catch (Exception e) {
             /* Do nothing */
         }
-    }
-
-    private void backgroundLoading() {
-        // #sijapp cond.if modules_TRAFFIC is "true" #
-        // Create traffic Object (and update progress indicator)
-        Traffic.getInstance().load();
-        // #sijapp cond.end#
-
-        // #sijapp cond.if modules_SOUND is "true"#
-        Notify.getSound().initSounds();
-        // #sijapp cond.end#
-
-        // #sijapp cond.if modules_LIGHT is "true" #
-        CustomLight.switchOn(Options.getInt(Options.OPTION_LIGHT_THEME));
-        // #sijapp cond.end#
-        Jimm.gc();
-
-        // init message editor
-        // #sijapp cond.if modules_SMILES is "true" #
-        //splash.setProgress(10);
-        Emotions.instance.load();
-        // #sijapp cond.end#
-        //splash.setProgress(25);
-        StringConvertor.load();
-        //splash.setProgress(35);
-        Templates.getInstance().load();
-        editor = new MessageEditor();
-        Jimm.gc();
-
-        // #sijapp cond.if modules_DEBUGLOG is "true"#
-        DebugLog.startTests();
-        // #sijapp cond.end#
     }
 
     private void restore(Object screen) {
@@ -178,7 +147,7 @@ public class Jimm {
             if (0 < Options.getAccountCount()) {
                 autoConnect();
             }
-            UIUpdater.refreshClock();
+            uiUpdater.refreshClock();
         } catch (Exception e) {
             // #sijapp cond.if modules_DEBUGLOG is "true"#
             DebugLog.panic("init", e);
@@ -264,7 +233,7 @@ public class Jimm {
         lastLockTime = Jimm.getCurrentGmtTime();
         locked = false;
         cl.activate();
-        UIUpdater.refreshClock();
+        uiUpdater.refreshClock();
         // #sijapp cond.if modules_ABSENCE is "true" #
         AutoAbsence.instance.online();
         // #sijapp cond.end #
@@ -366,7 +335,6 @@ public class Jimm {
         Scheme.setColorScheme(Options.getInt(Options.OPTION_COLOR_SCHEME));
         GraphicsEx.setFontScheme(Options.getInt(Options.OPTION_FONT_SCHEME));
         CanvasEx.updateUI();
-        UIUpdater.startUIUpdater();
     }
     private void initDaemonPhase3() {
         // phase #3: daemon
@@ -382,9 +350,37 @@ public class Jimm {
         splash.setProgress(10);
 
         cl = new ContactList();
+        statusView = new StatusView();
         // back loading (traffic, sounds and light)
-        //new Thread(this).start();
-        backgroundLoading();
+        // #sijapp cond.if modules_TRAFFIC is "true" #
+        // Create traffic Object (and update progress indicator)
+        Traffic.getInstance().load();
+        // #sijapp cond.end#
+
+        // #sijapp cond.if modules_SOUND is "true"#
+        Notify.getSound().initSounds();
+        // #sijapp cond.end#
+
+        // #sijapp cond.if modules_LIGHT is "true" #
+        CustomLight.switchOn(Options.getInt(Options.OPTION_LIGHT_THEME));
+        // #sijapp cond.end#
+        Jimm.gc();
+
+        // init message editor
+        // #sijapp cond.if modules_SMILES is "true" #
+        //splash.setProgress(10);
+        Emotions.instance.load();
+        // #sijapp cond.end#
+        //splash.setProgress(25);
+        StringConvertor.load();
+        //splash.setProgress(35);
+        Templates.getInstance().load();
+        editor = new MessageEditor();
+        Jimm.gc();
+
+        // #sijapp cond.if modules_DEBUGLOG is "true"#
+        DebugLog.startTests();
+        // #sijapp cond.end#
 
         // init contact list
         splash.setProgress(20);
@@ -393,6 +389,9 @@ public class Jimm {
         splash.setProgress(60);
         cl.updateCl();
 
+        if (null != uiUpdater) uiUpdater.stop();
+        uiUpdater = new UIUpdater();
+        uiUpdater.startUIUpdater();
         // #sijapp cond.if modules_ACTIVITYUI is "true"#
         if (phone.isPhone(PhoneInfo.PHONE_SE) && (750 <= phone.getSeVersion())) {
             activity = new ActivityUI();

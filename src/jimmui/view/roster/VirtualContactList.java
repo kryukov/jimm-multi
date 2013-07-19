@@ -24,6 +24,7 @@
 package jimmui.view.roster;
 
 import jimm.util.JLocale;
+import jimmui.HotKeys;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.*;
 import java.util.Vector;
@@ -399,7 +400,7 @@ public final class VirtualContactList extends VirtualList {
         }
 
         Protocol p = getProtocol(item);
-        if (JimmUI.execHotKey(p, current, keyCode, type)) {
+        if (HotKeys.execHotKey(p, current, keyCode, type)) {
             return;
         }
         super.doKeyReaction(keyCode, actionCode, type);

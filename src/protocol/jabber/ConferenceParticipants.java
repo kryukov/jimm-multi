@@ -12,6 +12,7 @@ package protocol.jabber;
 
 import jimm.Jimm;
 import jimm.chat.ChatHistory;
+import jimmui.HotKeys;
 import jimmui.view.icons.*;
 import java.util.Vector;
 import jimm.JimmUI;
@@ -176,10 +177,10 @@ public final class ConferenceParticipants extends VirtualList {
         }
     }
     protected void doKeyReaction(int keyCode, int actionCode, int type) {
-        if (JimmUI.isHotKey(keyCode, type)) {
+        if (HotKeys.isHotKey(keyCode, type)) {
             String nick = getCurrentContact();
             Contact c = (null == nick) ? null : getPrivateContact(nick);
-            if (JimmUI.execHotKey(protocol, c, keyCode, type)) {
+            if (HotKeys.execHotKey(protocol, c, keyCode, type)) {
                 return;
             }
         }

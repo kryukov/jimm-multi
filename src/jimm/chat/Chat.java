@@ -31,6 +31,7 @@
  */
 package jimm.chat;
 
+import jimmui.HotKeys;
 import jimmui.view.icons.Icon;
 import jimm.*;
 import jimm.chat.message.*;
@@ -236,7 +237,7 @@ public final class Chat extends VirtualList {
             }
             return;
         }
-        if (!JimmUI.execHotKey(getProtocol(), getContact(), keyCode, type)) {
+        if (!HotKeys.execHotKey(getProtocol(), getContact(), keyCode, type)) {
             super.doKeyReaction(keyCode, actionCode, type);
         }
     }

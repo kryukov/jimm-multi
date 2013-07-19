@@ -301,9 +301,11 @@ public final class ContactList implements ContactListListener {
     }
 
     public void typing(Protocol protocol, Contact item, boolean type) {
+        // #sijapp cond.if modules_SOUND is "true" #
         if (type && protocol.isConnected()) {
             playNotification(protocol, Notify.NOTIFY_TYPING);
         }
+        // #sijapp cond.end #
 
         getUpdater().typing(protocol, item);
     }
@@ -312,12 +314,12 @@ public final class ContactList implements ContactListListener {
         if ((prev == curr) || !contact.isSingleUserContact()) {
             return;
         }
-        // #sijapp cond.if modules_SOUND is "true" #
         // #sijapp cond.if protocols_JABBER is "true" #
         if (contact instanceof JabberServiceContact) {
             return;
         }
         // #sijapp cond.end #
+        // #sijapp cond.if modules_SOUND is "true" #
         if (!protocol.isAway(curr) && protocol.isAway(prev)) {
             playNotification(protocol, Notify.NOTIFY_ONLINE);
         }

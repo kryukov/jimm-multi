@@ -74,6 +74,6 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     private void restoreConnections() {
-        Jimm.getJimm().getCL().autoConnect();
+        Jimm.getJimm().autoConnect();
     }
 }

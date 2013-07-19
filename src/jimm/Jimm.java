@@ -37,6 +37,7 @@ import jimmui.view.base.*;
 import jimmui.view.notify.*;
 // #sijapp cond.end#
 import jimm.util.JLocale;
+import protocol.Protocol;
 import protocol.ui.MessageEditor;
 import protocol.ui.StatusView;
 
@@ -171,7 +172,12 @@ public class Jimm {
             splash = new SplashCanvas();
             initDaemonPhase3();
             initUiPhase4();
+            // phase 5
             cl.startUp();
+            // phase 6
+            if (0 < Options.getAccountCount()) {
+                autoConnect();
+            }
             UIUpdater.refreshClock();
         } catch (Exception e) {
             // #sijapp cond.if modules_DEBUGLOG is "true"#
@@ -325,6 +331,21 @@ public class Jimm {
 
     public StatusView getStatusView() {
         return statusView;
+    }
+
+    public void autoConnect() {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        if (!ru.net.jimm.JimmActivity.getInstance().isNetworkAvailable()) {
+            return;
+        }
+        // #sijapp cond.end#
+        int count = Jimm.getJimm().jimmModel.protocols.size();
+        for (int i = 0; i < count; ++i) {
+            Protocol p = (Protocol) Jimm.getJimm().jimmModel.protocols.elementAt(i);
+            if (!"".equals(p.getPassword()) && p.getProfile().isConnected()) {
+                p.connect();
+            }
+        }
     }
 
     private void initDaemonPhase1() {

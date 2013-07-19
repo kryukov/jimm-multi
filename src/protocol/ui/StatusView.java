@@ -9,6 +9,7 @@
 
 package protocol.ui;
 
+import jimm.cl.SysTextList;
 import jimmui.view.text.TextListModel;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.Parser;
@@ -57,7 +58,7 @@ public final class StatusView extends TextListController {
                 break;
 
             case INFO_MENU_GOTO_URL:
-                Jimm.getJimm().getCL().gotoUrl(model.getParText(list.getCurrItem()));
+                SysTextList.gotoURL(model.getParText(list.getCurrItem()));
                 break;
 
                 // #sijapp cond.if protocols_ICQ is "true" #

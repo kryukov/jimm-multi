@@ -50,11 +50,6 @@ public final class ContactList implements ContactListListener {
         updateMainMenu();
     }
 
-    public void gotoUrl(String textWithUrls) {
-        SysTextList.gotoURL(textWithUrls);
-    }
-
-
     public void activate() {
         contactList.update();
         contactList.showMain();
@@ -88,21 +83,6 @@ public final class ContactList implements ContactListListener {
             activate();
             ChatHistory.instance.loadUnreadMessages();
             updateUnreadMessageCount();
-            autoConnect();
-        }
-    }
-    public void autoConnect() {
-        // #sijapp cond.if modules_ANDROID is "true" #
-        if (!ru.net.jimm.JimmActivity.getInstance().isNetworkAvailable()) {
-            return;
-        }
-        // #sijapp cond.end#
-        int count = Jimm.getJimm().jimmModel.protocols.size();
-        for (int i = 0; i < count; ++i) {
-            Protocol p = (Protocol) Jimm.getJimm().jimmModel.protocols.elementAt(i);
-            if (!"".equals(p.getPassword()) && p.getProfile().isConnected()) {
-                p.connect();
-            }
         }
     }
 
@@ -134,15 +114,11 @@ public final class ContactList implements ContactListListener {
         }
     }
     private int cursorLock = 0;
-    private int contactListSaveDelay = 0;
     public final void userActivity() {
         cursorLock = 4 /* * 250 = 1 sec */;
         // #sijapp cond.if modules_ABSENCE is "true" #
         jimm.modules.AutoAbsence.instance.userActivity();
         // #sijapp cond.end #
-    }
-    public final void needRosterSave() {
-        contactListSaveDelay = 60 * 4 /* * 250 = 60 sec */;
     }
     public final void timerAction() {
         // #sijapp cond.if modules_ABSENCE is "true" #
@@ -151,16 +127,7 @@ public final class ContactList implements ContactListListener {
         if (0 < cursorLock) {
             cursorLock--;
         }
-        if (0 < contactListSaveDelay) {
-            contactListSaveDelay--;
-            if (0 == contactListSaveDelay) {
-                int count = Jimm.getJimm().jimmModel.protocols.size();
-                for (int i = 0; i < count; ++i) {
-                    Protocol p = (Protocol) Jimm.getJimm().jimmModel.protocols.elementAt(i);
-                    p.safeSave();
-                }
-            }
-        }
+        Jimm.getJimm().jimmModel.saveRostersIfNeed();
     }
 
     public final void receivedMessage(Contact contact) {

@@ -10,6 +10,7 @@
 package jimm.search;
 
 import jimm.Jimm;
+import jimm.cl.SysTextList;
 import jimmui.view.text.TextListModel;
 import jimmui.view.text.TextList;
 import jimmui.view.icons.*;
@@ -279,7 +280,7 @@ public class UserInfo implements
 
             case INFO_MENU_GOTO_URL:
                 String text = profileView.getModel().getParText(profileView.getCurrItem());
-                Jimm.getJimm().getCL().gotoUrl(text);
+                SysTextList.gotoURL(text);
                 break;
 
             // #sijapp cond.if protocols_ICQ is "true" | protocols_JABBER is "true" | protocols_OBIMP is "true" #

@@ -246,7 +246,7 @@ abstract public class Protocol {
 
     public final void needSave() {
         needSave = true;
-        Jimm.getJimm().getCL().needRosterSave();
+        Jimm.getJimm().jimmModel.needRosterSave();
     }
     // FIXME
     public final boolean safeSave() {

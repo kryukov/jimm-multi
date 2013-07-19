@@ -25,8 +25,9 @@ import java.util.Vector;
 public class JimmModel {
     public Vector<Protocol> protocols = new Vector<Protocol>();
     public final Vector<ChatModel> chats = new Vector<ChatModel>();
+    private int contactListSaveDelay = 0;
     // #sijapp cond.if modules_FILES="true"#
-    private Vector transfers = new Vector();
+    private Vector<FileTransfer> transfers = new Vector<FileTransfer>();
     // #sijapp cond.end#
 
     public boolean registerChat(ChatModel item) {
@@ -242,5 +243,32 @@ public class JimmModel {
         protocol.init();
         protocol.safeLoad();
         return protocol;
+    }
+
+    public final void needRosterSave() {
+        contactListSaveDelay = 60 * 4 /* * 250 = 60 sec */;
+        // #sijapp cond.if modules_ANDROID is "true" #
+        synchronized (this) {
+            saveRosters();
+        }
+        // #sijapp cond.end #
+    }
+    public void saveRostersIfNeed() {
+        // #sijapp cond.if modules_ANDROID isnot "true" #
+        if (0 < contactListSaveDelay) {
+            contactListSaveDelay--;
+            if (0 == contactListSaveDelay) {
+                saveRosters();
+            }
+        }
+        // #sijapp cond.end #
+    }
+
+    private void saveRosters() {
+        int count = protocols.size();
+        for (int i = 0; i < count; ++i) {
+            Protocol p = (Protocol) protocols.elementAt(i);
+            p.safeSave();
+        }
     }
 }

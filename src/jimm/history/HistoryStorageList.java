@@ -11,6 +11,7 @@ package jimm.history;
 
 // #sijapp cond.if modules_HISTORY is "true" #
 
+import jimm.cl.SysTextList;
 import jimmui.Clipboard;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListModel;
@@ -122,7 +123,7 @@ public final class HistoryStorageList extends VirtualList implements
         }
         switch (action) {
             case MENU_GOTO_URL:
-                Jimm.getJimm().getCL().gotoUrl(getCachedRecord(getCurrItem()).text);
+                SysTextList.gotoURL(getCachedRecord(getCurrItem()).text);
                 break;
 
             case MENU_SELECT:

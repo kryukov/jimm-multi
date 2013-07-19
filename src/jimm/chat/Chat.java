@@ -31,6 +31,7 @@
  */
 package jimm.chat;
 
+import jimm.cl.SysTextList;
 import jimmui.Clipboard;
 import jimmui.HotKeys;
 import jimmui.view.icons.Icon;
@@ -272,7 +273,7 @@ public final class Chat extends VirtualList {
                 break;
 
             case ACTION_GOTO_URL:
-                Jimm.getJimm().getCL().gotoUrl(getCurrentText());
+                SysTextList.gotoURL(getCurrentText());
                 break;
 
             case ACTION_SELECT:

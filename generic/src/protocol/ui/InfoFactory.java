@@ -1,5 +1,6 @@
 package protocol.ui;
 
+import jimm.chat.message.Message;
 import jimm.comm.Config;
 import jimmui.view.icons.Icon;
 import jimmui.view.icons.ImageList;
@@ -237,6 +238,22 @@ public class InfoFactory {
         final ImageList icons = ImageList.createImageList("/global-status.png");
         final int[] statusIconIndex = {1, 0, 3, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
         return new StatusInfo(icons, statusIconIndex, globalStatuses);
+    }
+
+    public int getMoreImportant(int v1, int v2) {
+        if ((Message.ICON_IN_MSG_HI == v1) || (Message.ICON_IN_MSG_HI == v2)) {
+            return Message.ICON_IN_MSG_HI;
+        }
+        if ((Message.ICON_SYSREQ == v1) || (Message.ICON_SYSREQ == v2)) {
+            return Message.ICON_SYSREQ;
+        }
+        if ((Message.ICON_IN_MSG == v1) || (Message.ICON_IN_MSG == v2)) {
+            return Message.ICON_IN_MSG;
+        }
+        if ((Message.ICON_SYS_OK == v1) || (Message.ICON_SYS_OK == v2)) {
+            return Message.ICON_SYS_OK;
+        }
+        return -1;
     }
 
 

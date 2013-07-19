@@ -108,7 +108,6 @@ public class HotKeys {
             case Options.HOTKEY_OPEN_CHATS:
                 if (Jimm.getJimm().getCL().isChats(currentDisplay)) {
                     Jimm.getJimm().getCL().backFromChats();
-
                 } else {
                     Jimm.getJimm().getCL().showChatList(false);
                 }

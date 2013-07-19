@@ -4,12 +4,20 @@ import jimm.Jimm;
 import jimm.Options;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
+import jimm.comm.StringConvertor;
 import jimm.history.HistoryStorage;
 import jimm.history.HistoryStorageList;
+import jimm.io.Storage;
 import jimmui.view.base.GraphicsEx;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.jabber.JabberServiceContact;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.util.Vector;
 
 
 /**
@@ -140,5 +148,67 @@ public class ChatUpdater {
             chat.topOffset = view.getTopOffset();
             chat.current = view.getCurrItem();
         }
+    }
+
+    public void saveUnreadMessages() {
+        Storage s = new Storage("unread");
+        try {
+            s.delete();
+            s.open(true);
+            Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
+            for (int i = 0; i < chats.size(); ++i) {
+                ChatModel chat = (ChatModel) chats.elementAt(i);
+                if (!chat.getContact().isSingleUserContact()) {
+                    continue;
+                }
+                if (chat.getContact().isTemp()) {
+                    continue;
+                }
+                if (!chat.getContact().hasHistory()) {
+                    continue;
+                }
+                int count = chat.getUnreadMessageCount();
+                for (int j = 0; j < count; ++j) {
+                    MessData message = chat.getUnreadMessage(j);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    DataOutputStream o = new DataOutputStream(out);
+                    o.writeUTF(chat.getProtocol().getUserId());
+                    o.writeUTF(chat.getContact().getUserId());
+                    o.writeUTF(message.getNick());
+                    o.writeUTF(message.getText());
+                    o.writeLong(message.getTime());
+                    s.addRecord(out.toByteArray());
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        s.close();
+    }
+
+    public void loadUnreadMessages() {
+        Storage s = new Storage("unread");
+        try {
+            s.open(false);
+            for (int i = 1; i <= s.getNumRecords(); ++i) {
+                DataInputStream in = new DataInputStream(new ByteArrayInputStream(s.getRecord(i)));
+                String account = in.readUTF();
+                String userId = in.readUTF();
+                String nick = in.readUTF();
+                String text = in.readUTF();
+                long time = in.readLong();
+                Protocol protocol = Jimm.getJimm().jimmModel.getProtocol(account);
+                if (null == protocol) {
+                    continue;
+                }
+                PlainMessage msg = new PlainMessage(userId, protocol, time, text, true);
+                if (!StringConvertor.isEmpty(nick)) {
+                    msg.setName(nick);
+                }
+                protocol.addMessage(msg, true);
+            }
+        } catch (Exception ignored) {
+        }
+        s.close();
+        s.delete();
     }
 }

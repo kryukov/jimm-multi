@@ -35,6 +35,7 @@ import jimmui.view.base.*;
 import protocol.*;
 import protocol.jabber.*;
 import protocol.ui.ContactMenu;
+import protocol.ui.InfoFactory;
 
 import java.util.Vector;
 
@@ -86,7 +87,7 @@ public final class ContactList implements ContactListListener {
 
         } else {
             activate();
-            ChatHistory.instance.loadUnreadMessages();
+            Jimm.getJimm().getChatUpdater().loadUnreadMessages();
             updateUnreadMessageCount();
         }
     }
@@ -235,7 +236,7 @@ public final class ContactList implements ContactListListener {
         }
     }
     private void updateUnreadMessageCount() {
-        Icon icon = ChatHistory.instance.getUnreadMessageIcon();
+        Icon icon = getUnreadMessageIcon();
         if (icon != MyActionBar.getMessageIcon()) {
             MyActionBar.setMessageIcon(icon);
             jimmui.view.base.NativeCanvas.getInstance().repaint();
@@ -243,6 +244,36 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.if modules_ANDROID is "true" #
         ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon();
         // #sijapp cond.end #
+    }
+
+    public Icon getUnreadMessageIcon() {
+        int icon = -1;
+        Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
+        for (int i = chats.size() - 1; 0 <= i; --i) {
+            icon = InfoFactory.factory.getMoreImportant(icon, ((ChatModel)chats.elementAt(i)).getNewMessageIcon());
+        }
+        return InfoFactory.msgIcons.iconAt(icon);
+    }
+    public Icon getUnreadMessageIcon(Vector contacts) {
+        int icon = -1;
+        Contact c;
+        for (int i = contacts.size() - 1; 0 <= i; --i) {
+            c = (Contact)contacts.elementAt(i);
+            icon = InfoFactory.factory.getMoreImportant(icon, c.getUnreadMessageIcon());
+        }
+        return InfoFactory.msgIcons.iconAt(icon);
+    }
+    public Icon getUnreadMessageIcon(Protocol p) {
+        int icon = -1;
+        ChatModel chat;
+        Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
+        for (int i = chats.size() - 1; 0 <= i; --i) {
+            chat = (ChatModel)chats.elementAt(i);
+            if (chat.getProtocol() == p) {
+                icon = InfoFactory.factory.getMoreImportant(icon, chat.getNewMessageIcon());
+            }
+        }
+        return InfoFactory.msgIcons.iconAt(icon);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -269,7 +300,7 @@ public final class ContactList implements ContactListListener {
 
     public final MenuModel getContextMenu(Protocol p, TreeNode node) {
         if (contactList.getModel() == getUpdater().getChatModel()) {
-            return ChatHistory.instance.getMenu();
+            return new ChatMenu().getMenu();
         }
         if (node instanceof Contact) {
             return new ContactMenu(p, (Contact) node).getContextMenu();
@@ -347,7 +378,7 @@ public final class ContactList implements ContactListListener {
         if (forceGoToChat) {
             ChatModel current = getPreferredChat();
             if (0 < current.getUnreadMessageCount()) {
-                ChatHistory.instance.getUpdater().activate(current);
+                Jimm.getJimm().getChatUpdater().activate(current);
                 return;
             }
         }
@@ -370,7 +401,7 @@ public final class ContactList implements ContactListListener {
         int total = Jimm.getJimm().jimmModel.chats.size();
         int nextChatNum = (chatNum + (next ? 1 : -1) + total) % total;
         Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
-        ChatHistory.instance.getUpdater().activate((ChatModel) chats.elementAt(nextChatNum));
+        Jimm.getJimm().getChatUpdater().activate((ChatModel) chats.elementAt(nextChatNum));
     }
 
     private ChatModel getPreferredChat() {
@@ -411,7 +442,7 @@ public final class ContactList implements ContactListListener {
         Chat chat = getChat(c);
         if (null != c) {
             chat = new Chat(c);
-            ChatHistory.instance.getUpdater().restoreTopPositionToUI(c, chat);
+            Jimm.getJimm().getChatUpdater().restoreTopPositionToUI(c, chat);
         }
         return chat;
     }

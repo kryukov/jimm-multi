@@ -393,7 +393,7 @@ public final class VirtualContactList extends VirtualList {
                 case NativeCanvas.CLEAR_KEY:
                     if ((item instanceof Contact) && ((Contact)item).hasChat()) {
                         ChatModel chat = Jimm.getJimm().jimmModel.getChatModel((Contact)item);
-                        ChatHistory.instance.getUpdater().removeReadMessages(chat);
+                        Jimm.getJimm().getChatUpdater().removeReadMessages(chat);
                     }
                     return;
             }

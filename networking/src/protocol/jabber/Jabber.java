@@ -9,8 +9,6 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
-import jimm.chat.ChatHistory;
-
 import java.util.Vector;
 import jimm.*;
 import jimm.chat.message.PlainMessage;
@@ -538,7 +536,7 @@ public final class Jabber extends Protocol implements FormListener {
 
             case JabberServiceContact.CONFERENCE_CONNECT:
                 join((JabberServiceContact) c);
-                ChatHistory.instance.getUpdater().activate(getChatModel(c));
+                Jimm.getJimm().getChatUpdater().activate(getChatModel(c));
                 break;
 
             case JabberServiceContact.CONFERENCE_OPTIONS:

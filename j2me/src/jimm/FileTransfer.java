@@ -27,12 +27,10 @@ import java.io.*;
 import javax.microedition.io.*;
 import javax.microedition.lcdui.Image;
 
-import jimm.chat.ChatHistory;
 import jimm.chat.ChatModel;
 import jimm.chat.MessData;
 import jimm.comm.*;
 import jimm.modules.*;
-import jimm.cl.*;
 // #sijapp cond.if modules_FILES="true"#
 import jimm.modules.fs.*;
 // #sijapp cond.end#
@@ -216,7 +214,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     }
     private void changeFileProgress(String message) {
         if (cItem.hasChat()) {
-            ChatHistory.instance.getUpdater().changeFileProgress(chat, progressInstance,
+            Jimm.getJimm().getChatUpdater().changeFileProgress(chat, progressInstance,
                     JLocale.getEllipsisString("sending_file"),
                     getProgressText() + "\n"
                             + JLocale.getString(message));
@@ -235,9 +233,9 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     }
     private void addProgress() {
         chat = protocol.getChatModel(cItem);
-        progressInstance = ChatHistory.instance.getUpdater().addFileProgress(chat,
+        progressInstance = Jimm.getJimm().getChatUpdater().addFileProgress(chat,
                 JLocale.getEllipsisString("sending_file"), getProgressText());
-        ChatHistory.instance.getUpdater().activate(chat);
+        Jimm.getJimm().getChatUpdater().activate(chat);
         Jimm.getJimm().jimmModel.addTransfer(this);
     }
     public void setProgress(int percent) {
@@ -263,7 +261,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         }
         progressInstance.par.setProgress((byte)percent);
         if (cItem.hasChat()) {
-            ChatHistory.instance.getUpdater().invalidate(chat);
+            Jimm.getJimm().getChatUpdater().invalidate(chat);
         }
     }
     private void handleException(JimmException e) {

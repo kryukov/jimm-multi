@@ -26,7 +26,8 @@ package jimm;
 
 import java.io.*;
 import javax.microedition.io.*;
-import jimm.chat.ChatHistory;
+
+import jimm.chat.ChatUpdater;
 import jimm.cl.*;
 import jimm.comm.*;
 import jimm.modules.*;
@@ -53,6 +54,8 @@ public class Jimm {
     private MessageEditor editor;
     private StatusView statusView;
     public UIUpdater uiUpdater;
+
+    private ChatUpdater chatUpdater = new ChatUpdater();
 
     // #sijapp cond.if modules_ACTIVITYUI is "true"#
     private ActivityUI activity;
@@ -206,7 +209,7 @@ public class Jimm {
      * Destroy Jimm
      */
     public void destroyJimm() {
-        ChatHistory.instance.saveUnreadMessages();
+        chatUpdater.saveUnreadMessages();
         // #sijapp cond.if modules_TRAFFIC is "true" #
         // Save traffic
         Traffic.getInstance().safeSave();
@@ -419,5 +422,10 @@ public class Jimm {
         // phase 5
         cl.startUp();
         uiUpdater.refreshClock();
+    }
+
+
+    public ChatUpdater getChatUpdater() {
+        return chatUpdater;
     }
 }

@@ -133,9 +133,9 @@ abstract public class Contact implements TreeNode, Sortable {
 
         ChatModel chat = p.getChatModel(this);
         if (hasChat()) {
-            ChatHistory.instance.getUpdater().activate(chat);
+            Jimm.getJimm().getChatUpdater().activate(chat);
         } else {
-            ChatHistory.instance.getUpdater().writeMessage(chat, null);
+            Jimm.getJimm().getChatUpdater().writeMessage(chat, null);
         }
     }
 ///////////////////////////////////////////////////////////////////////////

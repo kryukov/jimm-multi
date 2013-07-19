@@ -26,10 +26,8 @@ import jimm.chat.ChatModel;
 import jimmui.view.icons.*;
 import jimmui.view.text.*;
 import javax.microedition.lcdui.*;
-import jimm.chat.ChatHistory;
+
 import jimm.comm.*;
-import jimm.chat.message.Message;
-import jimm.cl.*;
 import jimmui.view.base.*;
 import jimm.util.*;
 import protocol.ui.InfoFactory;
@@ -94,7 +92,7 @@ public final class SplashCanvas extends CanvasEx {
             count += ((ChatModel) chats.elementAt(i)).getUnreadMessageCount();
         }
         availableMessages = count;
-        iconOfMessages = ChatHistory.instance.getUnreadMessageIcon();
+        iconOfMessages = Jimm.getJimm().getCL().getUnreadMessageIcon();
         invalidate();
     }
 

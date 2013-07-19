@@ -12,7 +12,6 @@ package protocol.jabber;
 
 import jimmui.Clipboard;
 import jimm.Jimm;
-import jimm.chat.ChatHistory;
 import jimmui.HotKeys;
 import jimmui.view.icons.*;
 import java.util.Vector;
@@ -137,7 +136,7 @@ public final class ConferenceParticipants extends VirtualList {
                         return;
                     }
                 }
-                ChatHistory.instance.getUpdater().writeMessageTo(conference, nick);
+                Jimm.getJimm().getChatUpdater().writeMessageTo(conference, nick);
                 break;
 
             case COMMAND_PRIVATE:

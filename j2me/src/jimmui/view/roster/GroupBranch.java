@@ -1,7 +1,7 @@
 package jimmui.view.roster;
 
+import jimm.Jimm;
 import jimmui.view.icons.Icon;
-import jimm.chat.ChatHistory;
 import jimm.comm.Sortable;
 import jimm.comm.Util;
 import protocol.Contact;
@@ -80,7 +80,7 @@ public class GroupBranch implements TreeBranch, Sortable {
         if (isExpanded()) {
             return;
         }
-        rightIcons[0] = ChatHistory.instance.getUnreadMessageIcon(getContacts());
+        rightIcons[0] = Jimm.getJimm().getCL().getUnreadMessageIcon(getContacts());
     }
 
 

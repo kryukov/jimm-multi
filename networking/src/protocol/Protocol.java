@@ -158,7 +158,7 @@ abstract public class Protocol {
             }
             this.roster = roster;
         }
-        ChatHistory.instance.restoreContactsWithChat(this);
+        Jimm.getJimm().jimmModel.restoreContactsWithChat(this);
 
         if (null != getUpdater()) {
             getUpdater().updateProtocol(this, oldRoster);
@@ -589,7 +589,7 @@ abstract public class Protocol {
             item.beginTyping(type);
             ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(item);
             if (null != chat) {
-                ChatHistory.instance.getUpdater().typing(chat, type);
+                Jimm.getJimm().getChatUpdater().typing(chat, type);
             }
             Jimm.getJimm().getCL().typing(this, item, type);
         }
@@ -790,7 +790,7 @@ abstract public class Protocol {
 
         // Adds a message to the message display
         ChatModel chat = getChatModel(contact);
-        ChatHistory.instance.getUpdater().addMessage(chat, message, !silent && !message.isWakeUp());
+        Jimm.getJimm().getChatUpdater().addMessage(chat, message, !silent && !message.isWakeUp());
         if (message instanceof SystemNotice) {
             SystemNotice notice = (SystemNotice) message;
             if (SystemNotice.TYPE_NOTICE_AUTHREQ == notice.getMessageType()) {
@@ -927,7 +927,7 @@ abstract public class Protocol {
                 if (!cmdExecuted) {
                     String text = JLocale.getString("jabber_command_not_found");
                     SystemNotice notice = new SystemNotice(this, SystemNotice.TYPE_NOTICE_MESSAGE, to.getUserId(), text);
-                    ChatHistory.instance.getUpdater().addMessage(getChatModel(to), notice, false);
+                    Jimm.getJimm().getChatUpdater().addMessage(getChatModel(to), notice, false);
                 }
                 return;
             }
@@ -935,7 +935,7 @@ abstract public class Protocol {
             sendSomeMessage(plainMsg);
         }
         if (addToChat) {
-            ChatHistory.instance.getUpdater().addMyMessage(getChatModel(to), plainMsg);
+            Jimm.getJimm().getChatUpdater().addMyMessage(getChatModel(to), plainMsg);
         }
     }
 
@@ -963,7 +963,7 @@ abstract public class Protocol {
     public final ChatModel getChatModel(Contact contact) {
         ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(contact);
         if (null == chat) {
-            chat = ChatHistory.instance.getUpdater().createModel(this, contact);
+            chat = Jimm.getJimm().getChatUpdater().createModel(this, contact);
             if (!roster.hasContact(contact)) {
                 contact.setTempFlag(true);
                 addLocalContact(contact);

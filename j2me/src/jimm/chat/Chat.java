@@ -70,7 +70,7 @@ public final class Chat extends VirtualList {
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
         if (getWidth() / 2 < Math.abs(fromX - toX)) {
-            ChatHistory.instance.getUpdater().storeTopPosition(model, this);
+            Jimm.getJimm().getChatUpdater().storeTopPosition(model, this);
             Jimm.getJimm().getCL().showNextPrevChat(model, (fromX > toX));
         }
     }
@@ -219,7 +219,7 @@ public final class Chat extends VirtualList {
             switch (actionCode) {
                 case NativeCanvas.NAVIKEY_LEFT:
                 case NativeCanvas.NAVIKEY_RIGHT:
-                    ChatHistory.instance.getUpdater().storeTopPosition(model, this);
+                    Jimm.getJimm().getChatUpdater().storeTopPosition(model, this);
                     Jimm.getJimm().getCL().showNextPrevChat(model, NativeCanvas.NAVIKEY_RIGHT == actionCode);
                     return;
             }
@@ -251,7 +251,7 @@ public final class Chat extends VirtualList {
                 return;
 
             case NativeCanvas.JIMM_BACK:
-                ChatHistory.instance.getUpdater().storeTopPosition(model, this);
+                Jimm.getJimm().getChatUpdater().storeTopPosition(model, this);
                 Jimm.getJimm().getCL().activate(getContact());
                 return;
 
@@ -287,7 +287,7 @@ public final class Chat extends VirtualList {
             // #sijapp cond.end#
 
             case ACTION_DEL_CHAT:
-                ChatHistory.instance.getUpdater().removeMessagesAtCursor(model);
+                Jimm.getJimm().getChatUpdater().removeMessagesAtCursor(model);
                 if (0 < getSize()) {
                     restore();
                 } else {

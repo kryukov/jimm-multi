@@ -10,7 +10,6 @@
 package protocol.ui;
 
 import jimm.*;
-import jimm.chat.ChatHistory;
 import jimm.chat.message.PlainMessage;
 import jimm.forms.ManageContactListForm;
 import jimm.history.*;
@@ -45,11 +44,11 @@ public class ContactMenu implements SelectListener {
     public void doAction(int cmd) {
         switch (cmd) {
             case Contact.USER_MENU_MESSAGE: /* Send plain message */
-                ChatHistory.instance.getUpdater().writeMessage(contact, null);
+                Jimm.getJimm().getChatUpdater().writeMessage(contact, null);
                 break;
                 
             case Contact.USER_MENU_PASTE: /* Send plain message without quotation */
-                ChatHistory.instance.getUpdater().writeMessage(contact, Clipboard.getClipBoardText());
+                Jimm.getJimm().getChatUpdater().writeMessage(contact, Clipboard.getClipBoardText());
                 break;
                 
             case Contact.USER_MENU_ADD_USER:
@@ -70,7 +69,7 @@ public class ContactMenu implements SelectListener {
 
             case Contact.USER_MENU_WAKE:
                 protocol.sendMessage(contact, PlainMessage.CMD_WAKEUP, true);
-                ChatHistory.instance.getUpdater().activate(Jimm.getJimm().jimmModel.getChatModel(contact));
+                Jimm.getJimm().getChatUpdater().activate(Jimm.getJimm().jimmModel.getChatModel(contact));
                 break;
 
             // #sijapp cond.if modules_FILES is "true"#
@@ -139,7 +138,7 @@ public class ContactMenu implements SelectListener {
     // #sijapp cond.if modules_HISTORY is "true" #
     private void showHistory() {
         if (contact.hasHistory()) {
-            ChatHistory.instance.getUpdater().showHistory(contact);
+            Jimm.getJimm().getChatUpdater().showHistory(contact);
         }
     }
     // #sijapp cond.end#

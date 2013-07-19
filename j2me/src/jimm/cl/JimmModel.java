@@ -1,7 +1,6 @@
 package jimm.cl;
 
 import jimm.*;
-import jimm.chat.ChatHistory;
 import jimm.chat.ChatModel;
 import jimm.chat.MessData;
 import jimm.comm.Util;
@@ -293,6 +292,34 @@ public class JimmModel {
         for (int i = 0; i < count; ++i) {
             Protocol p = (Protocol) protocols.elementAt(i);
             p.safeSave();
+        }
+    }
+
+    public void restoreContactsWithChat(Protocol p) {
+        for (int i = 0; i < chats.size(); ++i) {
+            ChatModel chat = (ChatModel) chats.elementAt(i);
+            Contact contact = chat.contact;
+            if (p != chat.getProtocol()) {
+                continue;
+            }
+            if (!p.hasContact(contact)) {
+                Contact newContact = p.getItemByUID(contact.getUserId());
+                if (null != newContact) {
+                    chat.contact = newContact;
+                    contact.updateChatState(null);
+                    newContact.updateChatState(chat);
+                    continue;
+                }
+                if (contact.isSingleUserContact()) {
+                    contact.setTempFlag(true);
+                    contact.setGroup(null);
+                } else {
+                    if (null == p.getGroup(contact)) {
+                        contact.setGroup(p.getGroup(contact.getDefaultGroupName()));
+                    }
+                }
+                p.addTempContact(contact);
+            }
         }
     }
 }

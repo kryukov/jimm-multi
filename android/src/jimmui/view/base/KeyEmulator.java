@@ -1,6 +1,5 @@
 package jimmui.view.base;
 
-import jimm.chat.ChatHistory;
 import jimmui.view.roster.VirtualContactList;
 import jimm.Jimm;
 

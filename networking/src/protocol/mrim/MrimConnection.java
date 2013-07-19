@@ -8,7 +8,6 @@ package protocol.mrim;
 import java.util.*;
 import jimm.*;
 import jimm.JimmException;
-import jimm.chat.ChatHistory;
 import jimm.chat.ChatModel;
 import jimm.chat.message.*;
 import jimm.comm.*;
@@ -255,7 +254,7 @@ public final class MrimConnection extends ClientConnection {
                 if (contact instanceof MrimPhoneContact) {
                     chat.setWritable(false);
                 }
-                ChatHistory.instance.getUpdater().addMessage(chat, message, false);
+                Jimm.getJimm().getChatUpdater().addMessage(chat, message, false);
                 if (!(contact instanceof MrimPhoneContact)) {
                     fromEmail = contact.getUserId();
                 }

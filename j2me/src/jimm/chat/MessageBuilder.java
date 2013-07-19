@@ -148,13 +148,13 @@ public class MessageBuilder {
             boolean atTheEnd = chatAtTheEnd(view);
             if (null != view) {
                 view.lock();
-                ChatHistory.instance.getUpdater().storeTopPosition(chat, view);
+                Jimm.getJimm().getChatUpdater().storeTopPosition(chat, view);
             }
             chat.add(mData);
             setCursor(chat, view, incoming, atTheEnd);
-            ChatHistory.instance.getUpdater().removeOldMessages(chat);
+            Jimm.getJimm().getChatUpdater().removeOldMessages(chat);
             if (null != view) {
-                ChatHistory.instance.getUpdater().restoreTopPositionToUI(chat, view);
+                Jimm.getJimm().getChatUpdater().restoreTopPositionToUI(chat, view);
                 view.unlock();
             }
         }

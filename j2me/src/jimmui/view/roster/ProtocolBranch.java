@@ -10,10 +10,10 @@
 // #sijapp cond.if modules_MULTI is "true" #
 package jimmui.view.roster;
 
+import jimm.Jimm;
 import jimmui.view.icons.Icon;
 import java.util.Vector;
 import jimm.Options;
-import jimm.chat.ChatHistory;
 import jimm.comm.Util;
 import jimm.util.JLocale;
 import protocol.*;
@@ -82,7 +82,7 @@ public class ProtocolBranch implements TreeBranch {
     }
     public final void getRightIcons(Icon[] rightIcons) {
         if (!isExpanded()) {
-            rightIcons[0] = ChatHistory.instance.getUnreadMessageIcon(protocol);
+            rightIcons[0] = Jimm.getJimm().getCL().getUnreadMessageIcon(protocol);
         }
     }
 

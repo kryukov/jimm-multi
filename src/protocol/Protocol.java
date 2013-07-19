@@ -954,9 +954,6 @@ abstract public class Protocol {
         contact.setStatus(status, text);
         if (isConnected() && !isConnecting()) {
             byte curr = contact.getStatusIndex();
-            if ((prev == curr) || !contact.isSingleUserContact()) {
-                return;
-            }
             Jimm.getJimm().getCL().setContactStatus(this, contact, prev, curr);
         }
     }

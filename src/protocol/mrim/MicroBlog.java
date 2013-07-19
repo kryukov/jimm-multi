@@ -25,7 +25,7 @@ Author(s): Artyomov Denis
 // #sijapp cond.if modules_MAGIC_EYE is "true" #
 package protocol.mrim;
 
-import jimm.modules.Notify;
+import jimm.modules.*;
 import jimmui.view.text.TextListModel;
 import jimmui.view.text.TextList;
 import jimmui.view.icons.*;

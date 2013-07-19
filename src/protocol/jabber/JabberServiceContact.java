@@ -11,6 +11,8 @@
 package protocol.jabber;
 
 import java.util.Vector;
+
+import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.chat.message.*;
 import jimmui.view.base.UIUpdater;
@@ -152,7 +154,7 @@ public class JabberServiceContact extends JabberContact {
         }
         SubContact sc = getExistSubContact(nick);
         if (null != sc) {
-            UIUpdater.showTopLine(jabber, this, nick, sc.status);
+            Jimm.getJimm().getCL().setContactStatus(jabber, this, nick, sc.status);
         }
         if (myNick.equals(nick)) {
             setStatus(StatusInfo.STATUS_ONLINE, getStatusText());

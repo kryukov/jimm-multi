@@ -309,12 +309,23 @@ public final class ContactList implements ContactListListener {
     }
 
     public void setContactStatus(Protocol protocol, Contact contact, byte prev, byte curr) {
+        if ((prev == curr) || !contact.isSingleUserContact()) {
+            return;
+        }
         // #sijapp cond.if modules_SOUND is "true" #
+        // #sijapp cond.if protocols_JABBER is "true" #
+        if (contact instanceof JabberServiceContact) {
+            return;
+        }
+        // #sijapp cond.end #
         if (!protocol.isAway(curr) && protocol.isAway(prev)) {
             playNotification(protocol, Notify.NOTIFY_ONLINE);
         }
         // #sijapp cond.end #
         UIUpdater.showTopLine(protocol, contact, null, contact.getStatusIndex());
+    }
+    public void setContactStatus(Protocol protocol, Contact contact, String nick, byte status) {
+        UIUpdater.showTopLine(protocol, contact, nick, status);
     }
 
     public void disconnected(Protocol protocol) {

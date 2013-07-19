@@ -388,7 +388,7 @@ public final class VirtualContactList extends VirtualList {
         TreeNode item = getCurrentNode();
         Contact current = (item instanceof Contact) ? (Contact)item : null;
         if (CanvasEx.KEY_PRESSED == type) {
-            clListener.setCurrentContact(current);
+            updater.setCurrentContact(current);
             switch (keyCode) {
                 case NativeCanvas.CLEAR_KEY:
                     if ((item instanceof Contact) && ((Contact)item).hasChat()) {

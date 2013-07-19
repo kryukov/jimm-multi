@@ -442,7 +442,7 @@ public final class Chat extends VirtualList {
 
     protected void restoring() {
         setTopByOffset(getTopOffset());
-        Jimm.getJimm().getCL().setCurrentContact(getContact());
+        Jimm.getJimm().getCL().getUpdater().setCurrentContact(getContact());
         classic = Options.getBoolean(Options.OPTION_CLASSIC_CHAT);
         int h = line.getRealHeight();
         line.setSize(getHeight() - h, getWidth(), h);

@@ -3,7 +3,6 @@ package jimmui.view.roster;
 import jimm.Jimm;
 import jimmui.model.roster.*;
 import jimm.Options;
-import jimm.cl.ContactList;
 import jimm.comm.Util;
 import protocol.Contact;
 import protocol.Group;
@@ -24,6 +23,8 @@ public class Updater {
 
     private ContactListModel chatModel = new ChatModel();
     private ContactListModel model;
+    private Contact currentContact;
+
     public void addGroup(Protocol protocol, Group group) {
         if (model.hasProtocol(protocol)) {
             model.addGroup(new Update(protocol,  group, null, Update.GROUP_ADD));
@@ -185,6 +186,14 @@ public class Updater {
         // #sijapp cond.if modules_ANDROID is "true" #
         ru.net.jimm.JimmActivity.getInstance().service.updateConnectionState();
         // #sijapp cond.end #
+    }
+
+    public void setCurrentContact(Contact currentContact) {
+        this.currentContact = currentContact;
+    }
+
+    public Contact getCurrentContact() {
+        return currentContact;
     }
 
     public static class Update {

@@ -49,7 +49,7 @@ public class UIUpdater extends TimerTask {
     }
 
     public static void showTopLine(Protocol protocol, Contact contact, String nick, byte statusIndex) {
-        if (contact != Jimm.getJimm().getCL().getCurrentContact()) {
+        if (contact != Jimm.getJimm().getCL().getUpdater().getCurrentContact()) {
             return;
         }
         Object vis = null;

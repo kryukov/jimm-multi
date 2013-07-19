@@ -27,7 +27,6 @@ import jimmui.view.base.CanvasEx;
 import jimmui.view.icons.Icon;
 import java.util.*;
 import jimm.*;
-import jimm.cl.ContactList;
 import jimm.comm.*;
 import protocol.Protocol;
 import jimmui.view.menu.*;
@@ -247,7 +246,7 @@ public final class ChatHistory implements SelectListener {
                 return i;
             }
         }
-        Contact currentContact = Jimm.getJimm().getCL().getCurrentContact();
+        Contact currentContact = Jimm.getJimm().getCL().getUpdater().getCurrentContact();
         int current  = 0;
         for (int i = 0; i < getTotal(); ++i) {
             ChatModel chat = chatModelAt(i);
@@ -277,7 +276,7 @@ public final class ChatHistory implements SelectListener {
 
     @Override
     public void select(Select select, MenuModel menu, int cmd) {
-        ChatModel chat = getChatModel(Jimm.getJimm().getCL().getCurrentContact());
+        ChatModel chat = getChatModel(Jimm.getJimm().getCL().getUpdater().getCurrentContact());
         switch (cmd) {
             case MENU_DEL_CURRENT_CHAT:
                 removeChat(chat);

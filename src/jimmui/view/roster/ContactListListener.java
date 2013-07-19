@@ -17,7 +17,6 @@ import protocol.*;
  * @author Vladimir Krukov
  */
 public interface ContactListListener {
-    void setCurrentContact(Contact contact);
     void activateMainMenu();
     MenuModel getContextMenu(Protocol p, TreeNode node);
 }

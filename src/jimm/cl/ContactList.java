@@ -36,14 +36,11 @@ import protocol.icq.*;
 import protocol.mrim.*;
 import protocol.jabber.*;
 import protocol.ui.ContactMenu;
-import protocol.ui.MessageEditor;
-import protocol.ui.StatusView;
 
 
 public final class ContactList implements ContactListListener {
     private final ProtocolMenu mainMenu = new ProtocolMenu(null, true);
     private VirtualContactList contactList;
-    private Contact currentContact;
 
     public ContactList() {
     }
@@ -276,12 +273,6 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.end #
     }
 
-    public final Contact getCurrentContact() {
-        return currentContact;
-    }
-    public final void setCurrentContact(Contact contact) {
-        currentContact = contact;
-    }
     /////////////////////////////////////////////////////////////////
 
     /** ************************************************************************* */

@@ -29,10 +29,6 @@ import protocol.ui.XStatusInfo;
  * @author vladimir
  */
 abstract public class Contact implements TreeNode, Sortable {
-    // #sijapp cond.if modules_SERVERLISTS is "true" #
-    private static final ImageList serverListsIcons = ImageList.createImageList("/serverlists.png");
-    // #sijapp cond.end #
-
     protected String userId;
     private String name;
     private int groupId = Group.NOT_IN_GROUP;
@@ -133,7 +129,7 @@ abstract public class Contact implements TreeNode, Sortable {
     ///////////////////////////////////////////////////////////////////////////
     /* Activates the contact item menu */
     public void activate(Protocol p) {
-        Jimm.getJimm().getCL().setCurrentContact(this);
+        Jimm.getJimm().getCL().getUpdater().setCurrentContact(this);
 
         ChatModel chat = p.getChatModel(this);
         if (hasChat()) {

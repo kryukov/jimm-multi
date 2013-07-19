@@ -980,9 +980,8 @@ public class Icq extends Protocol {
     public void showStatus(Contact contact) {
         StatusView statusView = Jimm.getJimm().getStatusView();
 
-        Jimm.getJimm().getCL().setCurrentContact(contact);
         _updateStatusView(statusView, contact);
-	statusView.showIt();
+	    statusView.showIt();
         // #sijapp cond.if modules_XSTATUSES is "true" #
         if ((XStatusInfo.XSTATUS_NONE != contact.getXStatusIndex())
                 && (null == contact.getXStatusText())

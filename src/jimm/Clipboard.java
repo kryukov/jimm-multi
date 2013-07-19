@@ -31,10 +31,11 @@ public final class Clipboard {
     //    Clipboard     //
     //                  //
     //////////////////////
+    private static Clipboard instance = new Clipboard();
 
-    private static String clipBoardText;
-    private static String clipBoardHeader;
-    private static boolean clipBoardIncoming;
+    private String text;
+    private String header;
+    private boolean incoming;
 
     private static void insertQuotingChars(StringBuffer out, String text, char qChars) {
         int size = text.length();
@@ -48,7 +49,7 @@ public final class Clipboard {
     }
 
     public static boolean isClipBoardEmpty() {
-        return null == clipBoardText;
+        return null == instance.text;
     }
 
     public static String getClipBoardText() {
@@ -57,19 +58,19 @@ public final class Clipboard {
     public static String getClipBoardText(boolean quote) {
         // #sijapp cond.if modules_ANDROID is "true" #
         String androidClipboard = ru.net.jimm.JimmActivity.getInstance().clipboard.get();
-        if (!StringConvertor.isEmpty(androidClipboard) && !androidClipboard.equals(clipBoardText)) {
-            clipBoardText = androidClipboard;
-            clipBoardHeader = "mobile";
-            clipBoardIncoming = true;
+        if (!StringConvertor.isEmpty(androidClipboard) && !androidClipboard.equals(instance.text)) {
+            instance.text = androidClipboard;
+            instance.header = "mobile";
+            instance.incoming = true;
         }
         // #sijapp cond.end #
         if (isClipBoardEmpty()) {
             return "";
         }
-        if (!quote || (null == clipBoardHeader)) {
-            return clipBoardText + " ";
+        if (!quote || (null == instance.header)) {
+            return instance.text + " ";
         }
-        return serialize(clipBoardIncoming, clipBoardHeader, clipBoardText) + "\n\n";
+        return serialize(instance.incoming, instance.header, instance.text) + "\n\n";
     }
 
     public static String serialize(boolean incoming, String header, String text) {
@@ -80,38 +81,28 @@ public final class Clipboard {
     }
 
     public static void setClipBoardText(String header, String text) {
-        clipBoardText     = text;
-        clipBoardHeader   = header;
-        clipBoardIncoming = true;
+        instance.text = text;
+        instance.header = header;
+        instance.incoming = true;
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().clipboard.put(clipBoardText);
+        ru.net.jimm.JimmActivity.getInstance().clipboard.put(instance.text);
         // #sijapp cond.end #
     }
     public static void setClipBoardText(String text) {
-        clipBoardText     = text;
-        clipBoardHeader   = null;
-        clipBoardIncoming = true;
+        instance.text = text;
+        instance.header = null;
+        instance.incoming = true;
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().clipboard.put(clipBoardText);
+        ru.net.jimm.JimmActivity.getInstance().clipboard.put(instance.text);
         // #sijapp cond.end #
     }
 
     public static void setClipBoardText(boolean incoming, String from, String date, String text) {
-        clipBoardText     = text;
-        clipBoardHeader   = null;//from + ' ' + date;
-        clipBoardIncoming = incoming;
+        instance.text = text;
+        instance.header = null;//from + ' ' + date;
+        instance.incoming = incoming;
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().clipboard.put(clipBoardText);
+        ru.net.jimm.JimmActivity.getInstance().clipboard.put(instance.text);
         // #sijapp cond.end #
     }
-
-    public static void clearClipBoardText() {
-        clipBoardText = null;
-    }
-
-
-    /************************************************************************/
-    /************************************************************************/
-    /************************************************************************/
-
 }

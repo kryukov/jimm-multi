@@ -125,6 +125,9 @@ public class Jimm {
         if (!paused) {
             return;
         }
+        // #sijapp cond.if modules_ANDROID is "true" #
+        restoreUI();
+        // #sijapp cond.end #
         restore(display.getCurrentDisplay());
     }
     // Start Jimm
@@ -133,6 +136,7 @@ public class Jimm {
             return;
         }
         display = new Display();
+        display.updateDisplay();
         locked = false;
         wakeUp();
         initDaemonPhase1();
@@ -400,5 +404,20 @@ public class Jimm {
         // #sijapp cond.if modules_ANDROID is "true" #
         ru.net.jimm.JimmActivity.getInstance().service.started();
         // #sijapp cond.end #
+    }
+
+    public void releaseUI() {
+        uiUpdater.stop();
+        uiUpdater = null;
+        paused = true;
+    }
+    private void restoreUI() {
+        splash = new SplashCanvas();
+        display.updateDisplay();
+        uiUpdater = new UIUpdater();
+        uiUpdater.startUIUpdater();
+        // phase 5
+        cl.startUp();
+        uiUpdater.refreshClock();
     }
 }

@@ -173,7 +173,7 @@ public final class Emotions {
         boolean loaded = false;
         try {
             loaded = loadAll();
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         if (!loaded) {
             selEmotionsIndexes    = null;

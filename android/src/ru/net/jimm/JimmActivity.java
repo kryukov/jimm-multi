@@ -147,8 +147,9 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     @Override
     protected void onDestroy() {
+        Jimm.getJimm().releaseUI();
 // TODO: hide
-        if (null != Jimm.getJimm()) Jimm.getJimm().quit();
+//        if (null != Jimm.getJimm()) Jimm.getJimm().quit();
         Log.i(LOG_TAG, "onDestroy();");
         super.onDestroy();
     }

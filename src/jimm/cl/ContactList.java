@@ -100,9 +100,9 @@ public final class ContactList implements ContactListListener {
         return contactList;
     }
     public Updater getUpdater() {
-//        // #sijapp cond.if modules_ANDROID is "true" #
-//        if (Jimm.isPaused()) return new EmptyUpdater();
-//        // #sijapp cond.end #
+        // #sijapp cond.if modules_ANDROID is "true" #
+        if (Jimm.getJimm().isPaused()) return new EmptyUpdater();
+        // #sijapp cond.end #
         return contactList.getUpdater();
     }
 

@@ -30,6 +30,8 @@ public class Display {
 
     /** Creates a new instance of Display */
     public Display() {
+    }
+    public void updateDisplay() {
         display = javax.microedition.lcdui.Display.getDisplay(JimmMidlet.getMidlet());
     }
     public javax.microedition.lcdui.Display getNativeDisplay() {

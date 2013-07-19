@@ -10,7 +10,7 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
-import jimm.Clipboard;
+import jimmui.Clipboard;
 import jimm.Jimm;
 import jimm.chat.ChatHistory;
 import jimmui.HotKeys;

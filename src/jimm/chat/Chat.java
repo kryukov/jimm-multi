@@ -31,6 +31,7 @@
  */
 package jimm.chat;
 
+import jimmui.Clipboard;
 import jimmui.HotKeys;
 import jimmui.view.icons.Icon;
 import jimm.*;

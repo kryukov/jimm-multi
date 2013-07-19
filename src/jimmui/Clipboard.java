@@ -21,7 +21,7 @@
  * Author(s): Artyomov Denis, Igor Palkin, Andreas Rossbacher, Vladimir Kryukov
  *******************************************************************************/
 
-package jimm;
+package jimmui;
 
 import jimm.comm.StringConvertor;
 

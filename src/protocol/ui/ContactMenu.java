@@ -14,6 +14,7 @@ import jimm.chat.ChatHistory;
 import jimm.chat.message.PlainMessage;
 import jimm.forms.ManageContactListForm;
 import jimm.history.*;
+import jimmui.Clipboard;
 import jimmui.view.menu.*;
 import protocol.Contact;
 import protocol.Protocol;

@@ -4,7 +4,7 @@
  */
 package jimmui.view.text;
 
-import jimm.Clipboard;
+import jimmui.Clipboard;
 import jimmui.view.base.NativeCanvas;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;

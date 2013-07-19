@@ -24,6 +24,7 @@
 
 package jimm.modules;
 
+import jimmui.Clipboard;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListModel;
 import java.util.Vector;

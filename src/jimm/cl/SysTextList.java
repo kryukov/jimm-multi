@@ -9,6 +9,7 @@
 package jimm.cl;
 
 import jimm.modules.*;
+import jimmui.Clipboard;
 import jimmui.view.text.Parser;
 import java.util.*;
 import jimm.*;

@@ -10,6 +10,7 @@ import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.comm.*;
 import jimm.modules.*;
+import jimmui.Clipboard;
 import jimmui.view.base.*;
 import jimm.util.JLocale;
 

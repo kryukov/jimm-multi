@@ -11,6 +11,7 @@ package jimm.history;
 
 // #sijapp cond.if modules_HISTORY is "true" #
 
+import jimmui.Clipboard;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListModel;
 import jimmui.view.text.*;

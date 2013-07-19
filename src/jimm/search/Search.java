@@ -23,11 +23,11 @@
 
 package jimm.search;
 
+import jimm.Jimm;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListModel;
 import java.util.Vector;
 
-import jimm.cl.*;
 import jimm.comm.*;
 import jimmui.view.*;
 import jimmui.view.base.Binder;
@@ -370,7 +370,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
                             protocol.requestAuth(contact);
                         }
                     }
-                    ContactList.getInstance().activate(contact);
+                    Jimm.getJimm().getCL().activate(contact);
                 }
             }
 

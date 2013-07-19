@@ -9,12 +9,12 @@
 
 package jimm.search;
 
+import jimm.Jimm;
 import jimmui.view.text.TextListModel;
 import jimmui.view.text.TextList;
 import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
 import jimm.JimmException;
-import jimm.cl.ContactList;
 import jimm.comm.Util;
 import jimm.forms.*;
 // #sijapp cond.if modules_FILES="true"#
@@ -279,7 +279,7 @@ public class UserInfo implements
 
             case INFO_MENU_GOTO_URL:
                 String text = profileView.getModel().getParText(profileView.getCurrItem());
-                ContactList.getInstance().gotoUrl(text);
+                Jimm.getJimm().getCL().gotoUrl(text);
                 break;
 
             // #sijapp cond.if protocols_ICQ is "true" | protocols_JABBER is "true" | protocols_OBIMP is "true" #

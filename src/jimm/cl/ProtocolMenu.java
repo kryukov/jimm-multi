@@ -74,7 +74,7 @@ public class ProtocolMenu implements SelectListener {
             menu.addItem("set_status", GlobalStatusForm.getGlobalStatusIcon(), MENU_GLOBAL_STATUS);
             menu.addItem("accounts", null, MENU_ACCOUNTS);
             // #sijapp cond.end #
-        } else if (0 < ContactList.getInstance().getManager().getModel().getProtocolCount()) {
+        } else if (0 < Jimm.getJimm().getCL().getManager().getModel().getProtocolCount()) {
             protocolMenu();
         }
         if (isSmsSupported()) {
@@ -96,13 +96,13 @@ public class ProtocolMenu implements SelectListener {
     private void showAccounts() {
         MenuModel m = new MenuModel();
         m.setActionListener(this);
-        int count = ContactList.getInstance().getManager().getModel().getProtocolCount();
+        int count = Jimm.getJimm().getCL().getManager().getModel().getProtocolCount();
         for (int i = 0; i < count; ++i) {
-            Protocol p = ContactList.getInstance().getManager().getModel().getProtocol(i);
+            Protocol p = Jimm.getJimm().getCL().getManager().getModel().getProtocol(i);
             m.addRawItem(p.getUserId(), InfoFactory.factory.getStatusInfo(p).getIcon(p.getProfile().statusIndex),
                     MENU_FIRST_ACCOUNT + i);
         }
-        ContactList.getInstance().getManager().showMenu(m);
+        Jimm.getJimm().getCL().getManager().showMenu(m);
     }
     // #sijapp cond.end #
 
@@ -174,9 +174,9 @@ public class ProtocolMenu implements SelectListener {
 
     private boolean isSmsSupported() {
         // #sijapp cond.if protocols_MRIM is "true" #
-        int count = ContactList.getInstance().getManager().getModel().getProtocolCount();
+        int count = Jimm.getJimm().getCL().getManager().getModel().getProtocolCount();
         for (int i = 0; i < count; ++i) {
-            Protocol p = ContactList.getInstance().getManager().getModel().getProtocol(i);
+            Protocol p = Jimm.getJimm().getCL().getManager().getModel().getProtocol(i);
             if ((p instanceof Mrim) && p.isConnected()) {
                 return true;
             }
@@ -184,7 +184,7 @@ public class ProtocolMenu implements SelectListener {
         // #sijapp cond.end #
         // #sijapp cond.if target is "MIDP2" #
         // #sijapp cond.if modules_FILES="true"#
-        if (!ContactList.getInstance().isCollapsible()) {
+        if (!Jimm.getJimm().phone.isCollapsible()) {
             return true;
         }
         // #sijapp cond.end #
@@ -194,9 +194,9 @@ public class ProtocolMenu implements SelectListener {
 
     private void execCommand(int cmd) {
         if (MENU_FIRST_ACCOUNT <= cmd) {
-            Protocol p = ContactList.getInstance().getManager().getModel().getProtocol(cmd - MENU_FIRST_ACCOUNT);
-            MenuModel model = ContactList.getInstance().getContextMenu(p, null);
-            ContactList.getInstance().getManager().showMenu(model);
+            Protocol p = Jimm.getJimm().getCL().getManager().getModel().getProtocol(cmd - MENU_FIRST_ACCOUNT);
+            MenuModel model = Jimm.getJimm().getCL().getContextMenu(p, null);
+            Jimm.getJimm().getCL().getManager().showMenu(model);
             return;
         }
         final Protocol proto = activeProtocol;
@@ -204,7 +204,7 @@ public class ProtocolMenu implements SelectListener {
             case MENU_DISCONNECT:
                 proto.setStatus(StatusInfo.STATUS_OFFLINE, "");
                 Thread.yield();
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             case MENU_KEYLOCK:

@@ -381,7 +381,7 @@ public class ViewFinder extends Canvas implements Runnable {
         return 0;
     }
     protected void pointerReleased(int x, int y) {
-        ContactList.getInstance().userActivity();
+        Jimm.getJimm().getCL().userActivity();
         if (y > getClientHeight()) {
             final int key = getTouchKey(x);
             if (key == touchKey) {
@@ -399,7 +399,7 @@ public class ViewFinder extends Canvas implements Runnable {
         touchKey = 0;
     }
     protected void pointerPressed(int x, int y) {
-        ContactList.getInstance().userActivity();
+        Jimm.getJimm().getCL().userActivity();
         // #sijapp cond.if modules_LIGHT is "true" #
         CustomLight.setLightMode(CustomLight.ACTION_KEY_PRESS);
         // #sijapp cond.end#

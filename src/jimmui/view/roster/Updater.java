@@ -1,5 +1,6 @@
 package jimmui.view.roster;
 
+import jimm.Jimm;
 import jimmui.model.roster.*;
 import jimm.Options;
 import jimm.cl.ContactList;
@@ -58,7 +59,7 @@ public class Updater {
     }
 
     public void update() {
-        ContactList.getInstance().getManager().update();
+        Jimm.getJimm().getCL().getManager().update();
     }
     public void update(Protocol protocol) {
         if (model.hasProtocol(protocol)) {
@@ -74,13 +75,13 @@ public class Updater {
         update();
     }
     public void repaint() {
-        ContactList.getInstance().getManager().invalidate();
+        Jimm.getJimm().getCL().getManager().invalidate();
     }
 
     public void typing(Protocol protocol, Contact item) {
         if (model.hasProtocol(protocol)) {
             // TODO: if contact visible only
-            ContactList.getInstance().getManager().invalidate();
+            Jimm.getJimm().getCL().getManager().invalidate();
         }
     }
 
@@ -130,7 +131,7 @@ public class Updater {
         } catch (Exception e) {
             // no groups mode
         }
-        ContactList.getInstance().getManager().setAllToTop();
+        Jimm.getJimm().getCL().getManager().setAllToTop();
         update();
     }
 

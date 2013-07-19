@@ -12,7 +12,6 @@ package protocol.ui;
 import jimm.*;
 import jimm.chat.ChatHistory;
 import jimm.chat.message.PlainMessage;
-import jimm.cl.ContactList;
 import jimm.forms.ManageContactListForm;
 import jimm.history.*;
 import jimmui.view.menu.*;
@@ -61,7 +60,7 @@ public class ContactMenu implements SelectListener {
                 HistoryStorage.getHistory(contact).removeHistory();
                 // #sijapp cond.end#
                 protocol.removeContact(contact);
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             case Contact.USER_MENU_STATUSES: /* Show user statuses */

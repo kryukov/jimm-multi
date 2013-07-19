@@ -133,7 +133,7 @@ abstract public class Contact implements TreeNode, Sortable {
     ///////////////////////////////////////////////////////////////////////////
     /* Activates the contact item menu */
     public void activate(Protocol p) {
-        ContactList.getInstance().setCurrentContact(this);
+        Jimm.getJimm().getCL().setCurrentContact(this);
 
         ChatModel chat = p.getChatModel(this);
         if (hasChat()) {

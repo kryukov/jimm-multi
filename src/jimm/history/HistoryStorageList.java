@@ -17,7 +17,6 @@ import jimmui.view.text.*;
 import java.util.*;
 import javax.microedition.rms.*;
 import jimm.*;
-import jimm.cl.*;
 // #sijapp cond.if modules_FILES="true"#
 // #sijapp cond.end#
 import jimmui.view.*;
@@ -122,7 +121,7 @@ public final class HistoryStorageList extends VirtualList implements
         }
         switch (action) {
             case MENU_GOTO_URL:
-                ContactList.getInstance().gotoUrl(getCachedRecord(getCurrItem()).text);
+                Jimm.getJimm().getCL().gotoUrl(getCachedRecord(getCurrItem()).text);
                 break;
 
             case MENU_SELECT:

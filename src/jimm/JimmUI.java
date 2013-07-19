@@ -175,7 +175,7 @@ public final class JimmUI {
             Jimm.getJimm().lockJimm();
             return true;
         }
-        ContactList cl = ContactList.getInstance();
+        ContactList cl = Jimm.getJimm().getCL();
         if (null != contact) {
             switch (actionNum) {
                 // #sijapp cond.if modules_HISTORY is "true" #
@@ -225,7 +225,7 @@ public final class JimmUI {
                 boolean hide = !Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
                 Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, hide);
                 Options.safeSave();
-                ContactList.getInstance().activate();
+                cl.activate();
                 return true;
 
             case Options.HOTKEY_MINIMIZE:
@@ -240,7 +240,7 @@ public final class JimmUI {
 
             case Options.HOTKEY_COLLAPSE_ALL:
                 if (currentDisplay == cl.getManager()) {
-                    ContactList.getInstance().getUpdater().collapseAll();
+                    cl.getUpdater().collapseAll();
                 }
                 return true;
         }

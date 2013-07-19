@@ -10,6 +10,7 @@
 package jimm.forms;
 
 // #sijapp cond.if modules_XSTATUSES is "true" #
+import jimm.Jimm;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.io.Storage;
@@ -100,7 +101,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
         new Select(menu).show();
     }
     public final void back() {
-        ContactList.getInstance().activate();
+        Jimm.getJimm().getCL().activate();
     }
 
 
@@ -117,7 +118,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
             }
         }
         protocol.setXStatus(xstatus, title, desc);
-        ContactList.getInstance().updateMainMenu();
+        Jimm.getJimm().getCL().updateMainMenu();
     }
 
     public void textboxAction(InputTextBox box, boolean ok) {

@@ -136,7 +136,7 @@ public final class VirtualContactList extends VirtualList {
                     model = updater.getChatModel();
                     break;
             }
-            jimm.cl.ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
         }
     }
     protected void touchItemTaped(int item, int x, boolean isLong) {

@@ -10,11 +10,11 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
+import jimm.Jimm;
 import jimm.chat.ChatHistory;
 import jimmui.view.icons.*;
 import java.util.Vector;
 import jimm.JimmUI;
-import jimm.cl.ContactList;
 import jimmui.view.*;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
@@ -113,7 +113,7 @@ public final class ConferenceParticipants extends VirtualList {
                 break;
 
             case COMMAND_REPLY:
-                MessageEditor editor = ContactList.getInstance().getMessageEditor();
+                MessageEditor editor = Jimm.getJimm().getCL().getMessageEditor();
                 if (editor.isActive(conference)) {
                     InputTextBox box = editor.getTextBox();
                     String text = box.getRawString();

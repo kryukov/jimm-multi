@@ -9,6 +9,7 @@
 
 package jimm.forms;
 
+import jimm.Jimm;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimmui.view.InputTextBox;
@@ -74,6 +75,6 @@ public final class SomeStatusForm implements SelectListener, TextBoxListener {
     }
     private void setStatus() {
         protocol.setStatus(selectedStatus, null);
-        ContactList.getInstance().activate();
+        Jimm.getJimm().getCL().activate();
     }
 }

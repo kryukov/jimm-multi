@@ -34,7 +34,6 @@ package jimm.chat;
 import jimmui.view.icons.Icon;
 import jimm.*;
 import jimm.chat.message.*;
-import jimm.cl.*;
 import jimm.comm.*;
 import jimm.history.*;
 import jimmui.view.base.*;
@@ -135,7 +134,7 @@ public final class Chat extends VirtualList {
                 return;
             }
             // #sijapp cond.end #
-            MessageEditor editor = ContactList.getInstance().getMessageEditor();
+            MessageEditor editor = Jimm.getJimm().getCL().getMessageEditor();
             if (null != editor) {
                 editor.writeMessage(getProtocol(), getContact(), initText);
             }
@@ -250,7 +249,7 @@ public final class Chat extends VirtualList {
 
             case NativeCanvas.JIMM_BACK:
                 ChatHistory.instance.getUpdater().storeTopPosition(model, this);
-                ContactList.getInstance().activate(getContact());
+                Jimm.getJimm().getCL().activate(getContact());
                 return;
 
             case NativeCanvas.JIMM_SELECT:
@@ -271,7 +270,7 @@ public final class Chat extends VirtualList {
                 break;
 
             case ACTION_GOTO_URL:
-                ContactList.getInstance().gotoUrl(getCurrentText());
+                Jimm.getJimm().getCL().gotoUrl(getCurrentText());
                 break;
 
             case ACTION_SELECT:
@@ -290,7 +289,7 @@ public final class Chat extends VirtualList {
                     restore();
                 } else {
                     ChatHistory.instance.unregisterChat(model);
-                    ContactList.getInstance().activate(null);
+                    Jimm.getJimm().getCL().activate(null);
                 }
                 break;
 
@@ -441,7 +440,7 @@ public final class Chat extends VirtualList {
 
     protected void restoring() {
         setTopByOffset(getTopOffset());
-        ContactList.getInstance().setCurrentContact(getContact());
+        Jimm.getJimm().getCL().setCurrentContact(getContact());
         classic = Options.getBoolean(Options.OPTION_CLASSIC_CHAT);
         int h = line.getRealHeight();
         line.setSize(getHeight() - h, getWidth(), h);
@@ -457,7 +456,7 @@ public final class Chat extends VirtualList {
         resetSelected();
         line.setString("");
         showTop();
-        ContactList.getInstance()._setActiveContact(getContact());
+        Jimm.getJimm().getCL()._setActiveContact(getContact());
         // #sijapp cond.if modules_ANDROID is "true" #
         NativeCanvas.getInstance().getInput().setOwner(this);
         // #sijapp cond.end #

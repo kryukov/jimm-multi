@@ -142,7 +142,7 @@ public final class FileBrowser extends VirtualList implements Runnable {
 
             case NativeCanvas.JIMM_BACK:
                 if ((null != errorMessage) || FileSystem.ROOT_DIRECTORY.equals(currDir)) {
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
 
                 } else {
                     int d = currDir.lastIndexOf('/', currDir.length() - 2);

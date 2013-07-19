@@ -66,7 +66,7 @@ public final class PrivateStatusForm implements SelectListener {
         protocol.setPrivateStatus((byte)statusIndex);
         Options.setInt(Options.OPTION_PRIVATE_STATUS, statusIndex);
         Options.safeSave();
-        ContactList.getInstance().activate();
+        Jimm.getJimm().getCL().activate();
     }
 
     public final void show() {

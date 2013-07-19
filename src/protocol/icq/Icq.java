@@ -27,7 +27,6 @@ package protocol.icq;
 import java.io.*;
 import java.util.*;
 import jimm.chat.message.*;
-import jimm.cl.*;
 import jimm.comm.*;
 import jimm.forms.*;
 import jimm.search.UserInfo;
@@ -248,7 +247,7 @@ public class Icq extends Protocol {
             case IcqContact.USER_MENU_REMOVE_ME:
                 // Remove me from other users contact list
                 sendRemoveMePacket(contact.getUserId());
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             // #sijapp cond.if modules_SERVERLISTS is "true" #
@@ -268,7 +267,7 @@ public class Icq extends Protocol {
                         break;
                 }
                 changeServerList(list, (IcqContact) contact);
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
             // #sijapp cond.end #
         }
@@ -979,9 +978,9 @@ public class Icq extends Protocol {
         data.showProfile();
     }
     public void showStatus(Contact contact) {
-        StatusView statusView = ContactList.getInstance().getStatusView();
+        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
 
-        ContactList.getInstance().setCurrentContact(contact);
+        Jimm.getJimm().getCL().setCurrentContact(contact);
         _updateStatusView(statusView, contact);
 	statusView.showIt();
         // #sijapp cond.if modules_XSTATUSES is "true" #
@@ -993,7 +992,7 @@ public class Icq extends Protocol {
         // #sijapp cond.end #
     }
     public void updateStatusView(Contact contact) {
-        StatusView statusView = ContactList.getInstance().getStatusView();
+        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
         if (contact == statusView.getContact()) {
             _updateStatusView(statusView, contact);
         }

@@ -819,7 +819,7 @@ public final class JabberXml extends ClientConnection {
                     // #sijapp cond.if modules_DEBUGLOG is "true" #
                     DebugLog.println("ver " + jid + " " + name + " " + ver + " in " + os);
                     // #sijapp cond.end #
-                    StatusView sv = jimm.cl.ContactList.getInstance().getStatusView();
+                    StatusView sv = Jimm.getJimm().getCL().getStatusView();
                     Contact c = sv.getContact();
                     // TODO: check protocol instance
                     if ((null != c) && c.getUserId().equals(jid)) {

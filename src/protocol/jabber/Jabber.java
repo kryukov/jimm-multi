@@ -14,7 +14,6 @@ import jimm.chat.ChatHistory;
 import java.util.Vector;
 import jimm.*;
 import jimm.chat.message.PlainMessage;
-import jimm.cl.ContactList;
 import jimm.comm.*;
 import jimm.search.*;
 import jimmui.view.form.FormListener;
@@ -503,12 +502,12 @@ public final class Jabber extends Protocol implements FormListener {
         switch (cmd) {
             case JabberServiceContact.GATE_CONNECT:
                 getConnection().sendPresence((JabberServiceContact) contact);
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             case JabberServiceContact.GATE_DISCONNECT:
                 getConnection().sendPresenceUnavailable(c.getUserId());
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             case JabberServiceContact.GATE_REGISTER:
@@ -518,7 +517,7 @@ public final class Jabber extends Protocol implements FormListener {
             case JabberServiceContact.GATE_UNREGISTER:
                 getConnection().unregister(c.getUserId());
                 getConnection().removeGateContacts(c.getUserId());
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             case JabberServiceContact.GATE_ADD:
@@ -552,12 +551,12 @@ public final class Jabber extends Protocol implements FormListener {
 
             case JabberServiceContact.CONFERENCE_DISCONNECT:
                 leave((JabberServiceContact) c);
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             case JabberServiceContact.CONFERENCE_ADD:
                 addContact(c);
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
             case JabberContact.USER_MENU_CONNECTIONS:
@@ -571,7 +570,7 @@ public final class Jabber extends Protocol implements FormListener {
 
             case JabberContact.USER_MENU_REMOVE_ME:
                 removeMe(c.getUserId());
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
 
         }
@@ -665,7 +664,7 @@ public final class Jabber extends Protocol implements FormListener {
 
     @Override
     public void showStatus(Contact contact) {
-        StatusView statusView = ContactList.getInstance().getStatusView();
+        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
         try {
             if (contact.isOnline() && contact.isSingleUserContact()) {
                 String jid = contact.getUserId();
@@ -735,7 +734,7 @@ public final class Jabber extends Protocol implements FormListener {
                         join(enterConf);
                     }
                 }
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
 
             } else {
                 enterData.back();

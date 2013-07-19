@@ -10,7 +10,7 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
-import jimm.cl.ContactList;
+import jimm.Jimm;
 import jimm.comm.*;
 import jimmui.view.form.*;
 import protocol.*;
@@ -89,7 +89,7 @@ final class JabberForm implements FormListener {
             switch (type) {
                 case TYPE_CAPTCHA:
                     Contact c = jabber.getItemByUID(jid);
-                    ContactList.getInstance().activate(c);
+                    Jimm.getJimm().getCL().activate(c);
                     return;
             }
             form.back();
@@ -102,7 +102,7 @@ final class JabberForm implements FormListener {
     }
 
     void success() {
-        ContactList.getInstance().activate(jabber.getItemByUID(jid));
+        Jimm.getJimm().getCL().activate(jabber.getItemByUID(jid));
     }
 
     private String getCaptchaXml() {
@@ -135,12 +135,12 @@ final class JabberForm implements FormListener {
 
             case TYPE_CAPTCHA:
                 jabber.getConnection().requestRawXml(getCaptchaXml());
-                ContactList.getInstance().activate(jabber.getItemByUID(jid));
+                Jimm.getJimm().getCL().activate(jabber.getItemByUID(jid));
                 break;
 
             case TYPE_OWNER:
                 jabber.getConnection().requestRawXml(getOwnerXml());
-                ContactList.getInstance().activate(jabber.getItemByUID(jid));
+                Jimm.getJimm().getCL().activate(jabber.getItemByUID(jid));
                 break;
 
             case TYPE_NONE:

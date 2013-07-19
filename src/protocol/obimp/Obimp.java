@@ -10,8 +10,8 @@
 // #sijapp cond.if protocols_OBIMP is "true" #
 package protocol.obimp;
 
+import jimm.Jimm;
 import jimm.chat.message.PlainMessage;
-import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimm.search.*;
@@ -178,7 +178,7 @@ public class Obimp extends Protocol {
 
     @Override
     public void showStatus(Contact contact) {
-        StatusView statusView = ContactList.getInstance().getStatusView();
+        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
         statusView.init(this, contact);
         statusView.initUI();
         statusView.addContactStatus();

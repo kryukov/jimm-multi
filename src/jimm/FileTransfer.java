@@ -204,7 +204,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             }
         } else {
             destroy();
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
         }
     }
 

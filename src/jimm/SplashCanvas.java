@@ -126,7 +126,7 @@ public final class SplashCanvas extends CanvasEx {
                 Jimm.getJimm().unlockJimm();
                 return;
             }
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
         } else {
             setProgress(0);
         }

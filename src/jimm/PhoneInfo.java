@@ -204,4 +204,11 @@ public class PhoneInfo {
     public boolean isCedar() {
         return hasSubStr(StringConvertor.notNull(microeditionPlatform), "EricssonJ108i");
     }
+
+    public boolean isCollapsible() {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        if (true) return true;
+        // #sijapp cond.end #
+        return isPhone(PhoneInfo.PHONE_SE) || isPhone(PhoneInfo.PHONE_NOKIA_S60);
+    }
 }

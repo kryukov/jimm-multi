@@ -246,7 +246,7 @@ abstract public class Protocol {
 
     public final void needSave() {
         needSave = true;
-        ContactList.getInstance().needRosterSave();
+        Jimm.getJimm().getCL().needRosterSave();
     }
     // FIXME
     public final boolean safeSave() {
@@ -632,10 +632,10 @@ abstract public class Protocol {
 
 
     private ContactList getContactList() {
-        return ContactList.getInstance();
+        return Jimm.getJimm().getCL();
     }
     private Updater getUpdater() {
-        return ContactList.getInstance().getUpdater();
+        return Jimm.getJimm().getCL().getUpdater();
     }
 
     protected abstract void s_updateOnlineStatus();
@@ -811,7 +811,7 @@ abstract public class Protocol {
                 ui_updateContact(contact);
             }
         }
-        ContactList.getInstance().receivedMessage(contact);
+        Jimm.getJimm().getCL().receivedMessage(contact);
     }
     private void addMessageNotify(ChatModel chat, Contact contact, Message message) {
         boolean isPersonal = contact.isSingleUserContact();
@@ -834,7 +834,7 @@ abstract public class Protocol {
 
         boolean isPaused = false;
         // #sijapp cond.if target is "MIDP2" #
-        isPaused = Jimm.getJimm().isPaused() && ContactList.getInstance().isCollapsible();
+        isPaused = Jimm.getJimm().isPaused() && Jimm.getJimm().phone.isCollapsible();
         if (isPaused && isPersonal && isHuman) {
             if (Options.getBoolean(Options.OPTION_BRING_UP)) {
                 ChatModel model = getChatModel(contact);
@@ -851,7 +851,7 @@ abstract public class Protocol {
 
         if (!isPaused && isHuman) {
             if (isPersonal) {
-                ContactList.getInstance().setActiveContact(contact);
+                Jimm.getJimm().getCL().setActiveContact(contact);
             }
             // #sijapp cond.if modules_LIGHT is "true" #
             if (isPersonal || isMention) {

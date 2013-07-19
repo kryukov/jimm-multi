@@ -10,7 +10,8 @@
 package jimm.forms;
 
 import java.util.Vector;
-import jimm.cl.ContactList;
+
+import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.search.*;
 import jimmui.view.*;
@@ -110,7 +111,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         if (groupList == model) {
             groupList = null;
             protocol.moveContactTo(contact, protocol.getGroupById(cmd));
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
             return;
         }
         action = cmd;
@@ -149,7 +150,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
                     form.show();
                 } else {
                     protocol.removeGroup(group);
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
                 }
                 break;
         }
@@ -201,7 +202,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         if (null != contact) {
             if (renameContactTextbox == box) {
                 protocol.renameContact(contact, renameContactTextbox.getString());
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 renameContactTextbox.setString(null);
             }
             return;
@@ -214,25 +215,25 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         String groupName_ = groupName.getString();
         boolean isExist = null != protocol.getGroup(groupName_);
         if (0 == groupName_.length()) {
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
             return;
         }
         switch (action) {
             case ADD_GROUP:
                 if (!isExist) {
                     protocol.addGroup(protocol.createGroup(groupName_));
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
                 }
                 break;
 
             case RENAME_GROUP:
                 boolean isMyName = group.getName().equals(groupName_);
                 if (isMyName) {
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
 
                 } else if (!isExist) {
                     protocol.renameGroup(group, groupName_);
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
                 }
                 break;
         }
@@ -243,11 +244,11 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
 
     public void formAction(GraphForm form, boolean apply) {
         if (!apply) {
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
             return;
         }
         if (!form.hasControl(GROUP)) {
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
             return;
         }
         switch (action) {
@@ -260,20 +261,20 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
                 boolean isMyName = oldGroupName.equals(newGroupName);
                 if (!oldGroupName.equals(g.getName())) {
                     // invalid group
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
 
                 } else if (StringConvertor.isEmpty(newGroupName)) {
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
 
                 } else if (isMyName) {
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
 
                 } else if (isExist) {
                     form.addString(JLocale.getString("group_already_exist"));
 
                 } else {
                     protocol.renameGroup(g, newGroupName);
-                    ContactList.getInstance().activate();
+                    Jimm.getJimm().getCL().activate();
                 }
                 break;
             }
@@ -285,7 +286,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
                 if (oldGroupName.equals(g.getName())) {
                     protocol.removeGroup(g);
                 }
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
             }
         }

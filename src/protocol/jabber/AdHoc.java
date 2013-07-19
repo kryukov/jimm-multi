@@ -5,7 +5,7 @@
 package protocol.jabber;
 
 // #sijapp cond.if protocols_JABBER is "true" #
-import jimm.cl.ContactList;
+import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimmui.view.base.Popup;
@@ -139,7 +139,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
 
         } else {
             execForm();
-            ContactList.getInstance().activate(contact);
+            Jimm.getJimm().getCL().activate(contact);
         }
     }
     private void execForm() {

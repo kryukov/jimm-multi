@@ -13,7 +13,6 @@ import java.util.*;
 import jimm.Jimm;
 import jimm.chat.ChatHistory;
 import jimm.chat.ChatModel;
-import jimm.cl.ContactList;
 import jimmui.view.*;
 import protocol.Contact;
 import protocol.ui.MessageEditor;
@@ -50,11 +49,11 @@ public class UIUpdater extends TimerTask {
     }
 
     public static void showTopLine(Protocol protocol, Contact contact, String nick, byte statusIndex) {
-        if (contact != ContactList.getInstance().getCurrentContact()) {
+        if (contact != Jimm.getJimm().getCL().getCurrentContact()) {
             return;
         }
         Object vis = null;
-        MessageEditor editor = ContactList.getInstance().getMessageEditor();
+        MessageEditor editor = Jimm.getJimm().getCL().getMessageEditor();
         if ((null != editor) && editor.getTextBox().isShown()) {
             vis = editor.getTextBox();
         } else if (contact.hasChat()) {
@@ -147,7 +146,7 @@ public class UIUpdater extends TimerTask {
         }
         long microTime = System.currentTimeMillis();
 
-        ContactList.getInstance().timerAction();
+        Jimm.getJimm().getCL().timerAction();
 
         NativeCanvas canvas = NativeCanvas.getInstance();
         if (!canvas.isShown()) {

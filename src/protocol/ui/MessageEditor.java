@@ -9,9 +9,9 @@
 
 package protocol.ui;
 
+import jimm.Jimm;
 import jimm.Options;
 import jimm.chat.ChatHistory;
-import jimm.cl.ContactList;
 import jimmui.view.*;
 import protocol.Contact;
 import protocol.Protocol;
@@ -83,7 +83,7 @@ public class MessageEditor implements TextBoxListener {
             if (toContact.hasChat()) {
                 ChatHistory.instance.getUpdater().activate(protocol.getChatModel(toContact));
             } else {
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
             }
             messageTextbox.setString(null);
             return;

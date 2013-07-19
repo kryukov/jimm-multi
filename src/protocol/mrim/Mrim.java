@@ -9,6 +9,7 @@
 // #sijapp cond.if protocols_MRIM is "true" #
 package protocol.mrim;
 
+import jimm.Jimm;
 import jimmui.view.text.TextList;
 
 import java.io.*;
@@ -334,7 +335,7 @@ public class Mrim extends Protocol {
                 }
                 contact.setFlags(flags);
                 getConnection().updateContact(contact);
-                ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
                 break;
             // #sijapp cond.end #
         }
@@ -389,7 +390,7 @@ public class Mrim extends Protocol {
         if (contact instanceof MrimPhoneContact) {
             return;
         }
-        StatusView statusView = ContactList.getInstance().getStatusView();
+        StatusView statusView = Jimm.getJimm().getCL().getStatusView();
         MenuModel menu = new MenuModel();
 
         statusView.init(this, contact);

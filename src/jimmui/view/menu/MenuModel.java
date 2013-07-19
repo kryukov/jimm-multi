@@ -9,6 +9,7 @@
 
 package jimmui.view.menu;
 
+import jimm.Jimm;
 import jimmui.view.icons.Icon;
 import java.util.Vector;
 import jimm.util.JLocale;
@@ -20,7 +21,7 @@ import jimm.util.JLocale;
 public final class MenuModel {
     public static final int UNDEFINED_CODE   = -10000;
     public static final int DELIMITER_CODE    = -10001;
-    private Vector items = new Vector();
+    private Vector<MenuItem> items = new Vector<MenuItem>();
     private SelectListener listener;
     private int selectedItemIndex;
     /** Creates a new instance of MenuModel */
@@ -66,7 +67,7 @@ public final class MenuModel {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         if (null == listener) {
             jimm.modules.DebugLog.panic("select listener is null");
-            jimm.cl.ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().activate();
             return;
         }
         // #sijapp cond.end#
@@ -85,7 +86,7 @@ public final class MenuModel {
             if (null != menu) {
                 menu.back();
             } else {
-                jimm.cl.ContactList.getInstance().activate();
+                Jimm.getJimm().getCL().activate();
             }
         }
     }

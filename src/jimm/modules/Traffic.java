@@ -201,8 +201,8 @@ public final class Traffic {
         trafficBlockSize += size;
         if (trafficBlockSize > UPDATE_CL_BYTES) {
     	    trafficBlockSize = 0;
-            ContactList.getInstance().getManager().updateTitle();
-            ContactList.getInstance().getManager().invalidate();
+            Jimm.getJimm().getCL().getManager().updateTitle();
+            Jimm.getJimm().getCL().getManager().invalidate();
         }
     }
 

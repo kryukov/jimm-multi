@@ -46,6 +46,7 @@ public class Jimm {
     private Display display;
     public JimmModel jimmModel;
     public SplashCanvas splash;
+    private ContactList cl;
 
     // #sijapp cond.if modules_ACTIVITYUI is "true"#
     private ActivityUI activity;
@@ -66,7 +67,7 @@ public class Jimm {
             url = "xmpp:" + url;
         }
         if (url.startsWith("xmpp:")) {
-            Search search = ContactList.getInstance().getManager().getCurrentProtocol().getSearchForm();
+            Search search = cl.getManager().getCurrentProtocol().getSearchForm();
             search.show(Util.getUrlWithoutProtocol(url));
             return;
         }
@@ -121,7 +122,7 @@ public class Jimm {
         StringConvertor.load();
         //splash.setProgress(35);
         Templates.getInstance().load();
-        ContactList.getInstance().initMessageEditor();
+        cl.initMessageEditor();
         Jimm.gc();
 
         // #sijapp cond.if modules_DEBUGLOG is "true"#
@@ -155,6 +156,7 @@ public class Jimm {
         // #sijapp cond.end #
         splash.setProgress(5);
 
+        cl = new ContactList();
         // back loading (traffic, sounds and light)
         //new Thread(this).start();
         backgroundLoading();
@@ -165,9 +167,9 @@ public class Jimm {
         splash.setProgress(20);
         Options.loadAccounts();
         splash.setProgress(50);
-        ContactList.getInstance().initUI();
+        cl.initUI();
         splash.setProgress(60);
-        ContactList.getInstance().updateAccounts();
+        cl.updateAccounts();
 
         // #sijapp cond.if modules_ACTIVITYUI is "true"#
         if (phone.isPhone(PhoneInfo.PHONE_SE) && (750 <= phone.getSeVersion())) {
@@ -220,7 +222,7 @@ public class Jimm {
         initBasic();
         try {
             initialize();
-            ContactList.getInstance().startUp();
+            cl.startUp();
             UIUpdater.refreshClock();
         } catch (Exception e) {
             // #sijapp cond.if modules_DEBUGLOG is "true"#
@@ -306,7 +308,7 @@ public class Jimm {
     public void unlockJimm() {
         lastLockTime = Jimm.getCurrentGmtTime();
         locked = false;
-        ContactList.getInstance().activate();
+        cl.activate();
         UIUpdater.refreshClock();
         // #sijapp cond.if modules_ABSENCE is "true" #
         AutoAbsence.instance.online();
@@ -362,5 +364,9 @@ public class Jimm {
             Thread.sleep(50);
         } catch (Exception ignored) {
         }
+    }
+
+    public ContactList getCL() {
+        return cl;
     }
 }

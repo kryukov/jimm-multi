@@ -13,7 +13,6 @@ import jimmui.view.text.TextListModel;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.Parser;
 import jimm.Jimm;
-import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimmui.view.base.CanvasEx;
@@ -58,7 +57,7 @@ public final class StatusView extends TextListController {
                 break;
 
             case INFO_MENU_GOTO_URL:
-                ContactList.getInstance().gotoUrl(model.getParText(list.getCurrItem()));
+                Jimm.getJimm().getCL().gotoUrl(model.getParText(list.getCurrItem()));
                 break;
 
                 // #sijapp cond.if protocols_ICQ is "true" #

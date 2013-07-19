@@ -38,7 +38,7 @@ public class GlobalStatusForm implements SelectListener {
     }
 
     public void select(Select select, MenuModel menu, int cmd) {
-        ContactList.getInstance().activate();
+        Jimm.getJimm().getCL().activate();
         setGlobalStatus(cmd);
     }
 

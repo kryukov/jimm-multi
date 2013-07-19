@@ -2,10 +2,10 @@ package jimmui.view.base;
 
 // #sijapp cond.if modules_TOUCH is "true"#
 
+import jimm.Jimm;
 import jimmui.view.icons.Icon;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.VirtualContactList;
-import jimm.cl.ContactList;
 import jimm.cl.GlobalStatusForm;
 import jimmui.view.menu.MenuModel;
 import protocol.Protocol;
@@ -29,7 +29,7 @@ public class RosterToolBar extends MySoftBar {
         int defWidth = getHeight();
         _x += defWidth;
         if (x < _x) {
-            ContactList.getInstance().activateMainMenu();
+            Jimm.getJimm().getCL().activateMainMenu();
             return;
         }
         ContactListModel m = ((VirtualContactList)c).getModel();
@@ -37,7 +37,7 @@ public class RosterToolBar extends MySoftBar {
             Protocol p = m.getProtocol(i);
             _x += defWidth;
             if (x < _x) {
-                MenuModel model = ContactList.getInstance().getContextMenu(p, null);
+                MenuModel model = Jimm.getJimm().getCL().getContextMenu(p, null);
                 ((VirtualContactList) c).showMenu(model);
                 return;
             }

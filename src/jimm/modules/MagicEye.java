@@ -137,7 +137,7 @@ public final class MagicEye implements SelectListener {
                     int item = list.getCurrItem();
                     String userId = (String)uins.elementAt(item);
                     Protocol protocol = (Protocol)protocols.elementAt(item);
-                    list.showMenu(ContactList.getInstance().getContextMenu(protocol,
+                    list.showMenu(Jimm.getJimm().getCL().getContextMenu(protocol,
                             protocol.createTempContact(userId)));
                 } catch (Exception e) {
                     list.restore();

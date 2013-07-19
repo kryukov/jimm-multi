@@ -38,11 +38,11 @@ public final class AutoAbsence {
         if (absence) {
             return;
         }
-        int count = ContactList.getInstance().getManager().getModel().getProtocolCount();
+        int count = Jimm.getJimm().getCL().getManager().getModel().getProtocolCount();
         protos = new Protocol[count];
         profiles = new Profile[count];
         for (int i = 0; i < count; ++i) {
-            Protocol p = ContactList.getInstance().getManager().getModel().getProtocol(i);
+            Protocol p = Jimm.getJimm().getCL().getManager().getModel().getProtocol(i);
             if (isSupported(p)) {
                 Profile pr = new Profile();
                 protos[i] = p;

@@ -10,10 +10,10 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
+import jimm.Jimm;
 import jimmui.view.text.TextList;
 import jimmui.view.text.*;
 import java.util.Vector;
-import jimm.cl.ContactList;
 import jimmui.view.*;
 import jimmui.view.menu.*;
 import jimm.util.JLocale;
@@ -69,7 +69,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
                 case COMMAND_ADD:
                     Contact c = jabber.createTempContact(jid);
                     jabber.addContact(c);
-                    ContactList.getInstance().activate(c);
+                    Jimm.getJimm().getCL().activate(c);
                     break;
 
                 case COMMAND_SET:

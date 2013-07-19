@@ -11,7 +11,6 @@ import jimm.JimmException;
 import jimm.chat.ChatHistory;
 import jimm.chat.ChatModel;
 import jimm.chat.message.*;
-import jimm.cl.ContactList;
 import jimm.comm.*;
 import jimm.modules.*;
 import jimm.search.*;
@@ -267,7 +266,7 @@ public final class MrimConnection extends ClientConnection {
                     Jimm.getJimm().maximize();
                 }
                 // #sijapp cond.end #
-                ContactList.getInstance().activateWithMsg(from + " (SMS):\n" + msg);
+                Jimm.getJimm().getCL().activateWithMsg(from + " (SMS):\n" + msg);
             }
             // #sijapp cond.if modules_MAGIC_EYE is "true" #
             MagicEye.addAction(mrim, fromEmail, "SMS", msg);

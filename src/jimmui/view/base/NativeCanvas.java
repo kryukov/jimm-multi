@@ -86,11 +86,11 @@ public class NativeCanvas extends Canvas {
 
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void pointerReleased(int x, int y) {
-        ContactList.getInstance().userActivity();
+        Jimm.getJimm().getCL().userActivity();
         touchControl.pointerReleased(x, y);
     }
     protected void pointerPressed(int x, int y) {
-        ContactList.getInstance().userActivity();
+        Jimm.getJimm().getCL().userActivity();
         // #sijapp cond.if modules_LIGHT is "true" #
         CustomLight.setLightMode(CustomLight.ACTION_KEY_PRESS);
         // #sijapp cond.end#
@@ -433,7 +433,7 @@ public class NativeCanvas extends Canvas {
             action = getAction(key, keyCode);
         }
 
-        ContactList.getInstance().userActivity();
+        Jimm.getJimm().getCL().userActivity();
         doKeyReaction(c, key, action, type);
         // #sijapp cond.if modules_ANDROID isnot "true" #
         if (CanvasEx.KEY_PRESSED == type) { // navigation keys only

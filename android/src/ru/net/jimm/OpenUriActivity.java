@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import jimm.Jimm;
-import jimm.cl.ContactList;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.jabber.Jabber;
@@ -72,7 +71,7 @@ public class OpenUriActivity extends Activity {
                 }
             }
             jabber.addTempContact(c);
-            ContactList.getInstance().activate(c);
+            Jimm.getJimm().getCL().activate(c);
         } catch (Exception e) {
             jimm.modules.DebugLog.panic("uri", e);
         }

@@ -41,7 +41,6 @@ import protocol.ui.StatusView;
 
 
 public final class ContactList implements ContactListListener {
-    private static final ContactList instance = new ContactList();
     private final ProtocolMenu mainMenu = new ProtocolMenu(null, true);
     private MessageEditor editor;
     private VirtualContactList contactList;
@@ -144,10 +143,6 @@ public final class ContactList implements ContactListListener {
         protocol.init();
         protocol.safeLoad();
         return protocol;
-    }
-
-    public static ContactList getInstance() {
-        return instance;
     }
 
     public void activate() {
@@ -303,13 +298,6 @@ public final class ContactList implements ContactListListener {
     /////////////////////////////////////////////////////////////////
 
     /** ************************************************************************* */
-    public boolean isCollapsible() {
-        // #sijapp cond.if modules_ANDROID is "true" #
-        if (true) return true;
-        // #sijapp cond.end #
-        return Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_SE) || Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_NOKIA_S60);
-    }
-
 
     /* Builds the main menu (visual list) */
     public void activateMainMenu() {

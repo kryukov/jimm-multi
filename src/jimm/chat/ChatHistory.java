@@ -148,7 +148,7 @@ public final class ChatHistory implements SelectListener {
 
     public boolean registerChat(ChatModel item) {
         if (Jimm.getJimm().jimmModel.registerChat(item)) {
-            ContactList.getInstance().getUpdater().registerChat(item);
+            Jimm.getJimm().getCL().getUpdater().registerChat(item);
             return true;
         }
         return false;
@@ -159,20 +159,20 @@ public final class ChatHistory implements SelectListener {
             ChatModel key = chatModelAt(i);
             if (key.getProtocol() == p) {
                 Jimm.getJimm().jimmModel.unregisterChat(key);
-                ContactList.getInstance().getUpdater().unregisterChat(key);
+                Jimm.getJimm().getCL().getUpdater().unregisterChat(key);
             }
         }
-        ContactList.getInstance().markMessages(null, null);
+        Jimm.getJimm().getCL().markMessages(null, null);
     }
     public void unregisterChat(ChatModel item) {
         if (null == item) return;
         Jimm.getJimm().jimmModel.unregisterChat(item);
-        ContactList.getInstance().getUpdater().unregisterChat(item);
+        Jimm.getJimm().getCL().getUpdater().unregisterChat(item);
         Contact c = item.getContact();
         c.updateChatState(null);
         item.getProtocol().ui_updateContact(c);
         if (0 < item.getUnreadMessageCount()) {
-            ContactList.getInstance().markMessages(item.protocol, c);
+            Jimm.getJimm().getCL().markMessages(item.protocol, c);
         }
     }
 
@@ -181,13 +181,13 @@ public final class ChatHistory implements SelectListener {
             clearChat(chat);
             Chat view = getChat(chat);
             if ((null != view) && Jimm.getJimm().getDisplay().remove(view)) {
-                ContactList.getInstance()._setActiveContact(null);
+                Jimm.getJimm().getCL()._setActiveContact(null);
             }
-            ContactList.getInstance().getUpdater().update();
+            Jimm.getJimm().getCL().getUpdater().update();
         }
         if (0 == getTotal()) {
-            ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getChatModel());
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
+            Jimm.getJimm().getCL().activate();
         }
     }
     private void clearChat(ChatModel chat) {
@@ -204,10 +204,10 @@ public final class ChatHistory implements SelectListener {
             if (except == chat) continue;
             clearChat(chat);
         }
-        ContactList.getInstance().getUpdater().update();
+        Jimm.getJimm().getCL().getUpdater().update();
         if (0 == getTotal()) {
-            ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getChatModel());
-            ContactList.getInstance().activate();
+            Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
+            Jimm.getJimm().getCL().activate();
         }
     }
 
@@ -247,7 +247,7 @@ public final class ChatHistory implements SelectListener {
                 return i;
             }
         }
-        Contact currentContact = ContactList.getInstance().getCurrentContact();
+        Contact currentContact = Jimm.getJimm().getCL().getCurrentContact();
         int current  = 0;
         for (int i = 0; i < getTotal(); ++i) {
             ChatModel chat = chatModelAt(i);
@@ -277,7 +277,7 @@ public final class ChatHistory implements SelectListener {
 
     @Override
     public void select(Select select, MenuModel menu, int cmd) {
-        ChatModel chat = getChatModel(ContactList.getInstance().getCurrentContact());
+        ChatModel chat = getChatModel(Jimm.getJimm().getCL().getCurrentContact());
         switch (cmd) {
             case MENU_DEL_CURRENT_CHAT:
                 removeChat(chat);
@@ -374,14 +374,14 @@ public final class ChatHistory implements SelectListener {
                 return;
             }
         }
-        ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getChatModel());
-        ContactList.getInstance().setActiveContact(chatModelAt(getPreferredItem()).getContact());
-        ContactList.getInstance().getManager().show();
+        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
+        Jimm.getJimm().getCL().setActiveContact(chatModelAt(getPreferredItem()).getContact());
+        Jimm.getJimm().getCL().getManager().show();
     }
 
     public void back() {
-        ContactList.getInstance().getManager().setModel(ContactList.getInstance().getUpdater().getModel());
-        Jimm.getJimm().getDisplay().back(ContactList.getInstance().getManager());
+        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getModel());
+        Jimm.getJimm().getDisplay().back(Jimm.getJimm().getCL().getManager());
     }
 
     public static boolean isChats(CanvasEx canvas) {

@@ -178,7 +178,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
                 try {
                     int item = list.getCurrItem();
                     String uin = (String)emails.elementAt(item);
-                    list.showMenu(ContactList.getInstance().getContextMenu(mrim,
+                    list.showMenu(Jimm.getJimm().getCL().getContextMenu(mrim,
                             mrim.createTempContact(uin)));
                 } catch (Exception ignored) {
                 }
@@ -195,7 +195,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
     protected final void beforePaint() {
         if (hasNewMessage) {
             hasNewMessage = false;
-            ContactList.getInstance().updateMainMenu();
+            Jimm.getJimm().getCL().updateMainMenu();
         }
     }
 

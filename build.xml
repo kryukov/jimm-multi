@@ -147,7 +147,31 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher
     <!--  Internal target: preprocess-source   -->
     <target name="preprocess-source" depends="init,sijapp,langs,res">
         <mkdir dir="${build}/init/src" />
-        <sijapp srcdir="${src}" destdir="${build}/init/src">
+        <sijapp srcdir="src" destdir="${build}/init/src">
+            <defineList prefix="protocols" list="${protocols}"/>
+            <defineList prefix="modules" list="${modules}"/>
+            <define name="device_configuration" value="${device_configuration}" />
+            <define name="target" value="${target}" />
+            <define name="client" value="${midlet/name}"/>
+            <define name="company" value="${company}"/>
+        </sijapp>
+        <sijapp srcdir="networking/src" destdir="${build}/init/src">
+            <defineList prefix="protocols" list="${protocols}"/>
+            <defineList prefix="modules" list="${modules}"/>
+            <define name="device_configuration" value="${device_configuration}" />
+            <define name="target" value="${target}" />
+            <define name="client" value="${midlet/name}"/>
+            <define name="company" value="${company}"/>
+        </sijapp>
+        <sijapp srcdir="external/src" destdir="${build}/init/src">
+            <defineList prefix="protocols" list="${protocols}"/>
+            <defineList prefix="modules" list="${modules}"/>
+            <define name="device_configuration" value="${device_configuration}" />
+            <define name="target" value="${target}" />
+            <define name="client" value="${midlet/name}"/>
+            <define name="company" value="${company}"/>
+        </sijapp>
+        <sijapp srcdir="j2me/src" destdir="${build}/init/src">
             <defineList prefix="protocols" list="${protocols}"/>
             <defineList prefix="modules" list="${modules}"/>
             <define name="device_configuration" value="${device_configuration}" />

@@ -21,7 +21,6 @@ import jimm.io.Storage;
 import jimm.modules.*;
 import jimm.search.*;
 import jimm.util.JLocale;
-import jimmui.view.base.UIUpdater;
 import jimmui.view.roster.Updater;
 import protocol.jabber.*;
 import protocol.ui.StatusInfo;
@@ -147,9 +146,9 @@ abstract public class Protocol {
         }
     }
     public final void setContactList(Vector<Group> groups, Vector<Contact> contacts) {
-        setContactList(new Roster(groups, contacts));
+        setContactList(new Roster(groups, contacts), false);
     }
-    public final void setContactList(Roster roster) {
+    public final void setContactList(Roster roster, boolean needSave) {
         Roster oldRoster;
         synchronized (rosterLockObject) {
             oldRoster = this.roster;
@@ -161,15 +160,21 @@ abstract public class Protocol {
         }
         ChatHistory.instance.restoreContactsWithChat(this);
 
-        getUpdater().updateProtocol(this, oldRoster);
-        needSave();
+        if (null != getUpdater()) {
+            getUpdater().updateProtocol(this, oldRoster);
+        }
+        if (needSave) {
+            needSave();
+        }
     }
     // #sijapp cond.if protocols_JABBER is "true" #
     public final void setContactListAddition(Group group) {
-        synchronized (rosterLockObject) {
-            getUpdater().addGroup(this, group);
-            getUpdater().addGroup(this, null);
-            getUpdater().update();
+        if (null != getUpdater()) {
+            synchronized (rosterLockObject) {
+                getUpdater().addGroup(this, group);
+                getUpdater().addGroup(this, null);
+                getUpdater().update();
+            }
         }
         needSave();
     }
@@ -240,7 +245,7 @@ abstract public class Protocol {
             // #sijapp cond.if modules_DEBUGLOG is "true" #
             DebugLog.panic("roster load", e);
             // #sijapp cond.end #
-            setContactList(new Roster());
+            setContactList(new Roster(), false);
         }
     }
 
@@ -340,7 +345,7 @@ abstract public class Protocol {
             // Close record store
             cl.closeRecordStore();
         }
-        setContactList(roster);
+        setContactList(roster, false);
     }
 
     // Save contact list to record store
@@ -631,7 +636,7 @@ abstract public class Protocol {
         return Jimm.getJimm().getCL();
     }
     private Updater getUpdater() {
-        return Jimm.getJimm().getCL().getUpdater();
+        return (null == Jimm.getJimm().getCL()) ? null : Jimm.getJimm().getCL().getUpdater();
     }
 
     protected abstract void s_updateOnlineStatus();

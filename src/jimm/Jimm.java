@@ -37,6 +37,7 @@ import jimmui.view.base.*;
 import jimmui.view.notify.*;
 // #sijapp cond.end#
 import jimm.util.JLocale;
+import protocol.ui.MessageEditor;
 
 
 public class Jimm {
@@ -47,6 +48,7 @@ public class Jimm {
     public JimmModel jimmModel;
     public SplashCanvas splash;
     private ContactList cl;
+    private MessageEditor editor;
 
     // #sijapp cond.if modules_ACTIVITYUI is "true"#
     private ActivityUI activity;
@@ -122,7 +124,7 @@ public class Jimm {
         StringConvertor.load();
         //splash.setProgress(35);
         Templates.getInstance().load();
-        cl.initMessageEditor();
+        editor = new MessageEditor();
         Jimm.gc();
 
         // #sijapp cond.if modules_DEBUGLOG is "true"#
@@ -368,5 +370,9 @@ public class Jimm {
 
     public ContactList getCL() {
         return cl;
+    }
+
+    public MessageEditor getMessageEditor() {
+        return editor;
     }
 }

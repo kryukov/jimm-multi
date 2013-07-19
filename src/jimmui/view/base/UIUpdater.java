@@ -53,7 +53,7 @@ public class UIUpdater extends TimerTask {
             return;
         }
         Object vis = null;
-        MessageEditor editor = Jimm.getJimm().getCL().getMessageEditor();
+        MessageEditor editor = Jimm.getJimm().getMessageEditor();
         if ((null != editor) && editor.getTextBox().isShown()) {
             vis = editor.getTextBox();
         } else if (contact.hasChat()) {

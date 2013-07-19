@@ -134,7 +134,7 @@ public final class Chat extends VirtualList {
                 return;
             }
             // #sijapp cond.end #
-            MessageEditor editor = Jimm.getJimm().getCL().getMessageEditor();
+            MessageEditor editor = Jimm.getJimm().getMessageEditor();
             if (null != editor) {
                 editor.writeMessage(getProtocol(), getContact(), initText);
             }

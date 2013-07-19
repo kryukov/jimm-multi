@@ -113,7 +113,7 @@ public final class ConferenceParticipants extends VirtualList {
                 break;
 
             case COMMAND_REPLY:
-                MessageEditor editor = Jimm.getJimm().getCL().getMessageEditor();
+                MessageEditor editor = Jimm.getJimm().getMessageEditor();
                 if (editor.isActive(conference)) {
                     InputTextBox box = editor.getTextBox();
                     String text = box.getRawString();

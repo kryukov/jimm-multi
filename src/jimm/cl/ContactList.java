@@ -42,7 +42,6 @@ import protocol.ui.StatusView;
 
 public final class ContactList implements ContactListListener {
     private final ProtocolMenu mainMenu = new ProtocolMenu(null, true);
-    private MessageEditor editor;
     private VirtualContactList contactList;
     private final StatusView statusView = new StatusView();
     private Contact currentContact;
@@ -52,9 +51,6 @@ public final class ContactList implements ContactListListener {
     public void initUI() {
         contactList = new VirtualContactList();
         contactList.setCLListener(this);
-    }
-    public void initMessageEditor() {
-        editor = new MessageEditor();
     }
 
     public void updateAccounts() {
@@ -194,10 +190,6 @@ public final class ContactList implements ContactListListener {
                 p.connect();
             }
         }
-    }
-
-    public MessageEditor getMessageEditor() {
-        return editor;
     }
 
     /* *********************************************************** */

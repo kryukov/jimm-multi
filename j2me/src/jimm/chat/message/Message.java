@@ -24,6 +24,7 @@
 
 package jimm.chat.message;
 
+import jimm.Jimm;
 import jimm.chat.ChatHistory;
 import jimm.chat.ChatModel;
 import jimmui.view.icons.*;
@@ -95,7 +96,7 @@ public abstract class Message {
         }
         Contact rcvr = getRcvr();
         if (rcvr.hasChat()) {
-            ChatModel chat = ChatHistory.instance.getChatModel(rcvr);
+            ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(rcvr);
             if (null != chat) {
                 ChatHistory.instance.getUpdater().invalidate(chat);
             }

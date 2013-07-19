@@ -23,7 +23,6 @@
 
 package jimm.chat;
 
-import jimmui.view.base.CanvasEx;
 import jimmui.view.icons.Icon;
 import java.util.*;
 import jimm.*;
@@ -35,7 +34,6 @@ import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
 import jimm.io.Storage;
 import protocol.Contact;
-import jimmui.view.roster.VirtualContactList;
 import protocol.ui.InfoFactory;
 
 public final class ChatHistory implements SelectListener {
@@ -52,56 +50,10 @@ public final class ChatHistory implements SelectListener {
     private int getTotal() {
         return Jimm.getJimm().jimmModel.chats.size();
     }
-    private ChatModel chatModelAt(int index) {
+    public ChatModel chatModelAt(int index) {
         return (ChatModel) Jimm.getJimm().jimmModel.chats.elementAt(index);
     }
 
-    public ChatModel getChatModel(Contact c) {
-        for (int i = getTotal() - 1; 0 <= i; --i) {
-            if (c == chatModelAt(i).contact) {
-                return chatModelAt(i);
-            }
-        }
-        return null;
-    }
-    public Chat getChat(ChatModel c) {
-        if (null == c) return null;
-        Object view = Jimm.getJimm().getDisplay().getCurrentDisplay();
-        if (view instanceof Chat) {
-            Chat chat = (Chat) view;
-            if (chat.getModel() == c) {
-                return chat;
-            }
-        }
-        return null;
-    }
-    public Chat getOrCreateChat(ChatModel c) {
-        Chat chat = getChat(c);
-        if (null != c) {
-            chat = new Chat(c);
-            updater.restoreTopPositionToUI(c, chat);
-        }
-        return chat;
-    }
-
-    public int getUnreadMessageCount() {
-        int count = 0;
-        for (int i = getTotal() - 1; 0 <= i; --i) {
-            count += chatModelAt(i).getUnreadMessageCount();
-        }
-        return count;
-    }
-    public int getPersonalUnreadMessageCount(boolean all) {
-        int count = 0;
-        ChatModel chat;
-        for (int i = getTotal() - 1; 0 <= i; --i) {
-            chat = chatModelAt(i);
-            if (all || chat.isHuman() || !chat.getContact().isSingleUserContact()) {
-                count += chat.getPersonalUnreadMessageCount();
-            }
-        }
-        return count;
-    }
     private int getMoreImportant(int v1, int v2) {
         if ((Message.ICON_IN_MSG_HI == v1) || (Message.ICON_IN_MSG_HI == v2)) {
             return Message.ICON_IN_MSG_HI;
@@ -145,40 +97,11 @@ public final class ChatHistory implements SelectListener {
         return InfoFactory.msgIcons.iconAt(icon);
     }
 
-    public boolean registerChat(ChatModel item) {
-        if (Jimm.getJimm().jimmModel.registerChat(item)) {
-            Jimm.getJimm().getCL().getUpdater().registerChat(item);
-            return true;
-        }
-        return false;
-    }
-
-    public void unregisterChats(Protocol p) {
-        for (int i = getTotal() - 1; 0 <= i; --i) {
-            ChatModel key = chatModelAt(i);
-            if (key.getProtocol() == p) {
-                Jimm.getJimm().jimmModel.unregisterChat(key);
-                Jimm.getJimm().getCL().getUpdater().unregisterChat(key);
-            }
-        }
-        Jimm.getJimm().getCL().markMessages(null, null);
-    }
-    public void unregisterChat(ChatModel item) {
-        if (null == item) return;
-        Jimm.getJimm().jimmModel.unregisterChat(item);
-        Jimm.getJimm().getCL().getUpdater().unregisterChat(item);
-        Contact c = item.getContact();
-        c.updateChatState(null);
-        item.getProtocol().ui_updateContact(c);
-        if (0 < item.getUnreadMessageCount()) {
-            Jimm.getJimm().getCL().markMessages(item.protocol, c);
-        }
-    }
 
     private void removeChat(ChatModel chat) {
         if (null != chat) {
             clearChat(chat);
-            Chat view = getChat(chat);
+            Chat view = Jimm.getJimm().getCL().getChat(chat);
             if ((null != view) && Jimm.getJimm().getDisplay().remove(view)) {
                 Jimm.getJimm().getCL()._setActiveContact(null);
             }
@@ -194,7 +117,7 @@ public final class ChatHistory implements SelectListener {
             updater.removeReadMessages(chat);
 
         } else {
-            unregisterChat(chat);
+            Jimm.getJimm().jimmModel.unregisterChat(chat);
         }
     }
     public void removeAll(ChatModel except) {
@@ -240,35 +163,6 @@ public final class ChatHistory implements SelectListener {
         }
     }
 
-    private int getPreferredItem() {
-        for (int i = 0; i < getTotal(); ++i) {
-            if (0 < chatModelAt(i).getPersonalUnreadMessageCount()) {
-                return i;
-            }
-        }
-        Contact currentContact = Jimm.getJimm().getCL().getUpdater().getCurrentContact();
-        int current  = 0;
-        for (int i = 0; i < getTotal(); ++i) {
-            ChatModel chat = chatModelAt(i);
-            if (0 < chat.getUnreadMessageCount()) {
-                return i;
-            }
-            if (currentContact == chat.getContact()) {
-                current = i;
-            }
-        }
-        return current;
-    }
-    // shows next or previos chat
-    public void showNextPrevChat(ChatModel item, boolean next) {
-        int chatNum = Jimm.getJimm().jimmModel.chats.indexOf(item);
-        if (-1 == chatNum) {
-            return;
-        }
-        int nextChatNum = (chatNum + (next ? 1 : -1) + getTotal()) % getTotal();
-        updater.activate(chatModelAt(nextChatNum));
-    }
-
     private static final int MENU_SELECT = 1;
     private static final int MENU_DEL_CURRENT_CHAT = 2;
     private static final int MENU_DEL_ALL_CHATS_EXCEPT_CUR = 3;
@@ -276,7 +170,7 @@ public final class ChatHistory implements SelectListener {
 
     @Override
     public void select(Select select, MenuModel menu, int cmd) {
-        ChatModel chat = getChatModel(Jimm.getJimm().getCL().getUpdater().getCurrentContact());
+        ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(Jimm.getJimm().getCL().getUpdater().getCurrentContact());
         switch (cmd) {
             case MENU_DEL_CURRENT_CHAT:
                 removeChat(chat);
@@ -363,31 +257,5 @@ public final class ChatHistory implements SelectListener {
         }
         s.close();
         s.delete();
-    }
-
-    public void showChatList(boolean forceGoToChat) {
-        if (forceGoToChat) {
-            ChatModel current = chatModelAt(getPreferredItem());
-            if (0 < current.getUnreadMessageCount()) {
-                updater.activate(current);
-                return;
-            }
-        }
-        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
-        Jimm.getJimm().getCL().getManager().setActiveContact(chatModelAt(getPreferredItem()).getContact());
-        Jimm.getJimm().getCL().getManager().show();
-    }
-
-    public void back() {
-        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getModel());
-        Jimm.getJimm().getDisplay().back(Jimm.getJimm().getCL().getManager());
-    }
-
-    public static boolean isChats(CanvasEx canvas) {
-        if (canvas instanceof VirtualContactList) {
-            VirtualContactList vcl = ((VirtualContactList) canvas);
-            return vcl.getModel() == vcl.getUpdater().getChatModel();
-        }
-        return false;
     }
 }

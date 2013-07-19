@@ -106,11 +106,11 @@ public class HotKeys {
             // #sijapp cond.end#
 
             case Options.HOTKEY_OPEN_CHATS:
-                if (currentDisplay == ChatHistory.instance) {
-                    ChatHistory.instance.back();
+                if (Jimm.getJimm().getCL().isChats(currentDisplay)) {
+                    Jimm.getJimm().getCL().backFromChats();
 
                 } else {
-                    ChatHistory.instance.showChatList(false);
+                    Jimm.getJimm().getCL().showChatList(false);
                 }
                 return true;
 

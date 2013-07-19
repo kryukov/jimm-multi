@@ -26,7 +26,7 @@ import protocol.ui.InfoFactory;
  */
 public class MessageBuilder {
     public void addMessage(ChatModel model, Message message, boolean toHistory) {
-        Chat chat = ChatHistory.instance.getChat(model);
+        Chat chat = Jimm.getJimm().getCL().getChat(model);
         boolean inc = (null == chat) || !chat.isVisibleChat();
         if (message instanceof PlainMessage) {
 
@@ -143,7 +143,7 @@ public class MessageBuilder {
         if (!incoming) {
             message.setVisibleIcon(par, mData);
         }
-        Chat view = ChatHistory.instance.getChat(chat);
+        Chat view = Jimm.getJimm().getCL().getChat(chat);
         synchronized (chat) {
             boolean atTheEnd = chatAtTheEnd(view);
             if (null != view) {
@@ -345,7 +345,7 @@ public class MessageBuilder {
             int index = model.getIndex(mData);
 
             if ((0 < model.size()) && (0 <= index)) {
-                Chat view = ChatHistory.instance.getChat(model);
+                Chat view = Jimm.getJimm().getCL().getChat(model);
                 if (null != view) view.lock();
                 mData.init(time, text, caption, flags, Message.ICON_NONE);
                 parser.commit();

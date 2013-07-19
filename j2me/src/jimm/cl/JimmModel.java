@@ -35,6 +35,7 @@ public class JimmModel {
         if (-1 == Util.getIndex(chats, item)) {
             chats.addElement(item);
             item.getContact().updateChatState(item);
+            Jimm.getJimm().getCL().getUpdater().registerChat(item);
             return true;
         }
         return false;
@@ -44,7 +45,22 @@ public class JimmModel {
         chats.removeElement(item);
         item.clear();
         item.getContact().updateChatState(null);
+        Contact c = item.getContact();
+        c.updateChatState(null);
+        Jimm.getJimm().getCL().getUpdater().unregisterChat(item);
+        if (0 < item.getUnreadMessageCount()) {
+            Jimm.getJimm().getCL().markMessages(item.protocol, c);
+        }
         return true;
+    }
+
+    public ChatModel getChatModel(Contact c) {
+        for (int i = chats.size() - 1; 0 <= i; --i) {
+            if (c == ((ChatModel)chats.elementAt(i)).contact) {
+                return (ChatModel)chats.elementAt(i);
+            }
+        }
+        return null;
     }
 
     public Protocol[] getProtocols() {
@@ -202,7 +218,13 @@ public class JimmModel {
             if (null != protocol) {
                 protocol.disconnect(true);
                 protocol.safeSave();
-                ChatHistory.instance.unregisterChats(protocol);
+                for (int j = chats.size() - 1; 0 <= j; --j) {
+                    ChatModel key = (ChatModel) chats.elementAt(j);
+                    if (key.getProtocol() == protocol) {
+                        Jimm.getJimm().jimmModel.unregisterChat(key);
+                    }
+                }
+                Jimm.getJimm().getCL().markMessages(null, null);
                 protocol.dismiss();
             }
         }

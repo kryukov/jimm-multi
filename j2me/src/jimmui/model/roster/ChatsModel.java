@@ -17,7 +17,7 @@ import java.util.Vector;
  *
  * @author vladimir
  */
-public class ChatModel extends ContactListModel {
+public class ChatsModel extends ContactListModel {
     @Override
     public void buildFlatItems(Vector items) {
         Vector<jimm.chat.ChatModel> chats = Jimm.getJimm().jimmModel.chats;

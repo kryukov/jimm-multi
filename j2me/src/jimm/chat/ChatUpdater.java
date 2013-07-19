@@ -1,5 +1,6 @@
 package jimm.chat;
 
+import jimm.Jimm;
 import jimm.Options;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
@@ -31,18 +32,18 @@ public class ChatUpdater {
     }
 
     public void addMessage(ChatModel chat, Message message, boolean toHistory) {
-        ChatHistory.instance.registerChat(chat);
+        Jimm.getJimm().jimmModel.registerChat(chat);
         new MessageBuilder().addMessage(chat, message, toHistory);
     }
 
     public void addMyMessage(ChatModel chat, PlainMessage plainMsg) {
-        ChatHistory.instance.registerChat(chat);
+        Jimm.getJimm().jimmModel.registerChat(chat);
         new MessageBuilder().addMyMessage(chat, plainMsg);
     }
 
     // #sijapp cond.if modules_FILES="true"#
     public MessData addFileProgress(ChatModel chat, String caption, String text) {
-        ChatHistory.instance.registerChat(chat);
+        Jimm.getJimm().jimmModel.registerChat(chat);
         return new MessageBuilder().addFileProgress(chat, caption, text);
     }
 
@@ -52,12 +53,12 @@ public class ChatUpdater {
     // #sijapp cond.end#
 
     public void activate(ChatModel chat) {
-        Chat view = ChatHistory.instance.getOrCreateChat(chat);
+        Chat view = Jimm.getJimm().getCL().getOrCreateChat(chat);
         view.activate();
     }
 
     public void invalidate(ChatModel chat) {
-        Chat view = ChatHistory.instance.getChat(chat);
+        Chat view = Jimm.getJimm().getCL().getChat(chat);
         if (null != view) {
             view.invalidate();
         }
@@ -68,12 +69,12 @@ public class ChatUpdater {
     }
 
     public void writeMessage(ChatModel chat, String message) {
-        Chat view = ChatHistory.instance.getOrCreateChat(chat);
+        Chat view = Jimm.getJimm().getCL().getOrCreateChat(chat);
         view.writeMessage(message);
     }
 
     public void writeMessage(Contact contact, String message) {
-        writeMessage(ChatHistory.instance.getChatModel(contact), message);
+        writeMessage(Jimm.getJimm().jimmModel.getChatModel(contact), message);
     }
 
     public void showHistory(Contact contact) {
@@ -86,13 +87,13 @@ public class ChatUpdater {
     }
 
     public void writeMessageTo(JabberServiceContact conference, String nick) {
-        ChatModel chat = ChatHistory.instance.getChatModel(conference);
-        Chat view = ChatHistory.instance.getOrCreateChat(chat);
+        ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(conference);
+        Chat view = Jimm.getJimm().getCL().getOrCreateChat(chat);
         view.writeMessageTo(nick);
     }
 
     public void typing(ChatModel chat, boolean type) {
-        Chat view = ChatHistory.instance.getChat(chat);
+        Chat view = Jimm.getJimm().getCL().getChat(chat);
         if (null != view) {
             view.beginTyping(type);
         }
@@ -102,7 +103,7 @@ public class ChatUpdater {
         removeMessages(chat, Options.getInt(Options.OPTION_MAX_MSG_COUNT));
     }
     public void removeMessagesAtCursor(ChatModel model) {
-        restoreTopPositionToUI(model, ChatHistory.instance.getChat(model));
+        restoreTopPositionToUI(model, Jimm.getJimm().getCL().getChat(model));
         removeMessages(model, model.size() - model.current - 1);
     }
     private void removeMessages(ChatModel chat, int limit) {
@@ -110,20 +111,20 @@ public class ChatUpdater {
             return;
         }
         if ((0 < limit) && (0 < chat.size())) {
-            storeTopPosition(chat, ChatHistory.instance.getChat(chat));
+            storeTopPosition(chat, Jimm.getJimm().getCL().getChat(chat));
             while (limit < chat.size()) {
                 chat.topOffset = Math.max(0, chat.topOffset - chat.getItemHeight(chat.getMessage(0)));
                 chat.current = Math.max(0, chat.current - 1);
                 chat.removeTopMessage();
             }
-            restoreTopPositionToUI(chat, ChatHistory.instance.getChat(chat));
+            restoreTopPositionToUI(chat, Jimm.getJimm().getCL().getChat(chat));
             invalidate(chat);
         } else {
-            ChatHistory.instance.unregisterChat(chat);
+            Jimm.getJimm().jimmModel.unregisterChat(chat);
         }
     }
 
-    void restoreTopPositionToUI(ChatModel chat, Chat view) {
+    public void restoreTopPositionToUI(ChatModel chat, Chat view) {
         if (null != view) {
             if (-1 == chat.topOffset) {
                 view.setCurrentItemToTop(chat.current);

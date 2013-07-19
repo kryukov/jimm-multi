@@ -587,7 +587,7 @@ abstract public class Protocol {
         }
         if (item.isTyping() != type) {
             item.beginTyping(type);
-            ChatModel chat = ChatHistory.instance.getChatModel(item);
+            ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(item);
             if (null != chat) {
                 ChatHistory.instance.getUpdater().typing(chat, type);
             }
@@ -696,12 +696,7 @@ abstract public class Protocol {
     }
     ///////////////////////////////////////////////////////////////////////////
     public final void ui_changeContactStatus(Contact contact) {
-        ChatModel chat = ChatHistory.instance.getChatModel(contact);
-        Chat view = ChatHistory.instance.getChat(chat);
-        if (null != view) {
-            view.updateStatus();
-        }
-        ui_updateContact(contact);
+        getContactList().changeContactStatus(this, contact);
     }
     public final void ui_updateContact(Contact contact) {
         getUpdater().updateContact(this, getGroup(contact), contact);
@@ -732,7 +727,7 @@ abstract public class Protocol {
             ui_removeFromAnyGroup(contact);
         }
         if (contact.hasChat()) {
-            ChatHistory.instance.unregisterChat(ChatHistory.instance.getChatModel(contact));
+            Jimm.getJimm().jimmModel.unregisterChat(Jimm.getJimm().jimmModel.getChatModel(contact));
         }
         if (inCL) {
             if (isConnected()) {
@@ -966,7 +961,7 @@ abstract public class Protocol {
         return contact.getUserId();
     }
     public final ChatModel getChatModel(Contact contact) {
-        ChatModel chat = ChatHistory.instance.getChatModel(contact);
+        ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(contact);
         if (null == chat) {
             chat = ChatHistory.instance.getUpdater().createModel(this, contact);
             if (!roster.hasContact(contact)) {
@@ -974,7 +969,7 @@ abstract public class Protocol {
                 addLocalContact(contact);
             }
             if ((0 < chat.size()) || !contact.isSingleUserContact()) {
-                ChatHistory.instance.registerChat(chat);
+                Jimm.getJimm().jimmModel.registerChat(chat);
             }
         }
         return chat;

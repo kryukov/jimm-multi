@@ -71,7 +71,7 @@ public final class Chat extends VirtualList {
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
         if (getWidth() / 2 < Math.abs(fromX - toX)) {
             ChatHistory.instance.getUpdater().storeTopPosition(model, this);
-            ChatHistory.instance.showNextPrevChat(model, (fromX > toX));
+            Jimm.getJimm().getCL().showNextPrevChat(model, (fromX > toX));
         }
     }
     // #sijapp cond.end#
@@ -220,7 +220,7 @@ public final class Chat extends VirtualList {
                 case NativeCanvas.NAVIKEY_LEFT:
                 case NativeCanvas.NAVIKEY_RIGHT:
                     ChatHistory.instance.getUpdater().storeTopPosition(model, this);
-                    ChatHistory.instance.showNextPrevChat(model, NativeCanvas.NAVIKEY_RIGHT == actionCode);
+                    Jimm.getJimm().getCL().showNextPrevChat(model, NativeCanvas.NAVIKEY_RIGHT == actionCode);
                     return;
             }
         }
@@ -291,7 +291,7 @@ public final class Chat extends VirtualList {
                 if (0 < getSize()) {
                     restore();
                 } else {
-                    ChatHistory.instance.unregisterChat(model);
+                    Jimm.getJimm().jimmModel.unregisterChat(model);
                     Jimm.getJimm().getCL().activate(null);
                 }
                 break;
@@ -466,7 +466,7 @@ public final class Chat extends VirtualList {
     }
     // #sijapp cond.if modules_ANDROID is "true" #
     public void sendMessage(String message) {
-        ChatHistory.instance.registerChat(model);
+        Jimm.getJimm().jimmModel.registerChat(model);
         NativeCanvas.getInstance().getInput().resetText();
         if (!getContact().isSingleUserContact() && message.endsWith(", ")) {
             message = "";

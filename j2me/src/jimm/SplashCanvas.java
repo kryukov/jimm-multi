@@ -22,6 +22,7 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher, Vladimir Kryukov
  *******************************************************************************/
 package jimm;
 
+import jimm.chat.ChatModel;
 import jimmui.view.icons.*;
 import jimmui.view.text.*;
 import javax.microedition.lcdui.*;
@@ -32,6 +33,8 @@ import jimm.cl.*;
 import jimmui.view.base.*;
 import jimm.util.*;
 import protocol.ui.InfoFactory;
+
+import java.util.Vector;
 
 public final class SplashCanvas extends CanvasEx {
 
@@ -85,7 +88,12 @@ public final class SplashCanvas extends CanvasEx {
 
     // Called when message has been received
     public void messageAvailable() {
-        availableMessages = ChatHistory.instance.getUnreadMessageCount();
+        int count = 0;
+        Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
+        for (int i = chats.size() - 1; 0 <= i; --i) {
+            count += ((ChatModel) chats.elementAt(i)).getUnreadMessageCount();
+        }
+        availableMessages = count;
         iconOfMessages = ChatHistory.instance.getUnreadMessageIcon();
         invalidate();
     }

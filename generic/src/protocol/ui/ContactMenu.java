@@ -70,7 +70,7 @@ public class ContactMenu implements SelectListener {
 
             case Contact.USER_MENU_WAKE:
                 protocol.sendMessage(contact, PlainMessage.CMD_WAKEUP, true);
-                ChatHistory.instance.getUpdater().activate(ChatHistory.instance.getChatModel(contact));
+                ChatHistory.instance.getUpdater().activate(Jimm.getJimm().jimmModel.getChatModel(contact));
                 break;
 
             // #sijapp cond.if modules_FILES is "true"#

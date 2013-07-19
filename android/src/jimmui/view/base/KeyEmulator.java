@@ -19,7 +19,7 @@ public class KeyEmulator {
         Object current = Jimm.getJimm().getDisplay().getCurrentDisplay();
 
         if (current instanceof VirtualContactList) {
-            return !ChatHistory.isChats((CanvasEx) current);
+            return !Jimm.getJimm().getCL().isChats((CanvasEx) current);
         }
         return false;
     }

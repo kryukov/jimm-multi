@@ -36,6 +36,8 @@ import protocol.*;
 import protocol.jabber.*;
 import protocol.ui.ContactMenu;
 
+import java.util.Vector;
+
 
 public final class ContactList implements ContactListListener {
     private final ProtocolMenu mainMenu = new ProtocolMenu(null, true);
@@ -167,20 +169,14 @@ public final class ContactList implements ContactListListener {
         }
         // #sijapp cond.end #
 
-        boolean isPaused = false;
+        boolean isPaused = Jimm.getJimm().isPaused() && Jimm.getJimm().phone.isCollapsible();
         // #sijapp cond.if target is "MIDP2" #
-        isPaused = Jimm.getJimm().isPaused() && Jimm.getJimm().phone.isCollapsible();
         if (isPaused && isPersonal && isHuman) {
             if (Options.getBoolean(Options.OPTION_BRING_UP)) {
-                Chat view = ChatHistory.instance.getOrCreateChat(chat);
-                Jimm.getJimm().maximize(view);
+                Jimm.getJimm().maximize(getOrCreateChat(chat));
                 isPaused = false;
             }
         }
-//        if (isPaused && isPlainMsg && isSingleUser) {
-//            Jimm.getJimm().addEvent(message.getName(),
-//                    message.getProcessedText(), null);
-//        }
         // #sijapp cond.end #
 
         if (!isPaused && isHuman) {
@@ -195,26 +191,26 @@ public final class ContactList implements ContactListListener {
         }
 
         // #sijapp cond.if modules_SOUND is "true" #
-        if (message.isOffline()) {
-            // Offline messages don't play sound
+        // Offline messages don't play sound
+        if (!message.isOffline()) {
+            if (isPersonal) {
+                if (contact.isSingleUserContact()
+                        && contact.isAuth() && !contact.isTemp()
+                        && message.isWakeUp()) {
+                    playNotification(p, Notify.NOTIFY_ALARM);
 
-        } else if (isPersonal) {
-            if (contact.isSingleUserContact()
-                    && contact.isAuth() && !contact.isTemp()
-                    && message.isWakeUp()) {
-                playNotification(p, Notify.NOTIFY_ALARM);
+                } else if (isBlog) {
+                    playNotification(p, Notify.NOTIFY_BLOG);
 
-            } else if (isBlog) {
-                playNotification(p, Notify.NOTIFY_BLOG);
+                } else if (isHuman) {
+                    playNotification(p, Notify.NOTIFY_MESSAGE);
+                }
 
-            } else if (isHuman) {
-                playNotification(p, Notify.NOTIFY_MESSAGE);
+                // #sijapp cond.if protocols_JABBER is "true" #
+            } else if (isMention) {
+                playNotification(p, Notify.NOTIFY_MULTIMESSAGE);
+                // #sijapp cond.end #
             }
-
-            // #sijapp cond.if protocols_JABBER is "true" #
-        } else if (isMention) {
-            playNotification(p, Notify.NOTIFY_MULTIMESSAGE);
-            // #sijapp cond.end #
         }
         // #sijapp cond.end#
     }
@@ -334,5 +330,98 @@ public final class ContactList implements ContactListListener {
         // #sijapp cond.if modules_SOUND is "true" #
         playNotification(protocol, Notify.NOTIFY_RECONNECT);
         // #sijapp cond.end #
+    }
+
+    //////////////////////////////////////////////////////////////////
+    // chats
+
+    public boolean isChats(Object canvas) {
+        if (canvas instanceof VirtualContactList) {
+            VirtualContactList vcl = ((VirtualContactList) canvas);
+            return vcl.getModel() == vcl.getUpdater().getChatModel();
+        }
+        return false;
+    }
+
+    public void showChatList(boolean forceGoToChat) {
+        if (forceGoToChat) {
+            ChatModel current = getPreferredChat();
+            if (0 < current.getUnreadMessageCount()) {
+                ChatHistory.instance.getUpdater().activate(current);
+                return;
+            }
+        }
+        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
+        Jimm.getJimm().getCL().getManager().setActiveContact(getPreferredChat().getContact());
+        Jimm.getJimm().getCL().getManager().show();
+    }
+
+    public void backFromChats() {
+        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getModel());
+        Jimm.getJimm().getDisplay().back(Jimm.getJimm().getCL().getManager());
+    }
+
+    // shows next or previos chat
+    public void showNextPrevChat(ChatModel item, boolean next) {
+        int chatNum = Jimm.getJimm().jimmModel.chats.indexOf(item);
+        if (-1 == chatNum) {
+            return;
+        }
+        int total = Jimm.getJimm().jimmModel.chats.size();
+        int nextChatNum = (chatNum + (next ? 1 : -1) + total) % total;
+        Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
+        ChatHistory.instance.getUpdater().activate((ChatModel) chats.elementAt(nextChatNum));
+    }
+
+    private ChatModel getPreferredChat() {
+        Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
+        for (int i = 0; i < chats.size(); ++i) {
+            ChatModel chat = (ChatModel) chats.elementAt(i);
+            if (0 < chat.getPersonalUnreadMessageCount()) {
+                return chat;
+            }
+        }
+        Contact currentContact = Jimm.getJimm().getCL().getUpdater().getCurrentContact();
+        int current  = 0;
+        for (int i = 0; i < chats.size(); ++i) {
+            ChatModel chat = (ChatModel) chats.elementAt(i);
+            if (0 < chat.getUnreadMessageCount()) {
+                return chat;
+            }
+            if (currentContact == chat.getContact()) {
+                current = i;
+            }
+        }
+        return (ChatModel) chats.elementAt(current);
+    }
+
+    public Chat getChat(ChatModel c) {
+        if (null == c) return null;
+        Object view = Jimm.getJimm().getDisplay().getCurrentDisplay();
+        if (view instanceof Chat) {
+            Chat chat = (Chat) view;
+            if (chat.getModel() == c) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
+    public Chat getOrCreateChat(ChatModel c) {
+        Chat chat = getChat(c);
+        if (null != c) {
+            chat = new Chat(c);
+            ChatHistory.instance.getUpdater().restoreTopPositionToUI(c, chat);
+        }
+        return chat;
+    }
+
+    public void changeContactStatus(Protocol protocol, Contact contact) {
+        ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(contact);
+        Chat view = Jimm.getJimm().getCL().getChat(chat);
+        if (null != view) {
+            view.updateStatus();
+        }
+        getUpdater().updateContact(protocol, protocol.getGroup(contact), contact);
     }
 }

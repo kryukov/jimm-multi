@@ -56,8 +56,8 @@ public class UIUpdater extends TimerTask {
         if ((null != editor) && editor.getTextBox().isShown()) {
             vis = editor.getTextBox();
         } else if (contact.hasChat()) {
-            ChatModel chat = ChatHistory.instance.getChatModel(contact);
-            vis = ChatHistory.instance.getChat(chat);
+            ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(contact);
+            vis = Jimm.getJimm().getCL().getChat(chat);
         }
         if (null == vis) return;
 

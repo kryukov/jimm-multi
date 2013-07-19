@@ -21,7 +21,7 @@ import java.util.Vector;
 public class Updater {
     private Vector updateQueue = new Vector();
 
-    private ContactListModel chatModel = new ChatModel();
+    private ContactListModel chatModel = new ChatsModel();
     private ContactListModel model;
     private Contact currentContact;
 

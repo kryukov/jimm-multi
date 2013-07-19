@@ -9,6 +9,7 @@ import android.os.*;
 import android.util.Log;
 import jimm.Jimm;
 import jimm.chat.ChatHistory;
+import jimm.chat.ChatModel;
 import jimm.cl.JimmModel;
 import org.bombusmod.scrobbler.MusicReceiver;
 import protocol.Protocol;
@@ -68,8 +69,8 @@ public class JimmService extends Service {
     }
 
     private Notification getNotification() {
-        int unread = ChatHistory.instance.getPersonalUnreadMessageCount(false);
-        int allUnread = ChatHistory.instance.getPersonalUnreadMessageCount(true);
+        int unread = getPersonalUnreadMessageCount(false);
+        int allUnread = getPersonalUnreadMessageCount(true);
         CharSequence stateMsg = "";
 
         boolean version2 = (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB);
@@ -155,5 +156,15 @@ public class JimmService extends Service {
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
+    }
+
+    private int getPersonalUnreadMessageCount(boolean all) {
+        int count = 0;
+        for (ChatModel chat : jimmModel.chats) {
+            if (all || chat.isHuman() || !chat.getContact().isSingleUserContact()) {
+                count += chat.getPersonalUnreadMessageCount();
+            }
+        }
+        return count;
     }
 }

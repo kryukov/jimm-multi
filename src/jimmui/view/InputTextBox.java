@@ -228,7 +228,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
 
             } else if (pasteCommand == c) {
                 int pos = getCaretPosition();
-                String clip = JimmUI.getClipBoardText();
+                String clip = Clipboard.getClipBoardText();
                 if (2 < pos) {
                     String text = textBox.getString();
                     if (('\n' == text.charAt(pos - 2)) && ('\n' == text.charAt(pos - 1))) {

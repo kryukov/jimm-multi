@@ -170,7 +170,7 @@ public final class HistoryStorageList extends VirtualList implements
                 if (-1 == index) return;
                 CachedRecord record = getCachedRecord(index);
                 if (null == record) return;
-                JimmUI.setClipBoardText((record.type == 0),
+                Clipboard.setClipBoardText((record.type == 0),
                         record.from, record.date, record.text);
                 restore();
                 break;

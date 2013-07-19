@@ -48,7 +48,7 @@ public class ContactMenu implements SelectListener {
                 break;
                 
             case Contact.USER_MENU_PASTE: /* Send plain message without quotation */
-                ChatHistory.instance.getUpdater().writeMessage(contact, JimmUI.getClipBoardText());
+                ChatHistory.instance.getUpdater().writeMessage(contact, Clipboard.getClipBoardText());
                 break;
                 
             case Contact.USER_MENU_ADD_USER:

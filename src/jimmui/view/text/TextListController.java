@@ -4,7 +4,7 @@
  */
 package jimmui.view.text;
 
-import jimm.JimmUI;
+import jimm.Clipboard;
 import jimmui.view.base.NativeCanvas;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
@@ -33,7 +33,7 @@ public class TextListController implements SelectListener {
         String text = all ? list.getModel().getAllText()
                 : list.getModel().getParText(list.getCurrItem());
         if (null != text) {
-            JimmUI.setClipBoardText(list.getCaption(), text);
+            Clipboard.setClipBoardText(list.getCaption(), text);
         }
     }
 

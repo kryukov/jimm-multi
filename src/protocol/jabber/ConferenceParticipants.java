@@ -10,12 +10,13 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
+import jimm.Clipboard;
 import jimm.Jimm;
 import jimm.chat.ChatHistory;
 import jimmui.HotKeys;
 import jimmui.view.icons.*;
 import java.util.Vector;
-import jimm.JimmUI;
+
 import jimmui.view.*;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
@@ -109,7 +110,7 @@ public final class ConferenceParticipants extends VirtualList {
         }
         switch (action) {
             case COMMAND_COPY:
-                JimmUI.setClipBoardText(nick);
+                Clipboard.setClipBoardText(nick);
                 restore();
                 break;
 

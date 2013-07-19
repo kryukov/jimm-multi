@@ -29,7 +29,7 @@ public final class SysTextList extends TextListController {
     private void copy() {
         String text = getCurrText();
         if (null != text) {
-            JimmUI.setClipBoardText(list.getCaption(), text);
+            Clipboard.setClipBoardText(list.getCaption(), text);
         }
     }
 

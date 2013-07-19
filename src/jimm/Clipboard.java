@@ -23,16 +23,9 @@
 
 package jimm;
 
-import javax.microedition.lcdui.*;
-import jimm.chat.*;
 import jimm.comm.StringConvertor;
-import jimm.modules.*;
-import jimmui.view.base.*;
-import jimm.cl.*;
-import protocol.*;
-import protocol.ui.ContactMenu;
 
-public final class JimmUI {
+public final class Clipboard {
     //////////////////////
     //                  //
     //    Clipboard     //

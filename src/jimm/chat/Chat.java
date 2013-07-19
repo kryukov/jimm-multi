@@ -397,7 +397,7 @@ public final class Chat extends VirtualList {
         menu.addItem("copy_text", ACTION_COPY_TEXT);
         // #sijapp cond.end#
         if (accessible) {
-            if (!JimmUI.isClipBoardEmpty()) {
+            if (!Clipboard.isClipBoardEmpty()) {
                 menu.addItem("paste", Contact.USER_MENU_PASTE);
             }
         }
@@ -597,7 +597,7 @@ public final class Chat extends VirtualList {
                 if (md.isMe()) {
                     msg = "*" + md.getNick() + " " + msg;
                 }
-                sb.append(JimmUI.serialize(md.isIncoming(), md.getNick() + " " + md.strTime, msg));
+                sb.append(Clipboard.serialize(md.isIncoming(), md.getNick() + " " + md.strTime, msg));
                 sb.append("\n");
             }
         }
@@ -607,7 +607,7 @@ public final class Chat extends VirtualList {
         String all = copySelected();
         if (null != all) {
             resetSelected();
-            JimmUI.setClipBoardText(null, all);
+            Clipboard.setClipBoardText(null, all);
             return;
         }
         MessData md = getCurrentMsgData();
@@ -618,7 +618,7 @@ public final class Chat extends VirtualList {
         if (md.isMe()) {
             msg = "*" + md.getNick() + " " + msg;
         }
-        JimmUI.setClipBoardText(md.isIncoming(), md.getNick(), md.strTime, msg);
+        Clipboard.setClipBoardText(md.isIncoming(), md.getNick(), md.strTime, msg);
     }
 
     public boolean empty() {

@@ -100,7 +100,7 @@ public final class Templates implements SelectListener, CommandListener {
                 break;
 
             case MENU_PASTE:
-                String text = JimmUI.getClipBoardText();
+                String text = Clipboard.getClipBoardText();
                 templates.addElement(text);
                 save();
                 refreshList();
@@ -146,7 +146,7 @@ public final class Templates implements SelectListener, CommandListener {
             menu.addItem("edit",   MENU_EDIT);
         }
         menu.addItem("add_new", MENU_ADD);
-        if (!JimmUI.isClipBoardEmpty()) {
+        if (!Clipboard.isClipBoardEmpty()) {
             menu.addItem("paste", MENU_PASTE);
         }
         menu.setDefaultItemCode(MENU_ADD);

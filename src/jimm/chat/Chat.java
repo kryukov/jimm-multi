@@ -607,7 +607,7 @@ public final class Chat extends VirtualList {
         String all = copySelected();
         if (null != all) {
             resetSelected();
-            Clipboard.setClipBoardText(null, all);
+            Clipboard.setClipBoardText(all);
             return;
         }
         MessData md = getCurrentMsgData();

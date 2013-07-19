@@ -33,7 +33,7 @@ public class TextListController implements SelectListener {
         String text = all ? list.getModel().getAllText()
                 : list.getModel().getParText(list.getCurrItem());
         if (null != text) {
-            Clipboard.setClipBoardText(list.getCaption(), text);
+            Clipboard.setClipBoardText(text);
         }
     }
 

@@ -34,8 +34,6 @@ public final class Clipboard {
     private static Clipboard instance = new Clipboard();
 
     private String text;
-    private String header;
-    private boolean incoming;
 
     private static void insertQuotingChars(StringBuffer out, String text, char qChars) {
         int size = text.length();
@@ -53,24 +51,13 @@ public final class Clipboard {
     }
 
     public static String getClipBoardText() {
-        return getClipBoardText(false);
-    }
-    public static String getClipBoardText(boolean quote) {
         // #sijapp cond.if modules_ANDROID is "true" #
         String androidClipboard = ru.net.jimm.JimmActivity.getInstance().clipboard.get();
         if (!StringConvertor.isEmpty(androidClipboard) && !androidClipboard.equals(instance.text)) {
-            instance.text = androidClipboard;
-            instance.header = "mobile";
-            instance.incoming = true;
+            instance.set(androidClipboard);
         }
         // #sijapp cond.end #
-        if (isClipBoardEmpty()) {
-            return "";
-        }
-        if (!quote || (null == instance.header)) {
-            return instance.text + " ";
-        }
-        return serialize(instance.incoming, instance.header, instance.text) + "\n\n";
+        return isClipBoardEmpty() ? "" : (instance.text + " ");
     }
 
     public static String serialize(boolean incoming, String header, String text) {
@@ -80,29 +67,18 @@ public final class Clipboard {
         return sb.toString();
     }
 
-    public static void setClipBoardText(String header, String text) {
-        instance.text = text;
-        instance.header = header;
-        instance.incoming = true;
-        // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().clipboard.put(instance.text);
-        // #sijapp cond.end #
-    }
     public static void setClipBoardText(String text) {
-        instance.text = text;
-        instance.header = null;
-        instance.incoming = true;
-        // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().clipboard.put(instance.text);
-        // #sijapp cond.end #
+        instance.set(text);
     }
 
     public static void setClipBoardText(boolean incoming, String from, String date, String text) {
-        instance.text = text;
-        instance.header = null;//from + ' ' + date;
-        instance.incoming = incoming;
+        instance.set(text);
+    }
+    private void set(String text) {
+        this.text = text;
         // #sijapp cond.if modules_ANDROID is "true" #
-        ru.net.jimm.JimmActivity.getInstance().clipboard.put(instance.text);
+        ru.net.jimm.JimmActivity.getInstance().clipboard.put(text);
         // #sijapp cond.end #
     }
+
 }

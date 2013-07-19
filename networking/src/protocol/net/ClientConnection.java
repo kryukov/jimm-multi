@@ -68,7 +68,7 @@ public abstract class ClientConnection implements Runnable {
                 boolean doing = processPacket();
                 if (!doing) {
                     sleep(250);
-                    doPingIfNeeeded();
+                    doPingIfNeeded();
                 }
             }
 
@@ -124,7 +124,7 @@ public abstract class ClientConnection implements Runnable {
         }
     }
 
-    private void doPingIfNeeeded() throws JimmException {
+    private void doPingIfNeeded() throws JimmException {
         long now = Jimm.getCurrentGmtTime();
         if (usePong && (pongTime + PONG_TIMEOUT < now)) {
             throw new JimmException(120, 9);

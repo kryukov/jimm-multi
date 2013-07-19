@@ -227,7 +227,7 @@ public class Options {
     public static final int HOTKEY_COLLAPSE_ALL = 17;
     public static final int HOTKEY_SEND_PHOTO = 18;
 
-    private static final Vector listOfProfiles = new Vector();
+    private static final Vector<Profile> listOfProfiles = new Vector<Profile>();
 
     /**************************************************************************/
     public static int getMaxAccountCount() {

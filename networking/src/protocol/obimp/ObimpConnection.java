@@ -335,7 +335,7 @@ public class ObimpConnection extends ClientConnection {
 
 
         socket = new TcpSocket();
-        socket.connectTo("socket://" + server + ":7023");
+        socket.connectTo(server, 7023);
 
         //- OBIMP_BEX_COM_CLI_HELLO
         //wTLD 0x0001: UTF8, account name

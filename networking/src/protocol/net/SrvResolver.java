@@ -28,14 +28,13 @@ import jimm.comm.Util;
  * @author Vladimir Kryukov
  */
 public final class SrvResolver {
-    private String server;
+    private static final String server = "8.8.8.8";
     private TcpSocket socket = new TcpSocket();
     
     /**
      * Creates a new instance of SrvResolver
      */
     public SrvResolver() {
-        server = "8.8.8.8";
     }
 
     private byte[] packet(String[] domain) throws IOException {
@@ -119,7 +118,7 @@ public final class SrvResolver {
 
     private String sendTcp(byte[] message) {
         try {
-            socket.connectTo("socket://" + server + ":53");
+            socket.connectTo(server, 53);
             byte[] packet = new byte[2 + message.length];
             System.arraycopy(message, 0, packet, 2, message.length);
             Util.putWordBE(packet, 0, message.length);

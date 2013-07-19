@@ -307,13 +307,13 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             int size = getFileSize();
             switch (sendMode) {
                 case JNR_SOCKET:
-                    sendFileThroughServer("socket://files.jimm.net.ru:2000", in, size);
+                    sendFileThroughServer("files.jimm.net.ru", 2000, in, size);
                     break;
                 case JNR_HTTP:
                     sendFileThroughWeb("files.jimm.net.ru:81", in, size);
                     break;
                 case P4U_SOCKET:
-                    sendFileThroughServer("socket://s1.pic4u.ru:2000", in, size);
+                    sendFileThroughServer("s1.pic4u.ru", 2000, in, size);
                     break;
                 case P4U_HTTP:
                     sendFileThroughWeb("s1.pic4u.ru:81", in, size);
@@ -384,10 +384,10 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         // #sijapp cond.end #
         return client;
     }
-    private void sendFileThroughServer(String server, InputStream fis, int fileSize) throws JimmException {
+    private void sendFileThroughServer(String server, int port, InputStream fis, int fileSize) throws JimmException {
         TcpSocket socket = new TcpSocket();
         try {
-            socket.connectTo(server);
+            socket.connectTo(server, port);
 
             final int version = 1;
             Util header = new Util();

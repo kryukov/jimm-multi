@@ -14,6 +14,8 @@ import javax.microedition.io.*;
 import jimm.JimmException;
 import jimm.modules.*;
 
+import java.net.Socket;
+
 /**
  *
  * @author Vladimir Kryukov
@@ -26,6 +28,9 @@ public final class TcpSocket {
     public TcpSocket() {
     }
 
+    public void connectTo(String host, int port) throws JimmException {
+        connectTo("socket://" + host + ":" + port);
+    }
     public void connectTo(String url) throws JimmException {
         try {
             sc = (StreamConnection)Connector.open(url, Connector.READ_WRITE);

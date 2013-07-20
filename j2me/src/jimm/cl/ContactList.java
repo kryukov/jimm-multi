@@ -182,7 +182,7 @@ public final class ContactList implements ContactListListener {
 
         if (!isPaused && isHuman) {
             if (isPersonal) {
-                Jimm.getJimm().getCL().setActiveContact(contact);
+                setActiveContact(contact);
             }
             // #sijapp cond.if modules_LIGHT is "true" #
             if (isPersonal || isMention) {
@@ -382,14 +382,14 @@ public final class ContactList implements ContactListListener {
                 return;
             }
         }
-        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
-        Jimm.getJimm().getCL().getManager().setActiveContact(getPreferredChat().getContact());
-        Jimm.getJimm().getCL().getManager().show();
+        getManager().setModel(getUpdater().getChatModel());
+        getManager().setActiveContact(getPreferredChat().getContact());
+        getManager().show();
     }
 
     public void backFromChats() {
-        Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getModel());
-        Jimm.getJimm().getDisplay().back(Jimm.getJimm().getCL().getManager());
+        getManager().setModel(getUpdater().getModel());
+        Jimm.getJimm().getDisplay().back(getManager());
     }
 
     // shows next or previos chat
@@ -412,7 +412,7 @@ public final class ContactList implements ContactListListener {
                 return chat;
             }
         }
-        Contact currentContact = Jimm.getJimm().getCL().getUpdater().getCurrentContact();
+        Contact currentContact = getUpdater().getCurrentContact();
         int current  = 0;
         for (int i = 0; i < chats.size(); ++i) {
             ChatModel chat = (ChatModel) chats.elementAt(i);
@@ -449,7 +449,7 @@ public final class ContactList implements ContactListListener {
 
     public void changeContactStatus(Protocol protocol, Contact contact) {
         ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(contact);
-        Chat view = Jimm.getJimm().getCL().getChat(chat);
+        Chat view = getChat(chat);
         if (null != view) {
             view.updateStatus();
         }

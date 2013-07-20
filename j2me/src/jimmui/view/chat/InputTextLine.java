@@ -21,7 +21,7 @@
  Author(s): Vladimir Kryukov
  *******************************************************************************/
 
-package jimm.chat;
+package jimmui.view.chat;
 import jimmui.view.text.*;
 import javax.microedition.lcdui.*;
 import jimm.Options;

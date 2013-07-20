@@ -1,7 +1,7 @@
 package jimmui.model.chat;
 
 import jimm.Jimm;
-import jimm.chat.Chat;
+import jimmui.view.chat.Chat;
 import jimm.chat.message.Message;
 import jimm.comm.Util;
 import jimmui.view.icons.Icon;

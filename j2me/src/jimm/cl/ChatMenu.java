@@ -24,7 +24,7 @@
 package jimm.cl;
 
 import jimm.*;
-import jimm.chat.Chat;
+import jimmui.view.chat.Chat;
 import jimmui.model.chat.ChatModel;
 import jimmui.view.menu.*;
 

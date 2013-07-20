@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.Jimm;
 import jimm.Options;
-import jimm.chat.Chat;
+import jimmui.view.chat.Chat;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
 import jimmui.view.ActionListener;

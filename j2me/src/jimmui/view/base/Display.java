@@ -12,7 +12,7 @@ package jimmui.view.base;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.JimmMidlet;
-import jimm.chat.Chat;
+import jimmui.view.chat.Chat;
 import jimm.comm.Util;
 import jimm.modules.*;
 import jimmui.view.*;

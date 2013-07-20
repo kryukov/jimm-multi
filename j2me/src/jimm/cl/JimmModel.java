@@ -1,6 +1,7 @@
 package jimm.cl;
 
 import jimm.*;
+import jimm.modules.DebugLog;
 import jimmui.model.chat.ChatModel;
 import jimmui.model.chat.MessData;
 import jimm.comm.Util;

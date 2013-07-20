@@ -31,10 +31,10 @@ public class ChatModel {
     public Contact contact;
     private Vector<MessData> messData = new Vector<MessData>();
 
-    protected short messageCounter = 0;
-    protected short otherMessageCounter = 0;
-    protected byte sysNoticeCounter = 0;
-    protected byte authRequestCounter = 0;
+    public short messageCounter = 0;
+    public short otherMessageCounter = 0;
+    public byte sysNoticeCounter = 0;
+    public byte authRequestCounter = 0;
     public int topOffset = -1;
     public int current;
     public Font[] fontSet;

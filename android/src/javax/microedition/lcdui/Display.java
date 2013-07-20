@@ -36,6 +36,9 @@ import java.util.TimerTask;
 import javax.microedition.midlet.MIDlet;
 
 import android.util.Log;
+import jimmui.view.base.NativeCanvas;
+import jimmui.view.chat.Chat;
+import org.microemu.android.device.ui.AndroidCanvasUI;
 import ru.net.jimm.JimmActivity;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletBridge;
@@ -414,9 +417,19 @@ public class Display {
 		return DeviceFactory.getDevice().getDeviceDisplay().isColor();
 	}
 
+    private void updateChatLine(Displayable displayable) {
+        if (displayable instanceof NativeCanvas) {
+            NativeCanvas c = (NativeCanvas) displayable;
+            DisplayableUI ui = ((Canvas)c).getUi();
+            ((AndroidCanvasUI) ui).setInputVisibility(c.getCanvas() instanceof Chat);
+            c.updateSize();
+        }
+    }
 	public void setCurrent(final Displayable nextDisplayable) {
         final Displayable prevDisplayable = current;
 		if (nextDisplayable == prevDisplayable) {
+            updateChatLine(nextDisplayable);
+            nextDisplayable.repaint();
 			return;
 		}
 		if (nextDisplayable != null) {
@@ -430,11 +443,12 @@ public class Display {
 						}));
 					}
 
+                    updateChatLine(nextDisplayable);
 					nextDisplayable.showNotify(Display.this);
 					Display.this.current = nextDisplayable;
 					nextDisplayable.repaint();
 				}
-												
+
 			}));
 		} else {
             ru.net.jimm.JimmActivity.getInstance().minimizeApp();

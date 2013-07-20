@@ -232,6 +232,7 @@ abstract public class Protocol {
     /* ********************************************************************* */
     public final void safeLoad() {
         if ("".equals(getUserId())) {
+            setContactList(new Roster(), false);
             return;
         }
         if (isConnected()) {

@@ -122,11 +122,16 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     // #sijapp cond.if modules_ANDROID is "true" #
     public void onFileSelect(InputStream in, String fileName) {
         try {
+            DebugLog.println("onFileSelect setFileName");
             setFileName(fileName);
+            DebugLog.println("onFileSelect setData");
             int fileSize = in.available();
             setData(in, fileSize);
+            DebugLog.println("onFileSelect askForNameDesc");
             askForNameDesc();
+            DebugLog.println("onFileSelect done");
         } catch (Exception e) {
+            DebugLog.panic("onFileSelect", e);
             closeFile();
             handleException(new JimmException(191, 6));
         }
@@ -164,7 +169,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         name_Desc = new GraphForm("name_desc", "ok", "back", this);
         name_Desc.addString("filename", filename);
         name_Desc.addTextField(descriptionField, "description", "", 255);
-        String items = "jimm.net.ru|www.jimm.net.ru|jimm.org|hetzner|www.hetzner";
+        String items = "jimm.net.ru|www.jimm.net.ru|jimm.org";
         // #sijapp cond.if protocols_JABBER is "true" #
         if (cItem instanceof protocol.jabber.JabberContact) {
             if (cItem.isSingleUserContact() && cItem.isOnline()) {
@@ -309,12 +314,6 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
                     break;
                 case JNR_HTTP:
                     sendFileThroughWeb("files.jimm.net.ru:81", in, size);
-                    break;
-                case P4U_SOCKET:
-                    sendFileThroughServer("s1.pic4u.ru", 2000, in, size);
-                    break;
-                case P4U_HTTP:
-                    sendFileThroughWeb("s1.pic4u.ru:81", in, size);
                     break;
                 case JO_HTTP:
                     sendFileThroughWeb("filetransfer.jimm.org", in, size);
@@ -563,9 +562,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     private static final int JNR_SOCKET = 0;
     private static final int JNR_HTTP = 1;
     private static final int JO_HTTP = 2;
-    private static final int P4U_SOCKET = 3;
-    private static final int P4U_HTTP = 4;
-    private static final int IBB_MODE = 5;
+    private static final int IBB_MODE = 3;
 
     private static final int MAX_IMAGE_SIZE = 2*1024*1024;
     private boolean isImageFile() {

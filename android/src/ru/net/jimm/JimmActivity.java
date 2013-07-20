@@ -126,7 +126,7 @@ public class JimmActivity extends MicroEmulatorActivity {
     protected void onResume() {
         super.onResume();
         isVisible = true;
-
+        Log.i(LOG_TAG, "onResume();");
         new Thread(new Runnable() {
 
             public void run()
@@ -158,6 +158,7 @@ public class JimmActivity extends MicroEmulatorActivity {
     protected void onRestart() {
         super.onRestart();
         isVisible = true;
+        Log.i(LOG_TAG, "onRestart();");
     }
 
     @Override
@@ -413,11 +414,11 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     public void minimizeApp() {
 // TODO: hide
-        super.onBackPressed();
-//        Intent startMain = new Intent(Intent.ACTION_MAIN);
-//        startMain.addCategory(Intent.CATEGORY_HOME);
-//        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(startMain);
+//        super.onBackPressed();
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 
     public boolean isNetworkAvailable() {

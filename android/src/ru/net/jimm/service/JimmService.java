@@ -159,7 +159,8 @@ public class JimmService extends Service {
 
     private int getPersonalUnreadMessageCount(boolean all) {
         int count = 0;
-        for (ChatModel chat : jimmModel.chats) {
+        for (Object c : jimmModel.chats) {
+            ChatModel chat = (ChatModel) c;
             if (all || chat.isHuman() || !chat.getContact().isSingleUserContact()) {
                 count += chat.getPersonalUnreadMessageCount();
             }

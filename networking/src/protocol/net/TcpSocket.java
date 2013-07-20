@@ -14,8 +14,6 @@ import javax.microedition.io.*;
 import jimm.JimmException;
 import jimm.modules.*;
 
-import java.net.Socket;
-
 /**
  *
  * @author Vladimir Kryukov

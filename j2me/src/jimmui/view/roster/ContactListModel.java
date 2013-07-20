@@ -31,17 +31,17 @@ import protocol.*;
 import java.util.Vector;
 
 public abstract class ContactListModel {
-    private final Vector<Protocol> protocolList = new Vector<Protocol>();
+    private Protocol[] protocols;
 
     protected TreeNode selectedItem = null;
 
     protected boolean hideOffline;
 
     public void addProtocols(Vector<Protocol> protocols) {
-        protocolList.removeAllElements();
-        for (int i = 0; i < protocols.size(); ++i) {
-            protocolList.addElement(protocols.elementAt(i));
-            updateProtocol((Protocol) protocols.elementAt(i), null);
+        this.protocols = new Protocol[protocols.size()];
+        protocols.copyInto(this.protocols);
+        for (int i = 0; i < this.protocols.length; ++i) {
+            updateProtocol(this.protocols[i], null);
         }
     }
     public final void setAlwaysVisibleNode(TreeNode node) {
@@ -49,10 +49,10 @@ public abstract class ContactListModel {
     }
 
     public final Protocol getProtocol(int accountIndex) {
-        return (Protocol) protocolList.elementAt(accountIndex);
+        return protocols[accountIndex];
     }
     public final int getProtocolCount() {
-        return protocolList.size();
+        return protocols.length;
     }
 
 
@@ -129,7 +129,10 @@ public abstract class ContactListModel {
     public abstract ProtocolBranch getProtocolNode(RosterUpdater.Update u);
 
     public boolean hasProtocol(Protocol p) {
-        return -1 < Util.getIndex(protocolList, p);
+        for (int i = 0; i < this.protocols.length; ++i) {
+            if (p == this.protocols[i]) return true;
+        }
+        return false;
     }
 
     public void expandPath(RosterUpdater.Update update) {

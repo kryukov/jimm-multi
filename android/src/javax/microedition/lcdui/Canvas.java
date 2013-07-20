@@ -172,8 +172,4 @@ public abstract class Canvas extends Displayable {
     public Input getInput() {
         return ((AndroidCanvasUI) getUi()).getInput();
     }
-
-    public void setInputVisibility(boolean v) {
-        ((AndroidCanvasUI) getUi()).setInputVisibility(v);
-    }
 }

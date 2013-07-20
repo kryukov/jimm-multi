@@ -112,7 +112,7 @@ public class NativeCanvas extends Canvas {
         // #sijapp cond.end#
         updateMetrix(getWidth(), getHeight());
     }
-    CanvasEx getCanvas() {
+    public CanvasEx getCanvas() {
         return canvas;
     }
     public void setPopup(Popup p) {
@@ -547,6 +547,12 @@ public class NativeCanvas extends Canvas {
         c.setSize(w, h);
         c.sizeChanged(prevW, prevH, c.getWidth(), c.getHeight());
     }
+    // #sijapp cond.if modules_ANDROID is "true" #
+    public void updateSize() {
+        CanvasEx c = canvas;
+        c.setSize(c.getWidth(), c.getHeight());
+    }
+    // #sijapp cond.end #
 
     public static int getScreenWidth() {
         return instance.getWidth();

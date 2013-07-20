@@ -147,6 +147,10 @@ public class Jimm {
         initUiPhase2();
         try {
             splash = new SplashCanvas();
+            // #sijapp cond.if modules_ANDROID isnot "true" #
+            splash.setMessage(JLocale.getString("loading"));
+            splash.show();
+            // #sijapp cond.end #
             initDaemonPhase3();
             initUiPhase4();
             // phase 5
@@ -351,10 +355,6 @@ public class Jimm {
         jimmModel.updateAccounts();
     }
     private void initUiPhase4() {
-        splash.setMessage(JLocale.getString("loading"));
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        splash.show();
-        // #sijapp cond.end #
         splash.setProgress(10);
 
         cl = new ContactList();
@@ -418,10 +418,9 @@ public class Jimm {
     private void restoreUI() {
         splash = new SplashCanvas();
         display.updateDisplay();
+        if (null != uiUpdater) uiUpdater.stop();
         uiUpdater = new UIUpdater();
         uiUpdater.startUIUpdater();
-        // phase 5
-        cl.startUp();
         uiUpdater.refreshClock();
     }
 

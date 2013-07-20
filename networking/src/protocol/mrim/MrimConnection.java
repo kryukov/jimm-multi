@@ -8,7 +8,7 @@ package protocol.mrim;
 import java.util.*;
 import jimm.*;
 import jimm.JimmException;
-import jimm.chat.ChatModel;
+import jimmui.model.chat.ChatModel;
 import jimm.chat.message.*;
 import jimm.comm.*;
 import jimm.modules.*;

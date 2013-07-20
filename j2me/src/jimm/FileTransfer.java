@@ -27,8 +27,8 @@ import java.io.*;
 import javax.microedition.io.*;
 import javax.microedition.lcdui.Image;
 
-import jimm.chat.ChatModel;
-import jimm.chat.MessData;
+import jimmui.model.chat.ChatModel;
+import jimmui.model.chat.MessData;
 import jimm.comm.*;
 import jimm.modules.*;
 // #sijapp cond.if modules_FILES="true"#

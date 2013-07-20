@@ -1,6 +1,7 @@
-package jimm.chat;
+package jimmui.model.chat;
 
 import jimm.Jimm;
+import jimm.chat.Chat;
 import jimm.chat.message.Message;
 import jimm.comm.Util;
 import jimmui.view.icons.Icon;
@@ -83,7 +84,7 @@ public class ChatModel {
         }
     }
 
-    protected void resetUnreadMessages() {
+    public void resetUnreadMessages() {
         boolean notEmpty = (0 < messageCounter)
                 || (0 < otherMessageCounter)
                 || (0 < sysNoticeCounter);
@@ -118,7 +119,7 @@ public class ChatModel {
         return !service && getContact().isSingleUserContact();
     }
 
-    protected boolean isBlogBot() {
+    public boolean isBlogBot() {
         // #sijapp cond.if protocols_JABBER is "true" #
         if (getContact() instanceof JabberContact) {
             return ((Jabber) protocol).isBlogBot(getContact().getUserId());
@@ -131,9 +132,8 @@ public class ChatModel {
         return protocol;
     }
 
-    MessData getUnreadMessage(int num) {
-        int index = size() - getUnreadMessageCount() + num;
-        return getMessage(index);
+    public MessData getUnreadMessage(int num) {
+        return getMessage(size() - getUnreadMessageCount() + num);
     }
 
     public final int getNewMessageIcon() {
@@ -148,7 +148,7 @@ public class ChatModel {
         }
         return -1;
     }
-    final String getMyName() {
+    public final String getMyName() {
         // #sijapp cond.if protocols_JABBER is "true" #
         if (getContact() instanceof JabberServiceContact) {
             String nick = ((JabberServiceContact)getContact()).getMyName();
@@ -169,7 +169,11 @@ public class ChatModel {
         return height;
     }
 
-    protected int getItemHeight(MessData mData) {
+    public int getItemHeight(MessData mData) {
         return mData.par.getHeight() + getMessageHeaderHeight(mData);
+    }
+
+    public boolean hasAuthRequests() {
+        return 0 < authRequestCounter;
     }
 }

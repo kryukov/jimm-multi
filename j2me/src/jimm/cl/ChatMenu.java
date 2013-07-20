@@ -25,15 +25,8 @@ package jimm.cl;
 
 import jimm.*;
 import jimm.chat.Chat;
-import jimm.chat.ChatModel;
-import jimm.comm.*;
-import protocol.Protocol;
+import jimmui.model.chat.ChatModel;
 import jimmui.view.menu.*;
-import java.io.*;
-
-import jimm.chat.message.PlainMessage;
-import jimm.io.Storage;
-import protocol.Contact;
 
 public final class ChatMenu implements SelectListener {
     public ChatMenu() {

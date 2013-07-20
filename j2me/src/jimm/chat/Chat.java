@@ -34,6 +34,8 @@ package jimm.chat;
 import jimm.cl.SysTextList;
 import jimmui.Clipboard;
 import jimmui.HotKeys;
+import jimmui.model.chat.ChatModel;
+import jimmui.model.chat.MessData;
 import jimmui.view.icons.Icon;
 import jimm.*;
 import jimm.chat.message.*;
@@ -355,7 +357,7 @@ public final class Chat extends VirtualList {
         }
         // #sijapp cond.end#
         // #sijapp cond.end#
-        if (0 < model.authRequestCounter) {
+        if (model.hasAuthRequests()) {
             menu.addItem("grant", Contact.USER_MENU_GRANT_AUTH);
             menu.addItem("deny", Contact.USER_MENU_DENY_AUTH);
         }

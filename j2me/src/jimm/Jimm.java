@@ -27,7 +27,7 @@ package jimm;
 import java.io.*;
 import javax.microedition.io.*;
 
-import jimm.chat.ChatUpdater;
+import jimmui.updater.ChatUpdater;
 import jimm.cl.*;
 import jimm.comm.*;
 import jimm.modules.*;

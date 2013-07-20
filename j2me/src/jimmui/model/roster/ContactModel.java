@@ -3,7 +3,7 @@ package jimmui.model.roster;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
-import jimmui.view.roster.Updater;
+import jimmui.updater.RosterUpdater;
 import jimm.comm.Util;
 import protocol.Contact;
 import protocol.Protocol;
@@ -29,31 +29,31 @@ public class ContactModel extends ContactListModel {
         rebuildContacts(contacts, items);
     }
 
-    public void updateOrder(Updater.Update u) {
+    public void updateOrder(RosterUpdater.Update u) {
         Util.sort(contacts);
     }
 
-    public void removeGroup(Updater.Update u) {
+    public void removeGroup(RosterUpdater.Update u) {
     }
-    public void addGroup(Updater.Update u) {
+    public void addGroup(RosterUpdater.Update u) {
         Vector contacts = u.protocol.getContacts(u.group);
         Util.removeAll(this.contacts, contacts);
         Util.addAll(this.contacts, contacts);
     }
-    public void addToGroup(Updater.Update update) {
+    public void addToGroup(RosterUpdater.Update update) {
         contacts.addElement(update.contact);
     }
 
-    public void removeFromGroup(Updater.Update update) {
+    public void removeFromGroup(RosterUpdater.Update update) {
         contacts.removeElement(update.contact);
     }
 
 
-    public GroupBranch getGroupNode(Updater.Update u) {
+    public GroupBranch getGroupNode(RosterUpdater.Update u) {
         return null;
     }
 
-    public ProtocolBranch getProtocolNode(Updater.Update u) {
+    public ProtocolBranch getProtocolNode(RosterUpdater.Update u) {
         return null;
     }
 

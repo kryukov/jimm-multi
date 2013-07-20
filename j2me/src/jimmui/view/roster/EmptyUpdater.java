@@ -1,5 +1,7 @@
 package jimmui.view.roster;
 
+import jimmui.model.chat.ChatModel;
+import jimmui.updater.RosterUpdater;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
@@ -14,14 +16,14 @@ import java.util.Vector;
  *
  * @author vladimir
  */
-public class EmptyUpdater extends Updater {
+public class EmptyUpdater extends RosterUpdater {
     public void addGroup(Protocol protocol, Group group) {
     }
 
-    public void unregisterChat(jimm.chat.ChatModel item) {
+    public void unregisterChat(ChatModel item) {
     }
 
-    public void registerChat(jimm.chat.ChatModel item) {
+    public void registerChat(ChatModel item) {
     }
 
 

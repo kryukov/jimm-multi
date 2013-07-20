@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.*;
 import android.util.Log;
 import jimm.Jimm;
-import jimm.chat.ChatModel;
+import jimmui.model.chat.ChatModel;
 import jimm.cl.JimmModel;
 import org.bombusmod.scrobbler.MusicReceiver;
 import protocol.Protocol;

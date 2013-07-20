@@ -9,10 +9,10 @@
 
 package protocol;
 
+import jimmui.model.chat.ChatModel;
 import jimmui.view.roster.*;
 import jimmui.view.icons.*;
 import jimm.*;
-import jimm.chat.*;
 import jimm.chat.message.*;
 import jimm.cl.ContactList;
 import jimm.history.*;

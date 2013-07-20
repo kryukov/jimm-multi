@@ -25,10 +25,10 @@
 package jimm.chat.message;
 
 import jimm.Jimm;
-import jimm.chat.ChatModel;
+import jimmui.model.chat.ChatModel;
 import jimmui.view.icons.*;
 import jimmui.view.text.*;
-import jimm.chat.MessData;
+import jimmui.model.chat.MessData;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.ui.InfoFactory;

@@ -1,7 +1,10 @@
-package jimm.chat;
+package jimmui.updater;
 
 import jimm.Jimm;
 import jimm.Options;
+import jimm.chat.Chat;
+import jimmui.model.chat.ChatModel;
+import jimmui.model.chat.MessData;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
 import jimm.comm.StringConvertor;
@@ -143,7 +146,7 @@ public class ChatUpdater {
         }
     }
 
-    void storeTopPosition(ChatModel chat, Chat view) {
+    public void storeTopPosition(ChatModel chat, Chat view) {
         if (null != view) {
             chat.topOffset = view.getTopOffset();
             chat.current = view.getCurrItem();

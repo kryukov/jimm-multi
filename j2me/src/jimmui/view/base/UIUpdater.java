@@ -11,7 +11,7 @@ package jimmui.view.base;
 
 import java.util.*;
 import jimm.Jimm;
-import jimm.chat.ChatModel;
+import jimmui.model.chat.ChatModel;
 import jimmui.view.*;
 import protocol.Contact;
 import protocol.ui.MessageEditor;

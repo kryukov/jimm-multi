@@ -25,13 +25,14 @@ package jimmui.view.roster;
 
 import jimm.util.JLocale;
 import jimmui.HotKeys;
+import jimmui.model.chat.ChatModel;
+import jimmui.updater.RosterUpdater;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.*;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 
 import jimm.*;
-import jimm.chat.*;
 import jimm.comm.*;
 import jimm.modules.*;
 import jimmui.view.base.*;
@@ -65,7 +66,7 @@ public final class VirtualContactList extends VirtualList {
 
     private Vector[] listOfContactList = new Vector[]{new Vector(), new Vector()};
     private int visibleListIndex = 0;
-    private Updater updater = new Updater();
+    private RosterUpdater updater = new RosterUpdater();
 
     public VirtualContactList() {
         super("");
@@ -236,7 +237,7 @@ public final class VirtualContactList extends VirtualList {
             Protocol p = model.getContactProtocol(c);
             if (null != p) {
                 Group group = p.getGroupById(c.getGroupId());
-                model.expandPath(new Updater.Update(p, group, c, Updater.Update.EXPAND));
+                model.expandPath(new RosterUpdater.Update(p, group, c, RosterUpdater.Update.EXPAND));
             }
         }
     }
@@ -617,7 +618,7 @@ public final class VirtualContactList extends VirtualList {
         return InfoFactory.factory.getStatusInfo(protocol).getName(contact.getStatusIndex());
     }
 
-    public Updater getUpdater() {
+    public RosterUpdater getUpdater() {
         return updater;
     }
 }

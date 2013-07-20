@@ -25,6 +25,7 @@ package jimmui.view.roster;
 
 import jimm.Options;
 import jimm.comm.Util;
+import jimmui.updater.RosterUpdater;
 import protocol.*;
 
 import java.util.Vector;
@@ -70,9 +71,9 @@ public abstract class ContactListModel {
 
     public abstract void buildFlatItems(Vector items);
 
-    public abstract void updateOrder(Updater.Update u);
+    public abstract void updateOrder(RosterUpdater.Update u);
 
-    public void removeFromGroup(Updater.Update update) {
+    public void removeFromGroup(RosterUpdater.Update update) {
         GroupBranch groupBranch = getGroupNode(update);
         if (null == groupBranch) return;
         if (groupBranch.getContacts().removeElement(update.contact)) {
@@ -80,7 +81,7 @@ public abstract class ContactListModel {
         }
     }
 
-    public void addToGroup(Updater.Update update) {
+    public void addToGroup(RosterUpdater.Update update) {
         GroupBranch gb = getGroupNode(update);
         if (null == gb) return;
         gb.getContacts().addElement(update.contact);
@@ -121,17 +122,17 @@ public abstract class ContactListModel {
 
     public abstract void updateProtocol(Protocol protocol, Roster oldRoster);
 
-    public abstract void addGroup(Updater.Update u);
-    public abstract void removeGroup(Updater.Update u);
+    public abstract void addGroup(RosterUpdater.Update u);
+    public abstract void removeGroup(RosterUpdater.Update u);
 
-    public abstract GroupBranch getGroupNode(Updater.Update u);
-    public abstract ProtocolBranch getProtocolNode(Updater.Update u);
+    public abstract GroupBranch getGroupNode(RosterUpdater.Update u);
+    public abstract ProtocolBranch getProtocolNode(RosterUpdater.Update u);
 
     public boolean hasProtocol(Protocol p) {
         return -1 < Util.getIndex(protocolList, p);
     }
 
-    public void expandPath(Updater.Update update) {
+    public void expandPath(RosterUpdater.Update update) {
         GroupBranch gb = getGroupNode(update);
         if (null != gb) gb.setExpandFlag(true);
     }

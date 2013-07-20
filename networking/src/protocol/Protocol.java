@@ -13,7 +13,6 @@ import java.io.*;
 import java.util.Vector;
 import javax.microedition.rms.*;
 import jimm.*;
-import jimm.chat.*;
 import jimm.chat.message.*;
 import jimm.cl.ContactList;
 import jimm.comm.*;
@@ -21,7 +20,8 @@ import jimm.io.Storage;
 import jimm.modules.*;
 import jimm.search.*;
 import jimm.util.JLocale;
-import jimmui.view.roster.Updater;
+import jimmui.model.chat.ChatModel;
+import jimmui.updater.RosterUpdater;
 import protocol.jabber.*;
 import protocol.ui.StatusInfo;
 
@@ -635,7 +635,7 @@ abstract public class Protocol {
     private ContactList getContactList() {
         return Jimm.getJimm().getCL();
     }
-    private Updater getUpdater() {
+    private RosterUpdater getUpdater() {
         return (null == Jimm.getJimm().getCL()) ? null : Jimm.getJimm().getCL().getUpdater();
     }
 

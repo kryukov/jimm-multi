@@ -22,7 +22,7 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher, Vladimir Kryukov
  *******************************************************************************/
 package jimm;
 
-import jimm.chat.ChatModel;
+import jimmui.model.chat.ChatModel;
 import jimmui.view.icons.*;
 import jimmui.view.text.*;
 import javax.microedition.lcdui.*;

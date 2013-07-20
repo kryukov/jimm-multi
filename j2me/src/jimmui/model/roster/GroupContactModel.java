@@ -3,7 +3,7 @@ package jimmui.model.roster;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
-import jimmui.view.roster.Updater;
+import jimmui.updater.RosterUpdater;
 import jimm.comm.Util;
 import jimm.util.JLocale;
 import protocol.Contact;
@@ -39,9 +39,9 @@ public class GroupContactModel extends ContactListModel {
         rebuildGroup(notInListGroup, false, items);
     }
 
-    public void updateOrder(Updater.Update u) {
+    public void updateOrder(RosterUpdater.Update u) {
         switch (u.event) {
-            case Updater.Update.PROTOCOL_UPDATE:
+            case RosterUpdater.Update.PROTOCOL_UPDATE:
                 Vector groups = u.protocol.getGroupItems();
                 for (int i = 0; i < groups.size(); ++i) {
                     u.group = (Group) groups.elementAt(i);
@@ -51,7 +51,7 @@ public class GroupContactModel extends ContactListModel {
                 }
                 u.group = null;
                 break;
-            case Updater.Update.UPDATE:
+            case RosterUpdater.Update.UPDATE:
                 GroupBranch groupBranch = getGroupNode(u);
                 groupBranch.updateGroupData();
                 groupBranch.sort();
@@ -59,7 +59,7 @@ public class GroupContactModel extends ContactListModel {
         }
     }
 
-    public void removeGroup(Updater.Update u) {
+    public void removeGroup(RosterUpdater.Update u) {
         boolean used = (null == u.group);
         if (!used) {
             for (int i = 0; i < getProtocolCount(); ++i) {
@@ -77,7 +77,7 @@ public class GroupContactModel extends ContactListModel {
         }
 
     }
-    public void addGroup(Updater.Update u) {
+    public void addGroup(RosterUpdater.Update u) {
         GroupBranch gb = getGroupNode(u);
         if (null == gb) {
             gb = createGroup(u.group);
@@ -112,7 +112,7 @@ public class GroupContactModel extends ContactListModel {
 
 
 
-    public GroupBranch getGroupNode(Updater.Update u) {
+    public GroupBranch getGroupNode(RosterUpdater.Update u) {
         if (null == u.group) {
             return notInListGroup;
         }
@@ -129,7 +129,7 @@ public class GroupContactModel extends ContactListModel {
         }
         return null;
     }
-    public ProtocolBranch getProtocolNode(Updater.Update u) {
+    public ProtocolBranch getProtocolNode(RosterUpdater.Update u) {
         return null;
     }
 
@@ -139,7 +139,7 @@ public class GroupContactModel extends ContactListModel {
     }
 
     public void updateProtocol(Protocol protocol, Roster oldRoster) {
-        Updater.Update u = new Updater.Update(protocol,  null, null, Updater.Update.GROUP_REMOVE);
+        RosterUpdater.Update u = new RosterUpdater.Update(protocol,  null, null, RosterUpdater.Update.GROUP_REMOVE);
         if (null != oldRoster) {
             for (int i = 0; i < oldRoster.groups.size(); ++i) {
                 u.group = (Group) oldRoster.groups.elementAt(i);
@@ -149,7 +149,7 @@ public class GroupContactModel extends ContactListModel {
             removeGroup(u);
         }
 
-        u.event = Updater.Update.GROUP_ADD;
+        u.event = RosterUpdater.Update.GROUP_ADD;
         Vector inGroups = protocol.getGroupItems();
         for (int i = 0; i < inGroups.size(); ++i) {
             u.group = (Group) inGroups.elementAt(i);

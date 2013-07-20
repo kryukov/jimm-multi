@@ -1,10 +1,11 @@
 package jimmui.model.roster;
 
 import jimm.Jimm;
+import jimmui.model.chat.ChatModel;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
-import jimmui.view.roster.Updater;
+import jimmui.updater.RosterUpdater;
 import protocol.Protocol;
 import protocol.Roster;
 
@@ -20,14 +21,14 @@ import java.util.Vector;
 public class ChatsModel extends ContactListModel {
     @Override
     public void buildFlatItems(Vector items) {
-        Vector<jimm.chat.ChatModel> chats = Jimm.getJimm().jimmModel.chats;
+        Vector<ChatModel> chats = Jimm.getJimm().jimmModel.chats;
         for (int i = 0; i < chats.size(); ++i) {
-            items.addElement(((jimm.chat.ChatModel)chats.elementAt(i)).getContact());
+            items.addElement(((ChatModel)chats.elementAt(i)).getContact());
         }
     }
 
     @Override
-    public void updateOrder(Updater.Update u) {
+    public void updateOrder(RosterUpdater.Update u) {
     }
 
     @Override
@@ -35,20 +36,20 @@ public class ChatsModel extends ContactListModel {
     }
 
     @Override
-    public void addGroup(Updater.Update u) {
+    public void addGroup(RosterUpdater.Update u) {
     }
 
     @Override
-    public void removeGroup(Updater.Update u) {
+    public void removeGroup(RosterUpdater.Update u) {
     }
 
     @Override
-    public GroupBranch getGroupNode(Updater.Update u) {
+    public GroupBranch getGroupNode(RosterUpdater.Update u) {
         return null;
     }
 
     @Override
-    public ProtocolBranch getProtocolNode(Updater.Update u) {
+    public ProtocolBranch getProtocolNode(RosterUpdater.Update u) {
         return null;
     }
 

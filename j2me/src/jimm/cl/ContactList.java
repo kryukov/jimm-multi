@@ -25,6 +25,9 @@ package jimm.cl;
 
 import jimm.chat.message.Message;
 import jimm.modules.*;
+import jimmui.model.chat.ChatModel;
+import jimmui.updater.MessageBuilder;
+import jimmui.updater.RosterUpdater;
 import jimmui.view.icons.Icon;
 import jimmui.view.roster.*;
 import jimm.*;
@@ -102,7 +105,7 @@ public final class ContactList implements ContactListListener {
     public VirtualContactList getManager() {
         return contactList;
     }
-    public Updater getUpdater() {
+    public RosterUpdater getUpdater() {
         // #sijapp cond.if modules_ANDROID is "true" #
         if (Jimm.getJimm().isPaused()) return new EmptyUpdater();
         // #sijapp cond.end #

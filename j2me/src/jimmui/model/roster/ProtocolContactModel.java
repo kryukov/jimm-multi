@@ -1,12 +1,10 @@
 package jimmui.model.roster;
 
 import jimm.comm.Util;
-import protocol.Contact;
-import protocol.Group;
+import jimmui.updater.RosterUpdater;
 import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.GroupBranch;
 import jimmui.view.roster.ProtocolBranch;
-import jimmui.view.roster.Updater;
 import protocol.Protocol;
 import protocol.Roster;
 
@@ -38,32 +36,32 @@ public class ProtocolContactModel extends ContactListModel {
         }
     }
 
-    public void updateOrder(Updater.Update u) {
+    public void updateOrder(RosterUpdater.Update u) {
         getProtocolNode(u).sort();
     }
-    public void removeGroup(Updater.Update u) {
+    public void removeGroup(RosterUpdater.Update u) {
     }
-    public void addGroup(Updater.Update u) {
+    public void addGroup(RosterUpdater.Update u) {
         Vector contacts = u.protocol.getContacts(u.group);
         Util.removeAll(getProtocolNode(u).getSortedContacts(), contacts);
         Util.addAll(getProtocolNode(u).getSortedContacts(), contacts);
     }
 
-    public void addToGroup(Updater.Update update) {
+    public void addToGroup(RosterUpdater.Update update) {
         ProtocolBranch pb = getProtocolNode(update);
         pb.getSortedContacts().addElement(update.contact);
     }
 
-    public void removeFromGroup(Updater.Update update) {
+    public void removeFromGroup(RosterUpdater.Update update) {
         ProtocolBranch pb = getProtocolNode(update);
         pb.getSortedContacts().removeElement(update.contact);
     }
 
-    public GroupBranch getGroupNode(Updater.Update u) {
+    public GroupBranch getGroupNode(RosterUpdater.Update u) {
         return null;
     }
 
-    public ProtocolBranch getProtocolNode(Updater.Update u) {
+    public ProtocolBranch getProtocolNode(RosterUpdater.Update u) {
         return (ProtocolBranch) protos.get(u.protocol);
     }
 

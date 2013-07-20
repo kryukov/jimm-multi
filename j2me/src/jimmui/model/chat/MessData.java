@@ -29,7 +29,7 @@ Author(s): Andreas Rossbacher, Artyomov Denis, Dmitry Tunin, Vladimir Kryukov
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-package jimm.chat;
+package jimmui.model.chat;
 
 import jimmui.view.text.Par;
 import jimm.Jimm;
@@ -39,7 +39,7 @@ public final class MessData {
     private long time;
     private String text;
     private String nick;
-    String strTime;
+    public String strTime;
     public int iconIndex;
     public Par par;
     private short rowData;

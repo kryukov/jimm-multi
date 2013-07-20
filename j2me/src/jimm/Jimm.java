@@ -27,6 +27,7 @@ package jimm;
 import java.io.*;
 import javax.microedition.io.*;
 
+import jimmui.SplashCanvas;
 import jimmui.updater.ChatUpdater;
 import jimm.cl.*;
 import jimm.comm.*;

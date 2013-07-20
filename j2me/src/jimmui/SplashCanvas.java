@@ -20,8 +20,9 @@ File: src/jimm/SplashCanvas.java
 Version: ###VERSION###  Date: ###DATE###
 Author(s): Manuel Linsmayer, Andreas Rossbacher, Vladimir Kryukov
  *******************************************************************************/
-package jimm;
+package jimmui;
 
+import jimm.Jimm;
 import jimmui.model.chat.ChatModel;
 import jimmui.view.icons.*;
 import jimmui.view.text.*;

@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.modules.*;
+import jimmui.SplashCanvas;
 import jimmui.view.menu.Select;
 
 /**

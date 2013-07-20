@@ -110,7 +110,9 @@ public class NativeCanvas extends Canvas {
         // #sijapp cond.if modules_TOUCH is "true"#
         touchControl.setCanvas(canvasEx);
         // #sijapp cond.end#
+        // #sijapp cond.if modules_ANDROID isnot "true"#
         updateMetrix(getWidth(), getHeight());
+        // #sijapp cond.end#
     }
     public CanvasEx getCanvas() {
         return canvas;

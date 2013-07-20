@@ -77,8 +77,7 @@ public final class ChatMenu implements SelectListener {
         }
         Jimm.getJimm().getCL().getUpdater().update();
         if (0 == getTotal()) {
-            Jimm.getJimm().getCL().getManager().setModel(Jimm.getJimm().getCL().getUpdater().getChatModel());
-            Jimm.getJimm().getCL().activate();
+            Jimm.getJimm().getCL().showChatList(false);
         }
     }
 

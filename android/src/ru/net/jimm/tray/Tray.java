@@ -1,4 +1,4 @@
-package ru.net.jimm;
+package ru.net.jimm.tray;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -87,5 +87,9 @@ public class Tray {
         } catch (Exception e) {
             // Should not happen.
         }
+    }
+
+    public void clear() {
+        mNM.cancelAll();
     }
 }

@@ -69,8 +69,6 @@ public class JimmActivity extends MicroEmulatorActivity {
 
     private boolean ignoreBackKeyUp = false;
 
-//    private boolean isFirstBack = true;
-
     public static JimmActivity getInstance() {
         return instance;
     }
@@ -254,16 +252,6 @@ public class JimmActivity extends MicroEmulatorActivity {
     @Override
     public void onBackPressed() {
         if (KeyEmulator.isMain()) {
-//            if (isFirstBack) {
-//                isFirstBack = false;
-//                new Timer().schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        isFirstBack = true;
-//                    }
-//                }, 1000);
-//                return;
-//            }
             minimizeApp();
             return;
         }
@@ -408,8 +396,6 @@ public class JimmActivity extends MicroEmulatorActivity {
         } catch (Exception e) {
             // do nothing
         }
-        stopService(new Intent(this, ru.net.jimm.service.JimmService.class));
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
     }
 
     public void minimizeApp() {

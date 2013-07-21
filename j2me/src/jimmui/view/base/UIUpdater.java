@@ -116,7 +116,7 @@ public class UIUpdater extends TimerTask {
 
     private void refreshClock(long timestamp) {
         this.timestamp = timestamp;
-        CanvasEx canvas = NativeCanvas.getInstance().getCanvas();
+        CanvasEx canvas = Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas();
         if ((null == canvas) || canvas.isSoftBarShown()) {
             MySoftBar.refreshClock();
             MyActionBar.refreshClock();
@@ -126,7 +126,7 @@ public class UIUpdater extends TimerTask {
         refreshClock(Jimm.getCurrentGmtTime() / 60);
     }
     private void updateClock() {
-        CanvasEx c = NativeCanvas.getInstance().getCanvas();
+        CanvasEx c = Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas();
         if ((null == c) || !c.isSoftBarShown()) {
             return;
         }
@@ -145,7 +145,7 @@ public class UIUpdater extends TimerTask {
 
         Jimm.getJimm().getCL().timerAction();
 
-        NativeCanvas canvas = NativeCanvas.getInstance();
+        NativeCanvas canvas = Jimm.getJimm().getDisplay().getNativeCanvas();
         if (!canvas.isShown()) {
             return;
         }

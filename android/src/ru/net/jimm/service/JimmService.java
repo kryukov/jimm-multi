@@ -2,6 +2,7 @@ package ru.net.jimm.service;
 
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -15,7 +16,7 @@ import protocol.Protocol;
 import protocol.ProtocolHelper;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
-import ru.net.jimm.Tray;
+import ru.net.jimm.tray.Tray;
 
 public class JimmService extends Service {
     private static final String LOG_TAG = "JimmService";
@@ -122,6 +123,8 @@ public class JimmService extends Service {
                 tray.startForegroundCompat(R.string.app_name, getNotification());
                 break;
             case QUIT:
+                tray.clear();
+                stopSelf();
                 break;
             default:
                 return false;

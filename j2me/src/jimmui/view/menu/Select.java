@@ -9,6 +9,7 @@
 
 package jimmui.view.menu;
 
+import jimm.Jimm;
 import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
 import jimmui.view.base.*;
@@ -91,14 +92,14 @@ public final class Select extends CanvasEx {
 
     protected void stylusPressed(int toX, int toY) {
         if (getHeight() < toY) {
-            NativeCanvas.getInstance().touchControl.setRegion(softBar);
+            Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(softBar);
             return;
         }
         if (!checkRegion(toX, toY)) {
             return;
         }
         int posY = toY - top;
-        TouchControl nat = NativeCanvas.getInstance().touchControl;
+        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
 
         if (isItemsRegion(toX)) { // menu items
             nat.prevTopY = getItemStartY();
@@ -126,7 +127,7 @@ public final class Select extends CanvasEx {
 
     protected void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
         if (checkRegion(fromX, fromY) && isItemsRegion(fromX)) {
-            TouchControl nat = NativeCanvas.getInstance().touchControl;
+            TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
             setTop((nat.prevTopY - toY + fromY + getHeadSpace()) / itemHeight);
         }
     }
@@ -442,12 +443,12 @@ public final class Select extends CanvasEx {
     }
 
     public final int getScreenWidth() {
-        return NativeCanvas.getScreenWidth();
+        return Jimm.getJimm().getDisplay().getScreenWidth();
     }
     public final int getScreenHeight() {
         if (isSoftBarShown()) {
-            return NativeCanvas.getScreenHeight() - softBar.getHeight();
+            return Jimm.getJimm().getDisplay().getScreenHeight() - softBar.getHeight();
         }
-        return NativeCanvas.getScreenHeight();
+        return Jimm.getJimm().getDisplay().getScreenHeight();
     }
 }

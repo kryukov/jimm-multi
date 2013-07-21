@@ -363,8 +363,8 @@ public class UserInfo implements
     public void setAvatar(Image img) {
         avatar = null;
         if (null != img) {
-            int height = NativeCanvas.getScreenHeight() * 2 / 3;
-            int width = NativeCanvas.getScreenWidth() - 5;
+            int height = Jimm.getJimm().getDisplay().getScreenHeight() * 2 / 3;
+            int width = Jimm.getJimm().getDisplay().getScreenWidth() - 5;
             Image image = Util.createThumbnail(img, width, height);
             avatar = new Icon(image, 0, 0, image.getWidth(), image.getHeight());
         }

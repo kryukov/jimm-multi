@@ -25,8 +25,8 @@ public class MySoftBar extends ActiveRegion {
         // #sijapp cond.if (modules_ANDROID is "true") or (modules_TOUCH isnot "true")#
         time = Util.getLocalDateString(Jimm.getCurrentGmtTime(), true);
         int h = GraphicsEx.getSoftBarSize();
-        int screenHeight = NativeCanvas.getScreenHeight();
-        NativeCanvas.getInstance().repaint(0, screenHeight - h, NativeCanvas.getScreenWidth(), h);
+        int screenHeight = Jimm.getJimm().getDisplay().getScreenHeight();
+        Jimm.getJimm().getDisplay().getNativeCanvas().repaint(0, screenHeight - h, Jimm.getJimm().getDisplay().getScreenWidth(), h);
         // #sijapp cond.end#
     }
     public int getHeight() {
@@ -65,7 +65,7 @@ public class MySoftBar extends ActiveRegion {
         int w = canvas.getWidth();
         int lsoftWidth = w / 2 - (w * 10 / 100);
         int rsoftWidth = w - lsoftWidth;
-        NativeCanvas nat = NativeCanvas.getInstance();
+        NativeCanvas nat = Jimm.getJimm().getDisplay().getNativeCanvas();
         if (x < lsoftWidth) {
             nat.emulateKey(canvas, NativeCanvas.LEFT_SOFT);
 

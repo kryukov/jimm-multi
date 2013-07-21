@@ -242,7 +242,7 @@ public final class ContactList implements ContactListListener {
         Icon icon = getUnreadMessageIcon();
         if (icon != MyActionBar.getMessageIcon()) {
             MyActionBar.setMessageIcon(icon);
-            jimmui.view.base.NativeCanvas.getInstance().repaint();
+            Jimm.getJimm().getDisplay().getNativeCanvas().repaint();
         }
         // #sijapp cond.if modules_ANDROID is "true" #
         ru.net.jimm.JimmActivity.getInstance().service.updateAppIcon();

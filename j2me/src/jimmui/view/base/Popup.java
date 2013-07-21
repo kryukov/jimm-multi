@@ -9,6 +9,7 @@
 
 package jimmui.view.base;
 
+import jimm.Jimm;
 import jimmui.view.text.*;
 import javax.microedition.lcdui.*;
 import jimm.comm.*;
@@ -31,17 +32,17 @@ public final class Popup implements Runnable {
     }
     public Popup(String text) {
         this.text = StringConvertor.notNull(text);
-        this.canvas = NativeCanvas.getInstance().getCanvas();
+        this.canvas = Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas();
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void stylusTap(int x, int y, boolean longTap) {
-        NativeCanvas.getInstance().setPopup(null);
+        Jimm.getJimm().getDisplay().getNativeCanvas().setPopup(null);
     }
     // #sijapp cond.end#
 
     private int getMaxHeight() {
-        int height = NativeCanvas.getScreenHeight();
+        int height = Jimm.getJimm().getDisplay().getScreenHeight();
         height = (height <= 200) ? (height - 15) : (height * 6 / 10);
         return Math.min(height, par.getHeight() + 6);
     }
@@ -55,10 +56,10 @@ public final class Popup implements Runnable {
         par = parser.getPar();
 
         setActiveHeight(0);
-        NativeCanvas.getInstance().setPopup(this);
+        Jimm.getJimm().getDisplay().getNativeCanvas().setPopup(this);
     }
     private int getPopupWidth() {
-        return NativeCanvas.getScreenWidth() - 4;
+        return Jimm.getJimm().getDisplay().getScreenWidth() - 4;
     }
 
     protected CanvasEx getCanvas() {
@@ -72,7 +73,7 @@ public final class Popup implements Runnable {
         int width = getPopupWidth();
         int height = popupHeight;
         int y = from;
-        int x = (NativeCanvas.getScreenWidth() - width) / 2;
+        int x = (Jimm.getJimm().getDisplay().getScreenWidth() - width) / 2;
 
         g.setClip(x, y, width, height);
         g.setStrokeStyle(Graphics.SOLID);
@@ -94,24 +95,24 @@ public final class Popup implements Runnable {
 
     public void run() {
         setActiveHeight(getMaxHeight() * 5 / 10);
-        NativeCanvas.getInstance().repaint();
+        Jimm.getJimm().getDisplay().getNativeCanvas().repaint();
         try { Thread.sleep(20); } catch (Exception e) {}
         setActiveHeight(getMaxHeight() * 9 / 10);
-        NativeCanvas.getInstance().repaint();
+        Jimm.getJimm().getDisplay().getNativeCanvas().repaint();
         try { Thread.sleep(50); } catch (Exception e) {}
         setActiveHeight(getMaxHeight());
-        NativeCanvas.getInstance().repaint();
+        Jimm.getJimm().getDisplay().getNativeCanvas().repaint();
 
         try { Thread.sleep(3000); } catch (Exception e) {}
         setActiveHeight(getMaxHeight() * 9 / 10);
-        NativeCanvas.getInstance().repaint();
+        Jimm.getJimm().getDisplay().getNativeCanvas().repaint();
 
         try { Thread.sleep(50); } catch (Exception e) {}
         setActiveHeight(getMaxHeight() * 5 / 10);
-        NativeCanvas.getInstance().repaint();
+        Jimm.getJimm().getDisplay().getNativeCanvas().repaint();
         try { Thread.sleep(20); } catch (Exception e) {}
-        if (this == NativeCanvas.getInstance().getPopup()) {
-            NativeCanvas.getInstance().setPopup(null);
+        if (this == Jimm.getJimm().getDisplay().getNativeCanvas().getPopup()) {
+            Jimm.getJimm().getDisplay().getNativeCanvas().setPopup(null);
         }
     }
 }

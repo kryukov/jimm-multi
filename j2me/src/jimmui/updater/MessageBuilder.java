@@ -179,7 +179,7 @@ public class MessageBuilder {
                 // #sijapp cond.if modules_TOUCH is "true"#
                 if (atTheEnd) {
                     atTheEnd = (currentMessageIndex == size - 2);
-                    if (NativeCanvas.getInstance().touchControl.touchUsed) {
+                    if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.touchUsed) {
                         atTheEnd = true;
                     }
                 }
@@ -236,9 +236,9 @@ public class MessageBuilder {
 
     private Parser createParser(ChatModel chat, Par par) {
         if (null == par) {
-            return new Parser(chat.fontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
+            return new Parser(chat.fontSet, Jimm.getJimm().getDisplay().getMinScreenMetrics() - 3);
         } else {
-            return new Parser(par, chat.fontSet, NativeCanvas.getInstance().getMinScreenMetrics() - 3);
+            return new Parser(par, chat.fontSet, Jimm.getJimm().getDisplay().getMinScreenMetrics() - 3);
         }
     }
 

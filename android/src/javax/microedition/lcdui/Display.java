@@ -421,7 +421,11 @@ public class Display {
         if (displayable instanceof NativeCanvas) {
             NativeCanvas c = (NativeCanvas) displayable;
             DisplayableUI ui = ((Canvas)c).getUi();
-            ((AndroidCanvasUI) ui).setInputVisibility(c.getCanvas() instanceof Chat);
+            if (c.getCanvas() instanceof Chat) {
+                ((AndroidCanvasUI) ui).setInputVisibility(true, (Chat)c.getCanvas());
+            } else {
+                ((AndroidCanvasUI) ui).setInputVisibility(false, null);
+            }
             c.updateSize();
         }
     }

@@ -12,7 +12,7 @@ import jimm.Jimm;
  */
 public class KeyEmulator {
     public static void emulateKey(int jimmKey) {
-        NativeCanvas.getInstance().emulateKey(null, jimmKey);
+        Jimm.getJimm().getDisplay().getNativeCanvas().emulateKey(null, jimmKey);
     }
     public static boolean isMain() {
         Object current = Jimm.getJimm().getDisplay().getCurrentDisplay();

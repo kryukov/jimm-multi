@@ -23,6 +23,8 @@ import jimmui.view.*;
  */
 public class Display {
     private javax.microedition.lcdui.Display display;
+    private NativeCanvas nativeCanvas;
+
     private Object currentScreen = null;
     private Vector<Object> stack = new Vector<Object>();
     public static final long LONG_INTERVAL = 700;
@@ -33,6 +35,7 @@ public class Display {
     }
     public void updateDisplay() {
         display = javax.microedition.lcdui.Display.getDisplay(JimmMidlet.getMidlet());
+        nativeCanvas = new NativeCanvas();
     }
     public javax.microedition.lcdui.Display getNativeDisplay() {
         return display;
@@ -79,7 +82,7 @@ public class Display {
         final Object prev = currentScreen;
         currentScreen = o;
         if ((o != prev) && (null != prev)) {
-            NativeCanvas.stopKeyRepeating();
+            nativeCanvas.stopKeyRepeating();
 
             if (prev instanceof DisplayableEx) {
                 ((DisplayableEx)prev).closed();
@@ -92,7 +95,7 @@ public class Display {
         }
         Displayable d = null;
         if (o instanceof CanvasEx) {
-            d = NativeCanvas.getInstance();
+            d = nativeCanvas;
 
         } else if (o instanceof InputTextBox) {
             d = ((InputTextBox)o).getBox();
@@ -114,12 +117,11 @@ public class Display {
         // #sijapp cond.end#
 
         if (o instanceof CanvasEx) {
-            NativeCanvas instance = NativeCanvas.getInstance();
-            instance.setCanvas((CanvasEx)o);
+            nativeCanvas.setCanvas((CanvasEx)o);
 
             // #sijapp cond.if modules_ANDROID isnot "true" #
-            if ((prev instanceof CanvasEx) && isShown(instance)) {
-                instance.invalidate((CanvasEx)o);
+            if ((prev instanceof CanvasEx) && isShown(nativeCanvas)) {
+                nativeCanvas.invalidate((CanvasEx)o);
                 return;
             }
             // #sijapp cond.end#
@@ -216,6 +218,30 @@ public class Display {
             return true;
         }
         return false;
+    }
+
+    public NativeCanvas getNativeCanvas() {
+        return nativeCanvas;
+    }
+
+    public boolean hasPointerEvents() {
+        // #sijapp cond.if modules_ANDROID is "true"#
+        if (true) return true;
+        // #sijapp cond.elseif modules_TOUCH is "true"#
+        if (true) return nativeCanvas.hasPointerEvents();
+        // #sijapp cond.end#
+        return false;
+    }
+
+    public int getMinScreenMetrics() {
+        return nativeCanvas.getMinScreenMetrics();
+    }
+
+    public int getScreenWidth() {
+        return nativeCanvas.getWidth();
+    }
+    public int getScreenHeight() {
+        return nativeCanvas.getHeight();
     }
 
 }

@@ -9,6 +9,7 @@
 
 package jimmui.view.base;
 
+import jimm.Jimm;
 import jimmui.view.icons.*;
 
 import javax.microedition.lcdui.*;
@@ -506,7 +507,7 @@ public final class GraphicsEx {
     }
 
     public int drawPopup(CanvasEx screen, int captionHeight) {
-        Popup p = NativeCanvas.getInstance().getPopup();
+        Popup p = Jimm.getJimm().getDisplay().getNativeCanvas().getPopup();
         if ((null == p) || (screen != p.getCanvas())) {
             return 0;
         }

@@ -4,6 +4,7 @@
  */
 package jimmui.view.text;
 
+import jimm.Jimm;
 import jimmui.view.icons.Icon;
 
 import java.util.Vector;
@@ -42,7 +43,7 @@ public final class TextListModel {
     }
 
     private Parser createParser(boolean selectable) {
-        final int width = NativeCanvas.getInstance().getMinScreenMetrics() - 3;
+        final int width = Jimm.getJimm().getDisplay().getNativeCanvas().getMinScreenMetrics() - 3;
         Parser parser = new Parser(fontSet, width);
         parser.setSelectable(selectable);
         return parser;

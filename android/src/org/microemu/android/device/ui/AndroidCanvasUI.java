@@ -30,6 +30,8 @@ import javax.microedition.lcdui.Canvas;
 
 import android.view.View;
 import android.widget.RelativeLayout;
+import jimmui.view.base.CanvasEx;
+import jimmui.view.chat.Chat;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.device.ui.CanvasUI;
@@ -94,11 +96,14 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
         return input;
     }
 
-    public void setInputVisibility(final boolean v) {
+    public void setInputVisibility(final boolean v, final Chat chat) {
         activity.post(new Runnable() {
             public void run() {
                 boolean prevV = (input.getVisibility() == View.VISIBLE);
                 input.setVisibility(v ? View.VISIBLE : View.GONE);
+                if (null != chat) {
+                    input.setOwner(chat);
+                }
                 view.requestLayout();
                 if (v && input.hasText()) {
                     input.showKeyboard();

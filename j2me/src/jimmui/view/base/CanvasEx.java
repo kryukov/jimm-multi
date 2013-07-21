@@ -115,13 +115,11 @@ abstract public class CanvasEx extends DisplayableEx {
         return smallFont.getHeight() * multiplier / 10;
     }
     private static int getMinItemWidth() {
-        NativeCanvas nc = NativeCanvas.getInstance();
-        return nc.getMinScreenMetrics() * 30 / 100;
+        return Jimm.getJimm().getDisplay().getNativeCanvas().getMinScreenMetrics() * 30 / 100;
     }
     private static int getScrollWidth() {
-        NativeCanvas nc = NativeCanvas.getInstance();
         int zoom = 2;//nc.hasPointerEvents() ? 5 : 2;
-        return Math.max(nc.getMinScreenMetrics() * zoom / 100, 6);
+        return Math.max(Jimm.getJimm().getDisplay().getNativeCanvas().getMinScreenMetrics() * zoom / 100, 6);
     }
 
     public int getHeight() {
@@ -232,7 +230,7 @@ abstract public class CanvasEx extends DisplayableEx {
     // protected void invalidate()
     public final void invalidate() {
         if (repaintLocked) return;
-        NativeCanvas.getInstance().invalidate(this);
+        Jimm.getJimm().getDisplay().getNativeCanvas().invalidate(this);
     }
 
     public final void lock() {

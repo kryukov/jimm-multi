@@ -28,7 +28,7 @@ public class MyActionBar extends ActiveRegion {
         // #sijapp cond.if modules_TOUCH is "true"#
         time = Util.getLocalDateString(Jimm.getCurrentGmtTime(), true);
         int h = GraphicsEx.getSoftBarSize();
-        NativeCanvas.getInstance().repaint(0, 0, NativeCanvas.getScreenWidth(), h);
+        Jimm.getJimm().getDisplay().getNativeCanvas().repaint(0, 0, Jimm.getJimm().getDisplay().getScreenWidth(), h);
         // #sijapp cond.end#
         // #sijapp cond.end#
     }

@@ -59,7 +59,6 @@ public final class VirtualContactList extends VirtualList {
     // #sijapp cond.if modules_MULTI isnot "true" #
     private Icon[] capIcons = new Icon[2];
     // #sijapp cond.end #
-    private Par textMessage = null;
 
     private TreeNode currentNode = null;
     private boolean rebuildList = false;
@@ -146,7 +145,7 @@ public final class VirtualContactList extends VirtualList {
         TreeNode currentNode = getSafeNode(item);
         if (isLong || (getWidth() - itemHeight < x)) {
             showContextMenu(currentNode);
-        } else if (NativeCanvas.getInstance().touchControl.isSecondTap) {
+        } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
             itemSelected(currentNode);
         }
     }
@@ -491,19 +490,7 @@ public final class VirtualContactList extends VirtualList {
         }
     }
 
-    private void setMessage(String text) {
-        Parser parser = new Parser(getFontSet(), getWidth() * 8 / 10);
-        parser.addText(text, CanvasEx.THEME_TEXT, CanvasEx.FONT_STYLE_PLAIN);
-        textMessage = parser.getPar();
-        invalidate();
-    }
     protected void drawEmptyItems(GraphicsEx g, int top_y) {
-        if (null != textMessage) {
-            int height = getHeight() - top_y;
-            textMessage.paint(getFontSet(), g, getWidth() / 10,
-                    top_y + (height - textMessage.getHeight()) / 2,
-                    0, textMessage.getHeight());
-        }
     }
     // #sijapp cond.if modules_MULTI is "true" #
     protected void drawItemBack(GraphicsEx g, int index, int x1, int y1, int w, int h, int skip, int to) {

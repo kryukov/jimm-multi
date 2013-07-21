@@ -156,6 +156,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         hideKeyboard(messageEditor);
         if (Jimm.getJimm().getDisplay().getCurrentDisplay() == owner) {
             owner.sendMessage(getText());
+            resetText();
         }
     }
 

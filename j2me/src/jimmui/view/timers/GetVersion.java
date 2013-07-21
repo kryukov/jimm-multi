@@ -164,7 +164,7 @@ public class GetVersion implements Runnable {
         return avatar;
     }
     private String getAvatarType() {
-        int h = NativeCanvas.getInstance().getMinScreenMetrics();
+        int h = Jimm.getJimm().getDisplay().getNativeCanvas().getMinScreenMetrics();
         if (180 < h) {
             return "/_avatar180";
         }

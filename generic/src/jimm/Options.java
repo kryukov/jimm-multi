@@ -516,7 +516,7 @@ public class Options {
         // #sijapp cond.end#
         int minItemSize = 15;
         // #sijapp cond.if modules_TOUCH is "true"#
-        if (NativeCanvas.getInstance().hasPointerEvents()) {
+        if (Jimm.getJimm().getDisplay().hasPointerEvents()) {
             minItemSize = 20;
         }
         // #sijapp cond.end#

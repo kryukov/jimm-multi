@@ -24,6 +24,7 @@
 package jimmui.view.base;
 import javax.microedition.lcdui.*;
 
+import jimm.Jimm;
 import jimmui.view.menu.*;
 
 /**
@@ -58,7 +59,7 @@ public abstract class VirtualList extends CanvasEx {
         setCaption(capt);
         setSoftBarLabels("menu", null, "back", false);
         fontSet = GraphicsEx.chatFontSet;
-        setSize(NativeCanvas.getScreenWidth(), NativeCanvas.getScreenHeight());
+        setSize(Jimm.getJimm().getDisplay().getScreenWidth(), Jimm.getJimm().getDisplay().getScreenHeight());
     }
 
     protected final void setSoftBarLabels(String more, String ok, String back, boolean direct) {
@@ -160,7 +161,7 @@ public abstract class VirtualList extends CanvasEx {
     protected void touchItemTaped(int item, int x, boolean isLong) {
         if (isLong) {
             showMenu(getMenu());
-        } else if (NativeCanvas.getInstance().touchControl.isSecondTap) {
+        } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
             execJimmAction(NativeCanvas.JIMM_SELECT);
         }
     }
@@ -176,14 +177,14 @@ public abstract class VirtualList extends CanvasEx {
 
     protected final void stylusPressed(int x, int y) {
         if (getHeight() < y) {
-            NativeCanvas.getInstance().touchControl.setRegion(softBar);
+            Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(softBar);
             return;
         }
         if (y < bar.getHeight()) {
-            NativeCanvas.getInstance().touchControl.setRegion(bar);
+            Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(bar);
             return;
         }
-        TouchControl nat = NativeCanvas.getInstance().touchControl;
+        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
         nat.touchUsed = true;
         int item = getItemByCoord(y);
         if (0 <= item) {
@@ -196,7 +197,7 @@ public abstract class VirtualList extends CanvasEx {
     protected final void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
         int item = getItemByCoord(toY);
         if (0 <= item) {
-            TouchControl nat = NativeCanvas.getInstance().touchControl;
+            TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
             setTopByOffset(nat.prevTopY + (fromY - toY));
             invalidate();
         }
@@ -232,7 +233,7 @@ public abstract class VirtualList extends CanvasEx {
     }
     private void setTop(int item, int offset) {
         set_Top(item, offset);
-        if (this == NativeCanvas.getInstance().getCanvas()) {
+        if (this == Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas()) {
             MyScrollBar.showScroll();
         }
     }
@@ -545,7 +546,7 @@ public abstract class VirtualList extends CanvasEx {
         int top     = getTopOffset();
         int visible = getContentHeight();
         // #sijapp cond.if modules_TOUCH is "true"#
-        TouchControl nat = NativeCanvas.getInstance().touchControl;
+        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
         if (nat.touchUsed) {
             nat.touchUsed = false;
             int curr = getCurrItem();

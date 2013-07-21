@@ -290,7 +290,7 @@ public final class SplashCanvas extends CanvasEx {
                     // Init the dimensions
                     String unlockMsg = JLocale.getString("keylock_message");
                     // #sijapp cond.if modules_TOUCH is "true"#
-                    if (NativeCanvas.getInstance().hasPointerEvents()) {
+                    if (Jimm.getJimm().getDisplay().hasPointerEvents()) {
                         unlockMsg = JLocale.getString("touchlock_message");
                     }
                     // #sijapp cond.end#

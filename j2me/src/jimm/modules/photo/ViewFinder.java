@@ -366,8 +366,8 @@ public class ViewFinder extends Canvas implements Runnable {
         // #sijapp cond.if modules_LIGHT is "true" #
         CustomLight.setLightMode(CustomLight.ACTION_KEY_PRESS);
         // #sijapp cond.end#
-        int keyCode = NativeCanvas.getJimmKey(key);
-        int action = NativeCanvas.getJimmAction(keyCode, key);
+        int keyCode = Jimm.getJimm().getDisplay().getNativeCanvas().getKey(key);
+        int action = Jimm.getJimm().getDisplay().getNativeCanvas().getAction(keyCode, key);
         doKeyPressed(keyCode, action);
     }
 

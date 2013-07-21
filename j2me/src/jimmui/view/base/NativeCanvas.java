@@ -29,7 +29,6 @@ public class NativeCanvas extends Canvas {
     private int minScreenMetrics;
     // #sijapp cond.end #
 
-    private static NativeCanvas instance = new NativeCanvas();
     // #sijapp cond.if modules_TOUCH is "true"#
     public TouchControl touchControl = new TouchControl();
     // #sijapp cond.end#
@@ -38,7 +37,7 @@ public class NativeCanvas extends Canvas {
 
     private boolean ignoreKeys = false;
 
-    private NativeCanvas() {
+    public NativeCanvas() {
         // #sijapp cond.if modules_ANDROID is "true" #
         minScreenMetrics = Math.min(getWidth(), getHeight());
         // #sijapp cond.end #
@@ -124,8 +123,8 @@ public class NativeCanvas extends Canvas {
     public Popup getPopup() {
         return popup;
     }
-    public static void stopKeyRepeating() {
-        instance.ignoreKeys = true;
+    public void stopKeyRepeating() {
+        ignoreKeys = true;
         KeyRepeatTimer.stop();
     }
 
@@ -162,7 +161,7 @@ public class NativeCanvas extends Canvas {
     public static final int JIMM_MENU     = 0x00100011;
     public static final int JIMM_SELECT   = 0x00100012;
     public static final int JIMM_ACTIVATE = 0x00100013;
-    private int getKey(int code) {
+    public int getKey(int code) {
         // #sijapp cond.if modules_ANDROID is "true" #
         if (Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_ANDROID)) {
             if (-4 == code) {
@@ -178,7 +177,7 @@ public class NativeCanvas extends Canvas {
         // #sijapp cond.end #
         String strCode = null;
         try {
-            strCode = instance.getKeyName(code);
+            strCode = getKeyName(code);
             if (null != strCode) {
                 strCode = strCode.replace('_', ' ').toLowerCase();
             }
@@ -304,13 +303,7 @@ public class NativeCanvas extends Canvas {
         doKeyReaction(keyCode, CanvasEx.KEY_RELEASED);
     }
 
-    public static int getJimmKey(int code) {
-        return instance.getKey(code);
-    }
-    public static int getJimmAction(int key, int keyCode) {
-        return instance.getAction(key, keyCode);
-    }
-    private int getAction(int key, int keyCode) {
+    public int getAction(int key, int keyCode) {
         if (key != keyCode) {
             return key;
         }
@@ -327,7 +320,7 @@ public class NativeCanvas extends Canvas {
             case KEY_STAR: return 0;
         }
         try {// getGameAction can raise exception
-            int action = instance.getGameAction(keyCode);
+            int action = getGameAction(keyCode);
             switch (action) {
                 case Canvas.RIGHT: return NAVIKEY_RIGHT;
                 case Canvas.LEFT:  return NAVIKEY_LEFT;
@@ -449,7 +442,7 @@ public class NativeCanvas extends Canvas {
                 case KEY_NUM3:
                 case KEY_NUM7:
                 case KEY_NUM9:
-                    KeyRepeatTimer.start(key, action, c);
+                    KeyRepeatTimer.start(this, key, action, c);
                     break;
             }
 
@@ -534,10 +527,6 @@ public class NativeCanvas extends Canvas {
         }
     }
 
-    public static NativeCanvas getInstance() {
-        return instance;
-    }
-
     private void updateMetrix(int w, int h) {
         if ((0 == w) || (0 == h)) return;
         CanvasEx c = canvas;
@@ -552,16 +541,10 @@ public class NativeCanvas extends Canvas {
     // #sijapp cond.if modules_ANDROID is "true" #
     public void updateSize() {
         CanvasEx c = canvas;
-        c.setSize(c.getWidth(), c.getHeight());
+        c.setSize(getWidth(), getHeight());
     }
     // #sijapp cond.end #
 
-    public static int getScreenWidth() {
-        return instance.getWidth();
-    }
-    public static int getScreenHeight() {
-        return instance.getHeight();
-    }
     public int getMinScreenMetrics() {
         // #sijapp cond.if modules_ANDROID is "true" #
         String supports = System.getProperty("device.accelerometer");
@@ -576,8 +559,8 @@ public class NativeCanvas extends Canvas {
         return getWidth();
     }
 
-    public static boolean isLongFirePress() {
-        return Display.isLongAction(instance.firePressTime);
+    public boolean isLongFirePress() {
+        return Display.isLongAction(firePressTime);
     }
 
 
@@ -590,11 +573,11 @@ public class NativeCanvas extends Canvas {
         private int slowlyIterations = 8;
 
 
-        public static void start(int key, int action, CanvasEx c) {
+        public static void start(NativeCanvas nativeCanvas, int key, int action, CanvasEx c) {
             try {
                 stop();
                 timer = new Timer();
-                KeyRepeatTimer repeater = new KeyRepeatTimer(key, action, c);
+                KeyRepeatTimer repeater = new KeyRepeatTimer(nativeCanvas, key, action, c);
                 timer.schedule(repeater, 300, 80);
             } catch (Exception ignored) {
                 ignored.printStackTrace();
@@ -608,11 +591,11 @@ public class NativeCanvas extends Canvas {
             }
         }
 
-        private KeyRepeatTimer(int keyCode, int actionCode, CanvasEx c) {
+        private KeyRepeatTimer(NativeCanvas nativeCanvas, int keyCode, int actionCode, CanvasEx c) {
             key = keyCode;
             action = actionCode;
             canvas = c;
-            nativeCanvas = NativeCanvas.getInstance();
+            this.nativeCanvas = nativeCanvas;
         }
 
         public void run() {

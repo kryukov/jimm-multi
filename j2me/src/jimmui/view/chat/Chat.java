@@ -55,7 +55,7 @@ public final class Chat extends VirtualList {
     private boolean classic = false;
     private Icon[] statusIcons = new Icon[7];
     private ChatModel model = new ChatModel();
-    private static boolean selectMode;
+    private boolean selectMode;
     ///////////////////////////////////////////
 
     public final int getSize() {
@@ -135,7 +135,7 @@ public final class Chat extends VirtualList {
             // #sijapp cond.if modules_ANDROID is "true" #
             if (true) {
                 activate();
-                NativeCanvas.getInstance().getInput().setText(initText);
+                Jimm.getJimm().getDisplay().getNativeCanvas().getInput().setText(initText);
                 return;
             }
             // #sijapp cond.end #
@@ -233,7 +233,7 @@ public final class Chat extends VirtualList {
             if ('5' == keyCode) {
                 execJimmAction(NativeCanvas.JIMM_SELECT);
             } else {
-                if (NativeCanvas.isLongFirePress()) {
+                if (Jimm.getJimm().getDisplay().getNativeCanvas().isLongFirePress()) {
                     markItem(getCurrItem());
                 } else {
                     writeMessage(null);
@@ -328,15 +328,26 @@ public final class Chat extends VirtualList {
         // #sijapp cond.else#
         menu.addItem("select", ACTION_SELECT);
         // #sijapp cond.end#
-        if (!selectMode && (null != md) && md.isURL()) {
-            menu.addItem("goto_url", ACTION_GOTO_URL);
+        if (!selectMode) {
+            if ((null != md) && md.isURL()) {
+                menu.addItem("goto_url", ACTION_GOTO_URL);
+            }
+            menu.addItem("copy_text", ACTION_COPY_TEXT);
+            // #sijapp cond.if modules_HISTORY is "true" #
+            if (!Options.getBoolean(Options.OPTION_HISTORY) && getContact().hasHistory()) {
+                menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
+            }
+            // #sijapp cond.end#
+            if (getContact().isSingleUserContact()) {
+                if (model.isBlogBot()) {
+                    menu.addItem("reply", ACTION_REPLY);
+                }
+            } else {
+                if (model.writable) {
+                    menu.addItem("reply", ACTION_REPLY);
+                }
+            }
         }
-        menu.addItem("copy_text", ACTION_COPY_TEXT);
-        // #sijapp cond.if modules_HISTORY is "true" #
-        if (!selectMode && !Options.getBoolean(Options.OPTION_HISTORY) && getContact().hasHistory()) {
-            menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
-        }
-        // #sijapp cond.end#
         menu.setActionListener(new Binder(this));
         return menu;
     }
@@ -363,6 +374,7 @@ public final class Chat extends VirtualList {
         }
 
         // #sijapp cond.if modules_ANDROID isnot "true" #
+        // not in touch
         if (getContact().isSingleUserContact()) {
             if (model.isBlogBot()) {
                 menu.addItem("message", Contact.USER_MENU_MESSAGE);
@@ -462,14 +474,10 @@ public final class Chat extends VirtualList {
         line.setString("");
         showTop();
         Jimm.getJimm().getCL()._setActiveContact(getContact());
-        // #sijapp cond.if modules_ANDROID is "true" #
-        NativeCanvas.getInstance().getInput().setOwner(this);
-        // #sijapp cond.end #
     }
     // #sijapp cond.if modules_ANDROID is "true" #
     public void sendMessage(String message) {
         Jimm.getJimm().jimmModel.registerChat(model);
-        NativeCanvas.getInstance().getInput().resetText();
         if (!getContact().isSingleUserContact() && message.endsWith(", ")) {
             message = "";
         }

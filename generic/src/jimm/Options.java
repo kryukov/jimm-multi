@@ -132,7 +132,7 @@ public class Options {
     public static final int OPTION_USER_GROUPS         = 136;   /* boolean */
     public static final int OPTION_HISTORY             = 137;   /* boolean */
     //public static final int OPTION_SHOW_LAST_MESS      = 142;   /* boolean */
-    public static final int OPTION_CLASSIC_CHAT        = 143;   /* boolean */
+    //public static final int OPTION_CLASSIC_CHAT        = 143;   /* boolean */
     public static final int OPTION_COLOR_SCHEME        =  73;   /* int     */
     public static final int OPTION_FONT_SCHEME         = 107;   /* int     */
     public static final int OPTION_STATUS_MESSAGE      =   7;   /* String  */
@@ -532,7 +532,7 @@ public class Options {
         setInt    (Options.OPTION_EXT_CLKEYCALL,      HOTKEY_HISTORY);
         setInt    (Options.OPTION_EXT_CLKEYPOUND,     HOTKEY_LOCK);
 
-        setBoolean(Options.OPTION_CLASSIC_CHAT,       false);
+        //setBoolean(Options.OPTION_CLASSIC_CHAT,       false);
 
         // #sijapp cond.if modules_ANDROID is "true" #
         setBoolean(Options.OPTION_BRING_UP,           false);

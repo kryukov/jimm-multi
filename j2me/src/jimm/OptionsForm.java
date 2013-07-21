@@ -304,7 +304,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                     saveOptionBoolean(Options.OPTION_HISTORY);
                     // #sijapp cond.end#
                     // #sijapp cond.if modules_ANDROID isnot "true" #
-                    saveOptionBoolean(Options.OPTION_CLASSIC_CHAT);
+                    //saveOptionBoolean(Options.OPTION_CLASSIC_CHAT);
                     saveOptionBoolean(Options.OPTION_SWAP_SEND_AND_BACK);
                     saveOptionBoolean(Options.OPTION_TF_FLAGS);
                     saveOptionBoolean(Options.OPTION_UNTITLED_INPUT);
@@ -468,7 +468,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                 setChecked("use_history", Options.OPTION_HISTORY);
                 // #sijapp cond.end#
                 // #sijapp cond.if modules_ANDROID isnot "true" #
-                setChecked("cl_chat", Options.OPTION_CLASSIC_CHAT);
+                //setChecked("cl_chat", Options.OPTION_CLASSIC_CHAT);
                 // #sijapp cond.end#
                 loadOptionInt(Options.OPTION_MAX_MSG_COUNT, "max_message_count", "10|50|100|250|500|1000");
 

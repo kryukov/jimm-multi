@@ -50,21 +50,16 @@ import protocol.ui.MessageEditor;
 
 import javax.microedition.lcdui.Font;
 
-public final class Chat extends VirtualList {
-    private static InputTextLine line = new InputTextLine();
-    private boolean classic = false;
+public final class Chat extends SomeContentList {
     private Icon[] statusIcons = new Icon[7];
-    private ChatModel model = new ChatModel();
+    private ChatModel model;
     private boolean selectMode;
     ///////////////////////////////////////////
-
-    public final int getSize() {
-        return model.size();
-    }
 
     ///////////////////////////////////////////
     public Chat(ChatModel model) {
         super(null);
+        content = new ChatContent(model);
         this.model = model;
         setFontSet(model.fontSet);
     }
@@ -118,20 +113,10 @@ public final class Chat extends VirtualList {
         invalidate();
     }
 
-    private byte getInOutColor(boolean incoming) {
-        return incoming ? THEME_CHAT_INMSG : THEME_CHAT_OUTMSG;
-    }
     public static final String ADDRESS = ", ";
 
     public final void writeMessage(String initText) {
         if (model.writable) {
-            if (classic) {
-                line.setString(initText);
-                line.setVisible(true);
-                invalidate();
-                restore();
-                return;
-            }
             // #sijapp cond.if modules_ANDROID is "true" #
             if (true) {
                 activate();
@@ -199,14 +184,7 @@ public final class Chat extends VirtualList {
         writeMessageTo(model.getMyName().equals(nick) ? null : nick);
     }
 
-    protected boolean qwertyKey(int keyCode, int type) {
-        return classic && line.qwertyKey(this, keyCode, type);
-    }
-
     protected final void doKeyReaction(int keyCode, int actionCode, int type) {
-        if (classic && line.doKeyReaction(this, keyCode, actionCode, type)) {
-            return;
-        }
         if (CanvasEx.KEY_PRESSED == type) {
             model.resetUnreadMessages();
             switch (keyCode) {
@@ -458,20 +436,12 @@ public final class Chat extends VirtualList {
     protected void restoring() {
         setTopByOffset(getTopOffset());
         Jimm.getJimm().getCL().getUpdater().setCurrentContact(getContact());
-        classic = Options.getBoolean(Options.OPTION_CLASSIC_CHAT);
-        int h = line.getRealHeight();
-        line.setSize(getHeight() - h, getWidth(), h);
-
         setSoftBarLabels("menu", "reply", "close", false);
         setCaption(getContact().getName());
-        if (!classic) {
-            line.setVisible(false);
-        }
     }
 
     public void activate() {
         resetSelected();
-        line.setString("");
         showTop();
         Jimm.getJimm().getCL()._setActiveContact(getContact());
     }
@@ -491,81 +461,9 @@ public final class Chat extends VirtualList {
         return true;
     }
 
-    protected int getItemHeight(int itemIndex) {
-        return model.getItemHeight(model.getMessage(itemIndex));
-    }
-
-    protected void drawItemBack(GraphicsEx g, int index, int x, int y, int w, int h, int skip, int to) {
-        MessData mData = model.getMessage(index);
-        byte bg;
-        if (mData.isMarked()) {
-            bg = THEME_CHAT_BG_MARKED;
-        } else if (mData.isService()) {
-            bg = THEME_CHAT_BG_SYSTEM;
-        } else if ((index & 1) == 0) {
-            bg = mData.isIncoming() ? THEME_CHAT_BG_IN : THEME_CHAT_BG_OUT;
-        } else {
-            bg = mData.isIncoming() ? THEME_CHAT_BG_IN_ODD : THEME_CHAT_BG_OUT_ODD;
-        }
-        if (g.notEqualsColor(THEME_BACKGROUND, bg)) {
-            if (getCurrItem() == index) {
-                g.setThemeColor(THEME_SELECTION_BACK, bg, 0xA0);
-            } else {
-                g.setThemeColor(bg);
-            }
-            g.fillRect(x, y + skip, w, to);
-        }
-    }
-
-
-    protected void drawItemData(GraphicsEx g, int index, int x, int y,
-                                int w, int h, int skip, int to) {
-        MessData mData = model.getMessage(index);
-        int header = model.getMessageHeaderHeight(mData);
-        if (0 < header) {
-            drawMessageHeader(g, mData, x, y, w, header);
-            y += header;
-            h -= header;
-            skip -= header;
-        }
-        model.getMessage(index).par.paint(getFontSet(), g, 1, y, skip, to);
-    }
-
-    private void drawMessageHeader(GraphicsEx g, MessData mData, int x1, int y1, int w, int h) {
-        Icon icon = InfoFactory.msgIcons.iconAt(mData.iconIndex);
-        if (null != icon) {
-            int iconWidth = g.drawImage(icon, x1, y1, h) + 1;
-            x1 += iconWidth;
-            w -= iconWidth;
-        }
-
-        Font[] set = getFontSet();
-        Font boldFont = set[FONT_STYLE_BOLD];
-        g.setFont(boldFont);
-        g.setThemeColor(getInOutColor(mData.isIncoming()));
-
-        Font plainFont = set[FONT_STYLE_PLAIN];
-        String time = mData.isMarked() ? "  v  " : mData.strTime;
-        int timeWidth = plainFont.stringWidth(time);
-
-        g.drawString(mData.getNick(), x1, y1, w - timeWidth, h);
-
-        g.setFont(plainFont);
-        g.drawString(time, x1 + w - timeWidth, y1, timeWidth, h);
-    }
-
-    protected void paint(GraphicsEx g) {
+    protected void beforePaint() {
         model.resetUnreadMessages();
         updateStatusIcons();
-        super.paint(g);
-        if (classic) {
-            if (line.isVisible()) {
-                line.paint(g.getGraphics());
-                setSoftBarLabels("menu", "send", "backspace", false);
-            } else {
-                setSoftBarLabels("menu", "reply", "close", false);
-            }
-        }
     }
 
     // #sijapp cond.if modules_HISTORY is "true" #

@@ -16,8 +16,12 @@ import jimmui.view.menu.SelectListener;
 public class Binder implements SelectListener {
     private CanvasEx canvas;
     private ActionListener listener;
+    private SomeContent content;
     public Binder(CanvasEx canvas) {
         this.canvas = canvas;
+    }
+    public Binder(SomeContent content) {
+        this.content = content;
     }
     public Binder(ActionListener l) {
         listener = l;
@@ -26,6 +30,8 @@ public class Binder implements SelectListener {
         if (null != canvas) {
             canvas.restore();
             canvas.execJimmAction(cmd);
+        } else if (null != content) {
+            content.execJimmAction(cmd);
         } else {
             listener.action(null, cmd);
         }

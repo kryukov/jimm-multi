@@ -369,17 +369,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     }
 
     private String getTransferClient() {
-        String client = "jimm";
-        // #sijapp cond.if modules_MULTI is "true" #
-        client = "jimm-multi";
-        // #sijapp cond.elseif protocols_ICQ is "true" #
-        client = "jimm-icq";
-        // #sijapp cond.elseif protocols_MRIM is "true" #
-        client = "jimm-mrim";
-        // #sijapp cond.elseif protocols_JABBER is "true" #
-        client = "jimm-jabber";
-        // #sijapp cond.end #
-        return client;
+        return "jimm-multi";
     }
     private void sendFileThroughServer(String server, int port, InputStream fis, int fileSize) throws JimmException {
         TcpSocket socket = new TcpSocket();

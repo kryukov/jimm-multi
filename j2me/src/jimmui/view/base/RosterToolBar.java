@@ -52,7 +52,6 @@ public class RosterToolBar extends MySoftBar {
         g.drawBarBack(y, height, Scheme.softbarImage, width);
 
         int x = 0;
-        // #sijapp cond.if modules_MULTI is "true" #
         // general
         x += drawLeft(g, GlobalStatusForm.getGlobalStatusIcon(), x, y, height);
         // accounts

@@ -48,9 +48,7 @@ public class ImageList {
     private Icon[] icons;
     protected int width = 0;
     protected int height = 0;
-    // #sijapp cond.if modules_MULTI is "true" #
     private static Hashtable files = new Hashtable();
-    // #sijapp cond.end #
 
     //! Return image by index
     public Icon iconAt(int index) { //!< Index of requested image in the list
@@ -129,20 +127,16 @@ public class ImageList {
     }
 
     static public ImageList createImageList(String resName) {
-        // #sijapp cond.if modules_MULTI is "true" #
         ImageList imgs = (ImageList) files.get(resName);
         if (null != imgs) {
             return imgs;
         }
-        // #sijapp cond.end #
         ImageList icons = new ImageList();
         try {
             icons.load(resName, -1, -1);
         } catch (Exception e) {
         }
-        // #sijapp cond.if modules_MULTI is "true" #
         files.put(resName, icons);
-        // #sijapp cond.end #
         return icons;
     }
 

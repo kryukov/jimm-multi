@@ -9,6 +9,7 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.jabber;
 
+import java.util.Hashtable;
 import java.util.Vector;
 import jimm.*;
 import jimm.chat.message.PlainMessage;
@@ -94,28 +95,22 @@ public final class Jabber extends Protocol implements FormListener {
     }
 
     public boolean hasS2S() {
-        // #sijapp cond.if modules_MULTI is "true" #
         switch (getProfile().protocolType) {
             case Profile.PROTOCOL_FACEBOOK:
-            case Profile.PROTOCOL_VK:
             case Profile.PROTOCOL_ODNOKLASSNIKI:
                 return false;
         }
-        // #sijapp cond.end #
         return true;
     }
 
     @Override
     public boolean hasVCardEditor() {
-        // #sijapp cond.if modules_MULTI is "true" #
         switch (getProfile().protocolType) {
             case Profile.PROTOCOL_FACEBOOK:
-            case Profile.PROTOCOL_VK:
             case Profile.PROTOCOL_LJ:
             case Profile.PROTOCOL_ODNOKLASSNIKI:
                 return false;
         }
-        // #sijapp cond.end #
         return true;
     }
 
@@ -334,7 +329,6 @@ public final class Jabber extends Protocol implements FormListener {
         return nonPdd ? "xmpp.yandex.ru" : "domain-xmpp.ya.ru";
     }
     String getDefaultServer(String domain) {
-        // #sijapp cond.if modules_MULTI is "true" #
         switch (getProfile().protocolType) {
             case Profile.PROTOCOL_GTALK:
                 return "talk.google.com";
@@ -344,39 +338,22 @@ public final class Jabber extends Protocol implements FormListener {
                 return "livejournal.com";
             case Profile.PROTOCOL_YANDEX:
                 return getYandexDomain(domain);
-            case Profile.PROTOCOL_VK:
-                return "vkmessenger.com";
             case Profile.PROTOCOL_QIP:
                 return "webim.qip.ru";
             case Profile.PROTOCOL_ODNOKLASSNIKI:
                 return "xmpp.odnoklassniki.ru";
         }
-        // #sijapp cond.end #
-        if ("jabber.ru".equals(domain)) {
-            return domain;
-        }
-        if ("xmpp.ru".equals(domain)) {
-            return domain;
-        }
-        if ("ya.ru".equals(domain)) {
-            return "xmpp.yandex.ru";
-        }
-        if ("gmail.com".equals(domain)) {
-            return "talk.google.com";
-        }
-        if ("qip.ru".equals(domain)) {
-            return "webim.qip.ru";
-        }
-        if ("livejournal.com".equals(domain)) {
-            return "livejournal.com";
-        }
-        if ("vk.com".equals(domain)) {
-            return "vkmessenger.com";
-        }
-        if ("chat.facebook.com".equals(domain)) {
-            return domain;
-        }
-        return null;
+        return (String) defaultDomains.get(domain);
+    }
+    private static final Hashtable defaultDomains = new Hashtable();
+    static {
+        defaultDomains.put("livejournal.com", "livejournal.com");
+        defaultDomains.put("chat.facebook.com", "chat.facebook.com");
+        defaultDomains.put("qip.ru", "webim.qip.ru");
+        defaultDomains.put("gmail.com", "talk.google.com");
+        defaultDomains.put("ya.ru", "xmpp.yandex.ru");
+        defaultDomains.put("xmpp.ru", "xmpp.ru");
+        defaultDomains.put("jabber.ru", "jabber.ru");
     }
 
     @Override

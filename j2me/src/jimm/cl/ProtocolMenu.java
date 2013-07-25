@@ -70,10 +70,8 @@ public class ProtocolMenu implements SelectListener {
         menu.addItem("keylock_enable", MENU_KEYLOCK);
         // #sijapp cond.end #
         if (null == p) {
-            // #sijapp cond.if modules_MULTI is "true" #
             menu.addItem("set_status", GlobalStatusForm.getGlobalStatusIcon(), MENU_GLOBAL_STATUS);
             menu.addItem("accounts", null, MENU_ACCOUNTS);
-            // #sijapp cond.end #
         } else if (0 < Jimm.getJimm().getCL().getManager().getModel().getProtocolCount()) {
             protocolMenu();
         }
@@ -92,7 +90,6 @@ public class ProtocolMenu implements SelectListener {
         return menu;
     }
 
-    // #sijapp cond.if modules_MULTI is "true" #
     private void showAccounts() {
         MenuModel m = new MenuModel();
         m.setActionListener(this);
@@ -104,14 +101,11 @@ public class ProtocolMenu implements SelectListener {
         }
         Jimm.getJimm().getCL().getManager().showMenu(m);
     }
-    // #sijapp cond.end #
 
     private void protocolMenu() {
         Protocol protocol = activeProtocol;
-        // #sijapp cond.if modules_MULTI is "true" #
         int id = protocol.isConnected() && protocol.hasVCardEditor() ? MENU_MYSELF : MENU_NON;
         menu.addRawItem(protocol.getUserId(), null, id);
-        // #sijapp cond.end #
         if (protocol.isConnecting()) {
             menu.addItem("disconnect", MENU_DISCONNECT);
             return;
@@ -211,7 +205,6 @@ public class ProtocolMenu implements SelectListener {
                 Jimm.getJimm().lockJimm();
                 break;
 
-            // #sijapp cond.if modules_MULTI is "true" #
             case MENU_GLOBAL_STATUS:
                 new GlobalStatusForm().show();
                 break;
@@ -219,7 +212,6 @@ public class ProtocolMenu implements SelectListener {
             case MENU_ACCOUNTS:
                 showAccounts();
                 break;
-            // #sijapp cond.end #
 
             case MENU_STATUS:
                 new SomeStatusForm(proto).show();

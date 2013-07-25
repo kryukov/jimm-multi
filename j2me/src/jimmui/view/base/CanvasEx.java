@@ -11,6 +11,8 @@ import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.modules.*;
 import jimmui.SplashCanvas;
+import jimmui.view.chat.Chat;
+import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 
 /**
@@ -153,6 +155,7 @@ abstract public class CanvasEx extends DisplayableEx {
     public final MySoftBar getSoftBar() {
         if (this instanceof VirtualList) return ((VirtualList) this).softBar;
         if (this instanceof Select) return ((Select) this).softBar;
+        if (this instanceof SomeContentList) return ((SomeContentList) this).softBar;
         return null;
     }
 
@@ -261,5 +264,9 @@ abstract public class CanvasEx extends DisplayableEx {
     }
 
     protected void sizeChanged(int prevW, int prevH, int w, int h) {
+    }
+
+    protected MenuModel getMenu() {
+        return null;
     }
 }

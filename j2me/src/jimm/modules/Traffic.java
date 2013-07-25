@@ -51,7 +51,6 @@ public final class Traffic {
     private int savedCost;
 
     private volatile int trafficBlockSize = 0;
-    private static final int UPDATE_CL_BYTES = 2048;
     private static final int MTU = 576;
     private static final int TCP_HEADER_SIZE = 24;
 
@@ -199,11 +198,6 @@ public final class Traffic {
 
     private void addTraffic(int size) {
         trafficBlockSize += size;
-        if (trafficBlockSize > UPDATE_CL_BYTES) {
-    	    trafficBlockSize = 0;
-            Jimm.getJimm().getCL().getManager().updateTitle();
-            Jimm.getJimm().getCL().getManager().invalidate();
-        }
     }
 
     public void addInTraffic(int bytes) {

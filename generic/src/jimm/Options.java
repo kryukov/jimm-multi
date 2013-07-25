@@ -70,7 +70,7 @@ public class Options {
 //    static final int OPTION_NICK3                      =  23;   /* String */
 //    static final int OPTION_UIN3                       =  15;   /* String  */
 //    static final int OPTION_PASSWORD3                  = 230;   /* String  */
-    static final int OPTIONS_CURR_ACCOUNT              =  86;   /* int     */
+//    static final int OPTIONS_CURR_ACCOUNT              =  86;   /* int     */
 
 //    public static final int OPTION_SRV_HOST            =   1;   /* String  */
 //    public static final int OPTION_SRV_PORT            =   2;   /* String  */
@@ -251,29 +251,9 @@ public class Options {
             return Math.max(0, Util.getIndex(listOfProfiles, profile));
         }
     }
-    public static void setCurrentAccount(int num) {
-        num = Math.min(num, getAccountCount());
-        Options.setInt(Options.OPTIONS_CURR_ACCOUNT, num);
-    }
-    public static int getCurrentAccount() {
-        return Options.getInt(Options.OPTIONS_CURR_ACCOUNT);
-    }
     public static void delAccount(int num) {
         synchronized (listOfProfiles) {
             listOfProfiles.removeElementAt(num);
-
-            // correct current position
-            int current = getCurrentAccount();
-            if (current == num) {
-                current = 0;
-            }
-            if (num < current) {
-                current--;
-            }
-            if (listOfProfiles.size() < current) {
-                current = 0;
-            }
-            setCurrentAccount(current);
 
             // remove profile
             Storage s = new Storage("j-accounts");
@@ -453,15 +433,11 @@ public class Options {
         // Try to load option values from record store and construct options form
         try {
             setDefaults();
-            initAccounts();
             load();
         // Use default values if loading option values from record store failed
         } catch (Exception e) {
             setDefaults();
         }
-    }
-    private static void initAccounts() {
-        setInt    (Options.OPTIONS_CURR_ACCOUNT,      0);
     }
     /* Set default values
        This is done before loading because older saves may not contain all new values */

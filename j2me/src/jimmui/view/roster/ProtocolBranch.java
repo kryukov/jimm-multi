@@ -7,7 +7,6 @@
  * and open the template in the editor.
  */
 
-// #sijapp cond.if modules_MULTI is "true" #
 package jimmui.view.roster;
 
 import jimm.Jimm;
@@ -127,4 +126,3 @@ public class ProtocolBranch implements TreeBranch {
         if (expanded) sort();
     }
 }
-// #sijapp cond.end #

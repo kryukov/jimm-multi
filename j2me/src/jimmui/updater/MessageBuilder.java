@@ -165,7 +165,7 @@ public class MessageBuilder {
     }
     private boolean chatAtTheEnd(Chat chat) {
         try {
-            return (null == chat) || (chat.getFullSize() - chat.getTopOffset() <= chat.getContentHeight());
+            return (null == chat) || (chat.getContent().getFullSize() - chat.getContent().getTopOffset() <= chat.getContentHeight());
         } catch (Exception ignored) {
             return true;
         }

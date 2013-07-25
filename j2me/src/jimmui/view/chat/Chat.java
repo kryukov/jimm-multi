@@ -59,9 +59,8 @@ public final class Chat extends SomeContentList {
     ///////////////////////////////////////////
     public Chat(ChatModel model) {
         super(null);
-        content = new ChatContent(model);
+        content = new ChatContent(this, model);
         this.model = model;
-        setFontSet(model.fontSet);
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
@@ -72,34 +71,6 @@ public final class Chat extends SomeContentList {
         }
     }
     // #sijapp cond.end#
-
-    // #sijapp cond.if modules_TOUCH is "true"#
-    protected void touchItemTaped(int item, int x, boolean isLong) {
-        if (isLong || (getWidth() - minItemHeight < x)) {
-            showMenu(getContextMenu());
-        } else if (selectMode) {
-            markItem(item);
-        } else {
-            super.touchItemTaped(item, x, isLong);
-        }
-    }
-    // #sijapp cond.end#
-
-    private void markItem(int item) {
-        MessData mData = model.getMessage(item);
-        mData.setMarked(!mData.isMarked());
-        selectMode = hasSelectedItems();
-        invalidate();
-    }
-    private boolean hasSelectedItems() {
-        for (int i = 0; i < model.size(); ++i) {
-            MessData md = model.getMessage(i);
-            if (md.isMarked()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void updateStatusIcons() {
         for (int i = 0; i < statusIcons.length; ++i) {
@@ -144,277 +115,8 @@ public final class Chat extends SomeContentList {
         writeMessage(nick);
     }
 
-    private String getBlogPostId(String text) {
-        if (StringConvertor.isEmpty(text)) {
-            return null;
-        }
-        String lastLine = text.substring(text.lastIndexOf('\n') + 1);
-        if (0 == lastLine.length()) {
-            return null;
-        }
-        if ('#' != lastLine.charAt(0)) {
-            return null;
-        }
-        int numEnd = lastLine.indexOf(' ');
-        if (-1 != numEnd) {
-            lastLine = lastLine.substring(0, numEnd);
-        }
-        return lastLine + " ";
-    }
-
-    Protocol getProtocol() {
+    private Protocol getProtocol() {
         return model.protocol;
-    }
-
-    void onMessageSelected() {
-        if (selectMode) {
-            markItem(getCurrItem());
-            return;
-        }
-        if (getContact().isSingleUserContact()) {
-            if (model.isBlogBot()) {
-                writeMessage(getBlogPostId(getCurrentText()));
-                return;
-            }
-            writeMessage(null);
-            return;
-        }
-        MessData md = getCurrentMsgData();
-        String nick = ((null == md) || md.isFile()) ? null : md.getNick();
-        writeMessageTo(model.getMyName().equals(nick) ? null : nick);
-    }
-
-    protected final void doKeyReaction(int keyCode, int actionCode, int type) {
-        if (CanvasEx.KEY_PRESSED == type) {
-            model.resetUnreadMessages();
-            switch (keyCode) {
-                case NativeCanvas.CALL_KEY:
-                    actionCode = 0;
-                    break;
-
-                case NativeCanvas.CLEAR_KEY:
-                    execJimmAction(ACTION_DEL_CHAT);
-                    return;
-            }
-            switch (actionCode) {
-                case NativeCanvas.NAVIKEY_LEFT:
-                case NativeCanvas.NAVIKEY_RIGHT:
-                    Jimm.getJimm().getChatUpdater().storeTopPosition(model, this);
-                    Jimm.getJimm().getCL().showNextPrevChat(model, NativeCanvas.NAVIKEY_RIGHT == actionCode);
-                    return;
-            }
-        }
-        if (NativeCanvas.NAVIKEY_FIRE == actionCode) {
-            if (CanvasEx.KEY_RELEASED != type) {
-                return;
-            }
-            if ('5' == keyCode) {
-                execJimmAction(NativeCanvas.JIMM_SELECT);
-            } else {
-                if (Jimm.getJimm().getDisplay().getNativeCanvas().isLongFirePress()) {
-                    markItem(getCurrItem());
-                } else {
-                    writeMessage(null);
-                }
-            }
-            return;
-        }
-        if (!HotKeys.execHotKey(getProtocol(), getContact(), keyCode, type)) {
-            super.doKeyReaction(keyCode, actionCode, type);
-        }
-    }
-
-    protected void doJimmAction(int action) {
-        switch (action) {
-            case NativeCanvas.JIMM_MENU:
-                showMenu(getMenu());
-                return;
-
-            case NativeCanvas.JIMM_BACK:
-                Jimm.getJimm().getChatUpdater().storeTopPosition(model, this);
-                Jimm.getJimm().getCL().activate(getContact());
-                return;
-
-            case NativeCanvas.JIMM_SELECT:
-                onMessageSelected();
-                return;
-        }
-        if (!model.writable && ((ACTION_REPLY == action)
-                || (Contact.USER_MENU_MESSAGE == action))) {
-            return;
-        }
-        switch (action) {
-            case ACTION_REPLY:
-                execJimmAction(NativeCanvas.JIMM_SELECT);
-                break;
-
-            case ACTION_COPY_TEXT:
-                copyText();
-                break;
-
-            case ACTION_GOTO_URL:
-                SysTextList.gotoURL(getCurrentText());
-                break;
-
-            case ACTION_SELECT:
-                markItem(getCurrItem());
-                break;
-
-            // #sijapp cond.if modules_HISTORY is "true" #
-            case ACTION_ADD_TO_HISTORY:
-                addTextToHistory();
-                break;
-            // #sijapp cond.end#
-
-            case ACTION_DEL_CHAT:
-                Jimm.getJimm().getChatUpdater().removeMessagesAtCursor(model);
-                if (0 < getSize()) {
-                    restore();
-                } else {
-                    Jimm.getJimm().jimmModel.unregisterChat(model);
-                    Jimm.getJimm().getCL().activate(null);
-                }
-                break;
-
-            // #sijapp cond.if modules_FILES="true"#
-            case ACTION_FT_CANCEL:
-                Jimm.getJimm().jimmModel.removeTransfer(getCurrentMsgData(), true);
-                break;
-            // #sijapp cond.end#
-
-            default:
-                new ContactMenu(getProtocol(), getContact()).doAction(action);
-        }
-    }
-    private static final int ACTION_FT_CANCEL = 900;
-    private static final int ACTION_REPLY = 901;
-    private static final int ACTION_ADD_TO_HISTORY = 902;
-    private static final int ACTION_COPY_TEXT = 903;
-    private static final int ACTION_GOTO_URL = 904;
-    private static final int ACTION_DEL_CHAT = 905;
-    private static final int ACTION_SELECT = 906;
-
-    private MenuModel getContextMenu() {
-        MessData md = getCurrentMsgData();
-        MenuModel menu = new MenuModel();
-        // #sijapp cond.if modules_FILES="true"#
-        if ((null != md) && md.isFile()) {
-            menu.addItem("cancel", ACTION_FT_CANCEL);
-        } else {
-            menu.addItem("select", ACTION_SELECT);
-        }
-        // #sijapp cond.else#
-        menu.addItem("select", ACTION_SELECT);
-        // #sijapp cond.end#
-        if (!selectMode) {
-            if ((null != md) && md.isURL()) {
-                menu.addItem("goto_url", ACTION_GOTO_URL);
-            }
-            menu.addItem("copy_text", ACTION_COPY_TEXT);
-            // #sijapp cond.if modules_HISTORY is "true" #
-            if (!Options.getBoolean(Options.OPTION_HISTORY) && getContact().hasHistory()) {
-                menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
-            }
-            // #sijapp cond.end#
-            if (getContact().isSingleUserContact()) {
-                if (model.isBlogBot()) {
-                    menu.addItem("reply", ACTION_REPLY);
-                }
-            } else {
-                if (model.writable) {
-                    menu.addItem("reply", ACTION_REPLY);
-                }
-            }
-        }
-        menu.setActionListener(new Binder(this));
-        return menu;
-    }
-    protected MenuModel getMenu() {
-        if (selectMode) {
-            MenuModel menu = new MenuModel();
-            menu.addItem("copy_text", ACTION_COPY_TEXT);
-            menu.setActionListener(new Binder(this));
-            return menu;
-        }
-        boolean accessible = model.writable && (getContact().isSingleUserContact() || getContact().isOnline());
-        MessData md = getCurrentMsgData();
-        MenuModel menu = new MenuModel();
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        // #sijapp cond.if modules_FILES="true"#
-        if ((null != md) && md.isFile()) {
-            menu.addItem("cancel", ACTION_FT_CANCEL);
-        }
-        // #sijapp cond.end#
-        // #sijapp cond.end#
-        if (model.hasAuthRequests()) {
-            menu.addItem("grant", Contact.USER_MENU_GRANT_AUTH);
-            menu.addItem("deny", Contact.USER_MENU_DENY_AUTH);
-        }
-
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        // not in touch
-        if (getContact().isSingleUserContact()) {
-            if (model.isBlogBot()) {
-                menu.addItem("message", Contact.USER_MENU_MESSAGE);
-                menu.addItem("reply", ACTION_REPLY);
-            } else {
-                menu.addItem("reply", Contact.USER_MENU_MESSAGE);
-            }
-        } else {
-            if (model.writable) {
-                menu.addItem("message", Contact.USER_MENU_MESSAGE);
-                menu.addItem("reply", ACTION_REPLY);
-            }
-        }
-        // #sijapp cond.end#
-        if (!getContact().isSingleUserContact()) {
-            menu.addItem("list_of_users", Contact.USER_MENU_USERS_LIST);
-        }
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        if ((null != md) && md.isURL()) {
-            menu.addItem("goto_url", ACTION_GOTO_URL);
-        }
-        // #sijapp cond.end#
-
-        // #sijapp cond.if modules_FILES is "true"#
-        if (accessible) {
-            if (jimm.modules.fs.FileSystem.isSupported()) {
-                menu.addItem("ft_name", Contact.USER_MENU_FILE_TRANS);
-            }
-            if (FileTransfer.isPhotoSupported()) {
-                menu.addItem("ft_cam", Contact.USER_MENU_CAM_TRANS);
-            }
-        }
-        // #sijapp cond.end#
-
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        menu.addItem("copy_text", ACTION_COPY_TEXT);
-        // #sijapp cond.end#
-        if (accessible) {
-            if (!Clipboard.isClipBoardEmpty()) {
-                menu.addItem("paste", Contact.USER_MENU_PASTE);
-            }
-        }
-        getContact().addChatMenuItems(menu);
-
-
-        // #sijapp cond.if modules_ANDROID isnot "true" #
-        // #sijapp cond.if modules_HISTORY is "true" #
-        if (!Options.getBoolean(Options.OPTION_HISTORY) && getContact().hasHistory()) {
-            menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);
-        }
-        // #sijapp cond.end#
-        // #sijapp cond.end#
-        if (!getContact().isAuth()) {
-            menu.addItem("requauth", Contact.USER_MENU_REQU_AUTH);
-        }
-        //menu.addItem("user_menu",   USER_MENU_SHOW);
-        //if (!getContact().isSingleUserContact() && getContact().isOnline()) {
-        //    menu.addItem("leave_chat", Contact.CONFERENCE_DISCONNECT);
-        //}
-        menu.addItem("delete_chat", ACTION_DEL_CHAT);
-        menu.setActionListener(new Binder(this));
-        return menu;
     }
 
     public void beginTyping(boolean type) {
@@ -423,25 +125,15 @@ public final class Chat extends SomeContentList {
     }
 
 
-    private String getFrom(Message message) {
-        String senderName = message.getName();
-        if (null == senderName) {
-            senderName = message.isIncoming()
-                    ? getContact().getName()
-                    : model.getMyName();
-        }
-        return senderName;
-    }
-
     protected void restoring() {
-        setTopByOffset(getTopOffset());
+        content.setTopByOffset(content.getTopOffset());
         Jimm.getJimm().getCL().getUpdater().setCurrentContact(getContact());
-        setSoftBarLabels("menu", "reply", "close", false);
-        setCaption(getContact().getName());
+        softBar.setSoftBarLabels("menu", "reply", "close", false);
+        bar.setCaption(getContact().getName());
     }
 
     public void activate() {
-        resetSelected();
+        ((ChatContent)content).resetSelected();
         showTop();
         Jimm.getJimm().getCL()._setActiveContact(getContact());
     }
@@ -466,82 +158,13 @@ public final class Chat extends SomeContentList {
         updateStatusIcons();
     }
 
-    // #sijapp cond.if modules_HISTORY is "true" #
-    private void addTextToHistory() {
-        MessData md = getCurrentMsgData();
-        if ((null == md) || (null == md.getText())) {
-            return;
-        }
-        if (getContact().hasHistory()) {
-            HistoryStorage.getHistory(getContact()).addText(md.getText(), md.isIncoming(), md.getNick(), md.getTime());
-        }
-    }
-    // #sijapp cond.end#
-
-    private MessData getCurrentMsgData() {
-        try {
-            int messIndex = getCurrItem();
-            return (messIndex < 0) ? null : model.getMessage(messIndex);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private String getCurrentText() {
-        MessData md = getCurrentMsgData();
-        return (null == md) ? "" : md.getText();
-    }
-
-    private void resetSelected() {
-        selectMode = false;
-        for (int i = 0; i < model.size(); ++i) {
-            model.getMessage(i).setMarked(false);
-        }
-    }
-    private String copySelected() {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < model.size(); ++i) {
-            MessData md = model.getMessage(i);
-            if (md.isMarked()) {
-                String msg = md.getText();
-                if (md.isMe()) {
-                    msg = "*" + md.getNick() + " " + msg;
-                }
-                sb.append(Clipboard.serialize(md.isIncoming(), md.getNick() + " " + md.strTime, msg));
-                sb.append("\n");
-            }
-        }
-        return 0 == sb.length() ? null : sb.toString();
-    }
-    private void copyText() {
-        String all = copySelected();
-        if (null != all) {
-            resetSelected();
-            Clipboard.setClipBoardText(all);
-            return;
-        }
-        MessData md = getCurrentMsgData();
-        if (null == md) {
-            return;
-        }
-        String msg = md.getText();
-        if (md.isMe()) {
-            msg = "*" + md.getNick() + " " + msg;
-        }
-        Clipboard.setClipBoardText(md.isIncoming(), md.getNick(), md.strTime, msg);
-    }
-
-    public boolean empty() {
-        return 0 == model.size();
-    }
-
     public boolean isVisibleChat() {
         return (this == Jimm.getJimm().getDisplay().getCurrentDisplay())
                 && !Jimm.getJimm().isPaused();
     }
 
 
-    public Contact getContact() {
+    private Contact getContact() {
         return model.contact;
     }
 

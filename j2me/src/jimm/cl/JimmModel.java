@@ -184,7 +184,6 @@ public class JimmModel {
     public void updateAccounts() {
         Protocol[] oldProtocols = getProtocols();
         Vector<Protocol> newProtocols = new Vector<Protocol>();
-        // #sijapp cond.if modules_MULTI is "true" #
         int accountCount = Options.getAccountCount();
         for (int i = 0; i < accountCount; ++i) {
             Profile profile = Options.getAccount(i);
@@ -210,9 +209,6 @@ public class JimmModel {
             profile.isActive = true;
             newProtocols.addElement(createProtocol(profile));
         }
-        // #sijapp cond.else #
-        newProtocols.addElement(createProtocol(Options.getAccount(Options.getCurrentAccount())));
-        // #sijapp cond.end #
         for (int i = 0; i < oldProtocols.length; ++i) {
             Protocol protocol = oldProtocols[i];
             if (null != protocol) {

@@ -85,37 +85,27 @@ abstract public class Protocol {
         password = pass;
     }
 
-    // #sijapp cond.if modules_MULTI is "true" #
     private String getDefaultDomain(byte type) {
         switch (type) {
             case Profile.PROTOCOL_GTALK:    return "@gmail.com";
             case Profile.PROTOCOL_FACEBOOK: return "@chat.facebook.com";
             case Profile.PROTOCOL_LJ:       return "@livejournal.com";
             case Profile.PROTOCOL_YANDEX:   return "@ya.ru";
-            case Profile.PROTOCOL_VK:       return "@vk.com";
             case Profile.PROTOCOL_QIP:      return "@qip.ru";
             case Profile.PROTOCOL_ODNOKLASSNIKI: return "@odnoklassniki.ru";
         }
         return null;
     }
-    // #sijapp cond.end #
     public final void setProfile(Profile account) {
         this.profile = account;
         String rawUin = StringConvertor.notNull(account.userId);
-        // #sijapp cond.if modules_MULTI is "true" #
         if (!StringConvertor.isEmpty(rawUin)) {
             byte type = account.protocolType;
-            if ((Profile.PROTOCOL_VK == type)
-                    && (0 < Util.strToIntDef(rawUin, 0))) {
-                rawUin = "id" + rawUin;
-                account.userId = rawUin;
-            }
             String domain = getDefaultDomain(type);
             if ((null != domain) && (-1 == rawUin.indexOf('@'))) {
                 rawUin += domain;
             }
         }
-        // #sijapp cond.end #
         userid = StringConvertor.isEmpty(rawUin) ? "" : processUin(rawUin);
         if (!StringConvertor.isEmpty(account.password)) {
             setPassword(null);

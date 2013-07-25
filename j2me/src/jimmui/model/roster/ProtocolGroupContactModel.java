@@ -26,11 +26,9 @@ public class ProtocolGroupContactModel extends ContactListModel {
         final int count = getProtocolCount();
         for (int i = 0; i < count; ++i) {
             Protocol p = getProtocol(i);
-            // #sijapp cond.if modules_MULTI is "true" #
             ProtocolBranch root = (ProtocolBranch) protos.get(p);
             items.addElement(root);
             if (!root.isExpanded()) continue;
-            // #sijapp cond.end #
             synchronized (p.getRosterLockObject()) {
                 Vector groups = root.getGroups();
                 for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {

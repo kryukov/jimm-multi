@@ -187,7 +187,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     public void setOwner(Chat owner) {
         if (this.owner != owner) {
             this.owner = owner;
-            String name = (null != owner) ? owner.getContact().getName() : null;
+            String name = (null != owner) ? owner.getModel().getContact().getName() : null;
             final String hint = (null == name)
                     ? getContext().getString(R.string.hint_message)
                     : getContext().getString(R.string.hint_message_to, name);

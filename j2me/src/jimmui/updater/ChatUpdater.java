@@ -12,6 +12,7 @@ import jimm.history.HistoryStorage;
 import jimm.history.HistoryStorageList;
 import jimm.io.Storage;
 import jimmui.view.base.GraphicsEx;
+import jimmui.view.chat.ChatContent;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.jabber.JabberServiceContact;
@@ -138,18 +139,18 @@ public class ChatUpdater {
     public void restoreTopPositionToUI(ChatModel chat, Chat view) {
         if (null != view) {
             if (-1 == chat.topOffset) {
-                view.setCurrentItemToTop(chat.current);
+                view.getContent().setCurrentItemToTop(chat.current);
             } else {
-                view.setTopByOffset(chat.topOffset);
-                view.setCurrentItemIndex(chat.current);
+                view.getContent().setTopByOffset(chat.topOffset);
+                view.getContent().setCurrentItemIndex(chat.current);
             }
         }
     }
 
     public void storeTopPosition(ChatModel chat, Chat view) {
         if (null != view) {
-            chat.topOffset = view.getTopOffset();
-            chat.current = view.getCurrItem();
+            chat.topOffset = view.getContent().getTopOffset();
+            chat.current = view.getContent().getCurrItem();
         }
     }
 

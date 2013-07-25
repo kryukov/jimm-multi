@@ -25,7 +25,6 @@ public final class Profile {
     public static final int PROTOCOL_FACEBOOK = 10;
     public static final int PROTOCOL_LJ = 11;
     public static final int PROTOCOL_YANDEX = 12;
-    public static final int PROTOCOL_VK = 13;
     public static final int PROTOCOL_GTALK = 14;
     public static final int PROTOCOL_QIP = 15;
     public static final int PROTOCOL_ODNOKLASSNIKI = 16;
@@ -39,15 +38,12 @@ public final class Profile {
             // #sijapp cond.end #
             // #sijapp cond.if protocols_JABBER is "true" #
             + "|Jabber"
-            // #sijapp cond.if modules_MULTI is "true" #
             + "|Facebook"
             + "|\u041e\u0434\u043d\u043e\u043a\u043b\u0430\u0441\u0441\u043d\u0438\u043a\u0438"
-            + "|VKontakte"
             + "|LiveJournal"
             + "|GTalk"
             + "|Ya.Online"
             + "|QIP"
-            // #sijapp cond.end #
             // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #
             + "|OBIMP"
@@ -65,15 +61,12 @@ public final class Profile {
             // #sijapp cond.end #
             // #sijapp cond.if protocols_JABBER is "true" #
             PROTOCOL_JABBER,
-            // #sijapp cond.if modules_MULTI is "true" #
             PROTOCOL_FACEBOOK,
             PROTOCOL_ODNOKLASSNIKI,
-            PROTOCOL_VK,
             PROTOCOL_LJ,
             PROTOCOL_GTALK,
             PROTOCOL_YANDEX,
             PROTOCOL_QIP,
-            // #sijapp cond.end #
             // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #
             PROTOCOL_OBIMP,
@@ -91,15 +84,12 @@ public final class Profile {
             // #sijapp cond.end #
             // #sijapp cond.if protocols_JABBER is "true" #
             "jid",
-            // #sijapp cond.if modules_MULTI is "true" #
             "Login",
             "ID",
-            "ID",
             "Login",
             "Login",
             "Login",
             "Login",
-            // #sijapp cond.end #
             // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #
             "ObimpID",
@@ -132,18 +122,15 @@ public final class Profile {
 
     public byte getEffectiveType() {
         // #sijapp cond.if protocols_JABBER is "true" #
-        // #sijapp cond.if modules_MULTI is "true" #
         switch (protocolType) {
             case Profile.PROTOCOL_GTALK:
             case Profile.PROTOCOL_FACEBOOK:
             case Profile.PROTOCOL_LJ:
             case Profile.PROTOCOL_YANDEX:
-            case Profile.PROTOCOL_VK:
             case Profile.PROTOCOL_QIP:
             case Profile.PROTOCOL_ODNOKLASSNIKI:
                 return Profile.PROTOCOL_JABBER;
         }
-        // #sijapp cond.end #
         // #sijapp cond.end #
         return protocolType;
     }

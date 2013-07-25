@@ -56,7 +56,7 @@ public class MyActionBar extends ActiveRegion {
         return caption;
     }
 
-    public void paint(GraphicsEx g, VirtualList view, int width) {
+    public void paint(GraphicsEx g, CanvasEx view, int width) {
         final int height = getHeight();
         g.setStrokeStyle(Graphics.SOLID);
         g.setClip(0, 0, width, height + 1);
@@ -146,8 +146,7 @@ public class MyActionBar extends ActiveRegion {
 
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void stylusTap(CanvasEx canvas, int x, int y, boolean longTap) {
-        VirtualList view = (VirtualList) canvas;
-        int region = getCaptionRegion(view, x, view.getWidth());
+        int region = getCaptionRegion(canvas, x, canvas.getWidth());
 
         if (CAPTION_REGION_NEW_MESSAGE == region) {
             Jimm.getJimm().getCL().showChatList(true);
@@ -163,7 +162,7 @@ public class MyActionBar extends ActiveRegion {
     }
     public static final int CAPTION_REGION_NEW_MESSAGE = -3;
     public static final int CAPTION_REGION_GENERAL = 1;
-    protected int getCaptionRegion(VirtualList view, int x, int width) {
+    protected int getCaptionRegion(CanvasEx view, int x, int width) {
         // #sijapp cond.if target is "MIDP2"#
         x += GraphicsEx.captionOffset;
         width -= GraphicsEx.captionOffset;
@@ -183,10 +182,10 @@ public class MyActionBar extends ActiveRegion {
         return CAPTION_REGION_GENERAL;
     }
     // #sijapp cond.end#
-    private boolean hasMenu(VirtualList view) {
+    private boolean hasMenu(CanvasEx view) {
         return (null != view.getMenu()) || isMainView(view);
     }
-    private boolean isMainView(VirtualList view) {
+    private boolean isMainView(CanvasEx view) {
         return view instanceof VirtualContactList;
     }
 }

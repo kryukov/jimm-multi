@@ -291,9 +291,6 @@ public final class ContactList implements ContactListListener {
     }
 
     public void updateMainMenu() {
-        // #sijapp cond.if modules_MULTI isnot "true" #
-        mainMenu.setProtocol((Protocol) Jimm.getJimm().jimmModel.protocols.elementAt(0));
-        // #sijapp cond.end #
         int currentCommand = mainMenu.getSelectedItemCode();
         mainMenu.updateMenu();
         Select menuView = mainMenu.getView();
@@ -314,13 +311,11 @@ public final class ContactList implements ContactListListener {
             }
             return null;
         }
-        // #sijapp cond.if modules_MULTI is "true" #
         if ((node instanceof ProtocolBranch) || (null == node)) {
             ProtocolMenu menu = new ProtocolMenu(p, false);
             menu.updateMenu();
             return menu.getModel();
         }
-        // #sijapp cond.end #
         return null;
     }
 
@@ -378,15 +373,15 @@ public final class ContactList implements ContactListListener {
     }
 
     public void showChatList(boolean forceGoToChat) {
-        if (forceGoToChat) {
-            ChatModel current = getPreferredChat();
-            if (0 < current.getUnreadMessageCount()) {
-                Jimm.getJimm().getChatUpdater().activate(current);
-                return;
-            }
+        ChatModel current = getPreferredChat();
+        if (forceGoToChat && (null != current) && (0 < current.getUnreadMessageCount())) {
+            Jimm.getJimm().getChatUpdater().activate(current);
+            return;
         }
         getManager().setModel(getUpdater().getChatModel());
-        getManager().setActiveContact(getPreferredChat().getContact());
+        if (null != current) {
+            getManager().setActiveContact(current.getContact());
+        }
         getManager().show();
     }
 
@@ -426,7 +421,7 @@ public final class ContactList implements ContactListListener {
                 current = i;
             }
         }
-        return (ChatModel) chats.elementAt(current);
+        return current < chats.size() ? (ChatModel) chats.elementAt(current) : null;
     }
 
     public Chat getChat(ChatModel c) {

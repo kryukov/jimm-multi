@@ -134,7 +134,7 @@ public class RosterUpdater {
         } catch (Exception e) {
             // no groups mode
         }
-        Jimm.getJimm().getCL().getManager().setAllToTop();
+        Jimm.getJimm().getCL().getManager().getContent().setAllToTop();
         update();
     }
 
@@ -153,20 +153,18 @@ public class RosterUpdater {
     }
 
     public ContactListModel createModel() {
-        // #sijapp cond.if modules_MULTI is "true" #
         if (!Options.getBoolean(Options.OPTION_USER_ACCOUNTS)) {
             if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
                 model = new GroupContactModel();
             } else {
                 model = new ContactModel();
             }
-            return model;
-        }
-        // #sijapp cond.end #
-        if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
-            model = new ProtocolGroupContactModel();
         } else {
-            model = new ProtocolContactModel();
+            if (Options.getBoolean(Options.OPTION_USER_GROUPS)) {
+                model = new ProtocolGroupContactModel();
+            } else {
+                model = new ProtocolContactModel();
+            }
         }
         return model;
     }

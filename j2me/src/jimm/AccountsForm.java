@@ -50,7 +50,6 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
     private static final int MENU_ACCOUNT_DELETE      = 1;
     private static final int MENU_ACCOUNT_UP          = 2;
     private static final int MENU_ACCOUNT_DOWN        = 3;
-    private static final int MENU_ACCOUNT_SET_CURRENT = 4;
     private static final int MENU_ACCOUNT_SET_ACTIVE  = 5;
     private static final int MENU_ACCOUNT_CREATE      = 6;
     //private static final int MENU_ACCOUNT_BACK        = 6;
@@ -66,19 +65,12 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
     private void updateAccountList() {
         TextListModel accountListModel = new TextListModel();
         int curItem = accountList.getCurrItem();
-        int current = Options.getCurrentAccount();
         int accountCount = Options.getAccountCount();
         for (int i = 0; i < accountCount; ++i) {
             Profile account = Options.getAccount(i);
-            boolean isCurrent = (current == i);
-            // #sijapp cond.if modules_MULTI is "true" #
-            isCurrent = account.isActive;
-            // #sijapp cond.end #
-            String text = account.userId + (isCurrent ? "*" : "");
-            // #sijapp cond.if modules_MULTI is "true" #
-            text = getProtocolName(account.protocolType) + ":\n" + text;
-            // #sijapp cond.end #
-            accountListModel.addItem(text, isCurrent);
+            String text = getProtocolName(account.protocolType) + ":\n"
+                    + account.userId + (account.isActive ? "*" : "");
+            accountListModel.addItem(text, account.isActive);
         }
         final int maxAccount = Options.getMaxAccountCount();
         if (accountCount < maxAccount) {
@@ -87,22 +79,13 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         accountList.setModel(accountListModel, curItem);
 
         accountMenu = new MenuModel();
-        boolean connected = Jimm.getJimm().jimmModel.isConnected();
-        // #sijapp cond.if modules_MULTI is "true" #
-        connected = false;
-        // #sijapp cond.end #
         int defCount = MENU_ACCOUNT_EDIT;
-        if ((0 < accountCount) && !connected) {
-            // #sijapp cond.if modules_MULTI isnot "true" #
-            accountMenu.addItem("set_current", MENU_ACCOUNT_SET_CURRENT);
-            defCount = MENU_ACCOUNT_SET_CURRENT;
-            // #sijapp cond.else #
+        if (0 < accountCount) {
             accountMenu.addItem("set_active", MENU_ACCOUNT_SET_ACTIVE);
             defCount = MENU_ACCOUNT_SET_ACTIVE;
-            // #sijapp cond.end #
         }
         accountMenu.addItem("edit", MENU_ACCOUNT_EDIT);
-        if ((0 < accountCount) && !connected) {
+        if (0 < accountCount) {
 //            if (accountCount < maxAccount) {
 //                accountMenu.addItem("add_new", MENU_ACCOUNT_NEW);
 //            }
@@ -133,7 +116,6 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         Profile account = Options.getAccount(editAccountNum);
         form = new GraphForm("options_account", "save", "back", this);
 
-        // #sijapp cond.if modules_MULTI is "true"#
         if (1 < Profile.protocolTypes.length) {
             int protocolIndex = 0;
             for (int i = 0; i < Profile.protocolTypes.length; ++i) {
@@ -144,13 +126,10 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
             }
             form.addSelector(protocolTypeField, "protocol", Profile.protocolNames, protocolIndex);
         }
-        // #sijapp cond.end #
         form.addLatinTextField(uinField, "UserID", account.userId, 64);
         form.addPasswordField(passField, "password", account.password, 40);
         form.addTextField(nickField, "nick", account.nick, 20);
-        // #sijapp cond.if modules_MULTI is "true"#
         form.setControlStateListener(this);
-        // #sijapp cond.end#
         updateAccountForm();
         return form;
     }
@@ -161,25 +140,8 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         }
     }
     private void updateAccountForm() {
-        int id = 0;
-        // #sijapp cond.if modules_MULTI is "true"#
-        id = form.getSelectorValue(protocolTypeField);
-        // #sijapp cond.end#
+        int id = form.getSelectorValue(protocolTypeField);
         form.setTextFieldLabel(uinField, Profile.protocolIds[id]);
-    }
-    public boolean setCurrentAccount(int accNum) {
-        if (Options.getAccountCount() <= accNum) {
-            return false;
-        }
-        if (accNum != Options.getCurrentAccount()) {
-            Options.setCurrentAccount(accNum);
-            // #sijapp cond.if modules_MULTI isnot "true"#
-            Options.safeSave();
-            // #sijapp cond.end#
-            setCurrentProtocol();
-            updateAccountList();
-        }
-        return true;
     }
     public void select(Select select, MenuModel menu, int cmd) {
         int num = accountList.getCurrItem();
@@ -218,13 +180,11 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
                 accountList.restore();
                 break;
         }
-        // #sijapp cond.if modules_MULTI is "true" #
         Profile account = Options.getAccount(num);
         Protocol p = Jimm.getJimm().jimmModel.getProtocol(account);
         if ((null != p) && p.isConnected()) {
             return;
         }
-        // #sijapp cond.end #
 
         switch (cmd) {
             case MENU_ACCOUNT_DELETE:
@@ -235,7 +195,6 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
                 accountList.restore();
                 break;
 
-                // #sijapp cond.if modules_MULTI is "true" #
             case MENU_ACCOUNT_SET_ACTIVE:
                 if (num < Options.getAccountCount()) {
                     account.isActive = !account.isActive;
@@ -248,14 +207,6 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
                 initAccountEditor(num).show();
                 break;
 
-                // #sijapp cond.end #
-            case MENU_ACCOUNT_SET_CURRENT:
-                if (setCurrentAccount(num)) {
-                    accountList.restore();
-                    break;
-                }
-                // break absent. It isn't bug!
-                // create account if not exist
 //            case MENU_ACCOUNT_NEW:
             case MENU_ACCOUNT_EDIT:
                 initAccountEditor(num).show();
@@ -280,13 +231,11 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
             }
             account.password = form.getTextFieldValue(passField);
             account.nick = form.getTextFieldValue(nickField);
-            // #sijapp cond.if modules_MULTI is "true" #
             if (Options.getAccountCount() <= editAccountNum) {
                 account.isActive = true;
             } else {
                 account.isActive = Options.getAccount(editAccountNum).isActive;
             }
-            // #sijapp cond.end #
             addAccount(editAccountNum, account);
         }
         form.back();

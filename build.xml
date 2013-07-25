@@ -45,8 +45,8 @@ Author(s): Manuel Linsmayer, Andreas Rossbacher
     <!--  This property must point at the MIDP API classes and all extension    -->
     <!--  classes required by the chosen target.                                -->
     <property name=":" value="${path.separator}"/>
-    <property name="MIDP2/midp/lib"    location="${MIDP2/midp}/lib/cldcapi11.jar${:}${MIDP2/midp}/lib/midpapi20.jar${:}${MIDP2/midp}/lib/wma11.jar${:}${MIDP2/midp}/lib/mmapi.jar${:}${MIDP2/midp}/lib/jsr75.jar${:}res/TARGETS/MIDP2/lib/nokia.zip${:}res/TARGETS/MIDP2/lib/se-activityui.zip"/>
-    <property name="MOTOROLA/midp/lib" location="${MIDP2/midp}/lib/cldcapi10.jar${:}${MIDP2/midp}/lib/midpapi20.jar${:}${MIDP2/midp}/lib/mmapi.jar${:}res/TARGETS/MOTOROLA/lib/fileaccess.jar${:}${MIDP2/midp}/lib/jsr75.jar" />
+    <property name="MIDP2/midp/lib"    location="${MIDP2/midp}/lib/cldcapi11.jar${:}${MIDP2/midp}/lib/midpapi20.jar${:}${MIDP2/midp}/lib/wma11.jar${:}${MIDP2/midp}/lib/mmapi.jar${:}${MIDP2/midp}/lib/jsr75.jar${:}j2me/res/TARGETS/MIDP2/lib/nokia.zip${:}j2me/res/TARGETS/MIDP2/lib/se-activityui.zip"/>
+    <property name="MOTOROLA/midp/lib" location="${MIDP2/midp}/lib/cldcapi10.jar${:}${MIDP2/midp}/lib/midpapi20.jar${:}${MIDP2/midp}/lib/mmapi.jar${:}j2me/res/TARGETS/MOTOROLA/lib/fileaccess.jar${:}${MIDP2/midp}/lib/jsr75.jar" />
     
     <!--  *******************************************************************   -->
     <!--  Change this to the directory where ProGuard is installed. You can     -->

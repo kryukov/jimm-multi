@@ -66,11 +66,6 @@ public class RosterToolBar extends MySoftBar {
             }
             x += drawLeft(g, icon, x, y, height);
         }
-        // #sijapp cond.else #
-        Protocol p = ((VirtualContactList)c).getModel().getProtocol(0);
-        Icon icon = InfoFactory.factory.getStatusInfo(p).getIcon(p.getProfile().statusIndex);
-        x += drawLeft(g, icon, x, y, height);
-        // #sijapp cond.end #
     }
 
     private int getIconWidth() {

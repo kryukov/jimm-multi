@@ -365,6 +365,8 @@ public class RosterContent extends SomeContent {
         }
     }
 
+    // #sijapp cond.if modules_TOUCH is "true"#
+    @Override
     protected void touchItemTaped(int item, int x, boolean isLong) {
         int itemHeight = getItemHeight(item);
         TreeNode currentNode = getSafeNode(item);
@@ -374,6 +376,7 @@ public class RosterContent extends SomeContent {
             itemSelected(currentNode);
         }
     }
+    // #sijapp cond.end#
     public void updateOption() {
         showStatusLine = Options.getBoolean(Options.OPTION_SHOW_STATUS_LINE);
         stepSize = Math.max(getFontSet()[CanvasEx.FONT_STYLE_PLAIN].getHeight() / 4, 2);

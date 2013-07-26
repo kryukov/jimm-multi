@@ -94,7 +94,7 @@ public class SomeContentList extends CanvasEx {
     protected int[] getScroll() {
         // scroll bar
         int[] scroll = MyScrollBar.makeVertScroll(
-                (getWidth() - scrollerWidth), bar.getHeight(),
+                (getWidth() - scrollerWidth), 0,//bar.getHeight(),
                 scrollerWidth, getContentHeight() + 1,
                 getContentHeight(), content.getFullSize());
         if (null != scroll) {

@@ -117,10 +117,11 @@ public abstract class SomeContent {
                 if (y >= bottom) break;
                 offset = 0;
             }
-            if (0 < MyScrollBar.showScroll) {
-                g.setClip(0, top_y, itemWidth, bottom - top_y);
-                MyScrollBar.paint(g, view, CanvasEx.THEME_SCROLL_BACK);
-            }
+        }
+
+        if (0 < MyScrollBar.showScroll) {
+            g.setClip(0, top_y, itemWidth, bottom - top_y);
+            MyScrollBar.paint(g, view, CanvasEx.THEME_SCROLL_BACK);
         }
 
         { // Draw items

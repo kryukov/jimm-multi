@@ -49,7 +49,7 @@ public class ChatContent extends SomeContent {
         MessData mData = model.getMessage(index);
         int header = model.getMessageHeaderHeight(mData);
         if (0 < header) {
-            drawMessageHeader(g, mData, x, y, w, header);
+            drawMessageHeader(g, mData, x, y, w, header, skip, to);
             y += header;
             h -= header;
             skip -= header;
@@ -79,10 +79,10 @@ public class ChatContent extends SomeContent {
         }
     }
 
-    private void drawMessageHeader(GraphicsEx g, MessData mData, int x1, int y1, int w, int h) {
+    private void drawMessageHeader(GraphicsEx g, MessData mData, int x1, int y1, int w, int baseLine, int skip, int h) {
         Icon icon = InfoFactory.msgIcons.iconAt(mData.iconIndex);
         if (null != icon) {
-            int iconWidth = g.drawImage(icon, x1, y1, h) + 1;
+            int iconWidth = g.drawImage(icon, x1, y1, baseLine) + 1;
             x1 += iconWidth;
             w -= iconWidth;
         }
@@ -96,10 +96,10 @@ public class ChatContent extends SomeContent {
         String time = mData.isMarked() ? "  v  " : mData.strTime;
         int timeWidth = plainFont.stringWidth(time);
 
-        g.drawString(mData.getNick(), x1, y1, w - timeWidth, h);
+        g.drawString(mData.getNick(), x1, y1, w - timeWidth, baseLine, skip, h);
 
         g.setFont(plainFont);
-        g.drawString(time, x1 + w - timeWidth, y1, timeWidth, h);
+        g.drawString(time, x1 + w - timeWidth, y1, timeWidth, baseLine, skip, h);
     }
 
     private byte getInOutColor(boolean incoming) {

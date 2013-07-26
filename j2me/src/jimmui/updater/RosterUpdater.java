@@ -134,7 +134,8 @@ public class RosterUpdater {
         } catch (Exception e) {
             // no groups mode
         }
-        Jimm.getJimm().getCL().getManager().getContent().setAllToTop();
+        Jimm.getJimm().getCL().getManager().getContent().setTopByOffset(0);
+        Jimm.getJimm().getCL().getManager().getContent().setCurrentItemIndex(0);
         update();
     }
 

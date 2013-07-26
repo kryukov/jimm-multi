@@ -294,16 +294,6 @@ public abstract class VirtualList extends CanvasEx {
     }
 
 
-    public final void setCurrentItemToTop(int index) {
-        setCurrItem(index);
-        setTopByOffset(getFullSize());
-        setOptimalTopItem();
-        int top = get_Top();
-        if (top == getCurrItem()) {
-            setTop(top, 0);
-        }
-    }
-
     protected int getItemByOffset(int offset) {
         int size = getSize();
         for (int i = 0; i < size; ++i) {

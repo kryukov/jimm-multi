@@ -55,7 +55,7 @@ public abstract class SomeContent {
         return true;
     }
 
-    protected void paintContent(GraphicsEx g, int top, int width, int height) {
+    protected final void paintContent(GraphicsEx g, int top, int width, int height) {
         beforePaint();
         drawBack(g, top, width, height);
         if (0 == getSize()) {
@@ -140,7 +140,7 @@ public abstract class SomeContent {
         }
         if (showCursor) {
             int itemHeight = getItemHeight(currentIndex);
-            g.setClip(0, currentY, itemWidth, itemHeight + 1);
+            g.setClip(0, currentY, itemWidth, Math.min(itemHeight + 1, bottom - currentY));
             g.setThemeColor(CanvasEx.THEME_SELECTION_RECT);
             g.setStrokeStyle(Graphics.SOLID);
             g.drawSimpleRect(0, currentY, itemWidth - 1, itemHeight);
@@ -168,14 +168,14 @@ public abstract class SomeContent {
     private int get_TopOffset() {
         return topOffset;
     }
+    public final int getTopOffset() {
+        return getOffset(get_Top()) + get_TopOffset();
+    }
 
     public final void setTopByOffset(int offset) {
         offset = Math.max(0, Math.min(offset, getFullSize() - view.getContentHeight()));
         int top = getItemByOffset(offset);
         setTop(top, offset - getOffset(top));
-    }
-    public final int getTopOffset() {
-        return getOffset(get_Top()) + get_TopOffset();
     }
 
     protected final int getOffset(int max) {
@@ -189,13 +189,6 @@ public abstract class SomeContent {
         return getOffset(getSize());
     }
 
-    public final void setAllToTop() {
-        setTopByOffset(0);
-        setCurrItem(0);
-    }
-    public final void setAllToBottom() {
-        setCurrentItemIndex(getSize() - 1);
-    }
     private void setTop(int item, int offset) {
         set_Top(item, offset);
         if (view == Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas()) {
@@ -228,6 +221,16 @@ public abstract class SomeContent {
             offset -= height;
         }
         return size;
+    }
+
+    public void setCurrentItemToTop(int current) {
+        setCurrItem(current);
+        setTopByOffset(getFullSize());
+        setOptimalTopItem();
+        int top = get_Top();
+        if (top == getCurrItem()) {
+            setTop(top, 0);
+        }
     }
 
     private void setOptimalTopItem() {
@@ -415,37 +418,9 @@ public abstract class SomeContent {
         //To change body of created methods use File | Settings | File Templates.
     }
 
-    public void setCurrentItemToTop(int current) {
-        setCurrItem(current);
-        setTopByOffset(getFullSize());
-        setOptimalTopItem();
-        int top = get_Top();
-        if (top == getCurrItem()) {
-            setTop(top, 0);
-        }
-    }
-
     protected final int getItemByCoord(int y) {
-        int size = getSize();
-        // is pointing on data area
-        int itemY1 = -get_TopOffset();
-        if (y < itemY1) {
-            for (int i = get_Top(); 0 <= i; --i) {
-                if (itemY1 <= y) {
-                    return i;
-                }
-                itemY1 -= getItemHeight(i);
-            }
-
-        } else {
-            for (int i = get_Top(); i < size; ++i) {
-                itemY1 += getItemHeight(i);
-                if (y < itemY1) {
-                    return i;
-                }
-            }
-        }
-        return -1;
+        int item = getItemByOffset( y + getTopOffset());
+        return (item == getSize()) ? -1 : item;
     }
 
     protected void updateTask(long microTime) {

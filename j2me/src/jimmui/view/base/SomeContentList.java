@@ -91,11 +91,6 @@ public class SomeContentList extends CanvasEx {
         super.doKeyReaction(keyCode, actionCode, type);
     }
 
-    protected final void paintContent(GraphicsEx g, int top, int width, int height) {
-        g.setClip(0, top, width, height);
-        content.paintContent(g, top, width, height);
-    }
-
     protected int[] getScroll() {
         // scroll bar
         int[] scroll = MyScrollBar.makeVertScroll(
@@ -123,7 +118,8 @@ public class SomeContentList extends CanvasEx {
         if (!onlySoftBar) {
             int captionHeight = bar.getHeight();
             g.getGraphics().translate(0, captionHeight);
-            paintContent(g, 0, getWidth(), getHeight() - captionHeight);
+            g.setClip(0, 0, getWidth(), bottom - captionHeight);
+            content.paintContent(g, 0, getWidth(), bottom - captionHeight);
             g.getGraphics().translate(0, -captionHeight);
 
             g.setClip(0, captionHeight, getWidth(), getHeight());

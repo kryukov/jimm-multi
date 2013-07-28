@@ -64,7 +64,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
     }
     private void updateAccountList() {
         TextListModel accountListModel = new TextListModel();
-        int curItem = accountList.getCurrItem();
+        int curItem = accountList.getTextContent().getCurrItem();
         int accountCount = Options.getAccountCount();
         for (int i = 0; i < accountCount; ++i) {
             Profile account = Options.getAccount(i);
@@ -144,7 +144,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         form.setTextFieldLabel(uinField, Profile.protocolIds[id]);
     }
     public void select(Select select, MenuModel menu, int cmd) {
-        int num = accountList.getCurrItem();
+        int num = accountList.getContent().getCurrItem();
 
         switch (cmd) {
                 // #sijapp cond.if protocols_JABBER is "true" #
@@ -160,7 +160,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
                     Profile down = Options.getAccount(num - 1);
                     Options.setAccount(num - 1, up);
                     Options.setAccount(num, down);
-                    accountList.setCurrentItemIndex(num - 1);
+                    accountList.getContent().setCurrentItemIndex(num - 1);
                     setCurrentProtocol();
                     updateAccountList();
                 }
@@ -173,7 +173,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
                     Profile down = Options.getAccount(num + 1);
                     Options.setAccount(num, down);
                     Options.setAccount(num + 1, up);
-                    accountList.setCurrentItemIndex(num + 1);
+                    accountList.getContent().setCurrentItemIndex(num + 1);
                     setCurrentProtocol();
                     updateAccountList();
                 }

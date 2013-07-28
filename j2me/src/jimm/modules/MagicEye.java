@@ -29,7 +29,6 @@ import jimmui.view.text.TextList;
 import jimmui.view.text.Parser;
 import java.util.Vector;
 import jimm.Jimm;
-import jimm.cl.ContactList;
 import jimm.comm.*;
 import jimmui.view.base.CanvasEx;
 import jimmui.view.menu.*;
@@ -58,7 +57,7 @@ public final class MagicEye implements SelectListener {
         menu.setDefaultItemCode(MENU_COPY);
         instance.list.setController(new TextListController(menu, MENU_USER_MENU));
 
-        instance.list.setAllToBottom();
+        instance.list.getTextContent().setAllToBottom();
         instance.list.show();
     }
 
@@ -97,7 +96,7 @@ public final class MagicEye implements SelectListener {
         while (maxRecordCount < model.getSize()) {
             protocols.removeElementAt(0);
             uins.removeElementAt(0);
-            list.removeFirstText();
+            list.getTextContent().removeFirstText();
         }
     }
 
@@ -118,7 +117,7 @@ public final class MagicEye implements SelectListener {
         switch (action) {
             case MENU_COPY:
             case MENU_COPY_ALL:
-                list.getController().copy(MENU_COPY_ALL == action);
+                list.getTextContent().getController().copy(MENU_COPY_ALL == action);
                 list.restore();
                 break;
 
@@ -134,7 +133,7 @@ public final class MagicEye implements SelectListener {
 
             case MENU_USER_MENU:
                 try {
-                    int item = list.getCurrItem();
+                    int item = list.getTextContent().getCurrItem();
                     String userId = (String)uins.elementAt(item);
                     Protocol protocol = (Protocol)protocols.elementAt(item);
                     list.showMenu(Jimm.getJimm().getCL().getContextMenu(protocol,

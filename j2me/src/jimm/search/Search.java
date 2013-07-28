@@ -204,7 +204,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     private void createSearchForm() {
         /* Result Screen */
         screen = new TextList("");
-        screen.setUpdateListener(this);
+        screen.getTextContent().setUpdateListener(this);
 
         /* Form */
         searchForm = new GraphForm((TYPE_LITE == type) ? "add_user" : "search_user",
@@ -267,7 +267,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     private void showWaitScreen() {
         screen.lock();
         screen.setCaption(JLocale.getString("search_user"));
-        screen.setAllToTop();
+        screen.getContent().setAllToTop();
         TextListModel model = new TextListModel();
         model.setInfoMessage(JLocale.getString("wait"));
         screen.setController(new TextListController(null, MENU_ADD));
@@ -280,7 +280,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         if (0 < resultCount) {
             screen.setCaption(JLocale.getString("results")
                     + " " + (currentResultIndex + 1) + "/" + resultCount);
-            screen.setAllToTop();
+            screen.getContent().setAllToTop();
             UserInfo userInfo = getCurrentResult();
             userInfo.setSeachResultFlag();
             userInfo.setProfileView(screen);
@@ -290,7 +290,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
             /* Show a result entry */
             screen.lock();
             screen.setCaption(JLocale.getString("results") + " 0/0");
-            screen.setAllToTop();
+            screen.getContent().setAllToTop();
             TextListModel model = new TextListModel();
             model.setInfoMessage(JLocale.getString("no_results"));
             screen.setModel(model);

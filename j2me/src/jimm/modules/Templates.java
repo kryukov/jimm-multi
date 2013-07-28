@@ -25,6 +25,7 @@
 package jimm.modules;
 
 import jimmui.Clipboard;
+import jimmui.ContentActionListener;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListModel;
 import java.util.Vector;
@@ -32,7 +33,6 @@ import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.comm.*;
 import jimm.io.Storage;
-import jimmui.view.ActionListener;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import jimmui.view.text.TextListController;
@@ -43,7 +43,7 @@ public final class Templates implements SelectListener, CommandListener {
     private final Command editCommand   = new Command(JLocale.getString("ok"), Command.OK, 1);
     private final Command cancelCommand = new Command(JLocale.getString("back"), Command.BACK, 2);
 
-    private ActionListener selectionListener;
+    private ContentActionListener selectionListener;
     private Vector templates = new Vector();
     private String selectedTemplate;
     private TextBox templateTextbox;
@@ -62,7 +62,7 @@ public final class Templates implements SelectListener, CommandListener {
     public static Templates getInstance() {
         return instance;
     }
-    public void showTemplatesList(ActionListener selectionListener_) {
+    public void showTemplatesList(ContentActionListener selectionListener_) {
         selectionListener = selectionListener_;
         refreshList();
         list.show();
@@ -79,7 +79,7 @@ public final class Templates implements SelectListener, CommandListener {
                 if (null != selectionListener) {
                     selectedTemplate = getTemlate();
                     list.back();
-                    selectionListener.action(list, 0);
+                    selectionListener.action(list.getTextContent(), 0);
                 }
                 selectionListener = null;
                 break;
@@ -109,7 +109,7 @@ public final class Templates implements SelectListener, CommandListener {
                 break;
 
             case MENU_DELETE:
-                templates.removeElementAt(list.getCurrItem());
+                templates.removeElementAt(list.getTextContent().getCurrItem());
                 save();
                 refreshList();
                 list.restore();
@@ -128,7 +128,7 @@ public final class Templates implements SelectListener, CommandListener {
             refreshList();
 
         } else if (c == editCommand) {
-            templates.setElementAt(text, list.getCurrItem());
+            templates.setElementAt(text, list.getTextContent().getCurrItem());
             save();
             refreshList();
 
@@ -156,7 +156,7 @@ public final class Templates implements SelectListener, CommandListener {
     }
 
     private void refreshList() {
-        list.setAllToTop();
+        list.getTextContent().setAllToTop();
         TextListModel model = new TextListModel();
         int count = templates.size();
         for ( int i = 0; i < count; ++i) {
@@ -201,13 +201,13 @@ public final class Templates implements SelectListener, CommandListener {
     }
 
     private String getTemlate() {
-        return (list.getSize() == 0)
+        return (list.getTextContent().getSize() == 0)
                 ? ""
-                : (String)templates.elementAt(list.getCurrItem());
+                : (String)templates.elementAt(list.getTextContent().getCurrItem());
     }
 
-    public boolean is(CanvasEx canvas) {
-        return list == canvas;
+    public boolean is(SomeContent canvas) {
+        return list.getTextContent() == canvas;
     }
 }
 

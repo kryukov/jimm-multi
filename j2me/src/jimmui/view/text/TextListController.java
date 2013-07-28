@@ -18,6 +18,7 @@ public class TextListController implements SelectListener {
     protected int defaultCode = -1;
     private MenuModel menu;
     protected TextList list;
+    protected TextContent content;
 
     public TextListController() {
     }
@@ -31,7 +32,7 @@ public class TextListController implements SelectListener {
 
     public final void copy(boolean all) {
         String text = all ? list.getModel().getAllText()
-                : list.getModel().getParText(list.getCurrItem());
+                : list.getModel().getParText(list.getTextContent().getCurrItem());
         if (null != text) {
             Clipboard.setClipBoardText(text);
         }
@@ -80,5 +81,9 @@ public class TextListController implements SelectListener {
         doJimmBaseAction(keyCode);
     }
     protected void beforePaint() {
+    }
+
+    public void setContent(TextContent content) {
+        this.content = content;
     }
 }

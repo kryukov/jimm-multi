@@ -274,12 +274,12 @@ public class UserInfo implements
         switch (cmd) {
             case INFO_MENU_COPY:
             case INFO_MENU_COPY_ALL:
-                profileView.getController().copy(INFO_MENU_COPY_ALL == cmd);
+                profileView.getTextContent().getController().copy(INFO_MENU_COPY_ALL == cmd);
                 profileView.restore();
                 break;
 
             case INFO_MENU_GOTO_URL:
-                String text = profileView.getModel().getParText(profileView.getCurrItem());
+                String text = profileView.getModel().getParText(profileView.getContent().getCurrItem());
                 SysTextList.gotoURL(text);
                 break;
 

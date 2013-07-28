@@ -328,7 +328,7 @@ public final class HistoryStorageList extends VirtualList implements
 //        // #sijapp cond.end#
 
         msg.setCaption(record.from);
-        msg.setUpdateListener(this);
+        msg.getTextContent().setUpdateListener(this);
 
         msgMenu.clean();
         msgMenu.addItem("copy_text", MENU_COPY_TEXT);
@@ -339,7 +339,7 @@ public final class HistoryStorageList extends VirtualList implements
 
 
         msg.lock();
-        msg.setAllToTop();
+        msg.getTextContent().setAllToTop();
         TextListModel msgText = new TextListModel();
         Parser parser = msgText.createNewParser(false);
         parser.addText(record.date + ":", THEME_TEXT, FONT_STYLE_BOLD);

@@ -35,7 +35,7 @@ public final class SysTextList extends TextListController {
     }
 
     private String getCurrText() {
-        return list.getModel().getParText(list.getCurrItem());
+        return list.getModel().getParText(list.getTextContent().getCurrItem());
     }
     ///////////////////////////////////////////////////////////////////////////
     protected void doJimmAction(int action) {

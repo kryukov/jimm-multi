@@ -138,7 +138,7 @@ public class SomeContentList extends CanvasEx {
         }
     }
 
-    public SomeContent getContent() {
+    public final SomeContent getContent() {
         return content;
     }
 

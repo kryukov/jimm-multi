@@ -11,8 +11,11 @@ import jimm.*;
 import jimm.comm.*;
 import jimm.modules.*;
 import jimmui.Clipboard;
+import jimmui.ContentActionListener;
 import jimmui.view.base.*;
 import jimm.util.JLocale;
+import jimmui.view.smiles.Selector;
+import jimmui.view.smiles.SmilesContent;
 
 /**
  * Extended TestBox.
@@ -26,7 +29,7 @@ import jimm.util.JLocale;
  *
  * @author Vladimir Kryukov
  */
-public final class InputTextBox extends DisplayableEx implements CommandListener, ActionListener {
+public final class InputTextBox extends DisplayableEx implements CommandListener, ContentActionListener {
     public static final int PASSWORD = TextField.PASSWORD;
     // #sijapp cond.if modules_SMILES is "true" #
     private Command insertEmotionCommand;
@@ -265,11 +268,11 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         return textBox.getCaretPosition();
     }
 
-    public void action(CanvasEx canvas, int cmd) {
+    public void action(SomeContent canvas, int cmd) {
         // #sijapp cond.if modules_SMILES is "true" #
-        if (canvas instanceof Selector) {
+        if (canvas instanceof SmilesContent) {
             String space = getSpace();
-            insert(space + ((Selector)canvas).getSelectedCode() + space, caretPos);
+            insert(space + ((SmilesContent)canvas).getSelectedCode() + space, caretPos);
         }
         // #sijapp cond.end#
         if (Templates.getInstance().is(canvas)) {

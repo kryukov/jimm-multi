@@ -33,7 +33,8 @@ public abstract class SomeContent {
 
     protected abstract void doJimmAction(int keyCode);
 
-    protected abstract void drawItemBack(GraphicsEx g, int index, int selected, int x, int y, int w, int h, int skip, int to);
+    protected void drawItemBack(GraphicsEx g, int index, int selected, int x, int y, int w, int h, int skip, int to) {
+    }
 
     protected final void execJimmAction(int keyCode) {
         doJimmAction(keyCode);
@@ -195,6 +196,16 @@ public abstract class SomeContent {
         if (view == Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas()) {
             MyScrollBar.showScroll();
         }
+    }
+
+    @Deprecated
+    public final void setAllToTop() {
+        setTopByOffset(0);
+        setCurrItem(0);
+    }
+    @Deprecated
+    public void setAllToBottom() {
+        setCurrentItemIndex(getSize() - 1);
     }
 
     public final int getCurrItem() {

@@ -18,12 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.Jimm;
 import jimm.Options;
+import jimmui.ContentActionListener;
+import jimmui.view.base.SomeContent;
 import jimmui.view.chat.Chat;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
 import jimmui.view.ActionListener;
-import jimmui.view.Selector;
+import jimmui.view.smiles.Selector;
 import jimmui.view.base.CanvasEx;
+import jimmui.view.smiles.SmilesContent;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
 
@@ -94,13 +97,13 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
 
     @Override
     public void onClick(View view) {
-        Emotions.selectEmotion(new ActionListener() {
+        Emotions.selectEmotion(new ContentActionListener() {
             @Override
-            public void action(final CanvasEx canvas, int cmd) {
+            public void action(final SomeContent canvas, int cmd) {
                 ((JimmActivity)getContext()).post(new Runnable() {
                     @Override
                     public void run() {
-                        insert(" " + ((Selector)canvas).getSelectedCode() + " ");
+                        insert(" " + ((SmilesContent)canvas).getSelectedCode() + " ");
                         showKeyboard();
                     }
                 });

@@ -1,34 +1,44 @@
-package jimmui.view;
+package jimmui.view.smiles;
 
+import jimmui.ContentActionListener;
+import jimmui.view.ActionListener;
 import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
 import jimmui.view.base.*;
 
-
-public final class Selector extends VirtualList {
+/**
+ * Created with IntelliJ IDEA.
+ * <p/>
+ * Date: 28.07.13 12:02
+ *
+ * @author vladimir
+ */
+public class SmilesContent extends SomeContent {
 
     private String[] names;
     private ImageList icons;
     private String[] codes;
 
-    private ActionListener listener;
+    private ContentActionListener listener;
     private int cols;
     private int rows;
     private int itemHeight;
     private int curCol;
 
-    public Selector(ImageList icons, String[] names, String[] codes) {
-        super(null);
+    public SmilesContent(SomeContentList view, ImageList icons, String[] names, String[] codes) {
+        super(view);
         this.icons = icons;
         this.names = names;
         this.codes = codes;
         setCurrentItem(0, 0);
     }
-    public final void setSelectionListener(ActionListener listener) {
+
+
+    public final void setSelectionListener(ContentActionListener listener) {
         this.listener = listener;
     }
     protected void restoring() {
-        int drawWidth = getWidth();
+        int drawWidth = view.getWidth();
 
         int heightSmall = Math.max(CanvasEx.minItemHeight, icons.getHeight() + 2);
         int moduloSmall = drawWidth % heightSmall;
@@ -36,7 +46,6 @@ public final class Selector extends VirtualList {
 
         cols = drawWidth / itemHeight;
         rows = (names.length + cols - 1) / cols;
-        setSoftBarLabels("select", "select", "cancel", false);
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
@@ -69,7 +78,7 @@ public final class Selector extends VirtualList {
 
             if (isSelected && (i == getCurrentCol())) {
                 g.setStrokeStyle(Graphics.SOLID);
-                g.setThemeColor(THEME_SELECTION_BACK);
+                g.setThemeColor(CanvasEx.THEME_SELECTION_BACK);
                 g.getGraphics().fillRoundRect(xa, y1, itemHeight - 1, h - 1, 4, 4);
             }
 
@@ -84,7 +93,7 @@ public final class Selector extends VirtualList {
 
             if (isSelected && (i == getCurrentCol())) {
                 g.setStrokeStyle(Graphics.SOLID);
-                g.setThemeColor(THEME_SELECTION_RECT);
+                g.setThemeColor(CanvasEx.THEME_SELECTION_RECT);
                 g.getGraphics().drawRoundRect(xa, y1, itemHeight - 1, h - 1, 4, 4);
             }
             xa = xb;
@@ -114,7 +123,7 @@ public final class Selector extends VirtualList {
     private void setCurrentItemToCaption() {
         int selIdx = getCurrentRow() * cols + getCurrentCol();
         if (names.length <= selIdx) return;
-        setCaption(names[selIdx]);
+        ((Selector)view).setCaption(names[selIdx]);
     }
 
     protected final int getItemHeight(int itemIndex) {
@@ -132,16 +141,16 @@ public final class Selector extends VirtualList {
                 return;
 
             case NativeCanvas.JIMM_BACK:
-                back();
+                view.back();
                 return;
         }
     }
     protected boolean hasMenu() {
         return false;
     }
-    protected void doKeyReaction(int keyCode, int actionCode, int type) {
+    protected boolean doKeyReaction(int keyCode, int actionCode, int type) {
         if (CanvasEx.KEY_RELEASED == type) {
-            return;
+            return true;
         }
         int newRow = getCurrentRow();
         int newCol = getCurrentCol();
@@ -150,7 +159,7 @@ public final class Selector extends VirtualList {
         switch (actionCode) {
             case NativeCanvas.NAVIKEY_FIRE:
                 select();
-                return;
+                return true;
 
             case NativeCanvas.NAVIKEY_DOWN:
                 newRow++;
@@ -207,15 +216,15 @@ public final class Selector extends VirtualList {
                         break;
 
                     case NativeCanvas.KEY_NUM3:
-                        setCurrentItem(curCol, getCurrItem() - getClientHeight() / itemHeight);
+                        setCurrentItem(curCol, getCurrItem() - view.getContentHeight() / itemHeight);
                         break;
 
                     case NativeCanvas.KEY_NUM9:
-                        setCurrentItem(curCol, getCurrItem() + getClientHeight() / itemHeight);
+                        setCurrentItem(curCol, getCurrItem() + view.getContentHeight() / itemHeight);
                         break;
 
                     default:
-                        return;
+                        return true;
                 }
                 newRow = getCurrentRow();
         }
@@ -225,12 +234,13 @@ public final class Selector extends VirtualList {
             newRow--;
         }
         setCurrentItem(newCol, newRow);
+        return true;
     }
 
     private void select() {
         if (null != listener) {
-    	    back();
-    	    listener.action(this, 0);
+            view.back();
+            listener.action(this, 0);
         }
         listener = null;
     }

@@ -56,7 +56,7 @@ public final class DebugLog implements SelectListener {
         menu.setActionListener(instance);
         instance.list.setController(new TextListController(menu, -1));
 
-        instance.list.setAllToBottom();
+        instance.list.getTextContent().setAllToBottom();
         instance.list.show();
     }
 
@@ -70,7 +70,7 @@ public final class DebugLog implements SelectListener {
         switch (action) {
             case MENU_COPY:
             case MENU_COPY_ALL:
-                list.getController().copy(action == MENU_COPY_ALL);
+                list.getTextContent().getController().copy(action == MENU_COPY_ALL);
                 list.restore();
                 break;
 
@@ -95,7 +95,7 @@ public final class DebugLog implements SelectListener {
             if (null == list) {
                 model.removeFirst();
             } else {
-                list.removeFirstText();
+                list.getTextContent().removeFirstText();
             }
         }
     }

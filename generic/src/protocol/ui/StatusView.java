@@ -53,12 +53,12 @@ public final class StatusView extends TextListController {
         switch (action) {
             case INFO_MENU_COPY:
             case INFO_MENU_COPY_ALL:
-                list.getController().copy(INFO_MENU_COPY_ALL == action);
+                list.getTextContent().getController().copy(INFO_MENU_COPY_ALL == action);
                 list.restore();
                 break;
 
             case INFO_MENU_GOTO_URL:
-                SysTextList.gotoURL(model.getParText(list.getCurrItem()));
+                SysTextList.gotoURL(model.getParText(list.getTextContent().getCurrItem()));
                 break;
 
                 // #sijapp cond.if protocols_ICQ is "true" #
@@ -156,7 +156,7 @@ public final class StatusView extends TextListController {
         MenuModel menu = new MenuModel();
         menu.addItem("copy_text",     INFO_MENU_COPY);
         menu.addItem("copy_all_text", INFO_MENU_COPY_ALL);
-        if ((1 < list.getCurrItem()) && Util.hasURL(model.getParText(list.getCurrItem()))) {
+        if ((1 < list.getTextContent().getCurrItem()) && Util.hasURL(model.getParText(list.getTextContent().getCurrItem()))) {
             menu.addItem("goto_url", INFO_MENU_GOTO_URL);
         }
         // #sijapp cond.if protocols_ICQ is "true" #
@@ -176,7 +176,7 @@ public final class StatusView extends TextListController {
         // #sijapp cond.if modules_CLIENTS is "true" #
         clientVersion = null;
         // #sijapp cond.end #
-        list.setAllToTop();
+        list.getTextContent().setAllToTop();
     }
     public void initUI() {
         list.lock();
@@ -193,7 +193,7 @@ public final class StatusView extends TextListController {
     }
     public void showIt() {
         list.setController(this);
-        list.setAllToTop();
+        list.getTextContent().setAllToTop();
         list.unlock();
         list.show();
     }

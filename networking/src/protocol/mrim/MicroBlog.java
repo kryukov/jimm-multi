@@ -55,12 +55,12 @@ public final class MicroBlog extends TextListController implements TextBoxListen
         list = new TextList(JLocale.getString("microblog"));
         list.setModel(model);
         setDefaultCode(MENU_WRITE);
-        list.setSeparate5(true);
+        list.getTextContent().setSeparate5(true);
     }
 
     public void activate() {
         list.setController(this);
-        list.setAllToBottom();
+        list.getTextContent().setAllToBottom();
         list.show();
     }
     protected MenuModel getMenu() {
@@ -82,7 +82,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
         while (maxRecordCount < model.getSize()) {
             ids.removeElementAt(0);
             emails.removeElementAt(0);
-            list.removeFirstText();
+            content.removeFirstText();
         }
     }
 
@@ -157,7 +157,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
 
             case MENU_REPLY:
                 String to = "";
-                int cur = list.getCurrItem();
+                int cur = list.getTextContent().getCurrItem();
                 if (cur < ids.size()) {
                     to = (String)ids.elementAt(cur);
                 }
@@ -165,7 +165,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
                 break;
 
             case MENU_COPY:
-                list.getController().copy(false);
+                list.getTextContent().getController().copy(false);
                 list.restore();
                 break;
 
@@ -181,7 +181,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
 
             case MENU_USER_MENU:
                 try {
-                    int item = list.getCurrItem();
+                    int item = list.getTextContent().getCurrItem();
                     String uin = (String)emails.elementAt(item);
                     list.showMenu(Jimm.getJimm().getCL().getContextMenu(mrim,
                             mrim.createTempContact(uin)));
@@ -210,7 +210,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
             String text = postEditor.getString();
             if (!StringConvertor.isEmpty(text)) {
                 c.postToMicroBlog(text, replayTo);
-                list.setAllToBottom();
+                list.getTextContent().setAllToBottom();
             }
             list.restore();
         }

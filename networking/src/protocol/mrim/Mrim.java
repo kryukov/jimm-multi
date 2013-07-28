@@ -346,7 +346,6 @@ public class Mrim extends Protocol {
                 list.addItem((String)members.elementAt(i), false);
             }
             TextList tl = new TextList(JLocale.getString("list_of_users"));
-            tl.setAllToTop();
             tl.setModel(list);
             tl.setController(new TextListController(null, -1));
             tl.show();

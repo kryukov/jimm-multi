@@ -25,11 +25,14 @@ package jimm.modules;
 
 // #sijapp cond.if (modules_SMILES is "true") #
 
+import jimmui.ContentActionListener;
 import jimmui.view.icons.*;
 import java.util.*;
 import java.io.*;
 import jimm.comm.*;
 import jimmui.view.*;
+import jimmui.view.smiles.Selector;
+import jimmui.view.smiles.SmilesContent;
 import protocol.net.TcpSocket;
 
 public final class Emotions {
@@ -320,7 +323,7 @@ public final class Emotions {
 
     static private Selector sl;
 
-    static public void selectEmotion(ActionListener listener) {
+    static public void selectEmotion(ContentActionListener listener) {
         if (!isSupported()) {
             return;
         }
@@ -328,7 +331,7 @@ public final class Emotions {
             sl = new Selector(instance.images, instance.selEmotionsSmileNames,
                     instance.selEmotionsWord);
         }
-        sl.setSelectionListener(listener);
+        ((SmilesContent)sl.getContent()).setSelectionListener(listener);
         sl.show();
     }
 }

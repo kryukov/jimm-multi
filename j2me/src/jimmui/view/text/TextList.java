@@ -24,7 +24,6 @@
 
 package jimmui.view.text;
 
-import jimmui.view.TextListExCommands;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
 
@@ -35,68 +34,10 @@ import jimmui.view.menu.*;
  * This class store text and data of lines internally.
  * You may use it to show text with colorised lines :)
  */
-public final class TextList extends VirtualList {
-    protected TextListModel pars;
-    protected TextListController controller;
-    private TextListExCommands vlCommands;
-    private boolean isSeparate5 = false;
-
-    public final int getSize() {
-        return (null == pars) ? 0 : pars.getSize();
-    }
-
+public final class TextList extends SomeContentList {
     public TextList(String capt) {
         super(capt);
-        setSoftBarLabels("menu", null, "back", false);
-    }
-    public void setSeparate5(boolean separate) {
-        isSeparate5 = separate;
-    }
-    public void setModel(TextListModel model) {
-        pars = model;
-        updateSoftLabels();
-        unlock();
-    }
-    public void setModel(TextListModel model, int current) {
-        pars = model;
-        setCurrentItemIndex(current);
-        updateSoftLabels();
-        unlock();
-    }
-    public void setController(TextListController controller) {
-        this.controller = controller;
-        controller.setList(this);
-    }
-    public TextListModel getModel() {
-        return pars;
-    }
-
-    public TextListController getController() {
-        return controller;
-    }
-
-    public final int getItemHeight(int itemIndex) {
-        if (itemIndex >= getSize()) {
-            return 1;
-        }
-        return pars.getPar(itemIndex).getHeight();
-    }
-
-    protected final boolean isCurrentItemSelectable() {
-        return pars.isSelectable(getCurrItem());
-    }
-
-    // Overrides VirtualList.drawItemData
-    protected final void drawItemData(GraphicsEx g, int index, int x1, int y1, int w, int h, int skip, int to) {
-        pars.getPar(index).paint(pars.getFontSet(), g, 1, y1, skip, to);
-    }
-
-    protected final MenuModel getMenu() {
-        return (null == controller)  ? null : controller.getMenu();
-    }
-
-    protected void doJimmAction(int keyCode) {
-        controller.doJimmAction(keyCode);
+        content = new TextContent(this);
     }
     private void updateSoftLabels() {
         MenuModel model = getMenu();
@@ -104,70 +45,40 @@ public final class TextList extends VirtualList {
         String ok = null;
         if (null != model) {
             more = "menu";
-            ok = model.getItemText(controller.defaultCode);
+            ok = model.getItemText(getTextContent().controller.defaultCode);
         }
-        setSoftBarLabels(more, ok, "back", false);
+        softBar.setSoftBarLabels(more, ok, "back", false);
     }
-
     protected void restoring() {
         updateSoftLabels();
     }
     public void updateModel() {
         updateSoftLabels();
-        setCurrentItemIndex(getCurrItem());
+        content.setCurrentItemIndex(content.getCurrItem());
         unlock();
     }
-
-    public final void setUpdateListener(TextListExCommands vlCommands) {
-        this.vlCommands = vlCommands;
+    public void setModel(TextListModel model) {
+        ((TextContent)content).setModel(model);
+        updateSoftLabels();
+        unlock();
+    }
+    public void setModel(TextListModel model, int current) {
+        ((TextContent)content).setModel(model);
+        content.setCurrentItemIndex(current);
+        updateSoftLabels();
+        unlock();
+    }
+    public TextListModel getModel() {
+        return ((TextContent)content).getModel();
+    }
+    public TextContent getTextContent() {
+        return (TextContent) content;
+    }
+    public void setController(TextListController controller) {
+        ((TextContent)content).setController(controller);
     }
 
-    protected void beforePaint() {
-        if (null != controller) {
-            controller.beforePaint();
-        }
-    }
-    protected void doKeyReaction(int keyCode, int actionCode, int type) {
-        if ((null != vlCommands) && (KEY_PRESSED == type)) {
-            switch (actionCode) {
-                case NativeCanvas.NAVIKEY_LEFT:
-                    vlCommands.onContentMove(pars, -1);
-                    return;
-
-                case NativeCanvas.NAVIKEY_RIGHT:
-                    vlCommands.onContentMove(pars, +1);
-                    return;
-            }
-        }
-        if (isSeparate5) {
-            if (NativeCanvas.NAVIKEY_FIRE == actionCode) {
-                if (CanvasEx.KEY_PRESSED == type) {
-                    execJimmAction(('5' == keyCode)
-                            ? NativeCanvas.JIMM_SELECT
-                            : NativeCanvas.JIMM_ACTIVATE);
-                }
-                return;
-            }
-        }
-        super.doKeyReaction(keyCode, actionCode, type);
-    }
-    // #sijapp cond.if modules_TOUCH is "true"#
-
-    protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
-        if (getWidth() / 2 < Math.abs(fromX - toX)) {
-            vlCommands.onContentMove(pars, (fromX > toX) ? -1 : +1);
-        }
-    }
-    // #sijapp cond.end#
-
-    public final void removeFirstText() {
-        int size = getSize();
-        if (0 < size) {
-            int top = Math.max(0, getTopOffset() - pars.getPar(0).getHeight());
-            pars.removeFirst();
-            setCurrentItemIndex(Math.max(0, getCurrItem() - 1));
-            setTopByOffset(top);
-            invalidate();
-        }
+    public void setCaption(String name) {
+        bar.setCaption(name);
     }
 }

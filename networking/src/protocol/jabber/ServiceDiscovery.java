@@ -143,7 +143,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
         return index;
     }
     private String getCurrentJid() {
-        int currentIndex = getJidIndex(screen.getCurrItem());
+        int currentIndex = getJidIndex(screen.getContent().getCurrItem());
         return (-1 == currentIndex) ? "" : getJid(currentIndex);
     }
 
@@ -164,7 +164,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
         model.clear();
         jids.removeAllElements();
         addServer(false);
-        screen.setAllToTop();
+        screen.getContent().setAllToTop();
     }
     public void setTotalCount(int count) {
         model.clear();
@@ -317,7 +317,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
                 currIndex++;
             }
         }
-        screen.setCurrentItemIndex(index);
+        screen.getContent().setCurrentItemIndex(index);
     }
     public void textboxAction(InputTextBox box, boolean ok) {
         if (!ok) {
@@ -332,7 +332,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
             if (isConferenceList) {
                 text = StringConvertor.toLowerCase(text);
             }
-            int currentIndex = getJidIndex(screen.getCurrItem()) + 1;
+            int currentIndex = getJidIndex(screen.getContent().getCurrItem()) + 1;
             for (int i = currentIndex; i < jids.size(); ++i) {
                 String jid = (String)jids.elementAt(i);
                 if (-1 != jid.indexOf(text)) {

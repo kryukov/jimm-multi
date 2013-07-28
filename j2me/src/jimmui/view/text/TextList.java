@@ -40,7 +40,7 @@ public final class TextList extends SomeContentList {
         content = new TextContent(this);
     }
     private void updateSoftLabels() {
-        MenuModel model = getMenu();
+        MenuModel model = getTextContent().getMenu();
         String more = null;
         String ok = null;
         if (null != model) {

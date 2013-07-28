@@ -27,7 +27,6 @@ public abstract class SomeContent {
         this.view = view;
     }
     public SomeContent() {
-        this.view = view;
     }
     void setView(SomeContentList view) {
         this.view = view;

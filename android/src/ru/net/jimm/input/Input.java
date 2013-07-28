@@ -113,9 +113,9 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
 
     @Override
     public boolean onLongClick(View view) {
-        Templates.getInstance().showTemplatesList(new ActionListener() {
+        Templates.getInstance().showTemplatesList(new ContentActionListener() {
             @Override
-            public void action(CanvasEx canvas, int cmd) {
+            public void action(SomeContent canvas, int cmd) {
                 ((JimmActivity) getContext()).post(new Runnable() {
                     @Override
                     public void run() {

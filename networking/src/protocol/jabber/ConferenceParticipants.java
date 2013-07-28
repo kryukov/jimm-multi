@@ -25,12 +25,15 @@ import protocol.*;
 import protocol.ui.InfoFactory;
 import protocol.ui.MessageEditor;
 
+import javax.microedition.lcdui.Font;
+
 /**
  *
  * @author Vladimir Krukov
  */
-public final class ConferenceParticipants extends VirtualList {
+public final class ConferenceParticipants extends SomeContent {
     private static ImageList affiliationIcons = ImageList.createImageList("/jabber-affiliations.png");
+    private Font[] fontSet;
 
     private Jabber protocol;
     private JabberServiceContact conference;
@@ -51,13 +54,15 @@ public final class ConferenceParticipants extends VirtualList {
     private static final int COMMAND_VOICE = 8;
 
     private int myRole;
+
     public ConferenceParticipants(Jabber jabber, JabberServiceContact conf) {
-        super(conf.getName());
+        fontSet = GraphicsEx.chatFontSet;
         protocol = jabber;
         conference = conf;
         myRole = getRole(conference.getMyName());
         update();
     }
+
 
     protected final int getSize() {
         return contacts.size();
@@ -66,8 +71,8 @@ public final class ConferenceParticipants extends VirtualList {
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void touchItemTaped(int item, int x, boolean isLong) {
         int itemHeight = getItemHeight(item);
-        if (isLong || (getWidth() - itemHeight < x)) {
-            showMenu(getMenu());
+        if (isLong || (view.getWidth() - itemHeight < x)) {
+            view.showMenu(getMenu());
         } else {
             super.touchItemTaped(item, x, isLong);
         }
@@ -96,11 +101,11 @@ public final class ConferenceParticipants extends VirtualList {
                 return;
 
             case NativeCanvas.JIMM_BACK:
-                back();
+                view.back();
                 return;
 
             case NativeCanvas.JIMM_MENU:
-                showMenu(getMenu());
+                view.showMenu(getMenu());
                 return;
         }
         String nick = getCurrentContact();
@@ -110,7 +115,7 @@ public final class ConferenceParticipants extends VirtualList {
         switch (action) {
             case COMMAND_COPY:
                 Clipboard.setClipBoardText(nick);
-                restore();
+                view.restore();
                 break;
 
             case COMMAND_REPLY:
@@ -154,37 +159,38 @@ public final class ConferenceParticipants extends VirtualList {
             case COMMAND_KICK:
                 setMucRole(nick, "n" + "o" + "ne");
                 update();
-                restore();
+                view.restore();
                 break;
 
             case COMMAND_BAN:
                 setMucAffiliation(nick, "o" + "utcast");
                 update();
-                restore();
+                view.restore();
                 break;
 
             case COMMAND_DEVOICE:
                 setMucRole(nick, "v" + "isitor");
                 update();
-                restore();
+                view.restore();
                 break;
 
             case COMMAND_VOICE:
                 setMucRole(nick, "partic" + "ipant");
                 update();
-                restore();
+                view.restore();
                 break;
         }
     }
-    protected void doKeyReaction(int keyCode, int actionCode, int type) {
+    @Override
+    protected boolean doKeyReaction(int keyCode, int actionCode, int type) {
         if (HotKeys.isHotKey(keyCode, type)) {
             String nick = getCurrentContact();
             Contact c = (null == nick) ? null : getPrivateContact(nick);
             if (HotKeys.execHotKey(protocol, c, keyCode, type)) {
-                return;
+                return true;
             }
         }
-        super.doKeyReaction(keyCode, actionCode, type);
+        return super.doKeyReaction(keyCode, actionCode, type);
     }
 
 
@@ -223,14 +229,14 @@ public final class ConferenceParticipants extends VirtualList {
     }
 
     private void update() {
-        super.lock();
+        view.lock();
         int currentIndex = getCurrItem();
         contacts.removeAllElements();
         addLayerToListOfSubcontacts("list_of_moderators", JabberServiceContact.ROLE_MODERATOR);
         addLayerToListOfSubcontacts("list_of_participants", JabberServiceContact.ROLE_PARTICIPANT);
         addLayerToListOfSubcontacts("list_of_visitors", JabberServiceContact.ROLE_VISITOR);
         setCurrentItemIndex(currentIndex);
-        super.unlock();
+        view.unlock();
     }
 
     private int getRole(String nick) {
@@ -260,7 +266,7 @@ public final class ConferenceParticipants extends VirtualList {
         Object o = contacts.elementAt(itemIndex);
         if (o instanceof JabberContact.SubContact) {
             JabberContact.SubContact c = (JabberContact.SubContact)o;
-            int height = getDefaultFont().getHeight() + 1;
+            int height = fontSet[CanvasEx.FONT_STYLE_PLAIN].getHeight() + 1;
             // #sijapp cond.if modules_CLIENTS is "true" #
             Icon client = InfoFactory.factory.getClientInfo(protocol).getIcon(c.client);
             if (null != client) {
@@ -274,15 +280,15 @@ public final class ConferenceParticipants extends VirtualList {
             height = Math.max(height, CanvasEx.minItemHeight);
             return height;
         }
-        return getFontSet()[FONT_STYLE_BOLD].getHeight() + 1;
+        return fontSet[CanvasEx.FONT_STYLE_BOLD].getHeight() + 1;
     }
 
     protected void drawItemData(GraphicsEx g, int index, int x, int y, int w, int h, int skip, int to) {
-        g.setThemeColor(THEME_TEXT);
+        g.setThemeColor(CanvasEx.THEME_TEXT);
         Object o = contacts.elementAt(index);
         if (o instanceof JabberContact.SubContact) {
             JabberContact.SubContact c = (JabberContact.SubContact)o;
-            g.setFont(getDefaultFont());
+            g.setFont(fontSet[CanvasEx.FONT_STYLE_PLAIN]);
             leftIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(c.status);
             leftIcons[1] = affiliationIcons.iconAt(c.priority & JabberServiceContact.AFFILIATION_MASK);
             // #sijapp cond.if modules_CLIENTS is "true" #
@@ -292,7 +298,7 @@ public final class ConferenceParticipants extends VirtualList {
             return;
         }
         String header = (String)o;
-        g.setFont(getFontSet()[FONT_STYLE_BOLD]);
+        g.setFont(fontSet[CanvasEx.FONT_STYLE_BOLD]);
         g.drawString(header, x, y, w, h);
     }
 

@@ -15,7 +15,7 @@ import javax.microedition.lcdui.Graphics;
  */
 public abstract class SomeContent {
     private int currItem;
-    protected final SomeContentList view;
+    protected SomeContentList view;
     protected static final byte MP_ALL = 0;
     protected static final byte MP_SELECTABLE_ONLY = 1;
     private byte movingPolicy = MP_ALL;
@@ -24,6 +24,12 @@ public abstract class SomeContent {
     private int topOffset = 0;
 
     public SomeContent(SomeContentList view) {
+        this.view = view;
+    }
+    public SomeContent() {
+        this.view = view;
+    }
+    void setView(SomeContentList view) {
         this.view = view;
     }
 

@@ -209,6 +209,9 @@ abstract public class CanvasEx extends DisplayableEx {
                 if (v.elementAt(i) instanceof VirtualList) {
                     from = i;
                     break;
+                } else if (v.elementAt(i) instanceof SomeContentList) {
+                    from = i;
+                    break;
                 } else if (!(v.elementAt(i) instanceof CanvasEx)) {
                     from = i;
                     break;

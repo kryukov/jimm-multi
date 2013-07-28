@@ -23,6 +23,14 @@ public class SomeContentList extends CanvasEx {
         setSize(Jimm.getJimm().getDisplay().getScreenWidth(),
                 Jimm.getJimm().getDisplay().getScreenHeight());
     }
+    public SomeContentList(SomeContent content, String capt) {
+        this.content = content;
+        content.setView(this);
+        bar.setCaption(capt);
+        softBar.setSoftBarLabels("menu", null, "back", false);
+        setSize(Jimm.getJimm().getDisplay().getScreenWidth(),
+                Jimm.getJimm().getDisplay().getScreenHeight());
+    }
 
     @Override
     protected final void doJimmAction(int keyCode) {

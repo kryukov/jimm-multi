@@ -15,6 +15,7 @@ import jimm.*;
 import jimm.chat.message.PlainMessage;
 import jimm.comm.*;
 import jimm.search.*;
+import jimmui.view.base.SomeContentList;
 import jimmui.view.form.FormListener;
 import jimmui.view.form.GraphForm;
 import jimmui.view.menu.MenuModel;
@@ -503,7 +504,7 @@ public final class Jabber extends Protocol implements FormListener {
 
             case JabberServiceContact.USER_MENU_USERS_LIST:
                 if (contact.isOnline() || !isConnected()) {
-                    new ConferenceParticipants(this, (JabberServiceContact) c).show();
+                    new SomeContentList(new ConferenceParticipants(this, (JabberServiceContact) c), c.getName()).show();
                 } else {
                     ServiceDiscovery sd = getServiceDiscovery();
                     sd.setServer(contact.getUserId());

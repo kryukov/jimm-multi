@@ -83,7 +83,7 @@ public class UIUpdater extends TimerTask {
         }
         flashCaptionInterval = FLASH_CAPTION_INTERVAL;
         if (0 < counter) {
-            if (curDispay instanceof VirtualList) {
+            if (curDispay instanceof SomeContentList) {
                 setTicker(curDispay, ((counter & 1) == 0) ? text : " ");
             }
             counter--;

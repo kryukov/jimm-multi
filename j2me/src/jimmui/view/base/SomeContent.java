@@ -352,7 +352,7 @@ public abstract class SomeContent {
         }
         // #sijapp cond.end#
         int next = getCurrItem() + step;
-        if (VirtualList.MP_SELECTABLE_ONLY == movingPolicy) {
+        if (SomeContent.MP_SELECTABLE_ONLY == movingPolicy) {
             while (!isItemSelectable(next)) {
                 next += step;
                 if ((next < 0) || (getSize() <= next)) {

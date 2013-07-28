@@ -96,9 +96,9 @@ public class UIUpdater extends TimerTask {
     private void setTicker(Object displ, String text) {
         if (displ instanceof InputTextBox) {
             ((InputTextBox)displ).setTicker(text);
-        } else if (displ instanceof VirtualList) {
-            ((VirtualList)displ).bar.setTicker(text);
-            ((VirtualList)displ).invalidate();
+        } else if (displ instanceof SomeContentList) {
+            ((SomeContentList)displ).bar.setTicker(text);
+            ((SomeContentList)displ).invalidate();
         }
     }
 

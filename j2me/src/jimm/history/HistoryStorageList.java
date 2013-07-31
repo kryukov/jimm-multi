@@ -32,8 +32,8 @@ import jimm.comm.*;
 import jimmui.view.text.TextListController;
 
 // Visual messages history list
-public final class HistoryStorageList extends VirtualList implements
-        Runnable, FormListener, TextListExCommands {
+public final class HistoryStorageList extends VirtualList
+        implements Runnable, FormListener, TextListExCommands {
 
     // list UIN
     private HistoryStorage history;
@@ -309,23 +309,6 @@ public final class HistoryStorageList extends VirtualList implements
     private TextList showMessText() {
         if (getCurrItem() >= getSize()) return null;
         CachedRecord record = history.getRecord(getCurrItem());
-//        // #sijapp cond.if modules_TOUCH is "true"#
-//        if ((null != current) && (getCurrItem() == current.index)) {
-//            current = null;
-//            invalidate();
-//            return;
-//        }
-//        final int width = NativeCanvas.getInstance().getMinScreenMetrics()
-//                - scrollerWidth - 3;
-//        Parser parser = new Parser(getCurrItem(), getFontSet(), width);
-//        parser.addText(record.from + " ", THEME_TEXT, FONT_STYLE_BOLD);
-//        parser.addText(record.date + ":", THEME_TEXT, FONT_STYLE_BOLD);
-//        parser.doCRLF();
-//        parser.addTextWithSmiles(record.text, THEME_TEXT, FONT_STYLE_PLAIN);
-//        current = parser.getPar();
-//        invalidate();
-//        if (true) return;
-//        // #sijapp cond.end#
 
         msg.setCaption(record.from);
         msg.getTextContent().setUpdateListener(this);
@@ -379,10 +362,6 @@ public final class HistoryStorageList extends VirtualList implements
     protected void drawItemData(GraphicsEx g, int index, int x1, int y1, int w, int h, int skip, int to) {
         CachedRecord record = getCachedRecord(index);
         if ((null == record) || (null == record.getShortText())) return;
-//        if ((null != current) && (index == current.index)) {
-//            current.paint(getFontSet(), g, x1, y1, skip, to);
-//            return;
-//        }
         Font font = getDefaultFont();
         g.setFont(font);
         g.setThemeColor((record.type == 0) ? THEME_CHAT_INMSG : THEME_CHAT_OUTMSG);
@@ -391,9 +370,6 @@ public final class HistoryStorageList extends VirtualList implements
     }
 
     protected int getItemHeight(int itemIndex) {
-//        if ((null != current) && (itemIndex == current.index)) {
-//            return Math.max(CanvasEx.minItemHeight, current.getHeight());
-//        }
         return Math.max(CanvasEx.minItemHeight, getDefaultFont().getHeight());
     }
 

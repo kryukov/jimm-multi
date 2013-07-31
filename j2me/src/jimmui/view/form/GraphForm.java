@@ -44,28 +44,6 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
     private int OFFSET = 3;
     private int BOTTOM = 3;
 
-    private static class Control {
-        public int id;
-        public Par description;
-        public boolean disabled;
-        public byte type;
-        public int height;
-
-        // input
-        public int inputType;
-        public String text;
-        private int size;
-        // checkbox
-        public boolean selected;
-        // select
-        public String[] items;
-        public int current;
-        // gauge
-        public int level;
-        // image
-        public Image image;
-    }
-
     public GraphForm(String caption, String ok, String cancel, FormListener l) {
         super(JLocale.getString(caption));
         formListener = l;

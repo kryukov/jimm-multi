@@ -35,9 +35,9 @@ import jimm.modules.*;
 import jimm.modules.fs.*;
 // #sijapp cond.end#
 import jimm.modules.photo.*;
+import jimmui.view.UIBuilder;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.J2meUIBuilder;
 import jimm.util.JLocale;
 import protocol.Contact;
 import protocol.Protocol;
@@ -168,7 +168,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
 
     /* Helpers for options UI: */
     private void askForNameDesc() {
-        name_Desc = J2meUIBuilder.createForm("name_desc", "ok", "back", this);
+        name_Desc = UIBuilder.createForm("name_desc", "ok", "back", this);
         name_Desc.addString("filename", filename);
         name_Desc.addTextField(descriptionField, "description", "", 255);
         String items = "jimm.net.ru|www.jimm.net.ru|jimm.org";

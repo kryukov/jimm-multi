@@ -27,10 +27,10 @@ import javax.microedition.lcdui.*;
 
 import jimm.comm.*;
 import jimm.modules.*;
+import jimmui.view.UIBuilder;
 import jimmui.view.form.ControlStateListener;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.J2meUIBuilder;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import jimm.util.*;
@@ -420,7 +420,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
         // Add elements, depending on selected option menu item
         currentOptionsForm = cmd;
         // Delete all items
-        form = J2meUIBuilder.createForm(model.getItemText(currentOptionsForm), "save", "back", this);
+        form = UIBuilder.createForm(model.getItemText(currentOptionsForm), "save", "back", this);
         switch (currentOptionsForm) {
             case OPTIONS_ACCOUNT:
                 new AccountsForm().show();

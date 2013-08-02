@@ -8,9 +8,9 @@ package protocol.jabber;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.comm.*;
+import jimmui.view.UIBuilder;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.J2meUIBuilder;
 import jimm.util.JLocale;
 
 /**
@@ -29,7 +29,7 @@ final class XForm {
         this.waitingForm = true;
     }
     void init(String caption, FormListener listener) {
-        form = J2meUIBuilder.createForm(caption, "ok", "back", listener);
+        form = UIBuilder.createForm(caption, "ok", "back", listener);
     }
     public boolean isWaiting() {
         return waitingForm;

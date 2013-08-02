@@ -9,10 +9,10 @@
 
 package jimm;
 
+import jimmui.view.UIBuilder;
 import jimmui.view.form.ControlStateListener;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.J2meUIBuilder;
 import jimmui.view.text.TextList;
 import jimm.comm.StringConvertor;
 import jimmui.view.menu.*;
@@ -116,7 +116,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
     private Form initAccountEditor(int accNum) {
         editAccountNum = accNum;
         Profile account = Options.getAccount(editAccountNum);
-        form = J2meUIBuilder.createForm("options_account", "save", "back", this);
+        form = UIBuilder.createForm("options_account", "save", "back", this);
 
         if (1 < Profile.protocolTypes.length) {
             int protocolIndex = 0;

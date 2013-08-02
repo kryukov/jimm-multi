@@ -209,7 +209,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         screen.getTextContent().setUpdateListener(this);
 
         /* Form */
-        searchForm = J2meUIBuilder.createForm((TYPE_LITE == type) ? "add_user" : "search_user",
+        searchForm = UIBuilder.createForm((TYPE_LITE == type) ? "add_user" : "search_user",
                 "ok", "back", this);
         if (TYPE_LITE == type) {
             addUserIdItem();

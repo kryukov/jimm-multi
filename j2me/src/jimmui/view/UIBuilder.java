@@ -11,7 +11,7 @@ import jimmui.view.form.GraphForm;
  *
  * @author vladimir
  */
-public class J2meUIBuilder {
+public class UIBuilder {
     public static Form createForm(String caption, String ok, String cancel, FormListener l) {
         return new GraphForm(caption, ok, cancel, l);
     }

@@ -8,10 +8,10 @@ package protocol.jabber;
 import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
+import jimmui.view.UIBuilder;
 import jimmui.view.form.ControlStateListener;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.J2meUIBuilder;
 import jimmui.view.base.Popup;
 import jimm.util.JLocale;
 
@@ -49,7 +49,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
     }
 
     void show() {
-        commandsListForm = J2meUIBuilder.createForm("adhoc", "ok", "cancel", this);
+        commandsListForm = UIBuilder.createForm("adhoc", "ok", "cancel", this);
         updateForm(false);
         commandsListForm.setControlStateListener(this);
         commandsListForm.show();

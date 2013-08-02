@@ -134,7 +134,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
 
             case RENAME_GROUP: /* Rename group */
                 if (null == group) {
-                    Form form = J2meUIBuilder.createForm("rename_group", "ok", "back", this);
+                    Form form = UIBuilder.createForm("rename_group", "ok", "back", this);
                     addGroup(form, getGroups(Group.MODE_EDITABLE));
                     form.addTextField(GROUP_NEW_NAME, "new_group_name", "", 64);
                     form.show();
@@ -145,7 +145,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
 
             case DEL_GROUP: /* Delete group */
                 if (null == group) {
-                    Form form = J2meUIBuilder.createForm("del_group", "delete", "back", this);
+                    Form form = UIBuilder.createForm("del_group", "delete", "back", this);
                     addGroup(form, getGroups(Group.MODE_REMOVABLE));
                     form.show();
                 } else {

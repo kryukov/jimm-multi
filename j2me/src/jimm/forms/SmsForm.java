@@ -20,9 +20,9 @@ import javax.wireless.messaging.*;
 // #sijapp cond.end #
 // #sijapp cond.end #
 import jimm.Jimm;
+import jimmui.view.UIBuilder;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.J2meUIBuilder;
 import jimm.util.JLocale;
 import protocol.mrim.*;
 import protocol.Protocol;
@@ -84,7 +84,7 @@ public class SmsForm implements FormListener {
         if (0 == agents.length()) {
             return;
         }
-        form = J2meUIBuilder.createForm("send_sms", "send", "cancel", this);
+        form = UIBuilder.createForm("send_sms", "send", "cancel", this);
         if (null == phones) {
             form.addTextField(PHONE, "phone", "", 20, TextField.PHONENUMBER);
 

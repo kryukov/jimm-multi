@@ -14,7 +14,7 @@ import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.io.Storage;
 import jimmui.view.InputTextBox;
-import jimmui.view.J2meUIBuilder;
+import jimmui.view.UIBuilder;
 import jimmui.view.TextBoxListener;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
@@ -160,7 +160,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
             message.show();
 
         } else {
-            form = J2meUIBuilder.createForm("set_xstatus", "save", "back", this);
+            form = UIBuilder.createForm("set_xstatus", "save", "back", this);
             form.addTextField(OPTION_XTRAZ_TITLE, "xtraz_title", xst_titles[id], title);
             form.addTextField(OPTION_XTRAZ_DESC, "xtraz_desc", xst_descs[id], descr);
             form.show();

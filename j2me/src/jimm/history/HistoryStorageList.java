@@ -133,7 +133,7 @@ public final class HistoryStorageList extends VirtualList
 
             case MENU_FIND:
                 if (null == frmFind) {
-                    frmFind = J2meUIBuilder.createForm("find", "find", "back", this);
+                    frmFind = UIBuilder.createForm("find", "find", "back", this);
                     frmFind.addTextField(tfldFind, "text_to_find", "", 64);
                     frmFind.addCheckBox(find_backwards, "find_backwards", true);
                     frmFind.addCheckBox(find_case_sensitiv, "find_case_sensitiv", false);

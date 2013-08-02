@@ -15,7 +15,7 @@ import jimm.*;
 import jimm.chat.message.PlainMessage;
 import jimm.comm.*;
 import jimm.search.*;
-import jimmui.view.J2meUIBuilder;
+import jimmui.view.UIBuilder;
 import jimmui.view.base.SomeContentList;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
@@ -675,7 +675,7 @@ public final class Jabber extends Protocol implements FormListener {
 
     void showOptionsForm(JabberServiceContact c) {
         enterConf = c;
-        enterData = J2meUIBuilder.createForm("conference", "ok", "cancel", this);
+        enterData = UIBuilder.createForm("conference", "ok", "cancel", this);
         enterData.addTextField(NICK, "nick", c.getMyName(), 32);
         enterData.addTextField(PASSWORD, "password", c.getPassword(), 32);
         if (!c.isTemp()) {

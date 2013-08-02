@@ -23,9 +23,9 @@ Author(s): Igor Palkin
 // #sijapp cond.if protocols_ICQ is "true" | protocols_JABBER is "true" | protocols_OBIMP is "true" #
 package jimm.forms;
 
+import jimmui.view.UIBuilder;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.J2meUIBuilder;
 import protocol.Protocol;
 import jimm.search.*;
 
@@ -63,7 +63,7 @@ public class EditInfo implements FormListener {
         // #sijapp cond.if protocols_OBIMP is "true"#
         final boolean isObimp = (protocol instanceof protocol.obimp.Obimp);
         // #sijapp cond.end#
-        form = J2meUIBuilder.createForm("editform", "save", "cancel", this);
+        form = UIBuilder.createForm("editform", "save", "cancel", this);
         form.addTextField(_NickNameItem, "nick", userInfo.nick, 64);
         form.addTextField(_FirstNameItem, "firstname", userInfo.firstName, 64);
         form.addTextField(_LastNameItem, "lastname", userInfo.lastName, 64);

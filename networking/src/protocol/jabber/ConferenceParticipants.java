@@ -229,14 +229,14 @@ public final class ConferenceParticipants extends SomeContent {
     }
 
     private void update() {
-        view.lock();
+        if (null != view) view.lock();
         int currentIndex = getCurrItem();
         contacts.removeAllElements();
         addLayerToListOfSubcontacts("list_of_moderators", JabberServiceContact.ROLE_MODERATOR);
         addLayerToListOfSubcontacts("list_of_participants", JabberServiceContact.ROLE_PARTICIPANT);
         addLayerToListOfSubcontacts("list_of_visitors", JabberServiceContact.ROLE_VISITOR);
         setCurrentItemIndex(currentIndex);
-        view.unlock();
+        if (null != view) view.unlock();
     }
 
     private int getRole(String nick) {

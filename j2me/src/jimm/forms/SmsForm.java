@@ -20,7 +20,9 @@ import javax.wireless.messaging.*;
 // #sijapp cond.end #
 // #sijapp cond.end #
 import jimm.Jimm;
-import jimmui.view.form.*;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
+import jimmui.view.J2meUIBuilder;
 import jimm.util.JLocale;
 import protocol.mrim.*;
 import protocol.Protocol;
@@ -67,7 +69,7 @@ public class SmsForm implements FormListener {
         // #sijapp cond.end #
     }
     private String phones;
-    private GraphForm form;
+    private Form form;
     private String agents;
     private Vector protocols;
 
@@ -82,7 +84,7 @@ public class SmsForm implements FormListener {
         if (0 == agents.length()) {
             return;
         }
-        form = new GraphForm("send_sms", "send", "cancel", this);
+        form = J2meUIBuilder.createForm("send_sms", "send", "cancel", this);
         if (null == phones) {
             form.addTextField(PHONE, "phone", "", 20, TextField.PHONENUMBER);
 
@@ -131,7 +133,7 @@ public class SmsForm implements FormListener {
         // #sijapp cond.end #
         return form.getTextFieldValue(PHONE);
     }
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (apply) {
             final String text = form.getTextFieldValue(TEXT);
             final String phone = getPhone();

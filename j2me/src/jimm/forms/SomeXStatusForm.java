@@ -11,13 +11,13 @@ package jimm.forms;
 
 // #sijapp cond.if modules_XSTATUSES is "true" #
 import jimm.Jimm;
-import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.io.Storage;
 import jimmui.view.InputTextBox;
+import jimmui.view.J2meUIBuilder;
 import jimmui.view.TextBoxListener;
+import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.form.GraphForm;
 import jimmui.view.menu.*;
 import protocol.*;
 import protocol.icq.*;
@@ -35,7 +35,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
     private Protocol protocol;
     private int xstatus;
     private InputTextBox message;
-    private GraphForm form;
+    private Form form;
     private static final int OPTION_XTRAZ_TITLE = 10;
     private static final int OPTION_XTRAZ_DESC  = 11;
 
@@ -128,7 +128,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
         }
     }
 
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (apply) {
             setXStatus(form.getTextFieldValue(OPTION_XTRAZ_TITLE),
                     form.getTextFieldValue(OPTION_XTRAZ_DESC));
@@ -160,7 +160,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
             message.show();
 
         } else {
-            form = new GraphForm("set_xstatus", "save", "back", this);
+            form = J2meUIBuilder.createForm("set_xstatus", "save", "back", this);
             form.addTextField(OPTION_XTRAZ_TITLE, "xtraz_title", xst_titles[id], title);
             form.addTextField(OPTION_XTRAZ_DESC, "xtraz_desc", xst_descs[id], descr);
             form.show();

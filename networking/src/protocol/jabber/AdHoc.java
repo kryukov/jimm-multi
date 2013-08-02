@@ -8,8 +8,11 @@ package protocol.jabber;
 import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.comm.Util;
+import jimmui.view.form.ControlStateListener;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
+import jimmui.view.J2meUIBuilder;
 import jimmui.view.base.Popup;
-import jimmui.view.form.*;
 import jimm.util.JLocale;
 
 /**
@@ -22,7 +25,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
     private String jid;
     private String[] nodes;
     private String[] names;
-    private GraphForm commandsListForm;
+    private Form commandsListForm;
     private XForm commandForm;
     private static final int FORM_RESOURCE = 1;
     private static final int FORM_COMMAND = 2;
@@ -38,7 +41,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
         return jid;
     }
 
-    public void controlStateChanged(GraphForm form, int id) {
+    public void controlStateChanged(Form form, int id) {
         if (FORM_RESOURCE == id) {
             requestCommandsForCurrentResource();
             updateForm(false);
@@ -46,7 +49,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
     }
 
     void show() {
-        commandsListForm = new GraphForm("adhoc", "ok", "cancel", this);
+        commandsListForm = J2meUIBuilder.createForm("adhoc", "ok", "cancel", this);
         updateForm(false);
         commandsListForm.setControlStateListener(this);
         commandsListForm.show();
@@ -125,7 +128,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
     private int commandIndex;
     private String commandSessionId;
     private String commandId;
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (!apply) {
             form.back();
             return;
@@ -176,7 +179,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
         form.loadXFromXml(commandXml, iqXml);
         commandForm = form;
 
-        boolean showForm = (0 < commandForm.getForm().getSize());
+        boolean showForm = (0 < commandForm.getSize());
         String status = commandXml.getAttribute("s" + "tatus");
         if (("c" + "anceled").equals(status) || ("co" + "mpleted").equals(status)) {
             String text = commandXml.getFirstNodeValue("n" + "ote");

@@ -23,7 +23,9 @@ Author(s): Igor Palkin
 // #sijapp cond.if protocols_ICQ is "true" | protocols_JABBER is "true" | protocols_OBIMP is "true" #
 package jimm.forms;
 
-import jimmui.view.form.*;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
+import jimmui.view.J2meUIBuilder;
 import protocol.Protocol;
 import jimm.search.*;
 
@@ -45,7 +47,7 @@ public class EditInfo implements FormListener {
     private static final int _WorkPositionItem = 1013;
     private static final int _WorkPhoneItem = 1014;
     private static final int _AboutItem = 1015;
-    private GraphForm form;
+    private Form form;
     private Protocol protocol;
     private UserInfo userInfo;
 
@@ -61,7 +63,7 @@ public class EditInfo implements FormListener {
         // #sijapp cond.if protocols_OBIMP is "true"#
         final boolean isObimp = (protocol instanceof protocol.obimp.Obimp);
         // #sijapp cond.end#
-        form = new GraphForm("editform", "save", "cancel", this);
+        form = J2meUIBuilder.createForm("editform", "save", "cancel", this);
         form.addTextField(_NickNameItem, "nick", userInfo.nick, 64);
         form.addTextField(_FirstNameItem, "firstname", userInfo.firstName, 64);
         form.addTextField(_LastNameItem, "lastname", userInfo.lastName, 64);
@@ -134,7 +136,7 @@ public class EditInfo implements FormListener {
         userInfo = null;
     }
 
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (!apply) {
             form.back();
             destroy();

@@ -13,6 +13,8 @@ package jimm.history;
 
 import jimm.cl.SysTextList;
 import jimmui.Clipboard;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListModel;
 import jimmui.view.text.*;
@@ -23,7 +25,6 @@ import jimm.*;
 // #sijapp cond.end#
 import jimmui.view.*;
 import jimmui.view.base.*;
-import jimmui.view.form.*;
 import jimmui.view.menu.*;
 import jimm.util.JLocale;
 import javax.microedition.lcdui.Font;
@@ -39,7 +40,7 @@ public final class HistoryStorageList extends VirtualList
     private HistoryStorage history;
 
     // Controls for finding text
-    private GraphForm frmFind;
+    private Form frmFind;
     private static final int tfldFind = 1000;
     private static final int find_backwards = 1010;
     private static final int find_case_sensitiv = 1011;
@@ -132,7 +133,7 @@ public final class HistoryStorageList extends VirtualList
 
             case MENU_FIND:
                 if (null == frmFind) {
-                    frmFind = new GraphForm("find", "find", "back", this);
+                    frmFind = J2meUIBuilder.createForm("find", "find", "back", this);
                     frmFind.addTextField(tfldFind, "text_to_find", "", 64);
                     frmFind.addCheckBox(find_backwards, "find_backwards", true);
                     frmFind.addCheckBox(find_case_sensitiv, "find_case_sensitiv", false);
@@ -294,7 +295,7 @@ public final class HistoryStorageList extends VirtualList
         return -1;
     }
 
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (apply) {
             frmFind.remove(NOT_FOUND);
             new Thread(this).start();

@@ -8,7 +8,9 @@ package protocol.jabber;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
 import jimm.comm.*;
-import jimmui.view.form.*;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
+import jimmui.view.J2meUIBuilder;
 import jimm.util.JLocale;
 
 /**
@@ -16,7 +18,7 @@ import jimm.util.JLocale;
  * @author Vladimir Kryukov
  */
 final class XForm {
-    private GraphForm form;
+    private Form form;
     private boolean waitingForm;
     private boolean isXData;
     private Vector fields = new Vector();
@@ -27,7 +29,7 @@ final class XForm {
         this.waitingForm = true;
     }
     void init(String caption, FormListener listener) {
-        form = new GraphForm(caption, "ok", "back", listener);
+        form = J2meUIBuilder.createForm(caption, "ok", "back", listener);
     }
     public boolean isWaiting() {
         return waitingForm;
@@ -41,7 +43,7 @@ final class XForm {
     public void clearForm() {
         form.clearForm();
     }
-    public GraphForm getForm() {
+    public Form getForm() {
         return form;
     }
     public void setWainting() {

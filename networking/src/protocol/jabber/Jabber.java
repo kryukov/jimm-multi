@@ -15,9 +15,10 @@ import jimm.*;
 import jimm.chat.message.PlainMessage;
 import jimm.comm.*;
 import jimm.search.*;
+import jimmui.view.J2meUIBuilder;
 import jimmui.view.base.SomeContentList;
+import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.form.GraphForm;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 import jimm.util.JLocale;
@@ -666,7 +667,7 @@ public final class Jabber extends Protocol implements FormListener {
         return jid.replace('%', '@');
     }
     // -----------------------------------------------------------------------
-    private static GraphForm enterData = null;
+    private static Form enterData = null;
     private static JabberServiceContact enterConf = null;
     private static final int NICK = 0;
     private static final int PASSWORD = 1;
@@ -674,7 +675,7 @@ public final class Jabber extends Protocol implements FormListener {
 
     void showOptionsForm(JabberServiceContact c) {
         enterConf = c;
-        enterData = new GraphForm("conference", "ok", "cancel", this);
+        enterData = J2meUIBuilder.createForm("conference", "ok", "cancel", this);
         enterData.addTextField(NICK, "nick", c.getMyName(), 32);
         enterData.addTextField(PASSWORD, "password", c.getPassword(), 32);
         if (!c.isTemp()) {
@@ -693,7 +694,7 @@ public final class Jabber extends Protocol implements FormListener {
     }
 
     @Override
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (enterData == form) {
             if (apply) {
                 if (enterConf.isConference()) {

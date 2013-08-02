@@ -3,8 +3,8 @@ package protocol.jabber;
 
 import jimm.*;
 import jimm.comm.*;
+import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.form.GraphForm;
 import protocol.Profile;
 
 /**
@@ -108,7 +108,7 @@ public class JabberRegistration implements Runnable, FormListener {
         new Thread(this).start();
     }
 
-    public void formAction(GraphForm uiForm, boolean apply) {
+    public void formAction(Form uiForm, boolean apply) {
         if (apply) {
             if ((0 < form.getSize()) || (TYPE_NEW_ACCOUNT_DOMAIN == type)) {
                 doAction();

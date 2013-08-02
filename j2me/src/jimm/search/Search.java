@@ -24,6 +24,9 @@
 package jimm.search;
 
 import jimm.Jimm;
+import jimmui.view.form.ControlStateListener;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
 import jimmui.view.text.TextList;
 import jimmui.view.text.TextListModel;
 import java.util.Vector;
@@ -32,7 +35,6 @@ import jimm.comm.*;
 import jimmui.view.*;
 import jimmui.view.base.Binder;
 import jimmui.view.base.CanvasEx;
-import jimmui.view.form.*;
 import jimmui.view.menu.*;
 import jimmui.view.text.TextListController;
 import jimm.util.*;
@@ -62,7 +64,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     private static final int MENU_MESSAGE = 1;
 
     /* Forms for results and query */
-    private GraphForm searchForm;
+    private Form searchForm;
 
     private TextList screen;
 
@@ -105,7 +107,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         preferredNick = null;
 
     }
-    public void controlStateChanged(GraphForm form, int id) {
+    public void controlStateChanged(Form form, int id) {
         if (PROFILE == id) {
             String userid = searchForm.getTextFieldValue(USERID);
             if (StringConvertor.isEmpty(userid)) {
@@ -207,7 +209,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         screen.getTextContent().setUpdateListener(this);
 
         /* Form */
-        searchForm = new GraphForm((TYPE_LITE == type) ? "add_user" : "search_user",
+        searchForm = J2meUIBuilder.createForm((TYPE_LITE == type) ? "add_user" : "search_user",
                 "ok", "back", this);
         if (TYPE_LITE == type) {
             addUserIdItem();
@@ -321,7 +323,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         nextOrPrev(1 == direction);
     }
 
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (apply) {
             if (TYPE_FULL == type) {
                 currentResultIndex = 0;

@@ -9,10 +9,12 @@
 
 package jimm;
 
+import jimmui.view.form.ControlStateListener;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
+import jimmui.view.J2meUIBuilder;
 import jimmui.view.text.TextList;
-import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
-import jimmui.view.form.*;
 import jimmui.view.menu.*;
 import jimmui.view.text.TextListController;
 import jimmui.view.text.TextListModel;
@@ -24,7 +26,7 @@ import protocol.*;
  * @author Vladimir Kryukov
  */
 public class AccountsForm implements FormListener, SelectListener, ControlStateListener {
-    private GraphForm form;
+    private Form form;
     private MenuModel accountMenu = null;
     private int editAccountNum;
     private TextList accountList = new TextList(JLocale.getString("options_account"));
@@ -111,10 +113,10 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
     public void showAccountEditor(Profile p) {
         initAccountEditor(Options.getAccountIndex(p)).show();
     }
-    private GraphForm initAccountEditor(int accNum) {
+    private Form initAccountEditor(int accNum) {
         editAccountNum = accNum;
         Profile account = Options.getAccount(editAccountNum);
-        form = new GraphForm("options_account", "save", "back", this);
+        form = J2meUIBuilder.createForm("options_account", "save", "back", this);
 
         if (1 < Profile.protocolTypes.length) {
             int protocolIndex = 0;
@@ -134,7 +136,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         return form;
     }
 
-    public void controlStateChanged(GraphForm form, int controlId) {
+    public void controlStateChanged(Form form, int controlId) {
         if (protocolTypeField == controlId) {
             updateAccountForm();
         }
@@ -218,7 +220,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         updateAccountList();
         accountList.show();
     }
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (apply) {
             // Save values, depending on selected option menu item
             Profile account = new Profile();

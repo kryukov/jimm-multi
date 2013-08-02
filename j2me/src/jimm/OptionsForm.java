@@ -24,11 +24,14 @@
 package jimm;
 
 import javax.microedition.lcdui.*;
-import jimm.cl.ContactList;
+
 import jimm.comm.*;
 import jimm.modules.*;
+import jimmui.view.form.ControlStateListener;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
+import jimmui.view.J2meUIBuilder;
 import jimmui.view.base.*;
-import jimmui.view.form.*;
 import jimmui.view.menu.*;
 import jimm.util.*;
 
@@ -36,7 +39,7 @@ import jimm.util.*;
 public class OptionsForm implements FormListener, ControlStateListener, SelectListener {
 
     private MenuModel optionsMenu = new MenuModel();
-    private GraphForm form;
+    private Form form;
     private int currentOptionsForm;
     // Static constants for menu actios
     private static final int OPTIONS_ACCOUNT = 0;
@@ -260,7 +263,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
     private static final String[] minItems = {"x1", "x1.5", "x2", "x2.5", "x3", "x3.5"};
 
     /* Command listener */
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         /* Look for back command */
         if (!apply) {
             back();
@@ -417,8 +420,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
         // Add elements, depending on selected option menu item
         currentOptionsForm = cmd;
         // Delete all items
-        form = new GraphForm("options_lng", "save", "back", this);
-        form.setCaption(model.getItemText(currentOptionsForm));
+        form = J2meUIBuilder.createForm(model.getItemText(currentOptionsForm), "save", "back", this);
         switch (currentOptionsForm) {
             case OPTIONS_ACCOUNT:
                 new AccountsForm().show();
@@ -610,7 +612,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
         form.back();
     }
 
-    public void controlStateChanged(GraphForm form, int id) {
+    public void controlStateChanged(Form form, int id) {
         switch (id) {
             case Options.OPTION_COLOR_SCHEME:
                 saveOptionSelector(Options.OPTION_COLOR_SCHEME);

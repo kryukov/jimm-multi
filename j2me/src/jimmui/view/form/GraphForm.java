@@ -23,7 +23,7 @@ import jimm.util.JLocale;
  *
  * @author Vladimir Kryukov
  */
-public final class GraphForm extends VirtualList implements TextBoxListener, SelectListener {
+public final class GraphForm extends VirtualList implements TextBoxListener, SelectListener, Form {
 
     private Vector controls = new Vector();
     private InputTextBox box;
@@ -54,6 +54,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         setSoftBarLabels(ok, ok, cancel, true);
     }
 
+    @Override
     public void setControlStateListener(ControlStateListener l) {
         controlListener = l;
     }
@@ -129,6 +130,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
     }
     // #sijapp cond.end#
 
+    @Override
     public void destroy() {
         clearForm();
         formListener = null;
@@ -156,10 +158,12 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         }
         return c;
     }
+    @Override
     public void clearForm() {
         setAllToTop();
         controls.removeAllElements();
     }
+    @Override
     public void addSelector(int controlId, String label, String items, int index) {
         String[] all = Util.explode(items, '|');
         for (int i = 0; i < all.length; ++i) {
@@ -167,6 +171,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         }
         addSelector(controlId, label, all, index);
     }
+    @Override
     public void addSelector(int controlId, String label, String[] items, int index) {
         label = (null == label) ? " " : label;
         Control c = create(controlId, CONTROL_SELECT, null, JLocale.getString(label));
@@ -174,42 +179,53 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         c.current = index % c.items.length;
         add(c);
     }
+    @Override
     public void addVolumeControl(int controlId, String label, int current) {
         label = (null == label) ? " " : label;
         Control c = create(controlId, CONTROL_GAUGE, null, JLocale.getString(label));
         c.level = current / 10;
         add(c);
     }
+    @Override
     public void addCheckBox(int controlId, String label, boolean selected) {
         label = (null == label) ? " " : label;
         Control c = create(controlId, CONTROL_CHECKBOX, null, JLocale.getString(label));
         c.selected = selected;
         add(c);
     }
+    @Override
     public void addHeader(String label) {
         add(create(-1, CONTROL_TEXT, JLocale.getString(label), null));
     }
+    @Override
     public void addString(String label, String text) {
         add(create(-1, CONTROL_TEXT, JLocale.getString(label), text));
     }
+    @Override
     public void addString(String text) {
         addString(null, text);
     }
+    @Override
     public void addString(int controlId, String text) {
         add(create(controlId, CONTROL_TEXT, null, text));
     }
+    @Override
     public void addLink(int controlId, String text) {
         add(create(controlId, CONTROL_LINK, null, text));
     }
+    @Override
     public void addLatinTextField(int controlId, String label, String text, int size) {
         addTextField(controlId, label, text, size, TextField.ANY);
     }
+    @Override
     public void addTextField(int controlId, String label, String text, int size) {
         addTextField(controlId, label, text, size, TextField.ANY);
     }
+    @Override
     public void addPasswordField(int controlId, String label, String text, int size) {
         addTextField(controlId, label, text, size, TextField.PASSWORD);
     }
+    @Override
     public void addTextField(int controlId, String label, String text, int size, int type) {
         label = (null == label) ? " " : label;
         Control c = create(controlId, CONTROL_INPUT, null, JLocale.getString(label));
@@ -223,11 +239,13 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         }
         add(c);
     }
+    @Override
     public void addImage(Image img) {
         Control c = create(-1, CONTROL_IMAGE, null, null);
         c.image = img;
         add(c);
     }
+    @Override
     public void remove(int controlId) {
         try {
             for (int num = 0; num < controls.size(); ++num) {
@@ -249,9 +267,11 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         }
         return null;
     }
+    @Override
     public boolean hasControl(int controlId) {
         return null != get(controlId);
     }
+    @Override
     public void setTextFieldLabel(int controlId, String desc) {
         Control c = get(controlId);
         byte type = c.type;
@@ -268,6 +288,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         invalidate();
     }
 
+    @Override
     public int getGaugeValue(int controlId) {
         try {
             return get(controlId).level;
@@ -278,9 +299,11 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         }
         return 0;
     }
+    @Override
     public int getVolumeValue(int controlId) {
         return getGaugeValue(controlId) * 10;
     }
+    @Override
     public String getTextFieldValue(int controlId) {
         try {
             return get(controlId).text;
@@ -291,6 +314,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         }
         return null;
     }
+    @Override
     public int getSelectorValue(int controlId) {
         try {
             return get(controlId).current;
@@ -301,6 +325,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         }
         return 0;
     }
+    @Override
     public String getSelectorString(int controlId) {
         try {
             return get(controlId).items[get(controlId).current];
@@ -312,6 +337,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         return null;
     }
 
+    @Override
     public boolean getCheckBoxValue(int controlId) {
         try {
             return get(controlId).selected;
@@ -321,6 +347,11 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
             // #sijapp cond.end#
         }
         return false;
+    }
+
+    @Override
+    public void addThumbnailImage(Image img) {
+        addImage(Util.createThumbnail(img, getWidth(), getHeight()));
     }
 
     public int getSize() {

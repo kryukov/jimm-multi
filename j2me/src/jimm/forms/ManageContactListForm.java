@@ -15,8 +15,8 @@ import jimm.Jimm;
 import jimm.comm.StringConvertor;
 import jimm.search.*;
 import jimmui.view.*;
+import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
-import jimmui.view.form.GraphForm;
 import jimmui.view.menu.*;
 import jimm.util.*;
 import protocol.*;
@@ -134,7 +134,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
 
             case RENAME_GROUP: /* Rename group */
                 if (null == group) {
-                    GraphForm form = new GraphForm("rename_group", "ok", "back", this);
+                    Form form = J2meUIBuilder.createForm("rename_group", "ok", "back", this);
                     addGroup(form, getGroups(Group.MODE_EDITABLE));
                     form.addTextField(GROUP_NEW_NAME, "new_group_name", "", 64);
                     form.show();
@@ -145,7 +145,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
 
             case DEL_GROUP: /* Delete group */
                 if (null == group) {
-                    GraphForm form = new GraphForm("del_group", "delete", "back", this);
+                    Form form = J2meUIBuilder.createForm("del_group", "delete", "back", this);
                     addGroup(form, getGroups(Group.MODE_REMOVABLE));
                     form.show();
                 } else {
@@ -168,7 +168,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         }
         return groups;
     }
-    private void addGroup(GraphForm form, Vector groups) {
+    private void addGroup(Form form, Vector groups) {
         if (!groups.isEmpty()) {
             String[] list = new String[groups.size()];
             int def = 0;
@@ -242,7 +242,7 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         new Select(getMenu()).show();
     }
 
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (!apply) {
             Jimm.getJimm().getCL().activate();
             return;

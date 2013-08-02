@@ -11,7 +11,7 @@ import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.modules.*;
 import jimmui.SplashCanvas;
-import jimmui.view.chat.Chat;
+import jimmui.view.form.Form;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 
@@ -138,7 +138,7 @@ abstract public class CanvasEx extends DisplayableEx {
     public final boolean isSoftBarShown() {
         // #sijapp cond.if modules_ANDROID is "true"#
         if (this instanceof jimm.modules.fs.FileBrowser) return true;
-        if (this instanceof jimmui.view.form.GraphForm) return true;
+        if (this instanceof Form) return true;
         if (this instanceof jimmui.view.roster.VirtualContactList) {
             return true;//!Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
         }

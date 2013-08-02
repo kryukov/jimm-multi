@@ -35,7 +35,9 @@ import jimm.modules.*;
 import jimm.modules.fs.*;
 // #sijapp cond.end#
 import jimm.modules.photo.*;
-import jimmui.view.form.*;
+import jimmui.view.form.Form;
+import jimmui.view.form.FormListener;
+import jimmui.view.J2meUIBuilder;
 import jimm.util.JLocale;
 import protocol.Contact;
 import protocol.Protocol;
@@ -45,7 +47,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         PhotoListener, Runnable {
 
     // Form for entering the name and description
-    private GraphForm name_Desc;
+    private Form name_Desc;
 
     // File data
     private String filename;
@@ -166,7 +168,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
 
     /* Helpers for options UI: */
     private void askForNameDesc() {
-        name_Desc = new GraphForm("name_desc", "ok", "back", this);
+        name_Desc = J2meUIBuilder.createForm("name_desc", "ok", "back", this);
         name_Desc.addString("filename", filename);
         name_Desc.addTextField(descriptionField, "description", "", 255);
         String items = "jimm.net.ru|www.jimm.net.ru|jimm.org";
@@ -190,7 +192,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     }
 
     // Command listener
-    public void formAction(GraphForm form, boolean apply) {
+    public void formAction(Form form, boolean apply) {
         if (apply) {
             description = name_Desc.getTextFieldValue(descriptionField);
             sendMode = name_Desc.getSelectorValue(transferMode);
@@ -348,9 +350,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             public void run() {
                 try {
                     Image img = Image.createImage(image, 0, image.length);
-                    img = Util.createThumbnail(img, name_Desc.getWidth(),
-                            name_Desc.getHeight());
-                    name_Desc.addImage(img);
+                    name_Desc.addThumbnailImage(img);
                 } catch (Throwable ignored) {
                     // IOException or OutOfMemoryError
                 }

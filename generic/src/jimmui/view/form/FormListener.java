@@ -1,7 +1,7 @@
 /*
- * ControlStateListener.java
+ * FormListener.java
  *
- * Created on 14 Декабрь 2010 г., 11:56
+ * Created on 10 Февраль 2011 г., 23:16
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
@@ -13,6 +13,6 @@ package jimmui.view.form;
  *
  * @author Vladimir Kryukov
  */
-public interface ControlStateListener {
-    void controlStateChanged(GraphForm form, int id);
+public interface FormListener {
+    void formAction(Form form, boolean apply);
 }

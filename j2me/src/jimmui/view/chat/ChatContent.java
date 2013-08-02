@@ -194,7 +194,9 @@ public class ChatContent extends SomeContent {
             if ((null != md) && md.isURL()) {
                 menu.addItem("goto_url", ACTION_GOTO_URL);
             }
-            menu.addItem("copy_text", ACTION_COPY_TEXT);
+        }
+        menu.addItem("copy_text", ACTION_COPY_TEXT);
+        if (!selectMode) {
             // #sijapp cond.if modules_HISTORY is "true" #
             if (!Options.getBoolean(Options.OPTION_HISTORY) && getContact().hasHistory()) {
                 menu.addItem("add_to_history", ACTION_ADD_TO_HISTORY);

@@ -32,6 +32,10 @@ public abstract class SomeContent {
         this.view = view;
     }
 
+    public SomeContentList getView() {
+        return view;
+    }
+
     protected abstract int getSize();
 
     protected abstract int getItemHeight(int itemIndex);

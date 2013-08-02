@@ -31,6 +31,7 @@ public class Binder implements SelectListener {
             canvas.restore();
             canvas.execJimmAction(cmd);
         } else if (null != content) {
+            content.getView().restore();
             content.execJimmAction(cmd);
         } else {
             listener.action(null, cmd);

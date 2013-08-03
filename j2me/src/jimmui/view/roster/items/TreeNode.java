@@ -22,7 +22,7 @@
  *******************************************************************************/
 
 
-package jimmui.view.roster;
+package jimmui.view.roster.items;
 
 import jimmui.view.icons.Icon;
 

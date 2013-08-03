@@ -10,7 +10,6 @@
 package protocol;
 
 import jimmui.model.chat.ChatModel;
-import jimmui.view.roster.*;
 import jimmui.view.icons.*;
 import jimm.*;
 import jimm.chat.message.*;
@@ -19,6 +18,7 @@ import jimm.history.*;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import jimm.comm.*;
+import jimmui.view.roster.items.TreeNode;
 import protocol.ui.ClientInfo;
 import protocol.ui.InfoFactory;
 import protocol.ui.StatusInfo;

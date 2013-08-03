@@ -29,7 +29,7 @@
  * and open the template in the editor.
  */
 
-package jimmui.view.roster;
+package jimmui.view.roster.items;
 
 /**
  *

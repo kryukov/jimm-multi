@@ -30,7 +30,7 @@ import protocol.ui.StatusInfo;
  * @author vladimir
  */
 abstract public class Protocol {
-    protected Roster roster;
+    protected Roster roster = new Roster();
     private Profile profile;
     private String password;
     private String userid = "";
@@ -596,30 +596,30 @@ abstract public class Protocol {
     }
 
     public final Vector<Contact> getContactItems() {
-        return null == roster ? null : roster.contacts;
+        return roster.contacts;
     }
     public final Vector<Group> getGroupItems() {
-        return null == roster ? null : roster.groups;
+        return roster.groups;
     }
     public final Contact getItemByUID(String uin) {
-        return null == roster ? null : roster.getItemByUID(uin);
+        return roster.getItemByUID(uin);
     }
     public final Group getGroupById(int id) {
         synchronized (rosterLockObject) {
-            return null == roster ? null : roster.getGroupById(id);
+            return roster.getGroupById(id);
         }
     }
     public final Group getGroup(Contact contact) {
-        return null == roster ? null : roster.getGroup(contact);
+        return roster.getGroup(contact);
     }
 
     public final Group getGroup(String name) {
         synchronized (rosterLockObject) {
-            return null == roster ? null : roster.getGroup(name);
+            return roster.getGroup(name);
         }
     }
     public final boolean hasContact(Contact contact) {
-        return (null != roster) && roster.hasContact(contact);
+        return roster.hasContact(contact);
     }
 
 

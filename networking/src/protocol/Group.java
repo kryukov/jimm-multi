@@ -9,7 +9,8 @@
 
 package protocol;
 
-import jimmui.view.roster.*;
+import jimmui.view.roster.items.GroupBranch;
+
 import java.util.Vector;
 
 /**

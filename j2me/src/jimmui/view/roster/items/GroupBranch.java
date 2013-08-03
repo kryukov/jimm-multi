@@ -1,4 +1,4 @@
-package jimmui.view.roster;
+package jimmui.view.roster.items;
 
 import jimm.Jimm;
 import jimmui.view.icons.Icon;

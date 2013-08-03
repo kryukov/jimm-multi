@@ -35,6 +35,8 @@ import jimm.*;
 import jimm.forms.*;
 import jimmui.view.menu.*;
 import jimmui.view.base.*;
+import jimmui.view.roster.items.ProtocolBranch;
+import jimmui.view.roster.items.TreeNode;
 import protocol.*;
 import protocol.jabber.*;
 import protocol.ui.ContactMenu;

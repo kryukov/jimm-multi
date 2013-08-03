@@ -3,8 +3,8 @@ package jimmui.model.roster;
 import jimm.comm.Util;
 import jimmui.updater.RosterUpdater;
 import jimmui.view.roster.ContactListModel;
-import jimmui.view.roster.GroupBranch;
-import jimmui.view.roster.ProtocolBranch;
+import jimmui.view.roster.items.GroupBranch;
+import jimmui.view.roster.items.ProtocolBranch;
 import protocol.Protocol;
 import protocol.Roster;
 

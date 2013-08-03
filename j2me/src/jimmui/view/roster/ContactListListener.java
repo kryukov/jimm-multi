@@ -10,6 +10,7 @@
 package jimmui.view.roster;
 
 import jimmui.view.menu.MenuModel;
+import jimmui.view.roster.items.TreeNode;
 import protocol.*;
 
 /**

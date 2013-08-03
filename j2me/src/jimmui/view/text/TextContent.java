@@ -1,5 +1,6 @@
 package jimmui.view.text;
 
+import jimm.Jimm;
 import jimmui.view.TextListExCommands;
 import jimmui.view.base.*;
 import jimmui.view.menu.*;
@@ -97,6 +98,13 @@ public class TextContent extends SomeContent {
         return super.doKeyReaction(keyCode, actionCode, type);
     }
     // #sijapp cond.if modules_TOUCH is "true"#
+    protected void touchItemTaped(int item, int x, boolean isLong) {
+        if (isLong) {
+            view.showMenu(getMenu());
+        } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
+            execJimmAction(NativeCanvas.JIMM_SELECT);
+        }
+    }
 
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
         if (view.getWidth() / 2 < Math.abs(fromX - toX)) {

@@ -77,6 +77,7 @@ public class RosterContent extends SomeContent {
                 if (getModel() == getUpdater().getChatModel()) {
                     setModel(getUpdater().getModel());
                     view.back();
+
                 } else {
                     showContextMenu(getCurrentNode());
                 }

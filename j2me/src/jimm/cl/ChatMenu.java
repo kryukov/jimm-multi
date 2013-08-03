@@ -86,14 +86,17 @@ public final class ChatMenu implements SelectListener {
         switch (cmd) {
             case MENU_DEL_CURRENT_CHAT:
                 removeChat(chat);
+                select.back();
                 break;
 
             case MENU_DEL_ALL_CHATS_EXCEPT_CUR:
                 removeAll(chat);
+                select.back();
                 break;
 
             case MENU_DEL_ALL_CHATS:
                 removeAll(null);
+                select.back();
                 break;
         }
     }

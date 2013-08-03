@@ -1032,16 +1032,23 @@ public class Util {
     }
 
     public static void removeAll(Vector to, Vector all) {
-        for (int i = 0; i < all.size(); ++i) {
-            int index = Util.getIndex(to, all.elementAt(i));
-            if (0 <= index) {
-                to.removeElementAt(index);
+        synchronized (to) {
+            int current = 0;
+            for (int index = 0; index < to.size(); ++index) {
+                if (0 <= Util.getIndex(all, to.elementAt(index))) continue;
+                if (current < index) {
+                    to.setElementAt(to.elementAt(index), current);
+                    current++;
+                }
             }
+            if (current < to.size()) to.setSize(current);
         }
     }
     public static void addAll(Vector to, Vector all) {
-        for (int i = 0; i < all.size(); ++i) {
-            to.addElement(all.elementAt(i));
+        synchronized (to) {
+            for (int i = 0; i < all.size(); ++i) {
+                to.addElement(all.elementAt(i));
+            }
         }
     }
 }

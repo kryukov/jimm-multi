@@ -97,9 +97,6 @@ public class ProtocolBranch implements TreeBranch {
                 return g;
             }
         }
-        if (name.equals(notInListGroup.getName())) {
-            return notInListGroup;
-        }
         return null;
     }
 

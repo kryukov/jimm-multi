@@ -93,7 +93,8 @@ public class GroupContactModel extends ContactListModel {
 
     private void updateGroupContent(GroupBranch groupBranch) {
         boolean notInList = groupBranch == notInListGroup;
-        groupBranch.getContacts().removeAllElements();
+        Vector groupContacts = groupBranch.getContacts();
+        groupContacts.removeAllElements();
         for (int i = 0; i < getProtocolCount(); ++i) {
             Protocol p = getProtocol(i);
             Group g = notInList ? null : p.getGroup(groupBranch.getName());
@@ -103,7 +104,7 @@ public class GroupContactModel extends ContactListModel {
             for (int j = 0; j < contacts.size(); ++j) {
                 Contact c = (Contact) contacts.elementAt(j);
                 if (id == c.getGroupId()) {
-                    groupBranch.getContacts().addElement(c);
+                    groupContacts.addElement(c);
                 }
             }
         }
@@ -123,9 +124,6 @@ public class GroupContactModel extends ContactListModel {
             if (name.equals(g.getName())) {
                 return g;
             }
-        }
-        if (name.equals(notInListGroup.getName())) {
-            return notInListGroup;
         }
         return null;
     }

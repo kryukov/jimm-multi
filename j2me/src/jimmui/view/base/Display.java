@@ -200,7 +200,7 @@ public class Display {
         return stack;
     }
 
-    static boolean isLongAction(long start) {
+    public static boolean isLongAction(long start) {
         return start + LONG_INTERVAL < System.currentTimeMillis();
     }
 

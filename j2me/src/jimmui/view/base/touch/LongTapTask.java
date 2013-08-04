@@ -1,14 +1,16 @@
-package jimmui.view.base;
+package jimmui.view.base.touch;
 
 // #sijapp cond.if modules_TOUCH is "true"#
+
+import jimmui.view.base.TouchControl;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-class TouchLongTapTask extends TimerTask {
+public class LongTapTask extends TimerTask {
     private Timer timer;
     private TouchControl touch;
-    public TouchLongTapTask(TouchControl touch) {
+    public LongTapTask(TouchControl touch) {
         this.touch = touch;
         timer = new Timer();
     }

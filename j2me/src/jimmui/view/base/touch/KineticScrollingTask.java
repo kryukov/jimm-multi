@@ -1,17 +1,20 @@
-package jimmui.view.base;
+package jimmui.view.base.touch;
+
+import jimmui.view.base.CanvasEx;
+import jimmui.view.base.TouchControl;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 // #sijapp cond.if modules_TOUCH is "true"#
-class TouchKineticScrollingTask extends TimerTask {
+public class KineticScrollingTask extends TimerTask {
     private int y;
     private int a;
     private int v;
     private Timer timer;
     private TouchControl touch;
 
-    public TouchKineticScrollingTask(TouchControl touch, int y, int velosity, int acceleration) {
+    public KineticScrollingTask(TouchControl touch, int y, int velosity, int acceleration) {
         this.y = y;
         this.a = acceleration;
         this.v = velosity;

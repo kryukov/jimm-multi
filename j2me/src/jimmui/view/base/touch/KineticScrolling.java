@@ -1,7 +1,10 @@
-package jimmui.view.base;
+package jimmui.view.base.touch;
+
+import jimmui.view.base.CanvasEx;
+import jimmui.view.base.TouchControl;
 
 // #sijapp cond.if modules_TOUCH is "true"#
-class TouchKineticScrolling {
+public class KineticScrolling {
     private int fromY;
     private long startTime;
 
@@ -23,7 +26,7 @@ class TouchKineticScrolling {
         addPoint(y, System.currentTimeMillis(), true);
     }
 
-    public TouchKineticScrollingTask create(TouchControl tc) {
+    public KineticScrollingTask create(TouchControl tc) {
         final int movingAfter = CanvasEx.minItemHeight / 2;
         final int time = period;
         final int way = toY - fromY;
@@ -35,7 +38,7 @@ class TouchKineticScrolling {
             return null;
         }
         int a = Math.max(1, Math.max(calcAbsA(v, time) / 3, calcAbsA(v, 3000)));
-        return new TouchKineticScrollingTask(tc, toY, v, ((way < 0) ? +a : -a));
+        return new KineticScrollingTask(tc, toY, v, ((way < 0) ? +a : -a));
     }
 
     private int calcV(int way, int time) {

@@ -9,7 +9,9 @@
 
 package jimmui.view.base;
 
-import java.util.*;
+import jimmui.view.base.touch.KineticScrolling;
+import jimmui.view.base.touch.KineticScrollingTask;
+import jimmui.view.base.touch.LongTapTask;
 
 /**
  *
@@ -20,7 +22,7 @@ public class TouchControl {
     public static final int DRAGGING = 0;
     public static final int DRAGGED = 1;
     public static final int KINETIC = 2;
-    static final int discreteness = 50;
+    public static final int discreteness = 50;
 
     private boolean isDragged;
     private int startY;
@@ -39,9 +41,9 @@ public class TouchControl {
     public boolean isSecondTap;
 
     boolean kineticOn;
-    private volatile TouchKineticScrollingTask kineticTask = null;
-    private final TouchKineticScrolling kinetic = new TouchKineticScrolling();
-    private TouchLongTapTask longTapTask= null;
+    private volatile KineticScrollingTask kineticTask = null;
+    private final KineticScrolling kinetic = new KineticScrolling();
+    private LongTapTask longTapTask= null;
     private boolean lockTouch;
 
     private int pressLimit;
@@ -116,7 +118,7 @@ public class TouchControl {
 
         c.stylusPressed(x, y);
 
-        longTapTask = new TouchLongTapTask(this);
+        longTapTask = new LongTapTask(this);
         longTapTask.start(Display.LONG_INTERVAL);
     }
 
@@ -171,7 +173,7 @@ public class TouchControl {
         }
     }
 
-    synchronized void kineticMoving(int y) {
+    public synchronized void kineticMoving(int y) {
         if (lockTouch) return;
         CanvasEx c = canvas;
         if (kineticOn && (null != c) && (null != kineticTask)) {
@@ -211,14 +213,14 @@ public class TouchControl {
 
 
     private void startKinetic() {
-        TouchKineticScrollingTask it = kinetic.create(this);
+        KineticScrollingTask it = kinetic.create(this);
         if (null != it) {
             it.start(discreteness);
             kineticTask = it;
         }
     }
     private void stopKinetic() {
-        TouchKineticScrollingTask k = kineticTask;
+        KineticScrollingTask k = kineticTask;
         kineticTask = null;
         if (null != k) {
             k.stop();

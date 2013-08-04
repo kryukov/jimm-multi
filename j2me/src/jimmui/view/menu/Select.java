@@ -93,7 +93,7 @@ public final class Select extends CanvasEx {
 
     protected void stylusPressed(TouchState state) {
         if (getHeight() < state.y) {
-            Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(softBar);
+            state.region = softBar;
             return;
         }
         if (!checkRegion(state.x, state.y)) {

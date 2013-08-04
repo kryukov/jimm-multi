@@ -1,5 +1,7 @@
 package jimmui.view.base.touch;
 
+import jimmui.view.base.ActiveRegion;
+
 /**
  * Created with IntelliJ IDEA.
  * <p/>
@@ -16,4 +18,5 @@ public class TouchState {
     public boolean isLong;
     public int prevTopY;
     public int type;
+    public ActiveRegion region;
 }

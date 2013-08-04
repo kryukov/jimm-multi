@@ -35,16 +35,15 @@ public class TouchControl {
 
     private TouchState state = new TouchState();
 
-    boolean kineticOn;
+    private boolean kineticOn;
     private volatile KineticScrollingTask kineticTask = null;
     private final KineticScrolling kinetic = new KineticScrolling();
-    private LongTapTask longTapTask= null;
+    private LongTapTask longTapTask = null;
     private boolean lockTouch;
 
     private int pressLimit;
 
     private CanvasEx canvas = null;
-    public ActiveRegion region;
 
     public synchronized void setCanvas(CanvasEx c) {
         stopKinetic();
@@ -98,7 +97,7 @@ public class TouchControl {
         lockTouch = false;
 
         kineticOn = true;
-        region = null;
+        state.region = null;
 
         horizontalDirection = false;
         directionUnlock = true;
@@ -116,6 +115,10 @@ public class TouchControl {
         state.x = x;
         state.y = y;
         c.stylusPressed(state);
+        if (null != state.region) {
+            kineticOn = false;
+            state.region.stylusPressed(canvas, startX, startY);
+        }
 
         longTapTask = new LongTapTask(this);
         longTapTask.start(Display.LONG_INTERVAL);
@@ -143,8 +146,8 @@ public class TouchControl {
         } else {
             __stylusTap(c, x, y, Display.isLongAction(pressTime));
         }
-        if (null != region) {
-            region.stylusReleased();
+        if (null != state.region) {
+            state.region.stylusReleased();
         }
         pressTime = 0;
     }
@@ -193,10 +196,10 @@ public class TouchControl {
         state.x = curX;
         state.y = curY;
         state.isLong = longTap;
-        if (null == region) {
+        if (null == state.region) {
             c.stylusTap(state);
         } else {
-            region.stylusTap(c, startX, startY, longTap);
+            state.region.stylusTap(c, startX, startY, longTap);
         }
     }
     private void __stylusMoved(CanvasEx c, int x, int y, boolean horizontalDirection, int type) {
@@ -205,7 +208,7 @@ public class TouchControl {
         state.x = x;
         state.y = y;
         state.type = type;
-        if (null == region) {
+        if (null == state.region) {
             if (horizontalDirection) {
                 if (TouchControl.DRAGGING == type) {
                     c.stylusXMoving(state);
@@ -216,7 +219,7 @@ public class TouchControl {
                 c.stylusGeneralYMoved(state);
             }
         } else {
-            region.stylusMoved(c, startX, startY, x, y, horizontalDirection, type);
+            state.region.stylusMoved(c, startX, startY, x, y, horizontalDirection, type);
         }
     }
 
@@ -245,12 +248,6 @@ public class TouchControl {
             horizontalDirection = (Math.abs(startY - curY) * 2 < Math.abs(startX - curX));
             directionUnlock = false;
         }
-    }
-
-    public void setRegion(ActiveRegion region) {
-        this.region = region;
-        kineticOn = false;
-        region.stylusPressed(canvas, startX, startY);
     }
 }
 // #sijapp cond.end#

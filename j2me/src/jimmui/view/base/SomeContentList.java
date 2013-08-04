@@ -53,11 +53,11 @@ public class SomeContentList extends CanvasEx {
 
     protected final void stylusPressed(TouchState state) {
         if (getHeight() < state.y) {
-            Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(softBar);
+            state.region = softBar;
             return;
         }
         if (state.y < bar.getHeight()) {
-            Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(bar);
+            state.region = bar;
             return;
         }
         touchUsed = true;

@@ -102,33 +102,33 @@ public final class SplashCanvas extends CanvasEx {
     protected void stylusTap(TouchState state) {
     }
 
-    protected void stylusXMoving(int fromX, int fromY, int toX, int toY) {
+    protected void stylusXMoving(TouchState state) {
         if (Jimm.getJimm().isLocked()) {
             int region = Math.max(getProgressHeight(), minItemHeight);
             int minY = getHeight() - region;
-            if ((fromY < minY) || (toY < minY)) {
+            if ((state.fromY < minY) || (state.y < minY)) {
                 poundPressTime = 0;
                 keyLock = KEY_LOCK_MSG_TIME;
                 setProgress(0);
                 invalidate();
                 return;
             }
-            setProgress(Math.max(fromX, toX) * 100 / getWidth());
+            setProgress(Math.max(state.fromX, state.y) * 100 / getWidth());
         }
     }
 
-    protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
+    protected void stylusXMoved(TouchState state) {
         int region = Math.max(getProgressHeight(), minItemHeight);
         int minY = getHeight() - region;
-        if ((fromY < minY) || (toY < minY)) {
+        if ((state.fromY < minY) || (state.y < minY)) {
             poundPressTime = 0;
             keyLock = KEY_LOCK_MSG_TIME;
             setProgress(0);
             invalidate();
             return;
         }
-        int x1 = Math.min(fromX, toX);
-        int x2 = Math.max(fromX, toX);
+        int x1 = Math.min(state.fromX, state.x);
+        int x2 = Math.max(state.fromX, state.x);
         if ((x1 < region) && (getWidth() - region < x2)) {
             if (Jimm.getJimm().isLocked()) {
                 Jimm.getJimm().unlockJimm();

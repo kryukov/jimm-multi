@@ -104,11 +104,11 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
             setGaugeLevel(c, x);
         }
     }
-    protected void stylusXMoving(int fromX, int fromY, int toX, int toY) {
-        stylusXMoved(fromX, fromY, toX, toY);
+    protected void stylusXMoving(TouchState state) {
+        stylusXMoved(state);
     }
-    protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
-        int itemIndex = getItemByCoord(toY);
+    protected void stylusXMoved(TouchState state) {
+        int itemIndex = getItemByCoord(state.y);
         if (itemIndex < 0) {
             return;
         }
@@ -117,7 +117,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
             return;
         }
         if (CONTROL_GAUGE == c.type) {
-            setGaugeLevel(c, toX);
+            setGaugeLevel(c, state.x);
         }
     }
     private void setGaugeLevel(Control c, int x) {

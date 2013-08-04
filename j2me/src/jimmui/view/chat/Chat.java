@@ -36,6 +36,7 @@ import jimmui.Clipboard;
 import jimmui.HotKeys;
 import jimmui.model.chat.ChatModel;
 import jimmui.model.chat.MessData;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.Icon;
 import jimm.*;
 import jimm.chat.message.*;
@@ -64,10 +65,10 @@ public final class Chat extends SomeContentList {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
-        if (getWidth() / 2 < Math.abs(fromX - toX)) {
+    protected void stylusXMoved(TouchState state) {
+        if (getWidth() / 2 < Math.abs(state.fromX - state.x)) {
             Jimm.getJimm().getChatUpdater().storeTopPosition(model, this);
-            Jimm.getJimm().getCL().showNextPrevChat(model, (fromX > toX));
+            Jimm.getJimm().getCL().showNextPrevChat(model, (state.fromX > state.x));
         }
     }
     // #sijapp cond.end#

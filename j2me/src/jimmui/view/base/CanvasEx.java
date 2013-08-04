@@ -178,9 +178,9 @@ abstract public class CanvasEx extends DisplayableEx {
     }
     protected void stylusPressed(TouchState state) {
     }
-    protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
+    protected void stylusXMoved(TouchState state) {
     }
-    protected void stylusXMoving(int fromX, int fromY, int toX, int toY) {
+    protected void stylusXMoving(TouchState state) {
     }
     protected void stylusTap(TouchState state) {
     }

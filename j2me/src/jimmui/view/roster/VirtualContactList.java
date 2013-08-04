@@ -27,6 +27,7 @@ import jimm.util.JLocale;
 import jimmui.HotKeys;
 import jimmui.model.chat.ChatModel;
 import jimmui.updater.RosterUpdater;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.*;
 import java.util.Vector;
@@ -72,9 +73,9 @@ public final class VirtualContactList extends SomeContentList {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
-        if (getWidth() / 2 < Math.abs(fromX - toX)) {
-            boolean isTrue = fromX < toX;
+    protected void stylusXMoved(TouchState state) {
+        if (getWidth() / 2 < Math.abs(state.fromX - state.x)) {
+            boolean isTrue = state.fromX < state.x;
             int currentModel = 0;
             if (Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE)) currentModel = 1;
             if (((RosterContent)content).getModel() == getUpdater().getChatModel()) currentModel = 2;

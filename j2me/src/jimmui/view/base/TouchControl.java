@@ -208,9 +208,9 @@ public class TouchControl {
         if (null == region) {
             if (horizontalDirection) {
                 if (TouchControl.DRAGGING == type) {
-                    c.stylusXMoving(startX, startY, x, y);
+                    c.stylusXMoving(state);
                 } else if (TouchControl.DRAGGED == type) {
-                    c.stylusXMoved(startX, startY, x, y);
+                    c.stylusXMoved(state);
                 }
             } else {
                 c.stylusGeneralYMoved(state);

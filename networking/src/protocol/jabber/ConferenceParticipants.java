@@ -72,9 +72,9 @@ public final class ConferenceParticipants extends SomeContent {
     protected void touchItemTaped(int item, int x, boolean isLong) {
         int itemHeight = getItemHeight(item);
         if (isLong || (view.getWidth() - itemHeight < x)) {
-            view.showMenu(getMenu());
+            view.showMenu(getContextMenu());
         } else {
-            super.touchItemTaped(item, x, isLong);
+            execJimmAction(NativeCanvas.JIMM_SELECT);
         }
     }
     // #sijapp cond.end#
@@ -105,7 +105,7 @@ public final class ConferenceParticipants extends SomeContent {
                 return;
 
             case NativeCanvas.JIMM_MENU:
-                view.showMenu(getMenu());
+                view.showMenu(getContextMenu());
                 return;
         }
         String nick = getCurrentContact();
@@ -194,7 +194,7 @@ public final class ConferenceParticipants extends SomeContent {
     }
 
 
-    protected final MenuModel getMenu() {
+    protected final MenuModel getContextMenu() {
         MenuModel menu = new MenuModel();
         menu.setActionListener(new Binder(this));
         String nick = getCurrentContact();

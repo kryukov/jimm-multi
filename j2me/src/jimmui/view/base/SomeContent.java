@@ -56,6 +56,16 @@ public abstract class SomeContent {
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void touchItemTaped(int item, int x, boolean isLong) {
     }
+
+    protected boolean touchItemPressed(int item, int x, int y) {
+        if (getCurrItem() != item) {
+            setCurrItem(item);
+            onCursorMove();
+            invalidate();
+            return true;
+        }
+        return false;
+    }
     // #sijapp cond.end#
 
     protected boolean doKeyReaction(int keyCode, int actionCode, int type) {

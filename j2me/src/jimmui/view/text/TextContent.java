@@ -99,7 +99,7 @@ public class TextContent extends SomeContent {
     }
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void touchItemTaped(int item, int x, boolean isLong) {
-        if (isLong) {
+        if (isLong || (view.getWidth() - view.minItemHeight < x)) {
             view.showMenu(getMenu());
         } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
             execJimmAction(NativeCanvas.JIMM_SELECT);

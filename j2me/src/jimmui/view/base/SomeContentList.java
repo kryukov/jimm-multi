@@ -46,13 +46,7 @@ public class SomeContentList extends CanvasEx {
         content.touchItemTaped(item, x, isLong);
     }
     protected final boolean touchItemPressed(int item, int x, int y) {
-        if (content.getCurrItem() != item) {
-            content.setCurrItem(item);
-            content.onCursorMove();
-            invalidate();
-            return true;
-        }
-        return false;
+        return content.touchItemPressed(item, x, y);
     }
 
     protected final void stylusPressed(int x, int y) {

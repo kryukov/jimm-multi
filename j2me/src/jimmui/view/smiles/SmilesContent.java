@@ -58,6 +58,9 @@ public class SmilesContent extends SomeContent {
         }
         return false;
     }
+    protected void touchItemTaped(int item, int x, boolean isLong) {
+        execJimmAction(NativeCanvas.JIMM_SELECT);
+    }
     // #sijapp cond.end#
 
     protected final boolean isCurrentItemSelectable() {

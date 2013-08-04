@@ -75,7 +75,7 @@ public class RosterContent extends SomeContent {
 
             case NativeCanvas.JIMM_BACK:
                 if (getModel() == getUpdater().getChatModel()) {
-                    setModel(getUpdater().getModel());
+                    ((VirtualContactList)view).setModel(getUpdater().getModel());
                     view.back();
 
                 } else {

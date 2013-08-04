@@ -149,7 +149,11 @@ public class MyActionBar extends ActiveRegion {
         int region = getCaptionRegion(canvas, x, canvas.getWidth());
 
         if (CAPTION_REGION_NEW_MESSAGE == region) {
-            Jimm.getJimm().getCL().showChatList(true);
+            if (Jimm.getJimm().getCL().isChats(canvas)) {
+                Jimm.getJimm().getCL().backFromChats();
+            } else {
+                Jimm.getJimm().getCL().showChatList(true);
+            }
 
         } else if (CAPTION_REGION_GENERAL == region) {
 

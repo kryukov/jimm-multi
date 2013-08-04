@@ -240,6 +240,14 @@ public class InfoFactory {
         }
         return new XStatusInfo(icons, names);
     }
+    public boolean onlyOneIcon(Protocol protocol) {
+        // #sijapp cond.if protocols_MRIM is "true" #
+        switch (protocol.getProfile().protocolType) {
+            case Profile.PROTOCOL_MRIM: return true;
+        }
+        // #sijapp cond.end #
+        return false;
+    }
     // #sijapp cond.end #
     private static StatusInfo createGlobalStatusInfo() {
         final ImageList icons = ImageList.createImageList("/global-status.png");

@@ -78,20 +78,6 @@ public class MrimContact extends Contact {
     }
     // #sijapp cond.end #
     /////////////////////////////////////////////////////////////////////////
-    // #sijapp cond.if modules_XSTATUSES is "true" #
-    public void getLeftIcons(Icon[] leftIcons) {
-        super.getLeftIcons(leftIcons);
-        if (!isTyping() && !hasUnreadMessage()) {
-            Icon x = leftIcons[1];
-            if (null != x) {
-                leftIcons[0] = x;
-                leftIcons[1] = null;
-            }
-        }
-    }
-    // #sijapp cond.end #
-    /////////////////////////////////////////////////////////////////////////
-
     public void addChatMenuItems(MenuModel model) {
         if (isOnline() && Options.getBoolean(Options.OPTION_ALARM)) {
             model.addItem("wake", USER_MENU_WAKE);

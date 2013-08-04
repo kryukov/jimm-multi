@@ -18,7 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.Jimm;
 import jimm.Options;
+import jimm.comm.StringConvertor;
 import jimmui.ContentActionListener;
+import jimmui.model.chat.ChatModel;
 import jimmui.view.base.SomeContent;
 import jimmui.view.chat.Chat;
 import jimm.modules.Emotions;
@@ -157,10 +159,17 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
 
     private void send() {
         hideKeyboard(messageEditor);
-        if (Jimm.getJimm().getDisplay().getCurrentDisplay() == owner) {
-            owner.sendMessage(getText());
-            resetText();
+        if (Jimm.getJimm().getDisplay().getCurrentDisplay() != owner) return;
+        String message = getText();
+        ChatModel model = owner.getModel();
+        if (!model.getContact().isSingleUserContact() && message.endsWith(", ")) {
+            message = "";
         }
+        if (!StringConvertor.isEmpty(message)) {
+            Jimm.getJimm().jimmModel.registerChat(model);
+            model.getProtocol().sendMessage(model.getContact(), message, true);
+        }
+        resetText();
     }
 
     public void setText(final String text) {

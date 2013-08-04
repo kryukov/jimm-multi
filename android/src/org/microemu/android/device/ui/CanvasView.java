@@ -58,7 +58,7 @@ public class CanvasView extends View implements DisplayRepaintListener {
         setId(id);
     }
 
-    private void initGraphics(int width, int height) {
+    private void initGraphics() {
         if (graphics == null) {
             graphics = new AndroidDisplayGraphics();
         }
@@ -131,7 +131,7 @@ public class CanvasView extends View implements DisplayRepaintListener {
         if (ma == null) {
             return;
         }
-        initGraphics(androidCanvas.getWidth(), androidCanvas.getHeight());
+        initGraphics();
         graphics.reset(androidCanvas);
         ma.getDisplayAccess().paint(graphics);
     }

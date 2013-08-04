@@ -62,6 +62,9 @@ public final class Chat extends SomeContentList {
         super(null);
         content = new ChatContent(this, model);
         this.model = model;
+        bar.setCaption(model.getContact().getName());
+        updateStatusIcons();
+        softBar.setSoftBarLabels("menu", "reply", "close", false);
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
@@ -77,7 +80,7 @@ public final class Chat extends SomeContentList {
         for (int i = 0; i < statusIcons.length; ++i) {
             statusIcons[i] = null;
         }
-        getContact().getLeftIcons(statusIcons);
+        model.getContact().getLeftIcons(statusIcons);
         bar.setImages(statusIcons);
     }
     public void updateStatus() {
@@ -98,7 +101,7 @@ public final class Chat extends SomeContentList {
             // #sijapp cond.end #
             MessageEditor editor = Jimm.getJimm().getMessageEditor();
             if (null != editor) {
-                editor.writeMessage(getProtocol(), getContact(), initText);
+                editor.writeMessage(model.getProtocol(), model.getContact(), initText);
             }
         }
     }
@@ -116,10 +119,6 @@ public final class Chat extends SomeContentList {
         writeMessage(nick);
     }
 
-    private Protocol getProtocol() {
-        return model.protocol;
-    }
-
     public void beginTyping(boolean type) {
         updateStatusIcons();
         invalidate();
@@ -127,46 +126,22 @@ public final class Chat extends SomeContentList {
 
 
     protected void restoring() {
-        content.setTopByOffset(content.getTopOffset());
-        Jimm.getJimm().getCL().getUpdater().setCurrentContact(getContact());
-        softBar.setSoftBarLabels("menu", "reply", "close", false);
-        bar.setCaption(getContact().getName());
+        Jimm.getJimm().getCL().getUpdater().setCurrentContact(model.getContact());
     }
 
     public void activate() {
         ((ChatContent)content).resetSelected();
         showTop();
-        Jimm.getJimm().getCL()._setActiveContact(getContact());
+        Jimm.getJimm().getCL()._setActiveContact(model.getContact());
     }
-    // #sijapp cond.if modules_ANDROID is "true" #
-    public void sendMessage(String message) {
-        Jimm.getJimm().jimmModel.registerChat(model);
-        if (!getContact().isSingleUserContact() && message.endsWith(", ")) {
-            message = "";
-        }
-        if (!StringConvertor.isEmpty(message)) {
-            getProtocol().sendMessage(getContact(), message, true);
-        }
-    }
-    // #sijapp cond.end #
 
     protected boolean isCurrentItemSelectable() {
         return true;
     }
 
-    protected void beforePaint() {
-        model.resetUnreadMessages();
-        updateStatusIcons();
-    }
-
     public boolean isVisibleChat() {
         return (this == Jimm.getJimm().getDisplay().getCurrentDisplay())
                 && !Jimm.getJimm().isPaused();
-    }
-
-
-    private Contact getContact() {
-        return model.contact;
     }
 
     public ChatModel getModel() {

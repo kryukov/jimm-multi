@@ -261,12 +261,16 @@ abstract public class Contact implements TreeNode, Sortable {
         }
         Protocol protocol = getProtocol();
         if (null != protocol) {
-            if (null == lIcons[0]) {
-                lIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(getStatusIndex());
-            }
             // #sijapp cond.if modules_XSTATUSES is "true" #
             if (XStatusInfo.XSTATUS_NONE != getXStatusIndex()) {
                 lIcons[1] = InfoFactory.factory.getXStatusInfo(protocol).getIcon(getXStatusIndex());
+            }
+            if (null == lIcons[0]) {
+                lIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(getStatusIndex());
+                if (InfoFactory.factory.onlyOneIcon(protocol)) {
+                    lIcons[0] = lIcons[1];
+                    lIcons[1] = null;
+                }
             }
             // #sijapp cond.end #
         }

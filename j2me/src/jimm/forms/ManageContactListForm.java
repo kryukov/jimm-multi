@@ -25,23 +25,24 @@ import protocol.*;
  *
  * @author vladimir
  */
-public final class ManageContactListForm implements TextBoxListener, SelectListener, FormListener {
+public final class ManageContactListForm implements SelectListener, FormListener {
     private static final int ADD_USER     = 1;
     private static final int SEARCH_USER  = 2;
     private static final int ADD_GROUP    = 3;
     private static final int RENAME_GROUP = 4;
     private static final int DEL_GROUP    = 5;
+    private static final int RENAME_CONTACT = 6;
 
+    private static final int ACCOUNT  = 9;
     private static final int GROUP    = 10;
     private static final int GROUP_NEW_NAME = 11;
+    private static final int CONTACT_NEW_NAME = 12;
 
     private Protocol protocol;
 
     private Group group;
-    private InputTextBox groupName;
 
     private Contact contact;
-    private InputTextBox renameContactTextbox;
     private MenuModel groupList;
     private int action;
 
@@ -58,10 +59,11 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         this.contact = contact;
     }
     public void showContactRename() {
-        renameContactTextbox = new InputTextBox().create("rename", 64);
-        renameContactTextbox.setString(contact.getName());
-        renameContactTextbox.setTextBoxListener(this);
-        renameContactTextbox.show();
+        action = RENAME_CONTACT;
+        Form form = UIBuilder.createForm("rename", "ok", "back", this);
+        form.addString("protocol", protocol.getUserId());
+        form.addTextField(CONTACT_NEW_NAME, "new_name", contact.getName(), 64);
+        form.show();
     }
     public void showContactMove() {
         Vector groups = protocol.getGroupItems();
@@ -128,31 +130,30 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
                 searchUser.show();
                 break;
 
-            case ADD_GROUP: /* Add group */
-                showTextBox("add_group", null);
+            case ADD_GROUP: /* Add group */ {
+                Form form = UIBuilder.createForm("add_group", "ok", "back", this);
+                addProtocol(form, Jimm.getJimm().jimmModel.protocols);
+                form.addTextField(GROUP_NEW_NAME, "new_group_name", "", 64);
+                form.show();
                 break;
+            }
 
-            case RENAME_GROUP: /* Rename group */
-                if (null == group) {
-                    Form form = UIBuilder.createForm("rename_group", "ok", "back", this);
-                    addGroup(form, getGroups(Group.MODE_EDITABLE));
-                    form.addTextField(GROUP_NEW_NAME, "new_group_name", "", 64);
-                    form.show();
-                } else {
-                    showTextBox("rename_group", group.getName());
-                }
+            case RENAME_GROUP: /* Rename group */ {
+                Form form = UIBuilder.createForm("rename_group", "ok", "back", this);
+                addProtocol(form, Jimm.getJimm().jimmModel.protocols);
+                addGroup(form, getGroups(Group.MODE_EDITABLE));
+                form.addTextField(GROUP_NEW_NAME, "new_group_name", "", 64);
+                form.show();
                 break;
+            }
 
-            case DEL_GROUP: /* Delete group */
-                if (null == group) {
-                    Form form = UIBuilder.createForm("del_group", "delete", "back", this);
-                    addGroup(form, getGroups(Group.MODE_REMOVABLE));
-                    form.show();
-                } else {
-                    protocol.removeGroup(group);
-                    Jimm.getJimm().getCL().activate();
-                }
+            case DEL_GROUP: /* Delete group */ {
+                Form form = UIBuilder.createForm("del_group", "delete", "back", this);
+                addProtocol(form, Jimm.getJimm().jimmModel.protocols);
+                addGroup(form, getGroups(Group.MODE_REMOVABLE));
+                form.show();
                 break;
+            }
         }
     }
 
@@ -167,6 +168,23 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
             }
         }
         return groups;
+    }
+    private void addProtocol(Form form, Vector protocols) {
+        if (!protocols.isEmpty()) {
+            String[] list = new String[protocols.size()];
+            int def = 0;
+            for (int i = 0; i < protocols.size(); ++i) {
+                Protocol p = (Protocol) protocols.elementAt(i);
+                list[i] = p.getUserId();
+                if (p == protocol) {
+                    def = i;
+                }
+            }
+            form.addSelector(ACCOUNT, "protocol", list, def);
+
+        } else {
+            form.addString(JLocale.getString("no_protocols_available"));
+        }
     }
     private void addGroup(Form form, Vector groups) {
         if (!groups.isEmpty()) {
@@ -186,58 +204,6 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
         }
     }
 
-    /* Show form for adding user */
-    private void showTextBox(String caption, String text) {
-        groupName = new InputTextBox().create("group_name", 16);
-        groupName.setCaption(JLocale.getString(caption));
-        groupName.setString(text);
-        groupName.setTextBoxListener(this);
-        groupName.show();
-    }
-
-    public void textboxAction(InputTextBox box, boolean ok) {
-        if (!ok) {
-            return;
-        }
-        if (null != contact) {
-            if (renameContactTextbox == box) {
-                protocol.renameContact(contact, renameContactTextbox.getString());
-                Jimm.getJimm().getCL().activate();
-                renameContactTextbox.setString(null);
-            }
-            return;
-        }
-        if (groupName != box) {
-            return;
-        }
-
-        /* Return to contact list */
-        String groupName_ = groupName.getString();
-        boolean isExist = null != protocol.getGroup(groupName_);
-        if (0 == groupName_.length()) {
-            Jimm.getJimm().getCL().activate();
-            return;
-        }
-        switch (action) {
-            case ADD_GROUP:
-                if (!isExist) {
-                    protocol.addGroup(protocol.createGroup(groupName_));
-                    Jimm.getJimm().getCL().activate();
-                }
-                break;
-
-            case RENAME_GROUP:
-                boolean isMyName = group.getName().equals(groupName_);
-                if (isMyName) {
-                    Jimm.getJimm().getCL().activate();
-
-                } else if (!isExist) {
-                    protocol.renameGroup(group, groupName_);
-                    Jimm.getJimm().getCL().activate();
-                }
-                break;
-        }
-    }
     public void show() {
         new Select(getMenu()).show();
     }
@@ -247,11 +213,35 @@ public final class ManageContactListForm implements TextBoxListener, SelectListe
             Jimm.getJimm().getCL().activate();
             return;
         }
+        switch (action) {
+            case RENAME_CONTACT: {
+                String newName = form.getTextFieldValue(CONTACT_NEW_NAME);
+                protocol.renameContact(contact, newName);
+                Jimm.getJimm().getCL().activate();
+                return;
+            }
+        }
         if (!form.hasControl(GROUP)) {
             Jimm.getJimm().getCL().activate();
             return;
         }
         switch (action) {
+            case ADD_GROUP: {
+                String groupName = form.getTextFieldValue(GROUP_NEW_NAME);
+                boolean isExist = null != protocol.getGroup(groupName);
+                if (0 == groupName.length()) {
+                    Jimm.getJimm().getCL().activate();
+                    return;
+                }
+                if (isExist) {
+                    form.addString(JLocale.getString("group_already_exist"));
+                } else {
+                    protocol.addGroup(protocol.createGroup(groupName));
+                    Jimm.getJimm().getCL().activate();
+                }
+                break;
+            }
+
             case RENAME_GROUP: {
                 Vector groups = getGroups(Group.MODE_EDITABLE);
                 Group g = (Group) groups.elementAt(form.getSelectorValue(GROUP));

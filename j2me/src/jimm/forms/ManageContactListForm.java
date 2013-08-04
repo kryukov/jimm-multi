@@ -32,6 +32,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
     private static final int RENAME_GROUP = 4;
     private static final int DEL_GROUP    = 5;
     private static final int RENAME_CONTACT = 6;
+    private static final int MOVE_CONTACT = 7;
 
     private static final int ACCOUNT  = 9;
     private static final int GROUP    = 10;
@@ -43,7 +44,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
     private Group group;
 
     private Contact contact;
-    private MenuModel groupList;
+    private MenuModel _groupList;
     private int action;
 
     /** Creates a new instance of ManageContactListForm */
@@ -66,17 +67,13 @@ public final class ManageContactListForm implements SelectListener, FormListener
         form.show();
     }
     public void showContactMove() {
-        Vector groups = protocol.getGroupItems();
-        Group myGroup = protocol.getGroup(contact);
-        groupList = new MenuModel();
-        for (int i = 0; i < groups.size(); ++i) {
-            Group g = (Group)groups.elementAt(i);
-            if ((myGroup != g) && g.hasMode(Group.MODE_NEW_CONTACTS)) {
-                groupList.addRawItem(g.getName(), null, g.getId());
-            }
-        }
-        groupList.setActionListener(this);
-        new Select(groupList).show();
+        action = MOVE_CONTACT;
+        Form form = UIBuilder.createForm("move", "ok", "back", this);
+        form.addString("protocol", protocol.getUserId());
+        group = protocol.getGroupById(contact.getGroupId());
+        form.addString("contact", contact.getName());
+        addGroup(form, getGroups(Group.MODE_NEW_CONTACTS));
+        form.show();
     }
 
     public MenuModel getMenu() {
@@ -110,12 +107,6 @@ public final class ManageContactListForm implements SelectListener, FormListener
     }
 
     public void select(Select select, MenuModel model, int cmd) {
-        if (groupList == model) {
-            groupList = null;
-            protocol.moveContactTo(contact, protocol.getGroupById(cmd));
-            Jimm.getJimm().getCL().activate();
-            return;
-        }
         action = cmd;
         switch (cmd) {
             case ADD_USER: /* Add user */
@@ -217,6 +208,15 @@ public final class ManageContactListForm implements SelectListener, FormListener
             case RENAME_CONTACT: {
                 String newName = form.getTextFieldValue(CONTACT_NEW_NAME);
                 protocol.renameContact(contact, newName);
+                Jimm.getJimm().getCL().activate();
+                return;
+            }
+            case MOVE_CONTACT: {
+                String groupName = form.getSelectorString(GROUP);
+                Group group = protocol.getGroup(groupName);
+                if (group == protocol.getGroupById(contact.getGroupId())) {
+                    protocol.moveContactTo(contact, group);
+                }
                 Jimm.getJimm().getCL().activate();
                 return;
             }

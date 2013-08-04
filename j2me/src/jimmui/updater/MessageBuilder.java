@@ -179,7 +179,7 @@ public class MessageBuilder {
                 // #sijapp cond.if modules_TOUCH is "true"#
                 if (atTheEnd) {
                     atTheEnd = (currentMessageIndex == size - 2);
-                    if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.touchUsed) {
+                    if (view.touchUsed) {
                         atTheEnd = true;
                     }
                 }

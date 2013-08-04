@@ -10,6 +10,7 @@
 package jimmui.view.menu;
 
 import jimm.Jimm;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
 import jimmui.view.base.*;
@@ -90,19 +91,18 @@ public final class Select extends CanvasEx {
         return (absoluteX - left) < itemWidth;
     }
 
-    protected void stylusPressed(int toX, int toY) {
-        if (getHeight() < toY) {
+    protected void stylusPressed(TouchState state) {
+        if (getHeight() < state.y) {
             Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(softBar);
             return;
         }
-        if (!checkRegion(toX, toY)) {
+        if (!checkRegion(state.x, state.y)) {
             return;
         }
-        int posY = toY - top;
-        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
+        int posY = state.y - top;
 
-        if (isItemsRegion(toX)) { // menu items
-            nat.prevTopY = getItemStartY();
+        if (isItemsRegion(state.x)) { // menu items
+            state.prevTopY = getItemStartY();
             int cur = getItemByCoord(posY);
             if (-1 != cur) {
                 setSelectedItemIndex(cur);
@@ -125,17 +125,16 @@ public final class Select extends CanvasEx {
         return topItem;
     }
 
-    protected void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
-        if (checkRegion(fromX, fromY) && isItemsRegion(fromX)) {
-            TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
-            setTop((nat.prevTopY - toY + fromY + getHeadSpace()) / itemHeight);
+    protected void stylusGeneralYMoved(TouchState state) {
+        if (checkRegion(state.fromX, state.fromY) && isItemsRegion(state.fromX)) {
+            setTop((state.prevTopY - state.y + state.fromY + getHeadSpace()) / itemHeight);
         }
     }
 
-    protected void stylusTap(int x, int y, boolean longTap) {
-        if (checkRegion(x, y)) {
-            if (isItemsRegion(x)) {
-                int posY = y - this.top;
+    protected void stylusTap(TouchState state) {
+        if (checkRegion(state.x, state.y)) {
+            if (isItemsRegion(state.x)) {
+                int posY = state.y - this.top;
                 int cur = getItemByCoord(posY);
                 if (-1 != cur) {
                     setSelectedItemIndex(getIndex(cur, 0));

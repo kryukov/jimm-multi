@@ -13,6 +13,7 @@ package protocol.jabber;
 import jimmui.Clipboard;
 import jimm.Jimm;
 import jimmui.HotKeys;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.*;
 import java.util.Vector;
 
@@ -69,9 +70,9 @@ public final class ConferenceParticipants extends SomeContent {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void touchItemTaped(int item, int x, boolean isLong) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
         int itemHeight = getItemHeight(item);
-        if (isLong || (view.getWidth() - itemHeight < x)) {
+        if (state.isLong || (view.getWidth() - itemHeight < x)) {
             view.showMenu(getContextMenu());
         } else {
             execJimmAction(NativeCanvas.JIMM_SELECT);

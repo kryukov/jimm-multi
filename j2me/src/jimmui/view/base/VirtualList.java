@@ -25,6 +25,7 @@ package jimmui.view.base;
 import javax.microedition.lcdui.*;
 
 import jimm.Jimm;
+import jimmui.view.base.touch.*;
 import jimmui.view.menu.*;
 
 /**
@@ -52,6 +53,7 @@ public abstract class VirtualList extends CanvasEx {
 
     // Set of fonts for quick selecting
     private Font[] fontSet;
+    private boolean touchUsed;
 
 
     //! Create new virtual list with default values
@@ -158,10 +160,10 @@ public abstract class VirtualList extends CanvasEx {
         return -1;
     }
 
-    protected void touchItemTaped(int item, int x, boolean isLong) {
-        if (isLong) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
+        if (state.isLong) {
             showMenu(getMenu());
-        } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
+        } else if (state.isSecondTap) {
             execJimmAction(NativeCanvas.JIMM_SELECT);
         }
     }
@@ -175,38 +177,36 @@ public abstract class VirtualList extends CanvasEx {
         return false;
     }
 
-    protected final void stylusPressed(int x, int y) {
-        if (getHeight() < y) {
+    protected final void stylusPressed(TouchState state) {
+        if (getHeight() < state.y) {
             Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(softBar);
             return;
         }
-        if (y < bar.getHeight()) {
+        if (state.y < bar.getHeight()) {
             Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(bar);
             return;
         }
-        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
-        nat.touchUsed = true;
-        int item = getItemByCoord(y);
+        touchUsed = true;
+        int item = getItemByCoord(state.y);
         if (0 <= item) {
-            nat.prevTopY = getTopOffset();
-            touchItemPressed(item, x, y);
-            nat.isSecondTap = true;
+            state.prevTopY = getTopOffset();
+            touchItemPressed(item, state.x, state.y);
+            state.isSecondTap = true;
         }
     }
 
-    protected final void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
-        int item = getItemByCoord(toY);
+    protected final void stylusGeneralYMoved(TouchState state) {
+        int item = getItemByCoord(state.y);
         if (0 <= item) {
-            TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
-            setTopByOffset(nat.prevTopY + (fromY - toY));
+            setTopByOffset(state.prevTopY + (state.fromY - state.y));
             invalidate();
         }
     }
 
-    protected final void stylusTap(int x, int y, boolean longTap) {
-        int item = getItemByCoord(y);
+    protected final void stylusTap(TouchState state) {
+        int item = getItemByCoord(state.y);
         if (0 <= item) {
-            touchItemTaped(item, x, longTap);
+            touchItemTaped(item, state.x, state);
         }
     }
     // #sijapp cond.end#
@@ -537,8 +537,8 @@ public abstract class VirtualList extends CanvasEx {
         int visible = getContentHeight();
         // #sijapp cond.if modules_TOUCH is "true"#
         TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
-        if (nat.touchUsed) {
-            nat.touchUsed = false;
+        if (touchUsed) {
+            touchUsed = false;
             int curr = getCurrItem();
             int current = getOffset(curr);
             if ((current + getItemHeight(curr) < top) || (top + visible < current)) {

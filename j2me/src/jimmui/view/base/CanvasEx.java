@@ -11,6 +11,7 @@ import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.modules.*;
 import jimmui.SplashCanvas;
+import jimmui.view.base.touch.*;
 import jimmui.view.form.Form;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
@@ -175,15 +176,15 @@ abstract public class CanvasEx extends DisplayableEx {
     protected int getScrollTop() {
         return 0;
     }
-    protected void stylusPressed(int x, int y) {
+    protected void stylusPressed(TouchState state) {
     }
     protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
     }
     protected void stylusXMoving(int fromX, int fromY, int toX, int toY) {
     }
-    protected void stylusTap(int x, int y, boolean longTap) {
+    protected void stylusTap(TouchState state) {
     }
-    protected void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
+    protected void stylusGeneralYMoved(TouchState state) {
     }
     // #sijapp cond.end#
 

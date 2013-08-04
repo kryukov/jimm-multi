@@ -1,6 +1,7 @@
 package jimmui.view.base;
 
 import jimm.Jimm;
+import jimmui.view.base.touch.*;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 
@@ -16,6 +17,7 @@ public class SomeContentList extends CanvasEx {
     protected MySoftBar softBar = new MySoftBar();
     private static MyScrollBar scrollBar = new MyScrollBar();
     protected SomeContent content;
+    public boolean touchUsed;
 
     public SomeContentList(String capt) {
         bar.setCaption(capt);
@@ -42,45 +44,43 @@ public class SomeContentList extends CanvasEx {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected final void touchItemTaped(int item, int x, boolean isLong) {
-        content.touchItemTaped(item, x, isLong);
+    protected final void touchItemTaped(int item, int x, TouchState state) {
+        content.touchItemTaped(item, x, state);
     }
     protected final boolean touchItemPressed(int item, int x, int y) {
         return content.touchItemPressed(item, x, y);
     }
 
-    protected final void stylusPressed(int x, int y) {
-        if (getHeight() < y) {
+    protected final void stylusPressed(TouchState state) {
+        if (getHeight() < state.y) {
             Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(softBar);
             return;
         }
-        if (y < bar.getHeight()) {
+        if (state.y < bar.getHeight()) {
             Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.setRegion(bar);
             return;
         }
-        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
-        nat.touchUsed = true;
-        int item = content.getItemByCoord(y - bar.getHeight());
+        touchUsed = true;
+        int item = content.getItemByCoord(state.y - bar.getHeight());
         if (0 <= item) {
-            nat.prevTopY = content.getTopOffset();
-            touchItemPressed(item, x, y);
-            nat.isSecondTap = true;
+            state.prevTopY = content.getTopOffset();
+            touchItemPressed(item, state.x, state.y);
+            state.isSecondTap = true;
         }
     }
 
-    protected final void stylusGeneralYMoved(int fromX, int fromY, int toX, int toY, int type) {
-        int item = content.getItemByCoord(toY - bar.getHeight());
+    protected final void stylusGeneralYMoved(TouchState state) {
+        int item = content.getItemByCoord(state.y - bar.getHeight());
         if (0 <= item) {
-            TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
-            content.setTopByOffset(nat.prevTopY + (fromY - toY));
+            content.setTopByOffset(state.prevTopY + (state.fromY - state.y));
             invalidate();
         }
     }
 
-    protected final void stylusTap(int x, int y, boolean longTap) {
-        int item = content.getItemByCoord(y - bar.getHeight());
+    protected final void stylusTap(TouchState state) {
+        int item = content.getItemByCoord(state.y - bar.getHeight());
         if (0 <= item) {
-            touchItemTaped(item, x, longTap);
+            touchItemTaped(item, state.x, state);
         }
     }
     // #sijapp cond.end#

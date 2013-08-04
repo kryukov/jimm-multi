@@ -3,6 +3,7 @@ package jimmui.view.text;
 import jimm.Jimm;
 import jimmui.view.TextListExCommands;
 import jimmui.view.base.*;
+import jimmui.view.base.touch.*;
 import jimmui.view.menu.*;
 
 /**
@@ -98,10 +99,10 @@ public class TextContent extends SomeContent {
         return super.doKeyReaction(keyCode, actionCode, type);
     }
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void touchItemTaped(int item, int x, boolean isLong) {
-        if (isLong || (view.getWidth() - view.minItemHeight < x)) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
+        if (state.isLong || (view.getWidth() - view.minItemHeight < x)) {
             view.showMenu(getMenu());
-        } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
+        } else if (state.isSecondTap) {
             execJimmAction(NativeCanvas.JIMM_SELECT);
         }
     }

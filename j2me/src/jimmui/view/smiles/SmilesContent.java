@@ -2,6 +2,7 @@ package jimmui.view.smiles;
 
 import jimmui.ContentActionListener;
 import jimmui.view.ActionListener;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
 import jimmui.view.base.*;
@@ -58,7 +59,7 @@ public class SmilesContent extends SomeContent {
         }
         return false;
     }
-    protected void touchItemTaped(int item, int x, boolean isLong) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
         execJimmAction(NativeCanvas.JIMM_SELECT);
     }
     // #sijapp cond.end#

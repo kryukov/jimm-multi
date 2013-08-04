@@ -1,6 +1,7 @@
 package jimmui.view.base;
 
 import jimm.Jimm;
+import jimmui.view.base.touch.*;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
 
@@ -54,7 +55,7 @@ public abstract class SomeContent {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void touchItemTaped(int item, int x, boolean isLong) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
     }
 
     protected boolean touchItemPressed(int item, int x, int y) {
@@ -359,8 +360,8 @@ public abstract class SomeContent {
         int visible = view.getContentHeight();
         // #sijapp cond.if modules_TOUCH is "true"#
         TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
-        if (nat.touchUsed) {
-            nat.touchUsed = false;
+        if (view.touchUsed) {
+            view.touchUsed = false;
             int curr = getCurrItem();
             int current = getOffset(curr);
             if ((current + getItemHeight(curr) < top) || (top + visible < current)) {

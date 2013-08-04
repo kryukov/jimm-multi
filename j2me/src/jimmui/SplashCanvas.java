@@ -24,6 +24,7 @@ package jimmui;
 
 import jimm.Jimm;
 import jimmui.model.chat.ChatModel;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.*;
 import jimmui.view.text.*;
 import javax.microedition.lcdui.*;
@@ -98,7 +99,7 @@ public final class SplashCanvas extends CanvasEx {
     }
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void stylusTap(int x, int y, boolean isLongTap) {
+    protected void stylusTap(TouchState state) {
     }
 
     protected void stylusXMoving(int fromX, int fromY, int toX, int toY) {

@@ -9,9 +9,7 @@
 
 package jimmui.view.base;
 
-import jimmui.view.base.touch.KineticScrolling;
-import jimmui.view.base.touch.KineticScrollingTask;
-import jimmui.view.base.touch.LongTapTask;
+import jimmui.view.base.touch.*;
 
 /**
  *
@@ -32,13 +30,10 @@ public class TouchControl {
     private long pressTime;
 
 
-    public boolean touchUsed;
-
     private boolean horizontalDirection;
     private boolean directionUnlock;
 
-    public int prevTopY;
-    public boolean isSecondTap;
+    private TouchState state = new TouchState();
 
     boolean kineticOn;
     private volatile KineticScrollingTask kineticTask = null;
@@ -116,7 +111,11 @@ public class TouchControl {
         pressTime = now;
         kinetic.press(y, now);
 
-        c.stylusPressed(x, y);
+        state.fromX = x;
+        state.fromY = y;
+        state.x = x;
+        state.y = y;
+        c.stylusPressed(state);
 
         longTapTask = new LongTapTask(this);
         longTapTask.start(Display.LONG_INTERVAL);
@@ -189,13 +188,23 @@ public class TouchControl {
 
 
     private void __stylusTap(CanvasEx c, int x, int y, boolean longTap) {
+        state.fromX = startX;
+        state.fromY = startY;
+        state.x = curX;
+        state.y = curY;
+        state.isLong = longTap;
         if (null == region) {
-            c.stylusTap(startX, startY, longTap);
+            c.stylusTap(state);
         } else {
             region.stylusTap(c, startX, startY, longTap);
         }
     }
     private void __stylusMoved(CanvasEx c, int x, int y, boolean horizontalDirection, int type) {
+        state.fromX = startX;
+        state.fromY = startY;
+        state.x = x;
+        state.y = y;
+        state.type = type;
         if (null == region) {
             if (horizontalDirection) {
                 if (TouchControl.DRAGGING == type) {
@@ -204,7 +213,7 @@ public class TouchControl {
                     c.stylusXMoved(startX, startY, x, y);
                 }
             } else {
-                c.stylusGeneralYMoved(startX, startY, x, y, type);
+                c.stylusGeneralYMoved(state);
             }
         } else {
             region.stylusMoved(c, startX, startY, x, y, horizontalDirection, type);

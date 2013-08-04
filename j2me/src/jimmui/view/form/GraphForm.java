@@ -9,6 +9,7 @@
 
 package jimmui.view.form;
 
+import jimmui.view.base.touch.*;
 import jimmui.view.text.*;
 import java.util.Vector;
 import javax.microedition.lcdui.*;
@@ -90,7 +91,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         super.doKeyReaction(keyCode, actionCode, type);
     }
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void touchItemTaped(int item, int x, boolean isLong) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
         execJimmAction(NativeCanvas.JIMM_SELECT);
         if (item != getCurrItem()) {
             return;

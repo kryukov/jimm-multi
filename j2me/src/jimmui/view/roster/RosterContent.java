@@ -9,11 +9,9 @@ import jimmui.HotKeys;
 import jimmui.model.chat.ChatModel;
 import jimmui.updater.RosterUpdater;
 import jimmui.view.base.*;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.Icon;
-import jimmui.view.roster.items.GroupBranch;
-import jimmui.view.roster.items.ProtocolBranch;
-import jimmui.view.roster.items.TreeBranch;
-import jimmui.view.roster.items.TreeNode;
+import jimmui.view.roster.items.*;
 import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
@@ -372,12 +370,12 @@ public class RosterContent extends SomeContent {
 
     // #sijapp cond.if modules_TOUCH is "true"#
     @Override
-    protected void touchItemTaped(int item, int x, boolean isLong) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
         int itemHeight = getItemHeight(item);
         TreeNode currentNode = getSafeNode(item);
-        if (isLong || (view.getWidth() - itemHeight < x)) {
+        if (state.isLong || (view.getWidth() - itemHeight < x)) {
             showContextMenu(currentNode);
-        } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
+        } else if (state.isSecondTap) {
             itemSelected(currentNode);
         }
     }

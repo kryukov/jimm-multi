@@ -9,6 +9,7 @@ import jimmui.HotKeys;
 import jimmui.model.chat.ChatModel;
 import jimmui.model.chat.MessData;
 import jimmui.view.base.*;
+import jimmui.view.base.touch.*;
 import jimmui.view.icons.Icon;
 import jimmui.view.menu.MenuModel;
 import protocol.Contact;
@@ -461,14 +462,14 @@ public class ChatContent extends SomeContent {
         model.resetUnreadMessages();
     }
     // #sijapp cond.if modules_TOUCH is "true"#
-    protected void touchItemTaped(int item, int x, boolean isLong) {
-        if (isLong || (view.getWidth() - view.minItemHeight < x)) {
+    protected void touchItemTaped(int item, int x, TouchState state) {
+        if (state.isLong || (view.getWidth() - view.minItemHeight < x)) {
             view.showMenu(getContextMenu());
         } else if (selectMode) {
             markItem(item);
-        } else if (isLong) {
+        } else if (state.isLong) {
             view.showMenu(getMenu());
-        } else if (Jimm.getJimm().getDisplay().getNativeCanvas().touchControl.isSecondTap) {
+        } else if (state.isSecondTap) {
             execJimmAction(NativeCanvas.JIMM_SELECT);
         }
 

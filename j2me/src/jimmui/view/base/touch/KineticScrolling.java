@@ -1,7 +1,6 @@
 package jimmui.view.base.touch;
 
-import jimmui.view.base.CanvasEx;
-import jimmui.view.base.TouchControl;
+import jimmui.view.base.*;
 
 // #sijapp cond.if modules_TOUCH is "true"#
 public class KineticScrolling {

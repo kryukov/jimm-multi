@@ -2,7 +2,7 @@ package jimmui.view.base.touch;
 
 // #sijapp cond.if modules_TOUCH is "true"#
 
-import jimmui.view.base.TouchControl;
+import jimmui.view.base.*;
 
 import java.util.Timer;
 import java.util.TimerTask;

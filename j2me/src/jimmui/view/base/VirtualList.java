@@ -536,7 +536,6 @@ public abstract class VirtualList extends CanvasEx {
         int top     = getTopOffset();
         int visible = getContentHeight();
         // #sijapp cond.if modules_TOUCH is "true"#
-        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
         if (touchUsed) {
             touchUsed = false;
             int curr = getCurrItem();

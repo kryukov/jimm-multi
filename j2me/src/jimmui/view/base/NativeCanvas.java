@@ -30,7 +30,7 @@ public class NativeCanvas extends Canvas {
     // #sijapp cond.end #
 
     // #sijapp cond.if modules_TOUCH is "true"#
-    public TouchControl touchControl = new TouchControl();
+    private TouchControl touchControl = new TouchControl();
     // #sijapp cond.end#
 
     private long firePressTime = 0;

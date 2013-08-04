@@ -359,7 +359,6 @@ public abstract class SomeContent {
         int top     = getTopOffset();
         int visible = view.getContentHeight();
         // #sijapp cond.if modules_TOUCH is "true"#
-        TouchControl nat = Jimm.getJimm().getDisplay().getNativeCanvas().touchControl;
         if (view.touchUsed) {
             view.touchUsed = false;
             int curr = getCurrItem();

@@ -40,11 +40,8 @@ public final class ManageContactListForm implements SelectListener, FormListener
     private static final int CONTACT_NEW_NAME = 12;
 
     private Protocol protocol;
-
     private Group group;
-
     private Contact contact;
-    private MenuModel _groupList;
     private int action;
 
     /** Creates a new instance of ManageContactListForm */

@@ -54,8 +54,17 @@ import javax.microedition.lcdui.Font;
 public final class Chat extends SomeContentList {
     private Icon[] statusIcons = new Icon[7];
     private ChatModel model;
-    private boolean selectMode;
     ///////////////////////////////////////////
+    // #sijapp cond.if modules_ANDROID is "true"#
+    protected void sizeChanged(int prevW, int prevH, int w, int h) {
+        try {
+            if (this == Jimm.getJimm().getDisplay().getNativeCanvas().getInput().getOwner()) {
+                super.sizeChanged(prevW, prevH, w, h);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+    // #sijapp cond.end#
 
     ///////////////////////////////////////////
     public Chat(ChatModel model) {
@@ -133,10 +142,6 @@ public final class Chat extends SomeContentList {
         ((ChatContent)content).resetSelected();
         showTop();
         Jimm.getJimm().getCL()._setActiveContact(model.getContact());
-    }
-
-    protected boolean isCurrentItemSelectable() {
-        return true;
     }
 
     public boolean isVisibleChat() {

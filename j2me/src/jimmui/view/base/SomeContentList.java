@@ -43,6 +43,14 @@ public class SomeContentList extends CanvasEx {
         return getHeight() - bar.getHeight() - 1;
     }
 
+    protected void sizeChanged(int prevW, int prevH, int w, int h) {
+        boolean prev = prevH < prevW;
+        boolean curr = h < w;
+        if (prev != curr) {
+            int delta = prevH - h;
+            content.setTopByOffset(content.getTopOffset() + delta);
+        }
+    }
     // #sijapp cond.if modules_TOUCH is "true"#
     protected final void touchItemTaped(int item, int x, TouchState state) {
         content.touchItemTaped(item, x, state);

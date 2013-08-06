@@ -12,7 +12,6 @@ import jimm.history.HistoryStorage;
 import jimm.history.HistoryStorageList;
 import jimm.io.Storage;
 import jimmui.view.base.GraphicsEx;
-import jimmui.view.chat.ChatContent;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.jabber.JabberServiceContact;

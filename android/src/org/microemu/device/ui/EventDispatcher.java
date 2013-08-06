@@ -243,7 +243,11 @@ public class EventDispatcher implements Runnable {
 		}
 
 		public void run() {
-			runnable.run();
+            try {
+			    runnable.run();
+            } catch (Exception e) {
+                jimm.modules.DebugLog.panic("EventDispatcher", e);
+            }
 		}
 
 	}

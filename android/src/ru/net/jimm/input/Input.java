@@ -281,4 +281,8 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         public void afterTextChanged(Editable editable) {
         }
     };
+
+    public Chat getOwner() {
+        return owner;
+    }
 }

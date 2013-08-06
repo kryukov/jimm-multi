@@ -100,6 +100,9 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
         activity.post(new Runnable() {
             public void run() {
                 boolean prevV = (input.getVisibility() == View.VISIBLE);
+                if (null == chat) {
+                    input.setOwner(null);
+                }
                 input.setVisibility(v ? View.VISIBLE : View.GONE);
                 if (null != chat) {
                     input.setOwner(chat);

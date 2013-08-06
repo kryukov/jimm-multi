@@ -16,6 +16,9 @@ public class J2mizer {
         if (startsWith(line, "@Override")) {
             line = line.replace("@Override", "");
         }
+        if (startsWith(line, "@Deprecated")) {
+            line = line.replace("@Deprecated", "");
+        }
         return line;
     }
     private String removeGenerics(String line) {

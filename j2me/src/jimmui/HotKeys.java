@@ -120,7 +120,7 @@ public class HotKeys {
                 boolean hide = !Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
                 Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, hide);
                 Options.safeSave();
-                cl.updateModel();
+                cl.getManager().updateOfflineStatus();
                 cl.activate();
                 return true;
 

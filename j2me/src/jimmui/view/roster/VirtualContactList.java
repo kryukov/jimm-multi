@@ -83,14 +83,12 @@ public final class VirtualContactList extends SomeContentList {
             switch (currentModel) {
                 case 0:
                     Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, false);
-                    ((RosterContent)content).setModel(getUpdater().getModel());
-                    getModel().hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+                    updateOfflineStatus();
                     Options.safeSave();
                     break;
                 case 1:
                     Options.setBoolean(Options.OPTION_CL_HIDE_OFFLINE, true);
-                    ((RosterContent)content).setModel(getUpdater().getModel());
-                    getModel().hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+                    updateOfflineStatus();
                     Options.safeSave();
                     break;
                 case 2:
@@ -102,6 +100,11 @@ public final class VirtualContactList extends SomeContentList {
         }
     }
     // #sijapp cond.end#
+
+    public void updateOfflineStatus() {
+        getUpdater().getModel().hideOffline = Options.getBoolean(Options.OPTION_CL_HIDE_OFFLINE);
+        ((RosterContent)content).setModel(getUpdater().getModel());
+    }
 
     protected void restoring() {
         content.setTopByOffset(content.getTopOffset());

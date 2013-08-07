@@ -40,9 +40,7 @@ public class ProtocolContactModel extends ContactListModel {
     public void removeGroup(RosterUpdater.Update u) {
     }
     public void addGroup(RosterUpdater.Update u) {
-        Vector contacts = u.protocol.getContacts(u.group);
-        Util.removeAll(getProtocolNode(u).getSortedContacts(), contacts);
-        Util.addAll(getProtocolNode(u).getSortedContacts(), contacts);
+        Util.addNew(getProtocolNode(u).getSortedContacts(), u.protocol.getContacts(u.group));
     }
 
     public void addToGroup(RosterUpdater.Update update) {

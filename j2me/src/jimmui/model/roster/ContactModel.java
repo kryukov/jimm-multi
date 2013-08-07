@@ -36,9 +36,7 @@ public class ContactModel extends ContactListModel {
     public void removeGroup(RosterUpdater.Update u) {
     }
     public void addGroup(RosterUpdater.Update u) {
-        Vector contacts = u.protocol.getContacts(u.group);
-        Util.removeAll(this.contacts, contacts);
-        Util.addAll(this.contacts, contacts);
+        Util.addNew(this.contacts, u.protocol.getContacts(u.group));
     }
     public void addToGroup(RosterUpdater.Update update) {
         contacts.addElement(update.contact);

@@ -98,14 +98,8 @@ public class GroupContactModel extends ContactListModel {
         for (int i = 0; i < getProtocolCount(); ++i) {
             Protocol p = getProtocol(i);
             Group g = notInList ? null : p.getGroup(groupBranch.getName());
-            if (null == g) continue;
-            int id = g.getId();
-            Vector contacts = p.getContactItems();
-            for (int j = 0; j < contacts.size(); ++j) {
-                Contact c = (Contact) contacts.elementAt(j);
-                if (id == c.getGroupId()) {
-                    groupContacts.addElement(c);
-                }
+            if (notInList || (null != g)) {
+                Util.addAll(groupContacts, p.getContacts(g));
             }
         }
     }

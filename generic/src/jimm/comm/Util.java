@@ -1051,4 +1051,12 @@ public class Util {
             }
         }
     }
+    public static void addNew(Vector to, Vector all) {
+        synchronized (to) {
+            for (int i = 0; i < all.size(); ++i) {
+                if (0 <= Util.getIndex(to, to.elementAt(i))) continue;
+                to.addElement(all.elementAt(i));
+            }
+        }
+    }
 }

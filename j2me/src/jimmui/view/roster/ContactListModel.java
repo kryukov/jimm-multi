@@ -142,5 +142,9 @@ public abstract class ContactListModel {
         if (null != gb) gb.setExpandFlag(true);
     }
 
+    protected final void addGroupContacts() {
+
+    }
+
     public abstract boolean hasGroups();
 }

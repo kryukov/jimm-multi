@@ -187,15 +187,15 @@ public final class GraphicsEx {
         gr.setClip(clipX, clipY, clipWidth, clipHeight);
     }
     public void drawString(String str, int x, int y, int width, int base, int skip, int height) {
-        if (null == str) {
+        if ((null == str) || (0 == height)) {
             return;
         }
         int clipX = gr.getClipX();
         int clipY = gr.getClipY();
         int clipHeight = gr.getClipHeight();
         int clipWidth = gr.getClipWidth();
-        gr.setClip(x, y, width, height - skip);
-        gr.drawString(str, x, y + base - skip, Graphics.BOTTOM + Graphics.LEFT);
+        gr.setClip(x, y + skip, width, height);
+        gr.drawString(str, x, y + base, Graphics.BOTTOM + Graphics.LEFT);
         gr.setClip(clipX, clipY, clipWidth, clipHeight);
     }
     public void drawImage(Image image, int x, int y, int width, int height) {

@@ -14,6 +14,7 @@ import jimm.*;
 import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.modules.*;
+import jimmui.view.menu.Select;
 
 /**
  *
@@ -62,7 +63,11 @@ public class NativeCanvas extends Canvas {
     private void paintAllOnGraphics(Graphics g) {
         graphicsEx.setGraphics(g);
         try {
-            getCanvas().paint(graphicsEx);
+            CanvasEx c = getCanvas();
+            if (c instanceof Select) {
+                c.paintBack(graphicsEx);
+            }
+            c.paint(graphicsEx);
         } catch(Exception e) {
             // #sijapp cond.if modules_DEBUGLOG is "true" #
             DebugLog.panic("native", e);

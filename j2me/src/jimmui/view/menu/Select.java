@@ -254,7 +254,6 @@ public final class Select extends CanvasEx {
 
         int y = this.top;
         int x = this.left;
-        paintBack(g);
         g.setStrokeStyle(Graphics.SOLID);
         // #sijapp cond.if modules_ANDROID is "true" #
         g.setClip(x, y, curWidth, curHeight);

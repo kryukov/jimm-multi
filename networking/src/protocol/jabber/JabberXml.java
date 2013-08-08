@@ -1038,7 +1038,6 @@ public final class JabberXml extends ClientConnection {
         Jabber jabber = getJabber();
         Group group = jabber.getOrCreateGroup(JLocale.getString(Jabber.CONFERENCE_GROUP));
         int autoJoinCount = jabber.isReconnect() ? 0 : 7;
-        Vector groups = jabber.getGroupItems();
         Vector contacts = jabber.getContactItems();
         while (0 < storage.childrenCount()) {
             XmlNode item = storage.popChildNode();

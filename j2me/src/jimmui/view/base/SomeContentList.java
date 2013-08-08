@@ -129,8 +129,12 @@ public class SomeContentList extends CanvasEx {
             content.beforePaint();
             int captionHeight = bar.getHeight();
             g.getGraphics().translate(0, captionHeight);
-            g.setClip(0, 0, getWidth(), bottom - captionHeight);
-            content.paintContent(g, 0, getWidth(), bottom - captionHeight);
+            try {
+                g.setClip(0, 0, getWidth(), bottom - captionHeight);
+                content.paintContent(g, 0, getWidth(), bottom - captionHeight);
+            } catch (Exception e) {
+                jimm.modules.DebugLog.panic("content", e);
+            }
             g.getGraphics().translate(0, -captionHeight);
 
             g.setClip(0, captionHeight, getWidth(), getHeight());

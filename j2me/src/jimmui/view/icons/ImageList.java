@@ -68,7 +68,7 @@ public class ImageList {
         return width;
     }
 
-    //! Return hright of each image
+    //! Return height of each image
     public int getHeight() {
         return height;
     }
@@ -134,7 +134,7 @@ public class ImageList {
         ImageList icons = new ImageList();
         try {
             icons.load(resName, -1, -1);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         files.put(resName, icons);
         return icons;
@@ -143,8 +143,8 @@ public class ImageList {
     static public Image loadImage(String resName) {
         try {
             return Image.createImage(resName);
-        } catch (Exception e) {
-        } catch (OutOfMemoryError out) {
+        } catch (Exception ignored) {
+        } catch (OutOfMemoryError ignored) {
         }
         return null;
     }

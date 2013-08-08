@@ -237,6 +237,7 @@ public class InfoFactory {
 
             default:
                 names = new String[0];
+                icons = ImageList.createImageList("/unk-xstatus.unk");
         }
         return new XStatusInfo(icons, names);
     }

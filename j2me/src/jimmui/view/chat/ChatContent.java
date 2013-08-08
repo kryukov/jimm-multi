@@ -50,7 +50,8 @@ public class ChatContent extends SomeContent {
         MessData mData = model.getMessage(index);
         int header = model.getMessageHeaderHeight(mData);
         if (0 < header) {
-            drawMessageHeader(g, mData, x, y, w, header, skip, Math.min(Math.max(0, header - skip), to));
+            int visHeader = Math.min(Math.max(0, header - skip), to);
+            drawMessageHeader(g, mData, x, y, w, header, skip, visHeader);
             y += header;
             h -= header;
             skip -= header;

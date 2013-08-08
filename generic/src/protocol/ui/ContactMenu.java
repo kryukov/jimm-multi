@@ -52,7 +52,7 @@ public class ContactMenu implements SelectListener {
                 break;
                 
             case Contact.USER_MENU_ADD_USER:
-                protocol.getSearchForm().show(contact.getUserId());
+                new ManageContactListForm(protocol, contact).showContactAdd();
                 break;
 
             case Contact.USER_MENU_USER_REMOVE:

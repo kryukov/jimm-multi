@@ -14,6 +14,7 @@ import java.util.Vector;
 import jimm.*;
 import jimm.chat.message.PlainMessage;
 import jimm.comm.*;
+import jimm.forms.ManageContactListForm;
 import jimm.search.*;
 import jimmui.view.UIBuilder;
 import jimmui.view.base.SomeContentList;
@@ -498,9 +499,9 @@ public final class Jabber extends Protocol implements FormListener {
                 break;
 
             case JabberServiceContact.GATE_ADD:
-                Search s = this.getSearchForm();
-                s.setJabberGate(c.getUserId());
-                s.show("");
+                ManageContactListForm m = new ManageContactListForm(this);
+                m.setJabberGate(c.getUserId());
+                m.showContactAdd();
                 break;
 
             case JabberServiceContact.USER_MENU_USERS_LIST:

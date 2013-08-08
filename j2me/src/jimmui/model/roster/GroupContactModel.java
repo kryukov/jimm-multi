@@ -6,7 +6,6 @@ import jimmui.view.roster.items.ProtocolBranch;
 import jimmui.updater.RosterUpdater;
 import jimm.comm.Util;
 import jimm.util.JLocale;
-import protocol.Contact;
 import protocol.Group;
 import protocol.Protocol;
 import protocol.Roster;

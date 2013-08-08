@@ -132,7 +132,11 @@ public class Jimm {
         // #sijapp cond.if modules_ANDROID is "true" #
         restoreUI();
         // #sijapp cond.end #
+        wakeUp();
         restore(display.getCurrentDisplay());
+        // #sijapp cond.if modules_ANDROID is "true" #
+        cl.getUpdater().updateModel();
+        // #sijapp cond.end #
     }
     // Start Jimm
     public void startJimm() {

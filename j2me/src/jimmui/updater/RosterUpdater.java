@@ -197,6 +197,15 @@ public class RosterUpdater {
         return currentContact;
     }
 
+    public void updateModel() {
+        for (int i = 0; i < model.getProtocolCount(); ++i) {
+            Protocol p = model.getProtocol(i);
+            synchronized (p.getRosterLockObject()) {
+                model.updateProtocol(p, null);
+            }
+        }
+    }
+
     public static class Update {
         public Protocol protocol;
         public Group group;

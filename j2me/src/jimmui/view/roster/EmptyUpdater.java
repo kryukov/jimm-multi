@@ -90,4 +90,7 @@ public class EmptyUpdater extends RosterUpdater {
         ru.net.jimm.JimmActivity.getInstance().service.updateConnectionState();
         // #sijapp cond.end #
     }
+
+    public void updateModel() {
+    }
 }

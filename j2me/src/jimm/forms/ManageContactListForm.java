@@ -78,6 +78,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
         addProtocol(form, false);
         form.addTextField(CONTACT_USER_ID, protocol.getUserIdName(),
                 null == contact ? "" : contact.getUserId(), 64);
+        addGroupSelector(form, getGroups(Group.MODE_NEW_CONTACTS));
         boolean request_auth = true;
         // #sijapp cond.if protocols_MRIM is "true" #
         if (protocol instanceof Mrim) {

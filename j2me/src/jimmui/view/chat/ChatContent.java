@@ -461,6 +461,7 @@ public class ChatContent extends SomeContent {
 
     protected void beforePaint() {
         model.resetUnreadMessages();
+        ((Chat)view).updateStatusIcons();
     }
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void touchItemTaped(int item, int x, TouchState state) {

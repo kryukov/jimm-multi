@@ -126,6 +126,7 @@ public class SomeContentList extends CanvasEx {
         int bottom = getHeight();
         boolean onlySoftBar = (bottom <= g.getClipY());
         if (!onlySoftBar) {
+            content.beforePaint();
             int captionHeight = bar.getHeight();
             g.getGraphics().translate(0, captionHeight);
             g.setClip(0, 0, getWidth(), bottom - captionHeight);

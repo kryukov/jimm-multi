@@ -85,7 +85,7 @@ public final class Chat extends SomeContentList {
     }
     // #sijapp cond.end#
 
-    private void updateStatusIcons() {
+    protected void updateStatusIcons() {
         for (int i = 0; i < statusIcons.length; ++i) {
             statusIcons[i] = null;
         }

@@ -77,7 +77,6 @@ public abstract class SomeContent {
     }
 
     protected final void paintContent(GraphicsEx g, int top, int width, int height) {
-        beforePaint();
         drawBack(g, top, width, height);
         if (0 == getSize()) {
             drawEmptyItems(g, top);

@@ -35,7 +35,7 @@ public class ChatModel {
     public short otherMessageCounter = 0;
     public byte sysNoticeCounter = 0;
     public byte authRequestCounter = 0;
-    public int topOffset = -1;
+    public int bottomOffset = -1;
     public int current;
     public Font[] fontSet;
 

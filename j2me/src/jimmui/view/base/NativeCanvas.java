@@ -11,7 +11,6 @@ package jimmui.view.base;
 import java.util.*;
 import javax.microedition.lcdui.*;
 import jimm.*;
-import jimm.cl.ContactList;
 import jimm.comm.StringConvertor;
 import jimm.modules.*;
 import jimmui.view.menu.Select;
@@ -543,6 +542,7 @@ public class NativeCanvas extends Canvas {
         c.setSize(w, h);
         c.sizeChanged(prevW, prevH, c.getWidth(), c.getHeight());
     }
+
     // #sijapp cond.if modules_ANDROID is "true" #
     public void updateSize() {
         CanvasEx c = canvas;

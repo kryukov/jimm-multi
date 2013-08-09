@@ -30,7 +30,6 @@ import javax.microedition.lcdui.Canvas;
 
 import android.view.View;
 import android.widget.RelativeLayout;
-import jimmui.view.base.CanvasEx;
 import jimmui.view.chat.Chat;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidDeviceDisplay;
@@ -97,12 +96,12 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
     }
 
     public void setInputVisibility(final boolean v, final Chat chat) {
+        if ((null == chat) && (null != input)) {
+            input.resetOwner();
+        }
         activity.post(new Runnable() {
             public void run() {
                 boolean prevV = (input.getVisibility() == View.VISIBLE);
-                if (null == chat) {
-                    input.setOwner(null);
-                }
                 input.setVisibility(v ? View.VISIBLE : View.GONE);
                 if (null != chat) {
                     input.setOwner(chat);
@@ -116,7 +115,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
                         input.hideKeyboard(view);
                     }
                 }
+
             }
         });
+    }
+    public void layout() {
+        view.requestLayout();
     }
 }

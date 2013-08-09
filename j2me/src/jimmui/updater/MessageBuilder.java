@@ -14,7 +14,6 @@ import jimm.history.CachedRecord;
 import jimm.history.HistoryStorage;
 import jimm.modules.MagicEye;
 import jimmui.view.base.CanvasEx;
-import jimmui.view.base.NativeCanvas;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.Par;
 import jimmui.view.text.Parser;
@@ -192,7 +191,7 @@ public class MessageBuilder {
                 int unread = chat.getUnreadMessageCount();
                 if (size - unread - 2 <= currentMessageIndex) {
                     chat.current = Math.max(0, size - 1 - unread);
-                    chat.topOffset = -1;
+                    chat.bottomOffset = -1;
                 }
             }
 
@@ -202,7 +201,7 @@ public class MessageBuilder {
             }
 
         } else {
-            chat.topOffset = -1;
+            chat.bottomOffset = -1;
             chat.current = chat.size() - 1;
         }
     }

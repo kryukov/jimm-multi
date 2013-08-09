@@ -25,9 +25,6 @@ import jimmui.view.base.SomeContent;
 import jimmui.view.chat.Chat;
 import jimm.modules.Emotions;
 import jimm.modules.Templates;
-import jimmui.view.ActionListener;
-import jimmui.view.smiles.Selector;
-import jimmui.view.base.CanvasEx;
 import jimmui.view.smiles.SmilesContent;
 import ru.net.jimm.JimmActivity;
 import ru.net.jimm.R;
@@ -42,6 +39,7 @@ import ru.net.jimm.R;
 public class Input extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
     private EditText messageEditor;
     private volatile Chat owner;
+    private volatile ChatModel ownerChatModel;
     private int layout = 0;
     private boolean sendByEnter;
 
@@ -196,20 +194,28 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         if (what.startsWith("#") && !text.contains(" ")) return false;
         return !text.endsWith(", ");
     }
+    public void resetOwner() {
+        this.owner = null;
+    }
     public void setOwner(Chat owner) {
         if (this.owner != owner) {
             this.owner = owner;
-            String name = (null != owner) ? owner.getModel().getContact().getName() : null;
-            final String hint = (null == name)
-                    ? getContext().getString(R.string.hint_message)
-                    : getContext().getString(R.string.hint_message_to, name);
-            ((JimmActivity)getContext()).post(new Runnable() {
-                @Override
-                public void run() {
-                    messageEditor.setHint(hint);
-                }
-            });
-            resetText();
+            if ((null != owner) && (ownerChatModel != owner.getModel())) {
+                ownerChatModel = owner.getModel();
+                String name = ownerChatModel.getContact().isSingleUserContact()
+                        ? ownerChatModel.getContact().getName()
+                        : null;
+                final String hint = (null == name)
+                        ? getContext().getString(R.string.hint_message)
+                        : getContext().getString(R.string.hint_message_to, name);
+                ((JimmActivity)getContext()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageEditor.setHint(hint);
+                    }
+                });
+                resetText();
+            }
         }
     }
     public void resetText() {

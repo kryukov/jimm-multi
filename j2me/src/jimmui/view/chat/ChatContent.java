@@ -130,6 +130,7 @@ public class ChatContent extends SomeContent {
         }
         switch (action) {
             case ACTION_REPLY:
+                Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat) view);
                 execJimmAction(NativeCanvas.JIMM_SELECT);
                 break;
 
@@ -147,11 +148,13 @@ public class ChatContent extends SomeContent {
 
             // #sijapp cond.if modules_HISTORY is "true" #
             case ACTION_ADD_TO_HISTORY:
+                Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat) view);
                 addTextToHistory();
                 break;
             // #sijapp cond.end#
 
             case ACTION_DEL_CHAT:
+                Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat) view);
                 Jimm.getJimm().getChatUpdater().removeMessagesAtCursor(model);
                 if (0 < getSize()) {
                     view.restore();

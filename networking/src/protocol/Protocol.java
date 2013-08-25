@@ -164,6 +164,7 @@ abstract public class Protocol {
                 getUpdater().addGroup(this, group);
                 getUpdater().addGroup(this, null);
                 getUpdater().update();
+                getUpdater().repaint();
             }
         }
         needSave();

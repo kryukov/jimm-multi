@@ -112,7 +112,7 @@ public class ProtocolBranch implements TreeBranch {
     public Vector<GroupBranch> getGroups() {
         return items;
     }
-    public final Vector getSortedContacts() {
+    public final Vector<Contact> getSortedContacts() {
         return sortedContacts;
     }
     public final boolean isExpanded() {

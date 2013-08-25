@@ -237,7 +237,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
             case MOVE_CONTACT: {
                 String groupName = form.getSelectorString(GROUP);
                 Group group = protocol.getGroup(groupName);
-                if (group == protocol.getGroupById(contact.getGroupId())) {
+                if (group != protocol.getGroupById(contact.getGroupId())) {
                     protocol.moveContactTo(contact, group);
                 }
                 Jimm.getJimm().getCL().activate();

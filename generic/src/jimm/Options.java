@@ -304,7 +304,7 @@ public class Options {
                         break;
                     }
                     Profile p = readProfile(data);
-                    if (!StringConvertor.isEmpty(p.userId)) {
+                    if (p.isValid()) {
                         listOfProfiles.addElement(p);
                     }
                 }

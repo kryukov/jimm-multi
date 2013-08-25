@@ -442,7 +442,6 @@ public final class ContactList implements ContactListListener {
         Chat chat = getChat(c);
         if (null != c) {
             chat = new Chat(c);
-            Jimm.getJimm().getChatUpdater().restoreTopPositionToUI(c, chat);
         }
         return chat;
     }

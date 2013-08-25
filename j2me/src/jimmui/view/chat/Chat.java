@@ -31,25 +31,12 @@
  */
 package jimmui.view.chat;
 
-import jimm.cl.SysTextList;
-import jimmui.Clipboard;
-import jimmui.HotKeys;
 import jimmui.model.chat.ChatModel;
-import jimmui.model.chat.MessData;
 import jimmui.view.base.touch.*;
 import jimmui.view.icons.Icon;
 import jimm.*;
-import jimm.chat.message.*;
-import jimm.comm.*;
-import jimm.history.*;
 import jimmui.view.base.*;
-import jimmui.view.menu.*;
-import protocol.*;
-import protocol.ui.ContactMenu;
-import protocol.ui.InfoFactory;
 import protocol.ui.MessageEditor;
-
-import javax.microedition.lcdui.Font;
 
 public final class Chat extends SomeContentList {
     private Icon[] statusIcons = new Icon[7];
@@ -135,6 +122,7 @@ public final class Chat extends SomeContentList {
 
 
     protected void restoring() {
+        Jimm.getJimm().getChatUpdater().restoreTopPositionToUI(model, this);
         Jimm.getJimm().getCL().getUpdater().setCurrentContact(model.getContact());
     }
 

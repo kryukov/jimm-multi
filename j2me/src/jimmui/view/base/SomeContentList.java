@@ -19,12 +19,22 @@ public class SomeContentList extends CanvasEx {
     protected SomeContent content;
     public boolean touchUsed;
 
+    public SomeContentList() {
+        // #sijapp cond.if modules_ANDROID isnot "true"#
+        bar.setCaption(null);
+        softBar.setSoftBarLabels("menu", null, "back", false);
+        setSize(Jimm.getJimm().getDisplay().getScreenWidth(),
+                Jimm.getJimm().getDisplay().getScreenHeight());
+        // #sijapp cond.end#
+    }
+
     public SomeContentList(String capt) {
         bar.setCaption(capt);
         softBar.setSoftBarLabels("menu", null, "back", false);
         setSize(Jimm.getJimm().getDisplay().getScreenWidth(),
                 Jimm.getJimm().getDisplay().getScreenHeight());
     }
+
     public SomeContentList(SomeContent content, String capt) {
         this.content = content;
         content.setView(this);

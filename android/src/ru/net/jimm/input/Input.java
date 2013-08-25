@@ -39,7 +39,7 @@ import ru.net.jimm.R;
 public class Input extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
     private EditText messageEditor;
     private volatile Chat owner;
-    private volatile ChatModel ownerChatModel;
+    private static State state = new State(null);
     private int layout = 0;
     private boolean sendByEnter;
 
@@ -200,10 +200,11 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
     public void setOwner(Chat owner) {
         if (this.owner != owner) {
             this.owner = owner;
-            if ((null != owner) && (ownerChatModel != owner.getModel())) {
-                ownerChatModel = owner.getModel();
-                String name = ownerChatModel.getContact().isSingleUserContact()
-                        ? ownerChatModel.getContact().getName()
+            if (null != owner) {
+                final State newState = state.is(owner.getModel()) ? state : new State(owner.getModel());
+                state = newState;
+                String name = newState.ownerChatModel.getContact().isSingleUserContact()
+                        ? newState.ownerChatModel.getContact().getName()
                         : null;
                 final String hint = (null == name)
                         ? getContext().getString(R.string.hint_message)
@@ -212,9 +213,9 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     @Override
                     public void run() {
                         messageEditor.setHint(hint);
+                        messageEditor.setText(newState.text);
                     }
                 });
-                resetText();
             }
         }
     }
@@ -280,6 +281,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
             if (lineCount != messageEditor.getLineCount()) {
                 lineCount = messageEditor.getLineCount();
                 messageEditor.requestLayout();
+                state.text = s;
             }
         }
 
@@ -290,5 +292,18 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
 
     public Chat getOwner() {
         return owner;
+    }
+
+    private static class State {
+        private ChatModel ownerChatModel;
+        private CharSequence text;
+        public State(ChatModel model) {
+            this.ownerChatModel = model;
+            text = "";
+        }
+
+        public boolean is(ChatModel model) {
+            return ownerChatModel == model;
+        }
     }
 }

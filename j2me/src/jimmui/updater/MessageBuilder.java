@@ -150,7 +150,6 @@ public class MessageBuilder {
             boolean atTheEnd = chatAtTheEnd(view);
             if (null != view) {
                 view.lock();
-                Jimm.getJimm().getChatUpdater().storeTopPosition(chat, view);
             }
             chat.add(mData);
             setCursor(chat, view, incoming, atTheEnd);

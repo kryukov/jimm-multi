@@ -214,6 +214,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     public void run() {
                         messageEditor.setHint(hint);
                         messageEditor.setText(newState.text);
+                        messageEditor.setSelection(newState.text.length());
                     }
                 });
             }
@@ -224,6 +225,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
             @Override
             public void run() {
                 messageEditor.setText("");
+                state.text = "";
             }
         });
     }
@@ -276,12 +278,15 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
                     messageEditor.setText(previousText);
                     messageEditor.setSelection(start);
                     send();
+                } else {
+                    state.text = s;
                 }
+            } else {
+                state.text = s;
             }
             if (lineCount != messageEditor.getLineCount()) {
                 lineCount = messageEditor.getLineCount();
                 messageEditor.requestLayout();
-                state.text = s;
             }
         }
 

@@ -36,6 +36,18 @@ public class ChatContent extends SomeContent {
     }
 
     @Override
+    public void setTopByOffset(int offset) {
+        super.setTopByOffset(offset);
+        model.bottomOffset = getTopOffset() + view.getContentHeight();
+    }
+
+    @Override
+    protected void setCurrItem(int cItem) {
+        super.setCurrItem(cItem);
+        model.current = getCurrItem();
+    }
+
+    @Override
     public int getSize() {
         return model.size();
     }
@@ -116,7 +128,6 @@ public class ChatContent extends SomeContent {
                 return;
 
             case NativeCanvas.JIMM_BACK:
-                Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat) view);
                 Jimm.getJimm().getCL().activate(getContact());
                 return;
 
@@ -130,7 +141,6 @@ public class ChatContent extends SomeContent {
         }
         switch (action) {
             case ACTION_REPLY:
-                Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat) view);
                 execJimmAction(NativeCanvas.JIMM_SELECT);
                 break;
 
@@ -148,13 +158,11 @@ public class ChatContent extends SomeContent {
 
             // #sijapp cond.if modules_HISTORY is "true" #
             case ACTION_ADD_TO_HISTORY:
-                Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat) view);
                 addTextToHistory();
                 break;
             // #sijapp cond.end#
 
             case ACTION_DEL_CHAT:
-                Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat) view);
                 Jimm.getJimm().getChatUpdater().removeMessagesAtCursor(model);
                 if (0 < getSize()) {
                     view.restore();
@@ -495,7 +503,6 @@ public class ChatContent extends SomeContent {
             switch (actionCode) {
                 case NativeCanvas.NAVIKEY_LEFT:
                 case NativeCanvas.NAVIKEY_RIGHT:
-                    Jimm.getJimm().getChatUpdater().storeTopPosition(model, (Chat)view);
                     Jimm.getJimm().getCL().showNextPrevChat(model, NativeCanvas.NAVIKEY_RIGHT == actionCode);
                     return true;
             }

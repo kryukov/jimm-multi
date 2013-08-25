@@ -66,7 +66,6 @@ public final class Chat extends SomeContentList {
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void stylusXMoved(TouchState state) {
         if (getWidth() / 2 < Math.abs(state.fromX - state.x)) {
-            Jimm.getJimm().getChatUpdater().storeTopPosition(model, this);
             Jimm.getJimm().getCL().showNextPrevChat(model, (state.fromX > state.x));
         }
     }

@@ -122,7 +122,6 @@ public class ChatUpdater {
             return;
         }
         if ((0 < limit) && (0 < chat.size())) {
-            storeTopPosition(chat, Jimm.getJimm().getCL().getChat(chat));
             while (limit < chat.size()) {
                 if (-1 < chat.bottomOffset) {
                     chat.bottomOffset = Math.max(0, chat.bottomOffset - chat.getItemHeight(chat.getMessage(0)));
@@ -145,13 +144,6 @@ public class ChatUpdater {
                 view.getContent().setTopByOffset(chat.bottomOffset - view.getContentHeight());
                 view.getContent().setCurrentItemIndex(chat.current);
             }
-        }
-    }
-
-    public void storeTopPosition(ChatModel chat, Chat view) {
-        if (null != view) {
-            chat.bottomOffset = view.getContent().getTopOffset() + view.getContentHeight();
-            chat.current = view.getContent().getCurrItem();
         }
     }
 

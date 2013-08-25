@@ -179,10 +179,6 @@ public abstract class SomeContent {
     }
 
 
-    private void set_Top(int item, int offset) {
-        topItem = item;
-        topOffset = offset;
-    }
     private int get_Top() {
         return topItem;
     }
@@ -193,10 +189,14 @@ public abstract class SomeContent {
         return getOffset(get_Top()) + get_TopOffset();
     }
 
-    public final void setTopByOffset(int offset) {
+    public void setTopByOffset(int offset) {
         offset = Math.max(0, Math.min(offset, getFullSize() - view.getContentHeight()));
         int top = getItemByOffset(offset);
-        setTop(top, offset - getOffset(top));
+        topItem = top;
+        topOffset = offset - getOffset(top);
+        if (view == Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas()) {
+            MyScrollBar.showScroll();
+        }
     }
 
     protected final int getOffset(int max) {
@@ -208,13 +208,6 @@ public abstract class SomeContent {
     }
     public final int getFullSize() {
         return getOffset(getSize());
-    }
-
-    private void setTop(int item, int offset) {
-        set_Top(item, offset);
-        if (view == Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas()) {
-            MyScrollBar.showScroll();
-        }
     }
 
     @Deprecated
@@ -260,7 +253,7 @@ public abstract class SomeContent {
         setOptimalTopItem();
         int top = get_Top();
         if (top == getCurrItem()) {
-            setTop(top, 0);
+            setTopByOffset(getOffset(top));
         }
     }
 
@@ -278,7 +271,7 @@ public abstract class SomeContent {
             final int contentHeight = view.getContentHeight();
             int maxTopHeight = getOffset(size) - contentHeight;
             top = Math.min(top, getItemByOffset(maxTopHeight));
-            setTop(top, Math.max(0, getItemHeight(top) - contentHeight));
+            setTopByOffset(getOffset(top) + Math.max(0, getItemHeight(top) - contentHeight));
 
         } else {
             top = Math.min(top, size - 1);
@@ -295,7 +288,7 @@ public abstract class SomeContent {
                     if (item < top) {
                     } else if ((item == top) && (offset < topOffset)) {
                     } else {
-                        setTop(item, offset);
+                        setTopByOffset(getOffset(item) + offset);
                     }
                     return;
                 }

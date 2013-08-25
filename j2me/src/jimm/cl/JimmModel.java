@@ -201,7 +201,10 @@ public class JimmModel {
                 }
             }
             if (null != profile) {
-                newProtocols.addElement(createProtocol(profile));
+                Protocol p = createProtocol(profile);
+                if (null != p) {
+                    newProtocols.addElement(p);
+                }
             }
         }
         if (0 == newProtocols.size()) {

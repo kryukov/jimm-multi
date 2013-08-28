@@ -15,7 +15,6 @@ import jimm.*;
 import jimm.chat.message.*;
 import jimm.cl.ContactList;
 import jimm.history.*;
-import jimmui.view.base.*;
 import jimmui.view.menu.*;
 import jimm.comm.*;
 import jimmui.view.roster.items.TreeNode;
@@ -239,20 +238,6 @@ abstract public class Contact implements TreeNode, Sortable {
         return isOnline() || hasChat() || isTemp();
     }
 
-    /* Returns color for contact name */
-    public final byte getTextTheme() {
-        if (isTemp()) {
-            return CanvasEx.THEME_CONTACT_TEMP;
-        }
-        if (hasChat()) {
-            return CanvasEx.THEME_CONTACT_WITH_CHAT;
-        }
-        if (isOnline()) {
-            return CanvasEx.THEME_CONTACT_ONLINE;
-        }
-        return CanvasEx.THEME_CONTACT_OFFLINE;
-    }
-
     public void getLeftIcons(Icon[] lIcons) {
         if (isTyping()) {
             lIcons[0] = InfoFactory.msgIcons.iconAt(Message.ICON_TYPE);
@@ -267,7 +252,7 @@ abstract public class Contact implements TreeNode, Sortable {
             }
             if (null == lIcons[0]) {
                 lIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(getStatusIndex());
-                if (InfoFactory.factory.onlyOneIcon(protocol)) {
+                if (InfoFactory.factory.onlyOneIcon(protocol) && (null != lIcons[1])) {
                     lIcons[0] = lIcons[1];
                     lIcons[1] = null;
                 }

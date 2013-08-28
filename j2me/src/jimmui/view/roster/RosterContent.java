@@ -159,15 +159,9 @@ public class RosterContent extends SomeContent {
             x += stepSize;
         }
 
-        Contact c = (Contact)node;
-        g.setThemeColor(c.getTextTheme());
-        if (showStatusLine) {
-            drawContact(g, c, x, y1, w + x1 - x, h);
-        } else {
-            g.setFont(getFontSet()[c.hasChat() ? CanvasEx.FONT_STYLE_BOLD : CanvasEx.FONT_STYLE_PLAIN]);
-            g.drawString(leftIcons, c.getName(), rightIcons, x, y1, w + x1 - x, h);
-        }
+        drawContact(g, (Contact)node, x, y1, w + x1 - x, h);
     }
+
     /** draw + or - before node text */
     private void drawNodeRect(GraphicsEx g, TreeBranch branch,
                               int x, int y1, int y2) {
@@ -209,6 +203,12 @@ public class RosterContent extends SomeContent {
     }
 
     private void drawContact(GraphicsEx g, Contact c, int x, int y, int w, int h) {
+        g.setThemeColor(getContactTheme(c));
+        if (!showStatusLine) {
+            g.setFont(getFontSet()[c.hasChat() ? CanvasEx.FONT_STYLE_BOLD : CanvasEx.FONT_STYLE_PLAIN]);
+            g.drawString(leftIcons, c.getName(), rightIcons, x, y, w, h);
+            return;
+        }
         int lWidth = g.drawImages(leftIcons, x, y, h);
         if (lWidth > 0) {
             lWidth++;
@@ -235,6 +235,19 @@ public class RosterContent extends SomeContent {
         g.setFont(statusFont);
         g.setThemeColor(CanvasEx.THEME_CONTACT_STATUS);
         g.drawString(getStatusMessage(c), x, y + statusHeight, Graphics.LEFT + Graphics.TOP);
+    }
+
+    private byte getContactTheme(Contact c) {
+        if (c.isTemp()) {
+            return CanvasEx.THEME_CONTACT_TEMP;
+        }
+        if (c.hasChat()) {
+            return CanvasEx.THEME_CONTACT_WITH_CHAT;
+        }
+        if (c.isOnline()) {
+            return CanvasEx.THEME_CONTACT_ONLINE;
+        }
+        return CanvasEx.THEME_CONTACT_OFFLINE;
     }
 
     private Font[] getFontSet() {

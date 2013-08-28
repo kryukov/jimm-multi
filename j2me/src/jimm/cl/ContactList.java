@@ -284,9 +284,13 @@ public final class ContactList implements ContactListListener {
 
     /* Builds the main menu (visual list) */
     public void activateMainMenu() {
-        updateMainMenu();
-        mainMenu.setDefaultItemCode(ProtocolMenu.MENU_STATUS);
-        mainMenu.getView().show();
+        if (contactList.getModel() == getUpdater().getChatModel()) {
+            contactList.showMenu(new ChatMenu().getMenu());
+        } else {
+            updateMainMenu();
+            mainMenu.setDefaultItemCode(ProtocolMenu.MENU_STATUS);
+            mainMenu.getView().show();
+        }
     }
 
     public void updateMainMenu() {
@@ -298,9 +302,6 @@ public final class ContactList implements ContactListListener {
     }
 
     public final MenuModel getContextMenu(Protocol p, TreeNode node) {
-        if (contactList.getModel() == getUpdater().getChatModel()) {
-            return new ChatMenu().getMenu();
-        }
         if (node instanceof Contact) {
             return new ContactMenu(p, (Contact) node).getContextMenu();
         }

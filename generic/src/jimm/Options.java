@@ -153,7 +153,7 @@ public class Options {
     //public static final int OPTION_ANTISPAM_OFFLINE    = 159;   /* boolean */
     public static final int OPTION_ANTISPAM_KEYWORDS   =  29;   /* String  */
 
-    public static final int OPTION_SAVE_TEMP_CONTACT   = 147;   /* boolean */
+//    public static final int OPTION_SAVE_TEMP_CONTACT   = 147;   /* boolean */
 
     //public static final int OPTION_USE_SMILES          = 141;   /* boolean */
     //public static final int OPTION_MD5_LOGIN           = 144;   /* boolean */

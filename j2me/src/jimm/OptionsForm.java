@@ -295,7 +295,6 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                     saveOptionBoolean(Options.OPTION_USER_GROUPS);
                     saveOptionBoolean(Options.OPTION_USER_ACCOUNTS);
                     saveOptionBoolean(Options.OPTION_CL_HIDE_OFFLINE);
-                    saveOptionBoolean(Options.OPTION_SAVE_TEMP_CONTACT);
                     saveOptionBoolean(Options.OPTION_SORT_UP_WITH_MSG);
                     saveOptionBoolean(Options.OPTION_SHOW_STATUS_LINE);
 
@@ -453,7 +452,6 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
                 setChecked("show_user_groups", Options.OPTION_USER_GROUPS);
                 setChecked("show_user_accounts", Options.OPTION_USER_ACCOUNTS);
                 setChecked("hide_offline", Options.OPTION_CL_HIDE_OFFLINE);
-                setChecked("save_temp_contacts", Options.OPTION_SAVE_TEMP_CONTACT);
                 setChecked("show_status_line", Options.OPTION_SHOW_STATUS_LINE);
                 setChecked("contacts_with_msg_at_top", Options.OPTION_SORT_UP_WITH_MSG);
 

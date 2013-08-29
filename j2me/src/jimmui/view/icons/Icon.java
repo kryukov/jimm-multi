@@ -65,7 +65,7 @@ public class Icon {
         int clipWidth = g.getClipWidth();
         int iy = y - this.y;
         int ix = x - this.x;
-        g.clipRect(x, y, width, height);
+        g.clipRect(x, y, width, Math.min(y + height, clipY + clipHeight) - y);
         g.drawImage(getImage(), ix, iy, Graphics.TOP | Graphics.LEFT);
         g.setClip(clipX, clipY, clipWidth, clipHeight);
     }

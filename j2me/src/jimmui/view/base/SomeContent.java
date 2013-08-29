@@ -151,6 +151,9 @@ public abstract class SomeContent {
             for (int i = topItem; i < size; ++i) {
                 int itemHeight = getItemHeight(i);
                 int realHeight = Math.min(itemHeight, bottom - y + 1);
+                // #sijapp cond.if modules_ANDROID is "true" #
+                realHeight = Math.min(itemHeight, bottom - y);
+                // #sijapp cond.end #
                 g.setClip(0, y, itemWidth, realHeight + 1);
                 g.setStrokeStyle(Graphics.SOLID);
                 drawItemData(g, i, 2, y - offset, itemWidth - 4, itemHeight, offset, realHeight);

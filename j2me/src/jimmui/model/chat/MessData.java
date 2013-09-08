@@ -42,7 +42,7 @@ public final class MessData {
     public String strTime;
     public int iconIndex;
     public Par par;
-    private short rowData;
+    public short rowData;
 
     public static final short URLS = 1;
     public static final short INCOMING = 2;

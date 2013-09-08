@@ -121,11 +121,12 @@ public class MessageBuilder {
             // #sijapp cond.end#
             parser.addTextWithSmiles(messageText, color, plain);
         }
+        short flags = 0;
         if (SystemNotice.TYPE_FILE == message.getMessageType()) {
             parser.addProgress(CanvasEx.THEME_TEXT);
+            flags |= MessData.PROGRESS;
         }
 
-        short flags = 0;
         if (incoming) {
             flags |= MessData.INCOMING;
         }
@@ -341,7 +342,7 @@ public class MessageBuilder {
         parser.addText(text, CanvasEx.THEME_TEXT, CanvasEx.FONT_STYLE_PLAIN);
 
         long time = Jimm.getCurrentGmtTime();
-        short flags = MessData.PROGRESS;
+        short flags = (short)(mData.rowData & ~MessData.PROGRESS);
         synchronized (this) {
             int index = model.getIndex(mData);
 

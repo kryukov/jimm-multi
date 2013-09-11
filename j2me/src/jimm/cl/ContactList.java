@@ -72,6 +72,7 @@ public final class ContactList implements ContactListListener {
         contactList.getModel().setAlwaysVisibleNode(c);
     }
     public void activate(Contact c) {
+        contactList.updateOfflineStatus();
         _setActiveContact(c);
         activate();
     }

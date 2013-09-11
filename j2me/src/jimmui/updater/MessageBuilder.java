@@ -2,6 +2,7 @@ package jimmui.updater;
 
 import jimm.Jimm;
 import jimm.Options;
+import jimm.modules.DebugLog;
 import jimmui.view.chat.Chat;
 import jimmui.model.chat.ChatModel;
 import jimmui.model.chat.MessData;
@@ -30,6 +31,7 @@ public class MessageBuilder {
     public void addMessage(ChatModel model, Message message, boolean toHistory) {
         Chat chat = Jimm.getJimm().getCL().getChat(model);
         boolean inc = (null == chat) || !chat.isVisibleChat();
+        DebugLog.println("addMessage " + ((null != chat) && chat.isVisibleChat()));
         if (message instanceof PlainMessage) {
 
             buildMessage(model, message);

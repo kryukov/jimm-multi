@@ -490,7 +490,7 @@ public class Display {
 	}
 
 	void repaint(Displayable d, int x, int y, int width, int height) {
-		if (current == d) {
+		if ((current == d) && d.isShown()) {
 			eventDispatcher.put(eventDispatcher.new PaintEvent(x, y, width, height));
 		}
 	}

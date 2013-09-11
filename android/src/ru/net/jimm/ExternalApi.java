@@ -85,10 +85,18 @@ public class ExternalApi implements ActivityResultListener {
             } else if (RESULT_EXTERNAL_PHOTO == requestCode) {
                 if (null == photoListener) return false;
                 Uri uriImage = data.getData();
-                InputStream in = activity.getContentResolver().openInputStream(uriImage);
-                byte[] img = new byte[in.available()];
-                in.read(img);
-                photoListener.processPhoto(img);
+                try {
+                    InputStream in = activity.getContentResolver().openInputStream(uriImage);
+                    byte[] img = new byte[in.available()];
+                    in.read(img);
+                    photoListener.processPhoto(img);
+                } catch (NullPointerException e) {
+                    uriImage = Uri.parse("file://" + getRealPathFromUri(uriImage));
+                    InputStream in = activity.getContentResolver().openInputStream(uriImage);
+                    byte[] img = new byte[in.available()];
+                    in.read(img);
+                    photoListener.processPhoto(img);
+                }
                 photoListener = null;
                 return true;
 

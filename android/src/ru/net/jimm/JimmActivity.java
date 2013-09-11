@@ -47,7 +47,6 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CommandUI;
 
 import android.media.AudioManager;
-import android.app.NotificationManager;
 import org.microemu.android.MicroEmulatorActivity;
 import android.content.Intent;
 import android.util.Log;

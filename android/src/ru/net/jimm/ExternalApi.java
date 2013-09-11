@@ -5,13 +5,17 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import jimm.FileTransfer;
 import jimm.history.HistoryStorage;
 import jimm.modules.photo.PhotoListener;
 import org.microemu.android.util.ActivityResultListener;
 import ru.net.jimm.photo.CameraActivity;
 
+import java.io.File;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,15 +33,19 @@ public class ExternalApi implements ActivityResultListener {
 
     private PhotoListener photoListener = null;
     private FileTransfer fileTransferListener = null;
+    private Uri imageUrl = null;
     private static final int RESULT_PHOTO = JimmActivity.RESULT_FIRST_USER + 1;
     private static final int RESULT_EXTERNAL_PHOTO = JimmActivity.RESULT_FIRST_USER + 2;
     private static final int RESULT_EXTERNAL_FILE = JimmActivity.RESULT_FIRST_USER + 3;
+
     public void startCamera(PhotoListener listener, int width, int height) {
         photoListener = listener;
         if (1000 < Math.max(width, height)) {
             try {
                 Intent extCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (!isCallable(extCameraIntent)) throw new Exception("not found");
+                imageUrl = Uri.fromFile(getOutputMediaFile());
+                extCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUrl);
                 startActivityForResult(extCameraIntent, RESULT_EXTERNAL_PHOTO);
                 return;
             } catch (Exception ignored) {
@@ -84,19 +92,13 @@ public class ExternalApi implements ActivityResultListener {
 
             } else if (RESULT_EXTERNAL_PHOTO == requestCode) {
                 if (null == photoListener) return false;
-                Uri uriImage = data.getData();
-                try {
-                    InputStream in = activity.getContentResolver().openInputStream(uriImage);
-                    byte[] img = new byte[in.available()];
-                    in.read(img);
-                    photoListener.processPhoto(img);
-                } catch (NullPointerException e) {
-                    uriImage = Uri.parse("file://" + getRealPathFromUri(uriImage));
-                    InputStream in = activity.getContentResolver().openInputStream(uriImage);
-                    byte[] img = new byte[in.available()];
-                    in.read(img);
-                    photoListener.processPhoto(img);
-                }
+                Uri uriImage = null == imageUrl ? data.getData() : imageUrl;
+                jimm.modules.DebugLog.println("pickFile " + uriImage);
+                InputStream in = activity.getContentResolver().openInputStream(uriImage);
+                byte[] img = new byte[in.available()];
+                in.read(img);
+                photoListener.processPhoto(img);
+                imageUrl = null;
                 photoListener = null;
                 return true;
 
@@ -141,5 +143,22 @@ public class ExternalApi implements ActivityResultListener {
         Uri uri = Uri.parse("file://" + historyFilePath);
         intent.setDataAndType(uri, "text/plain");
         activity.startActivity(intent);
+    }
+
+
+    private static File getOutputMediaFile() {
+        File mediaStorageDir = new File(android.os.Environment.getExternalStoragePublicDirectory(
+                android.os.Environment.DIRECTORY_PICTURES), "Jimm");
+
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("Jimm", "failed to create directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return new File(mediaStorageDir.getPath(), "IMG_"+ timeStamp + ".jpg");
     }
 }

@@ -81,7 +81,6 @@ public class ExternalApi implements ActivityResultListener {
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         jimm.modules.DebugLog.println("result " + requestCode + " " + resultCode + " " + data);
-        if (null == data) return false;
         if (JimmActivity.RESULT_OK != resultCode) return false;
         try {
             if (RESULT_PHOTO == requestCode) {
@@ -91,13 +90,25 @@ public class ExternalApi implements ActivityResultListener {
                 return true;
 
             } else if (RESULT_EXTERNAL_PHOTO == requestCode) {
+                jimm.modules.DebugLog.println("photoListener " + photoListener);
                 if (null == photoListener) return false;
-                Uri uriImage = null == imageUrl ? data.getData() : imageUrl;
+
+                // remove copy of image
+                if ((null != data) && (null != data.getData()) && (null != imageUrl)) {
+                    Uri file = Uri.parse("file://" + getRealPathFromUri(data.getData()));
+                    jimm.modules.DebugLog.println("pickFile " + imageUrl + " " + file);
+                    if (!imageUrl.equals(file)) {
+                        new File(file.getPath()).delete();
+                    }
+                }
+
+                Uri uriImage = imageUrl;
                 jimm.modules.DebugLog.println("pickFile " + uriImage);
                 InputStream in = activity.getContentResolver().openInputStream(uriImage);
                 byte[] img = new byte[in.available()];
                 in.read(img);
                 photoListener.processPhoto(img);
+
                 imageUrl = null;
                 photoListener = null;
                 return true;

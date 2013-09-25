@@ -90,12 +90,6 @@ public class JimmService extends Service {
         }
 
         final Notification notification = new Notification(icon, getText(R.string.app_name), 0);
-        if (0 < unread) {
-            notification.ledARGB = 0xff00ff00;
-            notification.ledOnMS = 300;
-            notification.ledOffMS = 1000;
-            notification.flags |= android.app.Notification.FLAG_SHOW_LIGHTS;
-        }
         if (0 < allUnread) {
             notification.number = allUnread;
             stateMsg = String.format((String) getText(R.string.unreadMessages), allUnread);
@@ -103,6 +97,13 @@ public class JimmService extends Service {
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, JimmActivity.class), 0);
         notification.setLatestEventInfo(this, getText(R.string.app_name), stateMsg, contentIntent);
+        notification.defaults = 0;
+        if (0 < unread) {
+            notification.ledARGB = 0xff00ff00;
+            notification.ledOnMS = 300;
+            notification.ledOffMS = 1000;
+            notification.flags |= android.app.Notification.FLAG_SHOW_LIGHTS;
+        }
         return notification;
     }
 

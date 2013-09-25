@@ -60,7 +60,15 @@ public class MyActionBar extends ActiveRegion {
         final int height = getHeight();
         g.setStrokeStyle(Graphics.SOLID);
         g.setClip(0, 0, width, height + 1);
-        g.drawBarBack(0, height, Scheme.captionImage, width);
+        if (null == Scheme.captionImage) {
+            g.setThemeColor(CanvasEx.THEME_BACKGROUND);
+            g.fillRect(0, 0, width, height);
+            g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+            g.drawLine(0, height - 1, width, height - 1);
+            g.drawLine(0, height, width, height);
+        } else {
+            g.drawBarBack(0, height, Scheme.captionImage, width);
+        }
 
         int x = 0;
         // #sijapp cond.if target is "MIDP2"#
@@ -77,7 +85,6 @@ public class MyActionBar extends ActiveRegion {
         int timeWidth = GraphicsEx.softBarFont.stringWidth(time);
         width -= (timeWidth + 5);
         g.drawString(null, time, null, x + width + 3, 1, timeWidth, height - 2);
-        drawSeparator(g, x + width, 0, height - 2);
         // #sijapp cond.end#
         // #sijapp cond.end#
 
@@ -128,16 +135,7 @@ public class MyActionBar extends ActiveRegion {
         defWidth = icon.getWidth();
         // #sijapp cond.end#
         g.drawImage(icon, x - defWidth + (defWidth - icon.getWidth()) / 2, 0, height);
-        // #sijapp cond.if modules_TOUCH is "true"#
-        drawSeparator(g, x - defWidth, 0, height - 2);
-        // #sijapp cond.end#
         return defWidth;
-    }
-    private void drawSeparator(GraphicsEx g, int x, int y, int height) {
-        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
-        g.drawLine(x, y, x, y + height);
-        g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
-        g.drawLine(x + 1, y, x + 1, y + height);
     }
 
     public void setTicker(String ticker) {

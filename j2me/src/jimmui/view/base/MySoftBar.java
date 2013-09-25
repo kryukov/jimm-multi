@@ -88,7 +88,15 @@ public class MySoftBar extends ActiveRegion {
         int clipWidth = gr.getClipWidth();
         gr.setClip(0, y, w, h);
 
-        gr.drawBarBack(y, height, Scheme.softbarImage, w);
+        if (null == Scheme.softbarImage) {
+            gr.setThemeColor(CanvasEx.THEME_BACKGROUND);
+            gr.fillRect(0, y, w, height);
+            gr.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+            gr.drawLine(0, y, w, y);
+            gr.drawLine(0, y + 1, w, y + 1);
+        } else {
+            gr.drawBarBack(y, height, Scheme.softbarImage, w);
+        }
 
         int halfSoftWidth = w / 2 - (2 + 2 * gr.softbarOffset);
         h -= 2;

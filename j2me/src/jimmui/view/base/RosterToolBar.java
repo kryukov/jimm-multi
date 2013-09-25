@@ -49,7 +49,15 @@ public class RosterToolBar extends MySoftBar {
         g.setStrokeStyle(Graphics.SOLID);
         int height = getHeight();
         g.setClip(0, y, width, height);
-        g.drawBarBack(y, height, Scheme.softbarImage, width);
+        if (null == Scheme.softbarImage) {
+            g.setThemeColor(CanvasEx.THEME_BACKGROUND);
+            g.fillRect(0, y, width, height);
+            g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+            g.drawLine(0, y, width, y);
+            g.drawLine(0, y + 1, width, y + 1);
+        } else {
+            g.drawBarBack(y, height, Scheme.softbarImage, width);
+        }
 
         int x = 0;
         // general
@@ -81,14 +89,7 @@ public class RosterToolBar extends MySoftBar {
         if (null != icon) {
             g.drawImage(icon, x + (defWidth - icon.getWidth()) / 2, y, height);
         }
-        drawSeparator(g, x + defWidth, y + 1, height);
         return defWidth + getSeparatorWidth();
-    }
-    private void drawSeparator(GraphicsEx g, int x, int y, int height) {
-        g.setThemeColor(CanvasEx.THEME_BACKGROUND);
-        g.drawLine(x, y, x, y + height);
-        g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
-        g.drawLine(x + 1, y, x + 1, y + height);
     }
 }
 // #sijapp cond.end#

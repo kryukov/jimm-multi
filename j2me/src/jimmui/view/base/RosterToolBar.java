@@ -50,9 +50,9 @@ public class RosterToolBar extends MySoftBar {
         int height = getHeight();
         g.setClip(0, y, width, height);
         if (null == Scheme.softbarImage) {
-            g.setThemeColor(CanvasEx.THEME_BACKGROUND);
-            g.fillRect(0, y, width, height);
             g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+            g.fillRect(0, y, width, height);
+            g.setThemeColor(CanvasEx.THEME_CAP_LINE);
             g.drawLine(0, y, width, y);
             g.drawLine(0, y + 1, width, y + 1);
         } else {

@@ -89,9 +89,9 @@ public class MySoftBar extends ActiveRegion {
         gr.setClip(0, y, w, h);
 
         if (null == Scheme.softbarImage) {
-            gr.setThemeColor(CanvasEx.THEME_BACKGROUND);
-            gr.fillRect(0, y, w, height);
             gr.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+            gr.fillRect(0, y, w, height);
+            gr.setThemeColor(CanvasEx.THEME_CAP_LINE);
             gr.drawLine(0, y, w, y);
             gr.drawLine(0, y + 1, w, y + 1);
         } else {

@@ -61,9 +61,9 @@ public class MyActionBar extends ActiveRegion {
         g.setStrokeStyle(Graphics.SOLID);
         g.setClip(0, 0, width, height + 1);
         if (null == Scheme.captionImage) {
-            g.setThemeColor(CanvasEx.THEME_BACKGROUND);
-            g.fillRect(0, 0, width, height);
             g.setThemeColor(CanvasEx.THEME_CAP_BACKGROUND);
+            g.fillRect(0, 0, width, height);
+            g.setThemeColor(CanvasEx.THEME_CAP_LINE);
             g.drawLine(0, height - 1, width, height - 1);
             g.drawLine(0, height, width, height);
         } else {

@@ -34,6 +34,7 @@ abstract public class CanvasEx extends DisplayableEx {
     public static final byte THEME_CHAT_INMSG           = 5;
     public static final byte THEME_CHAT_OUTMSG          = 6;
     //public static final byte THEME_CHAT_FROM_HISTORY    = 7;
+    public static final byte THEME_CAP_LINE             = 7;
 
     public static final byte THEME_CONTACT_ONLINE       = 8;
     public static final byte THEME_CONTACT_WITH_CHAT    = 9;

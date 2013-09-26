@@ -431,6 +431,24 @@ public final class GraphicsEx {
         gr.drawLine(x + 1, y + height, x + width - 1, y + height);
     }
 
+    public final void drawFieldRect(int x, int y, int width, int height) {
+        gr.drawLine(x,         y + height - 5, x,         y + height - 1);
+        gr.drawLine(x + width, y + height - 5, x + width, y + height - 1);
+        gr.drawLine(x + 1, y + height, x + width - 1, y + height);
+    }
+    public final void drawSelectRect(int x, int y, int width, int height, int iconSize) {
+        gr.drawLine(x + 1, y + height, x + width - 1, y + height);
+        iconSize = iconSize | 1;
+        y += height;
+        x += width - iconSize;
+        while (0 < iconSize) {
+            gr.drawLine(x, y, x + iconSize, y);
+            iconSize -= 1;
+            x += 1;
+            y -= 1;
+        }
+    }
+
     public final void drawString(String str, int x, int y, int anchor) {
         gr.drawString(str, x, y, anchor);
     }

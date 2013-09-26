@@ -520,19 +520,6 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
     }
 
 
-    private void drawSelectIcon(GraphicsEx g, int x, int y, int width, int height) {
-        g.setThemeColor(THEME_FORM_BORDER);
-        int size = (calcIconSize() - 4) | 1;
-        int half = (size + 1) / 2;
-        y += height / 2 - (half / 3);
-        x += 2;
-        while (0 < size) {
-            g.drawLine(x, y, x + size, y);
-            size -= 2;
-            x += 1;
-            y += 1;
-        }
-    }
     private void drawCheckIcon(GraphicsEx g, int x, int y, int width, int height, boolean checked) {
         int size = calcIconSize() - 4 & ~1;
         x += 2;
@@ -586,10 +573,12 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         if ((CONTROL_INPUT == c.type) || (CONTROL_SELECT == c.type)) {
             h -= 3;
             int inputH = h - hfont;
-            g.setThemeColor(THEME_FORM_BACK);
-            g.fillRect(x1 + 1, y1 + hfont, w - 1, inputH);
             g.setThemeColor(THEME_FORM_BORDER);
-            g.drawSimpleRect(x1, y1 + hfont, w, inputH);
+            if (CONTROL_SELECT == c.type) {
+                g.drawSelectRect(x1, y1 + hfont, w, inputH, calcIconSize() / 2);
+            } else {
+                g.drawFieldRect(x1, y1 + hfont, w, inputH);
+            }
             String text = (CONTROL_SELECT == c.type) ? c.items[c.current] : c.text;
             x1 += OFFSET;
             w -= 2 * OFFSET;
@@ -605,11 +594,6 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
                     width -= calcIconSize() - OFFSET;
                 }
                 g.drawString(text, x1, y1 + hfont, width, normalFont.getHeight());
-            }
-            if (CONTROL_SELECT == c.type) {
-                g.setThemeColor(THEME_FORM_TEXT);
-                int e = calcIconSize();
-                drawSelectIcon(g, x1 + w - calcIconSize(), y1 + hfont, e, inputH);
             }
         }
         if (CONTROL_IMAGE == c.type) {

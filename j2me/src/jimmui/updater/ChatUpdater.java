@@ -84,8 +84,17 @@ public class ChatUpdater {
         view.writeMessage(message);
     }
 
-    public void writeMessage(Contact contact, String message) {
-        writeMessage(Jimm.getJimm().jimmModel.getChatModel(contact), message);
+    public void writeMessage(Protocol protocol, Contact contact, String message) {
+        ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(contact);
+        if (null == chat) chat = createModel(protocol, contact);
+        writeMessage(chat, message);
+    }
+
+    public void writeMessageTo(Protocol protocol, JabberServiceContact conference, String nick) {
+        ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(conference);
+        if (null == chat) chat = createModel(protocol, conference);
+        Chat view = Jimm.getJimm().getCL().getOrCreateChat(chat);
+        view.writeMessageTo(nick);
     }
 
     public void showHistory(Contact contact) {
@@ -95,12 +104,6 @@ public class ChatUpdater {
         // #sijapp cond.else #
         new HistoryStorageList(history).show();
         // #sijapp cond.end #
-    }
-
-    public void writeMessageTo(JabberServiceContact conference, String nick) {
-        ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(conference);
-        Chat view = Jimm.getJimm().getCL().getOrCreateChat(chat);
-        view.writeMessageTo(nick);
     }
 
     public void typing(ChatModel chat, boolean type) {

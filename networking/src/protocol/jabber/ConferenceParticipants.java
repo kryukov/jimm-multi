@@ -142,7 +142,7 @@ public final class ConferenceParticipants extends SomeContent {
                         return;
                     }
                 }
-                Jimm.getJimm().getChatUpdater().writeMessageTo(conference, nick);
+                Jimm.getJimm().getChatUpdater().writeMessageTo(protocol, conference, nick);
                 break;
 
             case COMMAND_PRIVATE:

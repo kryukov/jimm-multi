@@ -44,11 +44,11 @@ public class ContactMenu implements SelectListener {
     public void doAction(int cmd) {
         switch (cmd) {
             case Contact.USER_MENU_MESSAGE: /* Send plain message */
-                Jimm.getJimm().getChatUpdater().writeMessage(contact, null);
+                Jimm.getJimm().getChatUpdater().writeMessage(protocol, contact, null);
                 break;
                 
             case Contact.USER_MENU_PASTE: /* Send plain message without quotation */
-                Jimm.getJimm().getChatUpdater().writeMessage(contact, Clipboard.getClipBoardText());
+                Jimm.getJimm().getChatUpdater().writeMessage(protocol, contact, Clipboard.getClipBoardText());
                 break;
                 
             case Contact.USER_MENU_ADD_USER:

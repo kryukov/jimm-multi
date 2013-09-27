@@ -1,7 +1,11 @@
 package org.microemu.android.device.ui;
 
 
-import android.graphics.Paint;
+import android.view.GestureDetector;
+import android.widget.Scroller;
+import jimmui.view.base.NativeCanvas;
+import jimmui.view.base.TouchControl;
+import jimmui.view.base.touch.TouchState;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -13,7 +17,6 @@ import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 
 import android.content.Context;
-import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -23,8 +26,6 @@ import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
-
-import java.lang.reflect.Method;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,20 +43,103 @@ public class CanvasView extends View implements DisplayRepaintListener {
 
     private AndroidCanvasUI ui;
 
-    private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
-
-    private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-
     private AndroidKeyListener keyListener = null;
 
     private int inputType = InputType.TYPE_CLASS_TEXT;
 
-    public CanvasView(Context context, AndroidCanvasUI ui, int id) {
+    private GestureDetector gestureDetector;
+    private Scroller scroller;
+    private TouchState state = new TouchState();
+
+    public CanvasView(final Context context, AndroidCanvasUI ui, int id) {
         super(context);
         this.ui = ui;
         setFocusable(false);
         setFocusableInTouchMode(false);
         setId(id);
+        scroller = new Scroller(context);
+        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                if (!scroller.isFinished()) {
+                    scroller.abortAnimation();
+                }
+                state.fromX = (int) e.getX();
+                state.fromY = (int) e.getY();
+                state.x = (int) e.getX();
+                state.y = (int) e.getY();
+                state.region = null;
+                getNativeCanvas().androidPointerPressed(state);
+                return true;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+                // TODO
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                state.x = (int) e.getX();
+                state.y = (int) e.getY();
+                state.isLong = false;
+                getNativeCanvas().androidPointerTap(state);
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                state.x = (int) e.getX();
+                state.y = (int) e.getY();
+                state.isLong = true;
+                getNativeCanvas().androidPointerTap(state);
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e, MotionEvent e2, float distanceX, float distanceY) {
+                state.x = (int) e2.getX();
+                state.y = (int) e2.getY();
+                state.isLong = false;
+                state.type = TouchControl.DRAGGING;
+                getNativeCanvas().androidPointerMoving(state, (int) distanceX, (int) distanceY);
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e, MotionEvent e2, float  vX, float vY) {
+                state.x = (int) e2.getX();
+                state.y = (int) e2.getY();
+                state.isLong = false;
+                state.type = TouchControl.DRAGGED;
+                scroller.fling(state.x, state.y, 0, (int)vY, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                beginScrolling();
+                if (state.fromY != state.y) {
+                    getNativeCanvas().androidPointerMoved(state, state.x - state.fromX, state.y - state.fromY);
+                }
+                return true;
+            }
+        });
+        gestureDetector.setIsLongpressEnabled(true);
+    }
+
+
+    private void beginScrolling() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (scroller.computeScrollOffset()) {
+                    state.x = (int) scroller.getCurrX();
+                    state.y = (int) scroller.getCurrY();
+                    state.type = TouchControl.KINETIC;
+                    getNativeCanvas().androidPointerMoving(state, 0, 1);
+                    try { Thread.sleep(50);} catch (Exception e) {}
+                }
+            }
+        }).start();
+    }
+
+    private NativeCanvas getNativeCanvas() {
+        return (NativeCanvas) ui.getDisplayable();
     }
 
     private void initGraphics() {
@@ -152,36 +236,40 @@ public class CanvasView extends View implements DisplayRepaintListener {
             da.sizeChanged();
         }
     }
+    public void resetScrolling() {
+        scroller.abortAnimation();
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Device device = DeviceFactory.getDevice();
-        AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                inputMethod.pointerPressed(x, y);
-                pressedX = x;
-                pressedY = y;
-                break;
-            case MotionEvent.ACTION_UP:
-                inputMethod.pointerReleased(x, y);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) && x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
-                        && y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) && y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
-                } else {
-                    pressedX = -FIRST_DRAG_SENSITIVITY_X;
-                    pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-                    inputMethod.pointerDragged(x, y);
-                }
-                break;
-            default:
-                return false;
-        }
-
-        return true;
+        return gestureDetector.onTouchEvent(event);
+//        Device device = DeviceFactory.getDevice();
+//        AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
+//        int x = (int) event.getX();
+//        int y = (int) event.getY();
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                inputMethod.pointerPressed(x, y);
+//                pressedX = x;
+//                pressedY = y;
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                inputMethod.pointerReleased(x, y);
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) && x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
+//                        && y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) && y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
+//                } else {
+//                    pressedX = -FIRST_DRAG_SENSITIVITY_X;
+//                    pressedY = -FIRST_DRAG_SENSITIVITY_Y;
+//                    inputMethod.pointerDragged(x, y);
+//                }
+//                break;
+//            default:
+//                return false;
+//        }
+//
+//        return true;
     }
 
     //

@@ -170,6 +170,7 @@ public class JimmActivity extends MicroEmulatorActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (getDisplayable() instanceof AndroidCanvasUI) {
+            ((AndroidCanvasUI) getDisplayable()).getCanvasView().resetScrolling();
             if (ignoreKey(keyCode)) {
                 return super.onKeyDown(keyCode, event);
             }

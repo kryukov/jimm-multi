@@ -122,4 +122,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI<Canvas> implements Can
     public void layout() {
         view.requestLayout();
     }
+    public CanvasView getCanvasView() {
+        return canvasView;
+    }
 }

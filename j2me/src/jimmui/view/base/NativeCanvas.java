@@ -13,6 +13,7 @@ import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.comm.StringConvertor;
 import jimm.modules.*;
+import jimmui.view.base.touch.TouchState;
 import jimmui.view.menu.Select;
 
 /**
@@ -104,6 +105,55 @@ public class NativeCanvas extends Canvas {
         CustomLight.setLightMode(CustomLight.ACTION_KEY_PRESS);
         // #sijapp cond.end#
         touchControl.pointerDragged(x, y);
+    }
+    // #sijapp cond.end#
+    // #sijapp cond.if modules_ANDROID is "true"#
+    public void androidPointerPressed(TouchState state) {
+        try {
+            canvas.stylusPressed(state);
+            if (null != state.region) {
+                state.region.stylusPressed(canvas, state.fromX, state.fromY);
+            }
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("androidPointerPressed", e);
+        }
+    }
+    public void androidPointerTap(TouchState state) {
+        try {
+            if (null == state.region) {
+                canvas.stylusTap(state);
+            } else {
+                state.region.stylusTap(canvas, state.fromX, state.fromY, state.isLong);
+            }
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("androidPointerTap", e);
+        }
+    }
+    public void androidPointerMoving(TouchState state, int dx, int dy) {
+        try {
+            if (null == state.region) {
+                if (Math.abs(dy) < Math.abs(dx)) {
+                    canvas.stylusXMoving(state);
+                } else {
+                    canvas.stylusGeneralYMoved(state);
+                }
+            }
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("androidPointerMoving", e);
+        }
+    }
+    public void androidPointerMoved(TouchState state, int dx, int dy) {
+        try {
+            if (null == state.region) {
+                if (Math.abs(dy) <= Math.abs(dx)) {
+                    canvas.stylusXMoved(state);
+                } else {
+                    canvas.stylusGeneralYMoved(state);
+                }
+            }
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("androidPointerMoved", e);
+        }
     }
     // #sijapp cond.end#
 

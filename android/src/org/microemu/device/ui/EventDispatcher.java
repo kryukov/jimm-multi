@@ -214,6 +214,12 @@ public class EventDispatcher implements Runnable {
 
 		public static final short POINTER_DRAGGED = 2;
 
+        public static final short ANDROID_POINTER_PRESSED = 3;
+        public static final short ANDROID_POINTER_TAP = 4;
+        public static final short ANDROID_POINTER_MOVING = 5;
+        public static final short ANDROID_POINTER_MOVED = 6;
+
+
 		private Runnable runnable;
 
 		private short type;

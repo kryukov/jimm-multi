@@ -11,9 +11,7 @@ import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidDisplayGraphics;
-import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.app.ui.DisplayRepaintListener;
-import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 
 import android.content.Context;
@@ -243,33 +241,6 @@ public class CanvasView extends View implements DisplayRepaintListener {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
-//        Device device = DeviceFactory.getDevice();
-//        AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
-//        int x = (int) event.getX();
-//        int y = (int) event.getY();
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                inputMethod.pointerPressed(x, y);
-//                pressedX = x;
-//                pressedY = y;
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                inputMethod.pointerReleased(x, y);
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) && x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
-//                        && y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) && y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
-//                } else {
-//                    pressedX = -FIRST_DRAG_SENSITIVITY_X;
-//                    pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-//                    inputMethod.pointerDragged(x, y);
-//                }
-//                break;
-//            default:
-//                return false;
-//        }
-//
-//        return true;
     }
 
     //

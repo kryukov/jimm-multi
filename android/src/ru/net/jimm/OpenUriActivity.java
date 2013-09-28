@@ -7,8 +7,8 @@ import android.net.Uri;
 import jimm.Jimm;
 import protocol.Contact;
 import protocol.Protocol;
-import protocol.jabber.Jabber;
-import protocol.jabber.Jid;
+import protocol.xmpp.Xmpp;
+import protocol.xmpp.Jid;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,29 +57,29 @@ public class OpenUriActivity extends Activity {
             jid = path.substring(0, path.indexOf('?'));
         }
         jimm.modules.DebugLog.println("open xmpp " + path + " " + jid);
-        Jabber jabber = getFirstJabber();
-        if (null == jabber) {
+        Xmpp xmpp = getFirstJabber();
+        if (null == xmpp) {
             alert();
             return;
         }
         try {
-            Contact c = jabber.createTempContact(Jid.getBareJid(jid));
-            while (jabber.isConnecting()) {
+            Contact c = xmpp.createTempContact(Jid.getBareJid(jid));
+            while (xmpp.isConnecting()) {
                 try {
                     Thread.sleep(2000);
                 } catch (Exception ignored) {
                 }
             }
-            jabber.addTempContact(c);
+            xmpp.addTempContact(c);
             Jimm.getJimm().getCL().activate(c);
         } catch (Exception e) {
             jimm.modules.DebugLog.panic("uri", e);
         }
     }
 
-    private Jabber getFirstJabber() {
+    private Xmpp getFirstJabber() {
         for (Protocol p : Jimm.getJimm().jimmModel.getProtocols()) {
-            if (p instanceof Jabber) return (Jabber) p;
+            if (p instanceof Xmpp) return (Xmpp) p;
         }
         return null;
     }

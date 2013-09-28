@@ -1,4 +1,4 @@
-package protocol.jabber;
+package protocol.xmpp;
 
 // #sijapp cond.if protocols_JABBER is "true" #
 import jimm.Jimm;

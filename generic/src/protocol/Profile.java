@@ -21,7 +21,7 @@ public final class Profile {
 
     public static final int PROTOCOL_ICQ = 0;
     public static final int PROTOCOL_MRIM = 1;
-    public static final int PROTOCOL_JABBER = 2;
+    public static final int PROTOCOL_XMPP = 2;
     public static final int PROTOCOL_OBIMP = 9;
     public static final int PROTOCOL_FACEBOOK = 10;
     public static final int PROTOCOL_LJ = 11;
@@ -61,7 +61,7 @@ public final class Profile {
             PROTOCOL_MRIM,
             // #sijapp cond.end #
             // #sijapp cond.if protocols_JABBER is "true" #
-            PROTOCOL_JABBER,
+            PROTOCOL_XMPP,
             PROTOCOL_FACEBOOK,
             PROTOCOL_ODNOKLASSNIKI,
             PROTOCOL_LJ,
@@ -130,7 +130,7 @@ public final class Profile {
             case Profile.PROTOCOL_YANDEX:
             case Profile.PROTOCOL_QIP:
             case Profile.PROTOCOL_ODNOKLASSNIKI:
-                return Profile.PROTOCOL_JABBER;
+                return Profile.PROTOCOL_XMPP;
         }
         // #sijapp cond.end #
         return protocolType;

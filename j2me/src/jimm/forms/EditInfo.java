@@ -28,6 +28,7 @@ import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
 import protocol.Protocol;
 import jimm.search.*;
+import protocol.xmpp.Xmpp;
 
 public class EditInfo implements FormListener {
 
@@ -58,7 +59,7 @@ public class EditInfo implements FormListener {
 
     public EditInfo init() {
         // #sijapp cond.if protocols_JABBER is "true"#
-        final boolean isJabber = (protocol instanceof protocol.jabber.Jabber);
+        final boolean isJabber = (protocol instanceof Xmpp);
         // #sijapp cond.end#
         // #sijapp cond.if protocols_OBIMP is "true"#
         final boolean isObimp = (protocol instanceof protocol.obimp.Obimp);
@@ -144,7 +145,7 @@ public class EditInfo implements FormListener {
         } else {
             boolean isJabber = false;
             // #sijapp cond.if protocols_JABBER is "true"#
-            isJabber = (protocol instanceof protocol.jabber.Jabber);
+            isJabber = (protocol instanceof Xmpp);
             // #sijapp cond.end#
             // #sijapp cond.if protocols_OBIMP is "true"#
             final boolean isObimp = (protocol instanceof protocol.obimp.Obimp);

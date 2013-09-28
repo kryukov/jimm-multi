@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -33,18 +33,18 @@ import protocol.ui.XStatusInfo;
  *
  * @author Vladimir Krukov
  */
-public final class Jabber extends Protocol implements FormListener {
+public final class Xmpp extends Protocol implements FormListener {
 
-    private JabberXml connection;
+    private XmppXml connection;
     private Vector<String> rejoinList = new Vector<String>();
     private String resource;
     private ServiceDiscovery disco = null;
     // #sijapp cond.if modules_XSTATUSES is "true" #
-    public static final JabberXStatus xStatus = new JabberXStatus();
+    public static final XmppXStatus xStatus = new XmppXStatus();
     // #sijapp cond.end#
     private static final String[] bots = {"juick@juick.com", "psto@psto.net"};
 
-    public Jabber() {
+    public Xmpp() {
     }
 
 
@@ -61,7 +61,7 @@ public final class Jabber extends Protocol implements FormListener {
     public void rejoin() {
         for (int i = 0; i < rejoinList.size(); ++i) {
             String jid = (String) rejoinList.elementAt(i);
-            JabberServiceContact conf = (JabberServiceContact) getItemByUID(jid);
+            XmppServiceContact conf = (XmppServiceContact) getItemByUID(jid);
             if ((null != conf) && !conf.isOnline()) {
                 join(conf);
             }
@@ -88,12 +88,12 @@ public final class Jabber extends Protocol implements FormListener {
 
     @Override
     protected void startConnection() {
-        connection = new JabberXml();
+        connection = new XmppXml();
         connection.setJabber(this);
         connection.start();
     }
 
-    JabberXml getConnection() {
+    XmppXml getConnection() {
         return connection;
     }
 
@@ -124,7 +124,7 @@ public final class Jabber extends Protocol implements FormListener {
 
     @Override
     protected final void closeConnection() {
-        JabberXml c = connection;
+        XmppXml c = connection;
         connection = null;
         if (null != c) {
             c.disconnect();
@@ -157,10 +157,10 @@ public final class Jabber extends Protocol implements FormListener {
         Group group = new Group(name);
         group.setGroupId(getNextGroupId());
         int mode = Group.MODE_FULL_ACCESS;
-        if (JLocale.getString(Jabber.CONFERENCE_GROUP).equals(name)) {
+        if (JLocale.getString(Xmpp.CONFERENCE_GROUP).equals(name)) {
             mode &= ~Group.MODE_EDITABLE;
             mode |= Group.MODE_TOP;
-        } else if (JLocale.getString(Jabber.GATE_GROUP).equals(name)) {
+        } else if (JLocale.getString(Xmpp.GATE_GROUP).equals(name)) {
             mode &= ~Group.MODE_EDITABLE;
             mode |= Group.MODE_BOTTOM;
         }
@@ -192,12 +192,12 @@ public final class Jabber extends Protocol implements FormListener {
         boolean isGate = (-1 == jid.indexOf('@'));
         boolean isConference = Jid.isConference(jid);
         if (isGate || isConference) {
-            JabberServiceContact c = new JabberServiceContact(jid, name);
+            XmppServiceContact c = new XmppServiceContact(jid, name);
             if (c.isConference()) {
                 c.setMyName(getDefaultName());
 
             } else if (isConference /* private */) {
-                JabberServiceContact conf = (JabberServiceContact) getItemByUID(Jid.getBareJid(jid));
+                XmppServiceContact conf = (XmppServiceContact) getItemByUID(Jid.getBareJid(jid));
                 if (null != conf) {
                     c.setPrivateContactStatus(conf);
                     c.setMyName(conf.getMyName());
@@ -206,7 +206,7 @@ public final class Jabber extends Protocol implements FormListener {
             return c;
         }
 
-        return new JabberContact(jid, name);
+        return new XmppContact(jid, name);
     }
 
     private String getDefaultName() {
@@ -240,25 +240,25 @@ public final class Jabber extends Protocol implements FormListener {
         connection.setStatus(getProfile().statusIndex, "", PRIORITY);
         for (int i = 0; i < rejoinList.size(); ++i) {
             String jid = (String) rejoinList.elementAt(i);
-            JabberServiceContact c = (JabberServiceContact) getItemByUID(jid);
+            XmppServiceContact c = (XmppServiceContact) getItemByUID(jid);
             if (null != c) {
                 connection.sendPresence(c);
             }
         }
     }
 
-    void setConfContactStatus(JabberServiceContact conf, String resource,
+    void setConfContactStatus(XmppServiceContact conf, String resource,
             byte status, String statusText, int role) {
         conf.__setStatus(resource, role, status, statusText);
     }
 
-    void setContactStatus(JabberContact c, String resource, byte status, String text, int priority) {
+    void setContactStatus(XmppContact c, String resource, byte status, String text, int priority) {
         c.__setStatus(resource, priority, status, text);
     }
 
     @Override
     protected final void s_addedContact(Contact contact) {
-        connection.updateContact((JabberContact) contact);
+        connection.updateContact((XmppContact) contact);
     }
 
     @Override
@@ -296,13 +296,13 @@ public final class Jabber extends Protocol implements FormListener {
     @Override
     protected final void s_moveContact(Contact contact, Group to) {
         contact.setGroup(to);
-        connection.updateContact((JabberContact) contact);
+        connection.updateContact((XmppContact) contact);
     }
 
     @Override
     protected final void s_renameContact(Contact contact, String name) {
         contact.setName(name);
-        connection.updateContact((JabberContact) contact);
+        connection.updateContact((XmppContact) contact);
     }
 
     @Override
@@ -412,14 +412,14 @@ public final class Jabber extends Protocol implements FormListener {
 
     @Override
     protected void s_sendTypingNotify(Contact to, boolean isTyping) {
-        if (to instanceof JabberServiceContact) {
+        if (to instanceof XmppServiceContact) {
             return;
         }
         if (Profile.PROTOCOL_LJ == getProfile().protocolType) {
             return;
         }
-        JabberContact c = (JabberContact) to;
-        JabberContact.SubContact s = c.getCurrentSubContact();
+        XmppContact c = (XmppContact) to;
+        XmppContact.SubContact s = c.getCurrentSubContact();
         if (null != s) {
             connection.sendTypingNotify(to.getUserId() + "/" + s.resource, isTyping);
         }
@@ -431,7 +431,7 @@ public final class Jabber extends Protocol implements FormListener {
         }
         Vector all = getContactItems();
         for (int i = all.size() - 1; 0 <= i; --i) {
-            JabberContact c = (JabberContact) all.elementAt(i);
+            XmppContact c = (XmppContact) all.elementAt(i);
             if (Jid.isGate(c.getUserId())) {
                 if (jid.endsWith(c.getUserId())) {
                     return true;
@@ -441,7 +441,7 @@ public final class Jabber extends Protocol implements FormListener {
         return false;
     }
 
-    public void leave(JabberServiceContact conf) {
+    public void leave(XmppServiceContact conf) {
         if (conf.isOnline()) {
             getConnection().sendPresenceUnavailable(conf.getUserId() + "/" + conf.getMyName());
             conf.nickOffline(this, conf.getMyName(), 0, null);
@@ -450,7 +450,7 @@ public final class Jabber extends Protocol implements FormListener {
             Vector all = getContactItems();
             String conferenceJid = conf.getUserId() + '/';
             for (int i = all.size() - 1; 0 <= i; --i) {
-                JabberContact c = (JabberContact) all.elementAt(i);
+                XmppContact c = (XmppContact) all.elementAt(i);
                 if (c.getUserId().startsWith(conferenceJid) && !c.hasUnreadMessage()) {
                     removeContact(c);
                 }
@@ -458,7 +458,7 @@ public final class Jabber extends Protocol implements FormListener {
         }
     }
 
-    public void join(JabberServiceContact c) {
+    public void join(XmppServiceContact c) {
         String jid = c.getUserId();
         if (!c.isOnline()) {
             setContactStatus(c, c.getMyName(), StatusInfo.STATUS_ONLINE, "", 0);
@@ -476,37 +476,37 @@ public final class Jabber extends Protocol implements FormListener {
 
     @Override
     public void doAction(Contact c, int cmd) {
-        JabberContact contact = (JabberContact) c;
+        XmppContact contact = (XmppContact) c;
         switch (cmd) {
-            case JabberServiceContact.GATE_CONNECT:
-                getConnection().sendPresence((JabberServiceContact) contact);
+            case XmppServiceContact.GATE_CONNECT:
+                getConnection().sendPresence((XmppServiceContact) contact);
                 Jimm.getJimm().getCL().activate();
                 break;
 
-            case JabberServiceContact.GATE_DISCONNECT:
+            case XmppServiceContact.GATE_DISCONNECT:
                 getConnection().sendPresenceUnavailable(c.getUserId());
                 Jimm.getJimm().getCL().activate();
                 break;
 
-            case JabberServiceContact.GATE_REGISTER:
+            case XmppServiceContact.GATE_REGISTER:
                 getConnection().register(c.getUserId());
                 break;
 
-            case JabberServiceContact.GATE_UNREGISTER:
+            case XmppServiceContact.GATE_UNREGISTER:
                 getConnection().unregister(c.getUserId());
                 getConnection().removeGateContacts(c.getUserId());
                 Jimm.getJimm().getCL().activate();
                 break;
 
-            case JabberServiceContact.GATE_ADD:
+            case XmppServiceContact.GATE_ADD:
                 ManageContactListForm m = new ManageContactListForm(this);
-                m.setJabberGate(c.getUserId());
+                m.setXmppGate(c.getUserId());
                 m.showContactAdd();
                 break;
 
-            case JabberServiceContact.USER_MENU_USERS_LIST:
+            case XmppServiceContact.USER_MENU_USERS_LIST:
                 if (contact.isOnline() || !isConnected()) {
-                    new SomeContentList(new ConferenceParticipants(this, (JabberServiceContact) c), c.getName()).show();
+                    new SomeContentList(new ConferenceParticipants(this, (XmppServiceContact) c), c.getName()).show();
                 } else {
                     ServiceDiscovery sd = getServiceDiscovery();
                     sd.setServer(contact.getUserId());
@@ -514,39 +514,39 @@ public final class Jabber extends Protocol implements FormListener {
                 }
                 break;
 
-            case JabberServiceContact.CONFERENCE_CONNECT:
-                join((JabberServiceContact) c);
+            case XmppServiceContact.CONFERENCE_CONNECT:
+                join((XmppServiceContact) c);
                 Jimm.getJimm().getChatUpdater().activate(getChatModel(c));
                 break;
 
-            case JabberServiceContact.CONFERENCE_OPTIONS:
-                showOptionsForm((JabberServiceContact) c);
+            case XmppServiceContact.CONFERENCE_OPTIONS:
+                showOptionsForm((XmppServiceContact) c);
                 break;
 
-            case JabberServiceContact.CONFERENCE_OWNER_OPTIONS:
+            case XmppServiceContact.CONFERENCE_OWNER_OPTIONS:
                 connection.requestOwnerForm(c.getUserId());
                 break;
 
-            case JabberServiceContact.CONFERENCE_DISCONNECT:
-                leave((JabberServiceContact) c);
+            case XmppServiceContact.CONFERENCE_DISCONNECT:
+                leave((XmppServiceContact) c);
                 Jimm.getJimm().getCL().activate();
                 break;
 
-            case JabberServiceContact.CONFERENCE_ADD:
+            case XmppServiceContact.CONFERENCE_ADD:
                 addContact(c);
                 Jimm.getJimm().getCL().activate();
                 break;
 
-            case JabberContact.USER_MENU_CONNECTIONS:
+            case XmppContact.USER_MENU_CONNECTIONS:
                 showListOfSubcontacts(contact);
                 break;
 
-            case JabberContact.USER_MENU_ADHOC:
+            case XmppContact.USER_MENU_ADHOC:
                 AdHoc adhoc = new AdHoc(this, contact);
                 adhoc.show();
                 break;
 
-            case JabberContact.USER_MENU_REMOVE_ME:
+            case XmppContact.USER_MENU_REMOVE_ME:
                 removeMe(c.getUserId());
                 Jimm.getJimm().getCL().activate();
                 break;
@@ -554,12 +554,12 @@ public final class Jabber extends Protocol implements FormListener {
         }
     }
 
-    private void showListOfSubcontacts(JabberContact c) {
+    private void showListOfSubcontacts(XmppContact c) {
         MenuModel sublist = new MenuModel();
         int selected = 0;
         StatusInfo statusInfo = InfoFactory.factory.getStatusInfo(this);
         for (int i = 0; i < c.subContacts.size(); ++i) {
-            JabberContact.SubContact contact = (JabberContact.SubContact) c.subContacts.elementAt(i);
+            XmppContact.SubContact contact = (XmppContact.SubContact) c.subContacts.elementAt(i);
             sublist.addRawItem(contact.resource, statusInfo.getIcon(contact.status), i);
             if (contact.resource.equals(c.currentResource)) {
                 selected = i;
@@ -573,13 +573,13 @@ public final class Jabber extends Protocol implements FormListener {
     @Override
     public void showUserInfo(Contact contact) {
         if (!contact.isSingleUserContact()) {
-            doAction(contact, JabberContact.USER_MENU_USERS_LIST);
+            doAction(contact, XmppContact.USER_MENU_USERS_LIST);
             return;
         }
 
         String realJid = contact.getUserId();
         if (Jid.isConference(realJid) && (-1 != realJid.indexOf('/'))) {
-            JabberServiceContact conference = (JabberServiceContact) getItemByUID(Jid.getBareJid(realJid));
+            XmppServiceContact conference = (XmppServiceContact) getItemByUID(Jid.getBareJid(realJid));
             String r = conference.getRealJid(Jid.getResource(realJid, ""));
             if (!StringConvertor.isEmpty(r)) {
                 realJid = r;
@@ -646,8 +646,8 @@ public final class Jabber extends Protocol implements FormListener {
         try {
             if (contact.isOnline() && contact.isSingleUserContact()) {
                 String jid = contact.getUserId();
-                if (!(contact instanceof JabberServiceContact)) {
-                    jid += '/' + ((JabberContact) contact).getCurrentSubContact().resource;
+                if (!(contact instanceof XmppServiceContact)) {
+                    jid += '/' + ((XmppContact) contact).getCurrentSubContact().resource;
                 }
                 getConnection().requestClientVersion(jid);
             }
@@ -669,12 +669,12 @@ public final class Jabber extends Protocol implements FormListener {
     }
     // -----------------------------------------------------------------------
     private static Form enterData = null;
-    private static JabberServiceContact enterConf = null;
+    private static XmppServiceContact enterConf = null;
     private static final int NICK = 0;
     private static final int PASSWORD = 1;
     private static final int AUTOJOIN = 2;
 
-    void showOptionsForm(JabberServiceContact c) {
+    void showOptionsForm(XmppServiceContact c) {
         enterConf = c;
         enterData = UIBuilder.createForm("conference", "ok", "cancel", this);
         enterData.addTextField(NICK, "nick", c.getMyName(), 32);

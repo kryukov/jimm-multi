@@ -14,7 +14,7 @@ import jimm.io.Storage;
 import jimmui.view.base.GraphicsEx;
 import protocol.Contact;
 import protocol.Protocol;
-import protocol.jabber.JabberServiceContact;
+import protocol.xmpp.XmppServiceContact;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -90,7 +90,7 @@ public class ChatUpdater {
         writeMessage(chat, message);
     }
 
-    public void writeMessageTo(Protocol protocol, JabberServiceContact conference, String nick) {
+    public void writeMessageTo(Protocol protocol, XmppServiceContact conference, String nick) {
         ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(conference);
         if (null == chat) chat = createModel(protocol, conference);
         Chat view = Jimm.getJimm().getCL().getOrCreateChat(chat);

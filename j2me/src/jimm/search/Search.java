@@ -79,7 +79,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     private byte type;
     private String[] searchParams = new String[Search.LAST_INDEX];
     // #sijapp cond.if protocols_JABBER is "true" #
-    private String jabberGate = null;
+    private String xmppGate = null;
     // #sijapp cond.end #
 
     private int currentResultIndex;
@@ -114,8 +114,8 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
                 return;
             }
             // #sijapp cond.if protocols_JABBER is "true" #
-            if ((null != jabberGate) && !userid.endsWith(jabberGate)) {
-                userid = userid.replace('@', '%') + '@' + jabberGate;
+            if ((null != xmppGate) && !userid.endsWith(xmppGate)) {
+                userid = userid.replace('@', '%') + '@' + xmppGate;
             }
             // #sijapp cond.end #
             Contact contact = protocol.createTempContact(userid);
@@ -170,8 +170,8 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     }
 
     // #sijapp cond.if protocols_JABBER is "true" #
-    public void setJabberGate(String gate) {
-        jabberGate = gate;
+    public void setXmppGate(String gate) {
+        xmppGate = gate;
     }
     // #sijapp cond.end #
 
@@ -214,8 +214,8 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         if (TYPE_LITE == type) {
             addUserIdItem();
             // #sijapp cond.if protocols_JABBER is "true" #
-            if (null != jabberGate) {
-                searchForm.addString("transport", jabberGate);
+            if (null != xmppGate) {
+                searchForm.addString("transport", xmppGate);
             }
             // #sijapp cond.end #
 
@@ -349,8 +349,8 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
                     return;
                 }
                 // #sijapp cond.if protocols_JABBER is "true" #
-                if ((null != jabberGate) && !userid.endsWith(jabberGate)) {
-                    userid = userid.replace('@', '%') + '@' + jabberGate;
+                if ((null != xmppGate) && !userid.endsWith(xmppGate)) {
+                    userid = userid.replace('@', '%') + '@' + xmppGate;
                 }
                 // #sijapp cond.end #
 
@@ -383,8 +383,8 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     private Contact createContact(UserInfo resultData) {
         String uin = StringConvertor.toLowerCase(resultData.uin.trim());
         // #sijapp cond.if protocols_JABBER is "true" #
-        if ((null != jabberGate) && !uin.endsWith(jabberGate)) {
-            uin = uin.replace('@', '%') + '@' + jabberGate;
+        if ((null != xmppGate) && !uin.endsWith(xmppGate)) {
+            uin = uin.replace('@', '%') + '@' + xmppGate;
         }
         // #sijapp cond.end #
         Contact contact = protocol.getItemByUID(uin);

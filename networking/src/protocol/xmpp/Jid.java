@@ -8,7 +8,7 @@
  */
 
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import jimm.comm.StringConvertor;
 

@@ -8,7 +8,7 @@
  */
 
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import jimm.Jimm;
 import jimmui.view.text.TextList;
@@ -32,7 +32,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
     private boolean isConferenceList = false;
     private int totalCount = 0;
 
-    private Jabber jabber;
+    private Xmpp xmpp;
     private String serverJid;
     private InputTextBox serverBox;
     private InputTextBox searchBox;
@@ -55,8 +55,8 @@ public final class ServiceDiscovery extends TextListController implements TextBo
         searchBox = new InputTextBox().create("service_discovery_search", 64);
         screen.setModel(model);
     }
-    public void setProtocol(Jabber protocol) {
-        jabber = protocol;
+    public void setProtocol(Xmpp protocol) {
+        xmpp = protocol;
     }
 
 
@@ -67,8 +67,8 @@ public final class ServiceDiscovery extends TextListController implements TextBo
         if (!StringConvertor.isEmpty(jid)) {
             switch (action) {
                 case COMMAND_ADD:
-                    Contact c = jabber.createTempContact(jid);
-                    jabber.addContact(c);
+                    Contact c = xmpp.createTempContact(jid);
+                    xmpp.addContact(c);
                     Jimm.getJimm().getCL().activate(c);
                     break;
 
@@ -78,7 +78,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
                     break;
 
                 case COMMAND_REGISTER:
-                    jabber.getConnection().register(jid);
+                    xmpp.getConnection().register(jid);
                     break;
             }
         }
@@ -235,10 +235,10 @@ public final class ServiceDiscovery extends TextListController implements TextBo
     }
 
     private void addBookmarks() {
-        Vector all = jabber.getContactItems();
+        Vector all = xmpp.getContactItems();
         boolean notEmpty = false;
         for (int i = 0; i < all.size(); ++i) {
-            JabberContact contact = (JabberContact)all.elementAt(i);
+            XmppContact contact = (XmppContact)all.elementAt(i);
             if (contact.isConference()) {
                 addUnique(contact.getName(), contact.getUserId());
                 notEmpty = true;
@@ -256,7 +256,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
         br.addText("\n", CanvasEx.THEME_TEXT,  CanvasEx.FONT_STYLE_PLAIN);
         model.addPar(br);
 
-        String domain = Jid.getDomain(jabber.getUserId());
+        String domain = Jid.getDomain(xmpp.getUserId());
         addUnique(JLocale.getString("my_server"), domain);
         addUnique(JLocale.getString("conferences_on_") + domain, "conference." + domain);
     }
@@ -293,7 +293,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
                 CanvasEx.THEME_TEXT,  CanvasEx.FONT_STYLE_PLAIN);
         model.addPar(wait);
         screen.updateModel();
-        jabber.getConnection().requestDiscoItems(serverJid);
+        xmpp.getConnection().requestDiscoItems(serverJid);
     }
 
     void setError(String description) {

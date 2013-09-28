@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import java.io.*;
 import java.util.*;
@@ -29,9 +29,9 @@ import protocol.ui.XStatusInfo;
  *
  * @author Vladimir Krukov
  */
-public final class JabberXml extends ClientConnection {
+public final class XmppXml extends ClientConnection {
     private Socket socket;
-    private Jabber protocol;
+    private Xmpp protocol;
 
     private String fullJid_;
     private String domain_ = "";
@@ -52,7 +52,7 @@ public final class JabberXml extends ClientConnection {
 
     private UserInfo singleUserInfo;
     private String autoSubscribeDomain;
-    private JabberForm jabberForm;
+    private XmppForm jabberForm;
     // #sijapp cond.if modules_FILES is "true"#
     private IBBFileTransfer ibb;
     // #sijapp cond.end#
@@ -152,13 +152,13 @@ public final class JabberXml extends ClientConnection {
                 + "' hash='md5'/>";
     }
 
-    public JabberXml() {
+    public XmppXml() {
     }
 
-    public void setJabber(Jabber jabber) {
-        protocol = jabber;
-        resource = jabber.getResource();
-        fullJid_ = jabber.getUserId() + '/' + resource;
+    public void setJabber(Xmpp xmpp) {
+        protocol = xmpp;
+        resource = xmpp.getResource();
+        fullJid_ = xmpp.getUserId() + '/' + resource;
         domain_ = Jid.getDomain(fullJid_);
     }
     private void setProgress(int percent) {
@@ -179,8 +179,8 @@ public final class JabberXml extends ClientConnection {
     }
     // #sijapp cond.end #
 
-    public Jabber getJabber() {
-        return (Jabber)protocol;
+    public Xmpp getJabber() {
+        return (Xmpp)protocol;
     }
 
 
@@ -652,7 +652,7 @@ public final class JabberXml extends ClientConnection {
             return;
         }
         String queryName = iqQuery.name;
-        Jabber jabber = getJabber();
+        Xmpp xmpp = getJabber();
 
         if (S_QUERY.equals(queryName)) {
             String xmlns = iqQuery.getXmlns();
@@ -662,8 +662,8 @@ public final class JabberXml extends ClientConnection {
                 }
                 if ((IQ_TYPE_RESULT == iqType) && !rosterLoaded) {
                     rosterLoaded = true;
-                    TemporaryRoster roster = new TemporaryRoster(jabber);
-                    jabber.setContactListStub();
+                    TemporaryRoster roster = new TemporaryRoster(xmpp);
+                    xmpp.setContactListStub();
 
                     while (0 < iqQuery.childrenCount()) {
                         XmlNode itemNode = iqQuery.popChildNode();
@@ -684,17 +684,17 @@ public final class JabberXml extends ClientConnection {
                     if (!isConnected()) {
                         return;
                     }
-                    jabber.setContactList(roster.getGroups(), roster.mergeContacts());
-                    Contact selfContact = jabber.getItemByUID(jabber.getUserId());
+                    xmpp.setContactList(roster.getGroups(), roster.mergeContacts());
+                    Contact selfContact = xmpp.getItemByUID(xmpp.getUserId());
                     if (null != selfContact) {
                         selfContact.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
-                        jabber.ui_updateContact(selfContact);
+                        xmpp.ui_updateContact(selfContact);
                     }
 
-                    jabber.s_updateOnlineStatus();
+                    xmpp.s_updateOnlineStatus();
                     // #sijapp cond.if modules_XSTATUSES is "true" #
-                    String xcode = Jabber.xStatus.getCode(jabber.getProfile().xstatusIndex);
-                    if ((null != xcode) && !xcode.startsWith(JabberXStatus.XSTATUS_START)) {
+                    String xcode = Xmpp.xStatus.getCode(xmpp.getProfile().xstatusIndex);
+                    if ((null != xcode) && !xcode.startsWith(XmppXStatus.XSTATUS_START)) {
                         setXStatus();
                     }
                     // #sijapp cond.end #
@@ -711,26 +711,26 @@ public final class JabberXml extends ClientConnection {
                         if (Jid.isConference(jid)) {
 
                         } else if ((S_REMOVE).equals(subscription)) {
-                            jabber.removeLocalContact(jabber.getItemByUID(jid));
+                            xmpp.removeLocalContact(xmpp.getItemByUID(jid));
 
                         } else {
                             String name = itemNode.getAttribute(XmlNode.S_NAME);
-                            Contact contact = jabber.createTempContact(jid);
+                            Contact contact = xmpp.createTempContact(jid);
                             String group = itemNode.getFirstNodeValue(S_GROUP);
                             if (StringConvertor.isEmpty(group) || Jid.isConference(contact.getUserId())) {
                                 group = contact.getDefaultGroupName();
                             }
                             contact.setName(name);
-                            contact.setGroup(jabber.getOrCreateGroup(group));
+                            contact.setGroup(xmpp.getOrCreateGroup(group));
                             contact.setTempFlag(false);
                             contact.setBooleanValue(Contact.CONTACT_NO_AUTH, isNoAutorized(subscription));
-                            jabber.addLocalContact(contact);
+                            xmpp.addLocalContact(contact);
                         }
                     }
-                    Contact selfContact = jabber.getItemByUID(jabber.getUserId());
+                    Contact selfContact = xmpp.getItemByUID(xmpp.getUserId());
                     if (null != selfContact) {
                         selfContact.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
-                        jabber.ui_updateContact(selfContact);
+                        xmpp.ui_updateContact(selfContact);
                     }
                 }
                 return;
@@ -751,7 +751,7 @@ public final class JabberXml extends ClientConnection {
                     return;
                 }
                 String name = iqQuery.getFirstNodeAttribute("identity", XmlNode.S_NAME);
-                jabber.setConferenceInfo(from, name);
+                xmpp.setConferenceInfo(from, name);
                 return;
 
             } else if ("http://jabber.org/protocol/disco#items".equals(xmlns)) {
@@ -834,7 +834,7 @@ public final class JabberXml extends ClientConnection {
                             + "</os></query></iq>");
                     // #sijapp cond.if modules_MAGIC_EYE is "true" #
                     String jid = Jid.isConference(from) ? from : Jid.getBareJid(from);
-                    MagicEye.addAction(jabber, jid, "get_version");
+                    MagicEye.addAction(xmpp, jid, "get_version");
                     // #sijapp cond.end #
                 }
                 return;
@@ -843,9 +843,9 @@ public final class JabberXml extends ClientConnection {
                 if (IQ_TYPE_GET == iqType) {
                     // #sijapp cond.if modules_MAGIC_EYE is "true" #
                     String jid = Jid.isConference(from) ? from : Jid.getBareJid(from);
-                    MagicEye.addAction(jabber, jid, "last_activity_request");
+                    MagicEye.addAction(xmpp, jid, "last_activity_request");
                     // #sijapp cond.end #
-                    long time = Jimm.getCurrentGmtTime() - jabber.getLastStatusChangeTime();
+                    long time = Jimm.getCurrentGmtTime() - xmpp.getLastStatusChangeTime();
                     putPacketIntoQueue("<iq type='result' to='" + Util.xmlEscape(from)
                             + "' id='" + Util.xmlEscape(id) + "'>"
                             + "<query xmlns='jabber:iq:last' seconds='"
@@ -869,7 +869,7 @@ public final class JabberXml extends ClientConnection {
             }
             // #sijapp cond.if modules_MAGIC_EYE is "true" #
             String jid = Jid.isConference(from) ? from : Jid.getBareJid(from);
-            MagicEye.addAction(jabber, jid, "get_time");
+            MagicEye.addAction(xmpp, jid, "get_time");
             // #sijapp cond.end #
             int gmtOffset = Options.getInt(Options.OPTION_GMT_OFFSET);
             putPacketIntoQueue("<iq type='result' to='" + Util.xmlEscape(from)
@@ -968,8 +968,8 @@ public final class JabberXml extends ClientConnection {
         userInfo.uin = from;
         if (Jid.isConference(from)) {
             Contact c = getJabber().getItemByUID(Jid.getBareJid(from));
-            if (c instanceof JabberServiceContact) {
-                JabberContact.SubContact sc = ((JabberServiceContact)c).getExistSubContact(Jid.getResource(from, null));
+            if (c instanceof XmppServiceContact) {
+                XmppContact.SubContact sc = ((XmppServiceContact)c).getExistSubContact(Jid.getResource(from, null));
                 if ((null != sc) && (null != sc.realJid)) {
                     userInfo.uin = sc.realJid;
                 }
@@ -1035,10 +1035,10 @@ public final class JabberXml extends ClientConnection {
         if (!"storage:bookmarks".equals(storage.getXmlns())) {
             return;
         }
-        Jabber jabber = getJabber();
-        Group group = jabber.getOrCreateGroup(JLocale.getString(Jabber.CONFERENCE_GROUP));
-        int autoJoinCount = jabber.isReconnect() ? 0 : 7;
-        Vector contacts = jabber.getContactItems();
+        Xmpp xmpp = getJabber();
+        Group group = xmpp.getOrCreateGroup(JLocale.getString(Xmpp.CONFERENCE_GROUP));
+        int autoJoinCount = xmpp.isReconnect() ? 0 : 7;
+        Vector contacts = xmpp.getContactItems();
         while (0 < storage.childrenCount()) {
             XmlNode item = storage.popChildNode();
 
@@ -1051,7 +1051,7 @@ public final class JabberXml extends ClientConnection {
             boolean autojoin = isTrue(item.getAttribute("au" + "tojoin"));
             String password = item.getAttribute("passwor" + "d");
 
-            JabberServiceContact conference = (JabberServiceContact)jabber.createTempContact(jid, name);
+            XmppServiceContact conference = (XmppServiceContact) xmpp.createTempContact(jid, name);
             conference.setMyName(nick);
             conference.setTempFlag(false);
             conference.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
@@ -1062,12 +1062,12 @@ public final class JabberXml extends ClientConnection {
                 contacts.addElement(conference);
             }
             if (conference.isAutoJoin() && (0 < autoJoinCount)) {
-                jabber.join(conference);
+                xmpp.join(conference);
                 autoJoinCount--;
             }
         }
-        jabber.setContactListAddition(group);
-        jabber.rejoin();
+        xmpp.setContactListAddition(group);
+        xmpp.rejoin();
     }
 
     /**
@@ -1092,7 +1092,7 @@ public final class JabberXml extends ClientConnection {
 
             boolean showError = Jid.isGate(from);
             if (Jid.isConference(from)) {
-                JabberServiceContact conf = (JabberServiceContact)getJabber().getItemByUID(from);
+                XmppServiceContact conf = (XmppServiceContact)getJabber().getItemByUID(from);
                 if (null != conf) {
                     int code = Util.strToIntDef(errorNode.getAttribute(S_CODE), -1);
                     conf.nickError(getJabber(), fromRes, code, getError(errorNode));
@@ -1142,10 +1142,10 @@ public final class JabberXml extends ClientConnection {
             type = "";
         }
 
-        JabberContact contact = (JabberContact)getJabber().getItemByUID(from);
+        XmppContact contact = (XmppContact)getJabber().getItemByUID(from);
         if (null == contact) {
             String fullJid = Jid.realJidToJimmJid(fromFull);
-            contact = (JabberContact)getJabber().getItemByUID(fullJid);
+            contact = (XmppContact)getJabber().getItemByUID(fullJid);
             if (null == contact) {
                 return;
             }
@@ -1157,34 +1157,34 @@ public final class JabberXml extends ClientConnection {
         if (Jid.isConference(from)) {
             XmlNode xMuc = x.getXNode("http://jabber.org/protocol/muc#user");
             XmlNode item = (null == xMuc) ? null : xMuc.getFirstNode(S_ITEM);
-            JabberServiceContact conf = (JabberServiceContact)contact;
+            XmppServiceContact conf = (XmppServiceContact)contact;
             String reasone = null;
             priority = 0;
             if (null != item) {
                 String affiliation = item.getAttribute(XmlNode.S_AFFILIATION);
                 if (("m" + "ember").equals(affiliation)) {
-                    priority |= JabberServiceContact.AFFILIATION_MEMBER;
+                    priority |= XmppServiceContact.AFFILIATION_MEMBER;
                 } else if (("o" + "wner").equals(affiliation)) {
-                    priority |= JabberServiceContact.AFFILIATION_OWNER;
+                    priority |= XmppServiceContact.AFFILIATION_OWNER;
                 } else if (("a" + "dmin").equals(affiliation)) {
-                    priority |= JabberServiceContact.AFFILIATION_ADMIN;
+                    priority |= XmppServiceContact.AFFILIATION_ADMIN;
                 } else {
-                    priority |= JabberServiceContact.AFFILIATION_NONE;
+                    priority |= XmppServiceContact.AFFILIATION_NONE;
                 }
 
                 String role = item.getAttribute(XmlNode.S_ROLE);
                 if (("m" + "oderator").equals(role)) {
-                    priority |= JabberServiceContact.ROLE_MODERATOR;
+                    priority |= XmppServiceContact.ROLE_MODERATOR;
 
                 } else if (("p" + "articipant").equals(role)) {
-                    priority |= JabberServiceContact.ROLE_PARTICIPANT;
+                    priority |= XmppServiceContact.ROLE_PARTICIPANT;
 
                 } else if (S_NONE.equals(role)) {
                     reasone = item.getFirstNodeValue("r" + "eason");
                     item = null;
 
                 } else {// "visitor"
-                    priority |= JabberServiceContact.ROLE_VISITOR;
+                    priority |= XmppServiceContact.ROLE_VISITOR;
                 }
             }
             getJabber().setConfContactStatus(conf, fromRes,
@@ -1224,7 +1224,7 @@ public final class JabberXml extends ClientConnection {
             // #sijapp cond.if modules_XSTATUSES is "true" #
             if (!("u" + "navailable").equals(type)) {
                 if ((XStatusInfo.XSTATUS_NONE == contact.getXStatusIndex())
-                        || !Jabber.xStatus.isPep(contact.getXStatusIndex())) {
+                        || !Xmpp.xStatus.isPep(contact.getXStatusIndex())) {
                     XmlNode xNode = x.getXNode(S_FEATURE_XSTATUS);
                     String id = getXStatus(xNode);
 
@@ -1243,7 +1243,7 @@ public final class JabberXml extends ClientConnection {
                     contact.setXStatus(id, xtext);
                 }
                 if (Jid.isPyIcqGate(from)) {
-                    setXStatusToIcqTransport((JabberServiceContact)contact);
+                    setXStatusToIcqTransport((XmppServiceContact)contact);
                 }
             }
             // #sijapp cond.end #
@@ -1301,7 +1301,7 @@ public final class JabberXml extends ClientConnection {
             update = true;
         }
         if (update) {
-            updateContact((JabberContact) contact);
+            updateContact((XmppContact) contact);
         }
     }
 
@@ -1310,7 +1310,7 @@ public final class JabberXml extends ClientConnection {
         if (null == eventNode) {
             return;
         }
-        JabberContact contact = (JabberContact)getJabber().getItemByUID(Jid.getBareJid(fullJid));
+        XmppContact contact = (XmppContact)getJabber().getItemByUID(Jid.getBareJid(fullJid));
         if (null == contact) {
             return;
         }
@@ -1334,7 +1334,7 @@ public final class JabberXml extends ClientConnection {
 
         if ((null == statusNode) || (0 == statusNode.childrenCount())) {
             if ((XStatusInfo.XSTATUS_NONE != contact.getXStatusIndex())
-                    && Jabber.xStatus.isType(contact.getXStatusIndex(), eventType)) {
+                    && Xmpp.xStatus.isType(contact.getXStatusIndex(), eventType)) {
                 contact.setXStatus("", "");
             }
             return;
@@ -1348,13 +1348,13 @@ public final class JabberXml extends ClientConnection {
         }
         status.deleteCharAt(0);
         if ((XStatusInfo.XSTATUS_NONE == contact.getXStatusIndex())
-                || Jabber.xStatus.isPep(contact.getXStatusIndex())) {
+                || Xmpp.xStatus.isPep(contact.getXStatusIndex())) {
             contact.setXStatus(status.toString(), text);
         }
     }
 
     private String getXStatus(XmlNode x) {
-        return (null == x) ? null : (JabberXStatus.XSTATUS_START + x.getId());
+        return (null == x) ? null : (XmppXStatus.XSTATUS_START + x.getId());
     }
     // #sijapp cond.end #
 
@@ -1404,19 +1404,19 @@ public final class JabberXml extends ClientConnection {
     }
 
     private void prepareFirstPrivateMessage(String jid) {
-        final JabberServiceContact conf =
-                (JabberServiceContact)getJabber().getItemByUID(Jid.getBareJid(jid));
+        final XmppServiceContact conf =
+                (XmppServiceContact)getJabber().getItemByUID(Jid.getBareJid(jid));
         if (null == conf) { // don't have conference
             return;
         }
 
-        JabberContact.SubContact sub = conf.getExistSubContact(Jid.getResource(jid, ""));
+        XmppContact.SubContact sub = conf.getExistSubContact(Jid.getResource(jid, ""));
         if (null == sub) { // don't have contact
             return;
         }
 
-        byte role = (byte)(sub.priority & JabberServiceContact.ROLE_MASK);
-        if (JabberServiceContact.ROLE_MODERATOR == role) {
+        byte role = (byte)(sub.priority & XmppServiceContact.ROLE_MASK);
+        if (XmppServiceContact.ROLE_MODERATOR == role) {
             // moderators without antispam
             getJabber().addTempContact(getJabber().createTempContact(jid));
         }
@@ -1524,7 +1524,7 @@ public final class JabberXml extends ClientConnection {
         }
         text = StringConvertor.trim(text);
 
-        final JabberContact c = (JabberContact)getJabber().getItemByUID(from);
+        final XmppContact c = (XmppContact)getJabber().getItemByUID(from);
 
         if (msg.contains(S_ERROR)) {
             final String errorText = getError(msg.getFirstNode(S_ERROR));
@@ -1534,7 +1534,7 @@ public final class JabberXml extends ClientConnection {
 
         } else {
             if ((null != c) && msg.contains("c" + "aptcha")) {
-                final JabberForm form = new JabberForm(JabberForm.TYPE_CAPTCHA,
+                final XmppForm form = new XmppForm(XmppForm.TYPE_CAPTCHA,
                         getJabber(), from);
                 form.showCaptcha(msg);
                 return;
@@ -1563,11 +1563,11 @@ public final class JabberXml extends ClientConnection {
                     + Util.xmlEscape(msg.getId()) + "'/></message>");
             }
 
-            if (c instanceof JabberServiceContact) {
+            if (c instanceof XmppServiceContact) {
                 isConference = c.isConference();
                 if ((null != subject) && isConference && isGroupchat) {
                     String prevSubject = StringConvertor.notNull(c.getStatusText());
-                    ((JabberServiceContact)c).setSubject(subject);
+                    ((XmppServiceContact)c).setSubject(subject);
                     getJabber().ui_changeContactStatus(c);
                     if (prevSubject.equals(subject)) {
                         prevSubject = null;
@@ -1600,7 +1600,7 @@ public final class JabberXml extends ClientConnection {
 
         } else {
             if (isConference) {
-                final JabberServiceContact conf = (JabberServiceContact)c;
+                final XmppServiceContact conf = (XmppServiceContact)c;
 
                 if (isGroupchat && (null != fromRes)) {
                     if (isOnlineMessage && fromRes.equals(conf.getMyName())) {
@@ -1971,11 +1971,11 @@ public final class JabberXml extends ClientConnection {
         return s.toString();
     }
 
-    private void updateConfPrivate(JabberServiceContact conf, String resource) {
+    private void updateConfPrivate(XmppServiceContact conf, String resource) {
         String privateJid = Jid.realJidToJimmJid(conf.getUserId() + '/' + resource);
         Contact privateContact = getJabber().getItemByUID(privateJid);
         if (null != privateContact) {
-            ((JabberServiceContact)privateContact).setPrivateContactStatus(conf);
+            ((XmppServiceContact)privateContact).setPrivateContactStatus(conf);
             getJabber().ui_changeContactStatus(privateContact);
         }
     }
@@ -1987,7 +1987,7 @@ public final class JabberXml extends ClientConnection {
         xml.append("<iq type='set' id='").append(generateId())
                 .append("'><query xmlns='jabber:iq:roster'>");
         for (int i = 0; i < contacts.size(); ++i) {
-            JabberContact contact = (JabberContact)contacts.elementAt(i);
+            XmppContact contact = (XmppContact)contacts.elementAt(i);
             if (Jid.isConference(contact.getUserId())) {
                 continue;
             }
@@ -2012,7 +2012,7 @@ public final class JabberXml extends ClientConnection {
     }
     private void parseRosterExchange(XmlNode x, String domain) {
         StringBuffer xml = new StringBuffer();
-        Jabber j = (Jabber)protocol;
+        Xmpp j = (Xmpp)protocol;
         Vector subscribes = new Vector();
         for (int i = 0; i < x.childrenCount(); ++i) {
             XmlNode item = x.childAt(i);
@@ -2023,12 +2023,12 @@ public final class JabberXml extends ClientConnection {
             boolean isDelete = item.getAttribute("a" + "ction").equals("d" + "elete");
             boolean isModify = item.getAttribute("a" + "ction").equals("m" + "odify");
 
-            JabberContact contact = (JabberContact)j.getItemByUID(jid);
+            XmppContact contact = (XmppContact)j.getItemByUID(jid);
             if (null == contact) {
                 if (isModify || isDelete) {
                     continue;
                 }
-                contact = (JabberContact)j.createTempContact(jid);
+                contact = (XmppContact)j.createTempContact(jid);
                 contact.setBooleanValue(Contact.CONTACT_NO_AUTH, true);
             }
             String group = item.getFirstNodeValue(S_GROUP);
@@ -2086,13 +2086,13 @@ public final class JabberXml extends ClientConnection {
         Vector contacts = getJabber().getContactItems();
         xml.append("<storage xmlns='storage:bookmarks'>");
         for (int i = 0; i < contacts.size(); ++i) {
-            JabberContact contact = (JabberContact)contacts.elementAt(i);
+            XmppContact contact = (XmppContact)contacts.elementAt(i);
             if (!contact.isConference() || contact.isTemp()) {
                 continue;
             }
             contact.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
 
-            JabberServiceContact conf = (JabberServiceContact)contact;
+            XmppServiceContact conf = (XmppServiceContact)contact;
             xml.append("<conference autojoin='");
             xml.append(conf.isAutoJoin() ? S_TRUE : S_FALSE);
             xml.append("' name='");
@@ -2140,7 +2140,7 @@ public final class JabberXml extends ClientConnection {
         xml.append("<iq type='set' id='").append(generateId())
             .append("'><query xmlns='jabber:iq:roster'>");
         for (int i = 0; i < contacts.size(); ++i) {
-            JabberContact contact = (JabberContact)contacts.elementAt(i);
+            XmppContact contact = (XmppContact)contacts.elementAt(i);
             if (!contact.getUserId().endsWith(gate)) {
                 continue;
             }
@@ -2154,7 +2154,7 @@ public final class JabberXml extends ClientConnection {
         putPacketIntoQueue(xml.toString());
     }
 
-    public void updateContact(JabberContact contact) {
+    public void updateContact(XmppContact contact) {
         if (contact.isConference() && Jid.isConference(contact.getUserId()) && !isGTalk_) {
             contact.setTempFlag(false);
             contact.setBooleanValue(Contact.CONTACT_NO_AUTH, false);
@@ -2265,7 +2265,7 @@ public final class JabberXml extends ClientConnection {
      */
     void sendMessage(PlainMessage message) {
         String to = message.getRcvrUin();
-        JabberContact toContact = (JabberContact)protocol.getItemByUID(to);
+        XmppContact toContact = (XmppContact)protocol.getItemByUID(to);
         if (null != toContact) {
             to = toContact.getReciverJid();
         }
@@ -2293,7 +2293,7 @@ public final class JabberXml extends ClientConnection {
     }
 
 
-    void sendPresence(JabberServiceContact conf) {
+    void sendPresence(XmppServiceContact conf) {
         String to = conf.getUserId();
         String xml = "";
         if (conf.isConference()) {
@@ -2412,7 +2412,7 @@ public final class JabberXml extends ClientConnection {
         getVCard(contact.getUserId());
         return singleUserInfo;
     }
-    void register2(JabberForm form, String rawXml, String jid) {
+    void register2(XmppForm form, String rawXml, String jid) {
         jabberForm = form;
         autoSubscribeDomain = jid;
         requestRawXml(rawXml);
@@ -2422,7 +2422,7 @@ public final class JabberXml extends ClientConnection {
         && (jid.equals(autoSubscribeDomain) || jid.endsWith('@' + autoSubscribeDomain));
     }
     void register(String jid) {
-        jabberForm = new JabberForm(JabberForm.TYPE_REGISTER, getJabber(), jid);
+        jabberForm = new XmppForm(XmppForm.TYPE_REGISTER, getJabber(), jid);
         requestIq(jid, "jabber:iq:register", jabberForm.getId());
         jabberForm.show();
     }
@@ -2432,7 +2432,7 @@ public final class JabberXml extends ClientConnection {
     }
 
     void requestOwnerForm(String jid) {
-        jabberForm = new JabberForm(JabberForm.TYPE_OWNER, getJabber(), jid);
+        jabberForm = new XmppForm(XmppForm.TYPE_OWNER, getJabber(), jid);
         requestIq(jid, "http://jabber.org/protocol/muc#owner", jabberForm.getId());
         jabberForm.show();
     }
@@ -2469,14 +2469,14 @@ public final class JabberXml extends ClientConnection {
         if (XStatusInfo.XSTATUS_NONE == x) {
             return "";
         }
-        String code = Jabber.xStatus.getCode(x);
-        if ((null == code) || !code.startsWith(JabberXStatus.XSTATUS_START)) {
+        String code = Xmpp.xStatus.getCode(x);
+        if ((null == code) || !code.startsWith(XmppXStatus.XSTATUS_START)) {
             return "";
         }
-        if (code.equals(JabberXStatus.XSTATUS_TEXT_NONE)) {
+        if (code.equals(XmppXStatus.XSTATUS_TEXT_NONE)) {
             return "";
         }
-        String id = code.substring(JabberXStatus.XSTATUS_START.length());
+        String id = code.substring(XmppXStatus.XSTATUS_START.length());
         return "<x xmlns='" + S_FEATURE_XSTATUS + "' id='"
                 + Util.xmlEscape(id) + "'><title>"
                 + Util.xmlEscape(getJabber().getProfile().xstatusTitle)
@@ -2485,16 +2485,16 @@ public final class JabberXml extends ClientConnection {
 
     private static final String S_FEATURE_XSTATUS = "http://qip.ru/x-status";
     void setXStatus() {
-        String xstatusCode = Jabber.xStatus.getCode(getJabber().getProfile().xstatusIndex);
+        String xstatusCode = Xmpp.xStatus.getCode(getJabber().getProfile().xstatusIndex);
         if (null == xstatusCode) {
             return;
         }
 
         setXStatusToIcqTransports();
 
-        if (xstatusCode.startsWith(JabberXStatus.XSTATUS_START)) {
+        if (xstatusCode.startsWith(XmppXStatus.XSTATUS_START)) {
             setStatus(getNativeStatus(getJabber().getProfile().statusIndex),
-                    getJabber().getProfile().statusMessage, Jabber.PRIORITY);
+                    getJabber().getProfile().statusMessage, Xmpp.PRIORITY);
             return;
         }
         final String mood = "mo"+"od";
@@ -2510,8 +2510,8 @@ public final class JabberXml extends ClientConnection {
         }
     }
 
-    private void setXStatusToIcqTransport(JabberServiceContact gate) {
-        String xstatus = Jabber.xStatus.getIcqXStatus(getJabber().getProfile().xstatusIndex);
+    private void setXStatusToIcqTransport(XmppServiceContact gate) {
+        String xstatus = Xmpp.xStatus.getIcqXStatus(getJabber().getProfile().xstatusIndex);
         if (null == xstatus) {
             return;
         }
@@ -2529,15 +2529,15 @@ public final class JabberXml extends ClientConnection {
         }
     }
     private void setXStatusToIcqTransports() {
-        String x = Jabber.xStatus.getIcqXStatus(getJabber().getProfile().xstatusIndex);
+        String x = Xmpp.xStatus.getIcqXStatus(getJabber().getProfile().xstatusIndex);
         if (null == x) {
             return;
         }
         Vector contacts = getJabber().getContactItems();
         for (int i = contacts.size() - 1; i >= 0; --i) {
-            JabberContact c = (JabberContact)contacts.elementAt(i);
+            XmppContact c = (XmppContact)contacts.elementAt(i);
             if (c.isOnline() && Jid.isPyIcqGate(c.getUserId())) {
-                setXStatusToIcqTransport((JabberServiceContact)c);
+                setXStatusToIcqTransport((XmppServiceContact)c);
             }
         }
     }

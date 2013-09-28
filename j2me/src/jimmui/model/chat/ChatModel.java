@@ -7,10 +7,10 @@ import jimm.comm.Util;
 import jimmui.view.icons.Icon;
 import protocol.Contact;
 import protocol.Protocol;
-import protocol.jabber.Jabber;
-import protocol.jabber.JabberContact;
-import protocol.jabber.JabberServiceContact;
-import protocol.jabber.Jid;
+import protocol.xmpp.Xmpp;
+import protocol.xmpp.XmppContact;
+import protocol.xmpp.XmppServiceContact;
+import protocol.xmpp.Jid;
 import protocol.ui.InfoFactory;
 
 import javax.microedition.lcdui.Font;
@@ -112,7 +112,7 @@ public class ChatModel {
     public boolean isHuman() {
         boolean service = isBlogBot() || protocol.isBot(getContact());
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (getContact() instanceof JabberContact) {
+        if (getContact() instanceof XmppContact) {
             service |= Jid.isGate(getContact().getUserId());
         }
         // #sijapp cond.end #
@@ -121,8 +121,8 @@ public class ChatModel {
 
     public boolean isBlogBot() {
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (getContact() instanceof JabberContact) {
-            return ((Jabber) protocol).isBlogBot(getContact().getUserId());
+        if (getContact() instanceof XmppContact) {
+            return ((Xmpp) protocol).isBlogBot(getContact().getUserId());
         }
         // #sijapp cond.end #
         return false;
@@ -150,8 +150,8 @@ public class ChatModel {
     }
     public final String getMyName() {
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (getContact() instanceof JabberServiceContact) {
-            String nick = ((JabberServiceContact)getContact()).getMyName();
+        if (getContact() instanceof XmppServiceContact) {
+            String nick = ((XmppServiceContact)getContact()).getMyName();
             if (null != nick) return nick;
         }
         // #sijapp cond.end#

@@ -9,7 +9,7 @@
 
 // #sijapp cond.if protocols_JABBER is "true" #
 // #sijapp cond.if modules_XSTATUSES is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import jimm.comm.Config;
 import jimm.comm.StringConvertor;
@@ -19,7 +19,7 @@ import protocol.ui.XStatusInfo;
  *
  * @author Vladimir Krukov
  */
-public class JabberXStatus {
+public class XmppXStatus {
     private final String[] xstatusCaps;
 
     public static final int TYPE_X = 0x1000;
@@ -30,7 +30,7 @@ public class JabberXStatus {
     public static final String XSTATUS_TEXT_NONE = "qip:none";
     public static final String XSTATUS_START = "qip:";
 
-    public JabberXStatus() {
+    public XmppXStatus() {
         Config cfg = new Config().loadLocale("/jabber-xstatus.txt");
         xstatusCaps = cfg.getKeys();
     }
@@ -62,7 +62,7 @@ public class JabberXStatus {
             if (-1 != index) {
                 String xstr = xstatusCaps[capsIndex];
                 final int endPos = index + id.length();
-                if ((endPos < xstr.length()) && (StringConvertor.DELEMITER != xstr.charAt(endPos))) {
+                if ((endPos < xstr.length()) && (StringConvertor.DELIMITER != xstr.charAt(endPos))) {
                     continue;
                 }
                 return capsIndex | getType(id);
@@ -75,7 +75,7 @@ public class JabberXStatus {
         if (pos < 0) {
             return defval;
         }
-        int strEnd = str.indexOf(StringConvertor.DELEMITER, pos);
+        int strEnd = str.indexOf(StringConvertor.DELIMITER, pos);
         if (-1 == strEnd) {
     	    str = str.substring(pos);
         } else {

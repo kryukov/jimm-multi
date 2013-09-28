@@ -1,7 +1,6 @@
 package jimm.cl;
 
 import jimm.*;
-import jimm.modules.DebugLog;
 import jimmui.model.chat.ChatModel;
 import jimmui.model.chat.MessData;
 import jimm.comm.Util;
@@ -12,7 +11,7 @@ import protocol.ui.InfoFactory;
 import protocol.ui.StatusInfo;
 import protocol.icq.*;
 import protocol.mrim.*;
-import protocol.jabber.*;
+import protocol.xmpp.*;
 
 import java.util.Vector;
 
@@ -244,8 +243,8 @@ public class JimmModel {
                 break;
             // #sijapp cond.end #
             // #sijapp cond.if protocols_JABBER is "true" #
-            case Profile.PROTOCOL_JABBER:
-                protocol = new Jabber();
+            case Profile.PROTOCOL_XMPP:
+                protocol = new Xmpp();
                 break;
             // #sijapp cond.end #
             // #sijapp cond.if protocols_OBIMP is "true" #

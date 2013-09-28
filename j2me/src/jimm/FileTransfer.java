@@ -42,6 +42,7 @@ import jimm.util.JLocale;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.net.TcpSocket;
+import protocol.xmpp.XmppContact;
 
 public final class FileTransfer implements FormListener, FileBrowserListener,
         PhotoListener, Runnable {
@@ -173,7 +174,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         name_Desc.addTextField(descriptionField, "description", "", 255);
         String items = "jimm.net.ru|www.jimm.net.ru|jimm.org";
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (cItem instanceof protocol.jabber.JabberContact) {
+        if (cItem instanceof XmppContact) {
             if (cItem.isSingleUserContact() && cItem.isOnline()) {
                 items += "|ibb";
             }

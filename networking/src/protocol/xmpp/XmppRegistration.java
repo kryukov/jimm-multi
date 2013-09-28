@@ -1,4 +1,4 @@
-package protocol.jabber;
+package protocol.xmpp;
 // #sijapp cond.if protocols_JABBER is "true" #
 
 import jimm.*;
@@ -11,9 +11,9 @@ import protocol.Profile;
  *
  * @author Vladimir Kryukov
  */
-public class JabberRegistration implements Runnable, FormListener {
+public class XmppRegistration implements Runnable, FormListener {
     private XForm form;
-    private JabberXml connection;
+    private XmppXml connection;
     private AccountsForm opts;
     private byte type;
     private String id;
@@ -29,7 +29,7 @@ public class JabberRegistration implements Runnable, FormListener {
     private final static int FORM_SERVER = 0;
 
 
-    public JabberRegistration(AccountsForm of) {
+    public XmppRegistration(AccountsForm of) {
         opts = of;
     }
     public void show() {
@@ -51,7 +51,7 @@ public class JabberRegistration implements Runnable, FormListener {
     public void run() {
         String error = null;
         try {
-            connection = new JabberXml();
+            connection = new XmppXml();
             XmlNode xform = connection.newAccountConnect(domain, "socket://" + getServer(domain));
             id = "reg1";
             form.loadFromXml(xform.childAt(0), xform);
@@ -67,7 +67,7 @@ public class JabberRegistration implements Runnable, FormListener {
             XmlNode n = connection.newAccountRegister(xml);
             if (("r" + "esult").equals(n.getAttribute("t" + "ype"))) {
                 Profile account = new Profile();
-                account.protocolType = Profile.PROTOCOL_JABBER;
+                account.protocolType = Profile.PROTOCOL_XMPP;
                 account.userId = username + "@" + domain;
                 account.password = password;
                 account.nick = "";

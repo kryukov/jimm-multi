@@ -30,7 +30,7 @@ import jimm.util.JLocale;
 import protocol.net.TcpSocket;
 import protocol.*;
 import protocol.icq.*;
-import protocol.jabber.*;
+import protocol.xmpp.*;
 import protocol.mrim.*;
 // #sijapp cond.if protocols_OBIMP is "true" #
 import protocol.obimp.*;
@@ -60,7 +60,7 @@ public class UserInfo implements
     public String status;
     // #sijapp cond.end #
     // #sijapp cond.if protocols_JABBER is "true" #
-    public protocol.jabber.XmlNode vCard;
+    public protocol.xmpp.XmlNode vCard;
     // #sijapp cond.end #
     /////////////////////////////////////
     public final String realUin;
@@ -227,7 +227,7 @@ public class UserInfo implements
             menu.addItem("edit",      INFO_MENU_EDIT);
             // #sijapp cond.if protocols_JABBER is "true" #
             // #sijapp cond.if modules_FILES="true"#
-            if (protocol instanceof Jabber) {
+            if (protocol instanceof Xmpp) {
                 // #sijapp cond.if target is "MIDP2" #
                 menu.addItem("take_photo", INFO_MENU_TAKE_AVATAR);
                 // #sijapp cond.end #
@@ -264,7 +264,7 @@ public class UserInfo implements
         isEditable |= (protocol instanceof Obimp);
         // #sijapp cond.end #
         // #sijapp cond.if protocols_JABBER is "true" #
-        isEditable |= (protocol instanceof Jabber);
+        isEditable |= (protocol instanceof Xmpp);
         // #sijapp cond.end #
         return isEditable && protocol.getUserId().equals(uin)
                 && protocol.isConnected();

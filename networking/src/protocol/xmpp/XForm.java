@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package protocol.jabber;
+package protocol.xmpp;
 
 // #sijapp cond.if protocols_JABBER is "true" #
 import java.util.Vector;
@@ -258,7 +258,7 @@ final class XForm {
             form.addPasswordField(num, label, value, 64);
 
         } else if (S_BOOLEAN.equals(type)) {
-            form.addCheckBox(num, label, JabberXml.isTrue(value));
+            form.addCheckBox(num, label, XmppXml.isTrue(value));
 
         } else if (S_JID_SINGLE.equals(type)) {
             form.addTextField(num, label, value, 512);

@@ -22,7 +22,7 @@ import jimm.search.*;
 import jimm.util.JLocale;
 import jimmui.model.chat.ChatModel;
 import jimmui.updater.RosterUpdater;
-import protocol.jabber.*;
+import protocol.xmpp.*;
 import protocol.ui.StatusInfo;
 
             /**
@@ -914,8 +914,8 @@ abstract public class Protocol {
         PlainMessage plainMsg = new PlainMessage(this, to, Jimm.getCurrentGmtTime(), msg);
         if (isConnected()) {
             // #sijapp cond.if protocols_JABBER is "true" #
-            if (msg.startsWith("/") && !msg.startsWith("/me ") && !msg.startsWith("/wakeup") && (to instanceof JabberContact)) {
-                boolean cmdExecuted = ((JabberContact)to).execCommand(this, msg);
+            if (msg.startsWith("/") && !msg.startsWith("/me ") && !msg.startsWith("/wakeup") && (to instanceof XmppContact)) {
+                boolean cmdExecuted = ((XmppContact)to).execCommand(this, msg);
                 if (!cmdExecuted) {
                     String text = JLocale.getString("jabber_command_not_found");
                     SystemNotice notice = new SystemNotice(this, SystemNotice.TYPE_NOTICE_MESSAGE, to.getUserId(), text);

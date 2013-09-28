@@ -8,7 +8,7 @@
  */
 
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import jimmui.Clipboard;
 import jimm.Jimm;
@@ -36,8 +36,8 @@ public final class ConferenceParticipants extends SomeContent {
     private static ImageList affiliationIcons = ImageList.createImageList("/jabber-affiliations.png");
     private Font[] fontSet;
 
-    private Jabber protocol;
-    private JabberServiceContact conference;
+    private Xmpp protocol;
+    private XmppServiceContact conference;
     private Vector contacts = new Vector();
 
     private final Icon[] leftIcons = new Icon[2];
@@ -56,9 +56,9 @@ public final class ConferenceParticipants extends SomeContent {
 
     private int myRole;
 
-    public ConferenceParticipants(Jabber jabber, JabberServiceContact conf) {
+    public ConferenceParticipants(Xmpp xmpp, XmppServiceContact conf) {
         fontSet = GraphicsEx.chatFontSet;
-        protocol = jabber;
+        protocol = xmpp;
         conference = conf;
         myRole = getRole(conference.getMyName());
         update();
@@ -86,8 +86,8 @@ public final class ConferenceParticipants extends SomeContent {
             return null;
         }
         Object o = contacts.elementAt(contactIndex);
-        if (o instanceof JabberContact.SubContact) {
-            JabberContact.SubContact c = (JabberContact.SubContact)o;
+        if (o instanceof XmppContact.SubContact) {
+            XmppContact.SubContact c = (XmppContact.SubContact)o;
             return c.resource;
         }
         return null;
@@ -213,10 +213,10 @@ public final class ConferenceParticipants extends SomeContent {
         menu.addItem("user_statuses", COMMAND_STATUS);
         menu.addItem("copy_text", COMMAND_COPY);
 
-        if (JabberServiceContact.ROLE_MODERATOR == myRole) {
+        if (XmppServiceContact.ROLE_MODERATOR == myRole) {
             int role = getRole(nick);
-            if (JabberServiceContact.ROLE_MODERATOR != role) {
-                if (JabberServiceContact.ROLE_PARTICIPANT == role) {
+            if (XmppServiceContact.ROLE_MODERATOR != role) {
+                if (XmppServiceContact.ROLE_PARTICIPANT == role) {
                     menu.addItem("devoice", COMMAND_DEVOICE);
                 } else {
                     menu.addItem("voice", COMMAND_VOICE);
@@ -233,17 +233,17 @@ public final class ConferenceParticipants extends SomeContent {
         if (null != view) view.lock();
         int currentIndex = getCurrItem();
         contacts.removeAllElements();
-        addLayerToListOfSubcontacts("list_of_moderators", JabberServiceContact.ROLE_MODERATOR);
-        addLayerToListOfSubcontacts("list_of_participants", JabberServiceContact.ROLE_PARTICIPANT);
-        addLayerToListOfSubcontacts("list_of_visitors", JabberServiceContact.ROLE_VISITOR);
+        addLayerToListOfSubcontacts("list_of_moderators", XmppServiceContact.ROLE_MODERATOR);
+        addLayerToListOfSubcontacts("list_of_participants", XmppServiceContact.ROLE_PARTICIPANT);
+        addLayerToListOfSubcontacts("list_of_visitors", XmppServiceContact.ROLE_VISITOR);
         setCurrentItemIndex(currentIndex);
         if (null != view) view.unlock();
     }
 
     private int getRole(String nick) {
-        JabberContact.SubContact c = conference.getContact(nick);
-        int priority = (null == c) ? JabberServiceContact.ROLE_VISITOR : c.priority;
-        return priority & JabberServiceContact.ROLE_MASK;
+        XmppContact.SubContact c = conference.getContact(nick);
+        int priority = (null == c) ? XmppServiceContact.ROLE_VISITOR : c.priority;
+        return priority & XmppServiceContact.ROLE_MASK;
     }
 
 
@@ -252,8 +252,8 @@ public final class ConferenceParticipants extends SomeContent {
         contacts.addElement(JLocale.getString(layer));
         Vector subcontacts = conference.subContacts;
         for (int i = 0; i < subcontacts.size(); ++i) {
-            JabberContact.SubContact contact = (JabberContact.SubContact)subcontacts.elementAt(i);
-            if ((contact.priority & JabberServiceContact.ROLE_MASK) == priority) {
+            XmppContact.SubContact contact = (XmppContact.SubContact)subcontacts.elementAt(i);
+            if ((contact.priority & XmppServiceContact.ROLE_MASK) == priority) {
                 contacts.addElement(contact);
                 hasLayer = true;
             }
@@ -265,8 +265,8 @@ public final class ConferenceParticipants extends SomeContent {
     }
     protected int getItemHeight(int itemIndex) {
         Object o = contacts.elementAt(itemIndex);
-        if (o instanceof JabberContact.SubContact) {
-            JabberContact.SubContact c = (JabberContact.SubContact)o;
+        if (o instanceof XmppContact.SubContact) {
+            XmppContact.SubContact c = (XmppContact.SubContact)o;
             int height = fontSet[CanvasEx.FONT_STYLE_PLAIN].getHeight() + 1;
             // #sijapp cond.if modules_CLIENTS is "true" #
             Icon client = InfoFactory.factory.getClientInfo(protocol).getIcon(c.client);
@@ -287,11 +287,11 @@ public final class ConferenceParticipants extends SomeContent {
     protected void drawItemData(GraphicsEx g, int index, int x, int y, int w, int h, int skip, int to) {
         g.setThemeColor(CanvasEx.THEME_TEXT);
         Object o = contacts.elementAt(index);
-        if (o instanceof JabberContact.SubContact) {
-            JabberContact.SubContact c = (JabberContact.SubContact)o;
+        if (o instanceof XmppContact.SubContact) {
+            XmppContact.SubContact c = (XmppContact.SubContact)o;
             g.setFont(fontSet[CanvasEx.FONT_STYLE_PLAIN]);
             leftIcons[0] = InfoFactory.factory.getStatusInfo(protocol).getIcon(c.status);
-            leftIcons[1] = affiliationIcons.iconAt(c.priority & JabberServiceContact.AFFILIATION_MASK);
+            leftIcons[1] = affiliationIcons.iconAt(c.priority & XmppServiceContact.AFFILIATION_MASK);
             // #sijapp cond.if modules_CLIENTS is "true" #
             rightIcons[0] = InfoFactory.factory.getClientInfo(protocol).getIcon(c.client);
             // #sijapp cond.end #
@@ -313,9 +313,9 @@ public final class ConferenceParticipants extends SomeContent {
     }
     private void nickSelected(String nick) {
         String jid = Jid.realJidToJimmJid(conference.getUserId() + "/" + nick);
-        JabberServiceContact c = (JabberServiceContact)protocol.getItemByUID(jid);
+        XmppServiceContact c = (XmppServiceContact)protocol.getItemByUID(jid);
         if (null == c) {
-            c = (JabberServiceContact)protocol.createTempContact(jid);
+            c = (XmppServiceContact)protocol.createTempContact(jid);
             protocol.addTempContact(c);
         }
         c.activate(protocol);
@@ -325,7 +325,7 @@ public final class ConferenceParticipants extends SomeContent {
         protocol.getConnection().setMucRole(conference.getUserId(), nick, role);
     }
     public void setMucAffiliation(String nick, String affiliation) {
-        JabberContact.SubContact c = conference.getExistSubContact(nick);
+        XmppContact.SubContact c = conference.getExistSubContact(nick);
         if ((null == c) || (null == c.realJid)) {
             return;
         }

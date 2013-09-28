@@ -20,6 +20,7 @@ import jimmui.view.text.TextListController;
 import jimmui.view.text.TextListModel;
 import jimm.util.JLocale;
 import protocol.*;
+import protocol.xmpp.XmppRegistration;
 
 /**
  *
@@ -152,7 +153,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
                 // #sijapp cond.if protocols_JABBER is "true" #
             case MENU_ACCOUNT_CREATE:
                 accountList.restore();
-                new protocol.jabber.JabberRegistration(this).show();
+                new XmppRegistration(this).show();
                 break;
                 // #sijapp cond.end #
 

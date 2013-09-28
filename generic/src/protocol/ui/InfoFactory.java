@@ -8,7 +8,7 @@ import protocol.Contact;
 import protocol.Profile;
 import protocol.Protocol;
 import protocol.icq.ClientDetector;
-import protocol.jabber.JabberClient;
+import protocol.xmpp.XmppClient;
 import protocol.mrim.MrimClient;
 
 /**
@@ -84,7 +84,7 @@ public class InfoFactory {
             // #sijapp cond.end #
 
             // #sijapp cond.if protocols_JABBER is "true" #
-            case Profile.PROTOCOL_JABBER:
+            case Profile.PROTOCOL_XMPP:
                 statusIcons = createStatusIcons(protocolType);
                 statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
                 return new StatusInfo(statusIcons, statusIconIndex, xmppStatuses);
@@ -173,8 +173,8 @@ public class InfoFactory {
             // #sijapp cond.end #
 
             // #sijapp cond.if protocols_JABBER is "true" #
-            case Profile.PROTOCOL_JABBER:
-                return JabberClient.get();
+            case Profile.PROTOCOL_XMPP:
+                return XmppClient.get();
             // #sijapp cond.end #
 
             // #sijapp cond.if protocols_OBIMP is "true" #
@@ -220,7 +220,7 @@ public class InfoFactory {
                 // #sijapp cond.end #
 
             // #sijapp cond.if protocols_JABBER is "true" #
-            case Profile.PROTOCOL_JABBER:
+            case Profile.PROTOCOL_XMPP:
                 config = new Config().loadLocale("/jabber-xstatus.txt");
                 names = config.getValues();
                 icons = ImageList.createImageList("/jabber-xstatus.png");

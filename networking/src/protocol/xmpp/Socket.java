@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package protocol.jabber;
+package protocol.xmpp;
 
 import com.jcraft.jzlib.*;
 import jimm.JimmException;

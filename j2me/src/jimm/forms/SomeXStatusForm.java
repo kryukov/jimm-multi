@@ -21,7 +21,7 @@ import jimmui.view.form.FormListener;
 import jimmui.view.menu.*;
 import protocol.*;
 import protocol.icq.*;
-import protocol.jabber.*;
+import protocol.xmpp.*;
 import protocol.mrim.*;
 import protocol.ui.InfoFactory;
 import protocol.ui.XStatusInfo;
@@ -68,7 +68,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
         }
         // #sijapp cond.end#
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (protocol instanceof Jabber) {
+        if (protocol instanceof Xmpp) {
             return "jabber";
         }
         // #sijapp cond.end#

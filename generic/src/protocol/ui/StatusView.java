@@ -23,7 +23,7 @@ import jimmui.view.text.TextListController;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.icq.*;
-import protocol.jabber.*;
+import protocol.xmpp.*;
 
 /**
  *
@@ -94,7 +94,7 @@ public final class StatusView extends TextListController {
             return;
         }
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (contact instanceof JabberServiceContact) {
+        if (contact instanceof XmppServiceContact) {
             return;
         }
         // #sijapp cond.end #

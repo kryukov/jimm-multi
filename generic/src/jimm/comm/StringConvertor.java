@@ -28,7 +28,7 @@ public final class StringConvertor {
     public static final String MRIM2JIMM = "mrim2jimm";
     public static final String JIMM2MRIM = "jimm2mrim";
     public static final String JABBER2JIMM = "jabber2jimm";
-    public static final char DELEMITER = ' ';
+    public static final char DELIMITER = ' ';
 
     private static boolean systemWin1251 = true;
 

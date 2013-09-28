@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import java.util.Vector;
 import jimm.*;
@@ -22,9 +22,9 @@ import protocol.ui.StatusInfo;
  *
  * @author Vladimir Kryukov
  */
-public class JabberContact extends Contact implements SelectListener {
+public class XmppContact extends Contact implements SelectListener {
     /** Creates a new instance of JabberContact */
-    public JabberContact(String jid, String name) {
+    public XmppContact(String jid, String name) {
         this.userId = jid;
         this.setName((null == name) ? jid : name);
         setOfflineStatus();
@@ -39,7 +39,7 @@ public class JabberContact extends Contact implements SelectListener {
     }
 
     public String getDefaultGroupName() {
-        return JLocale.getString(Jabber.GENERAL_GROUP);
+        return JLocale.getString(Xmpp.GENERAL_GROUP);
     }
 
     /////////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ public class JabberContact extends Contact implements SelectListener {
     public static final int USER_MENU_ADHOC       = 12;
 
     public void addChatMenuItems(MenuModel model) {
-        if (isOnline() && !(this instanceof JabberServiceContact)) {
+        if (isOnline() && !(this instanceof XmppServiceContact)) {
             if (Options.getBoolean(Options.OPTION_ALARM)) {
                 model.addItem("wake", USER_MENU_WAKE);
             }
@@ -96,7 +96,7 @@ public class JabberContact extends Contact implements SelectListener {
     }
     /////////////////////////////////////////////////////////////////////////
     String getReciverJid() {
-        if (this instanceof JabberServiceContact) {
+        if (this instanceof XmppServiceContact) {
         } else if (!StringConvertor.isEmpty(currentResource)) {
             return getUserId() + "/" + currentResource;
         }
@@ -135,16 +135,16 @@ public class JabberContact extends Contact implements SelectListener {
             return false;
         }
 
-        JabberXml jabberXml = ((Jabber)protocol).getConnection();
+        XmppXml xmppXml = ((Xmpp)protocol).getConnection();
 
         String jid = Jid.jimmJidToRealJid(getUserId());
         String fullJid = jid;
         if (isConference()) {
-            String nick = ((JabberServiceContact)this).getMyName();
+            String nick = ((XmppServiceContact)this).getMyName();
             fullJid = Jid.jimmJidToRealJid(getUserId() + '/' + nick);
         }
 
-    	xml = Util.replace(xml, "${jimm.caps}", jabberXml.getCaps());
+    	xml = Util.replace(xml, "${jimm.caps}", xmppXml.getCaps());
         xml = Util.replace(xml, "${c.jid}", Util.xmlEscape(jid));
         xml = Util.replace(xml, "${c.fulljid}", Util.xmlEscape(fullJid));
     	xml = Util.replace(xml, "${param.full}", Util.xmlEscape(param));
@@ -155,7 +155,7 @@ public class JabberContact extends Contact implements SelectListener {
         xml = Util.replace(xml, "${param.full.realjid}",
     		Util.xmlEscape(getSubContactRealJid(param)));
 
-        jabberXml.requestRawXml(xml);
+        xmppXml.requestRawXml(xml);
         return true;
     }
     private String getSubContactRealJid(String resource) {
@@ -254,17 +254,17 @@ public class JabberContact extends Contact implements SelectListener {
             c.statusText = statusText;
         }
     }
-    void updateMainStatus(Jabber jabber) {
+    void updateMainStatus(Xmpp xmpp) {
         if (isSingleUserContact()) {
             SubContact c = getCurrentSubContact();
             if (null == c) {
                 setOfflineStatus();
 
-            } else if (this instanceof JabberServiceContact) {
+            } else if (this instanceof XmppServiceContact) {
                 setStatus(c.status, c.statusText);
 
             } else {
-                jabber.setContactStatus(this, c.status, c.statusText);
+                xmpp.setContactStatus(this, c.status, c.statusText);
             }
         }
     }
@@ -273,7 +273,7 @@ public class JabberContact extends Contact implements SelectListener {
     public void setClient(String resource, String caps) {
         SubContact c = getExistSubContact(resource);
         if (null != c) {
-            c.client = JabberClient.createClient(caps);
+            c.client = XmppClient.createClient(caps);
         }
         SubContact cur = getCurrentSubContact();
         setClient((null == cur) ? ClientInfo.CLI_NONE : cur.client, null);
@@ -286,7 +286,7 @@ public class JabberContact extends Contact implements SelectListener {
             jimm.modules.DebugLog.println("xstatus " + getUserId() + " " + id + " " + text);
         }
         // #sijapp cond.end #
-        setXStatus(Jabber.xStatus.createXStatus(id), text);
+        setXStatus(Xmpp.xStatus.createXStatus(id), text);
     }
     // #sijapp cond.end #
 

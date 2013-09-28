@@ -38,7 +38,7 @@ import jimmui.view.base.*;
 import jimmui.view.roster.items.ProtocolBranch;
 import jimmui.view.roster.items.TreeNode;
 import protocol.*;
-import protocol.jabber.*;
+import protocol.xmpp.*;
 import protocol.ui.ContactMenu;
 import protocol.ui.InfoFactory;
 
@@ -163,9 +163,9 @@ public final class ContactList implements ContactListListener {
         }
         boolean isMention = false;
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (!isPersonal && !message.isOffline() && (contact instanceof JabberContact)) {
+        if (!isPersonal && !message.isOffline() && (contact instanceof XmppContact)) {
             String msg = message.getText();
-            String myName = ((JabberServiceContact)contact).getMyName();
+            String myName = ((XmppServiceContact)contact).getMyName();
             // regexp: "^nick. "
             isPersonal = msg.startsWith(myName)
                     && msg.startsWith(" ", myName.length() + 1);
@@ -341,7 +341,7 @@ public final class ContactList implements ContactListListener {
             return;
         }
         // #sijapp cond.if protocols_JABBER is "true" #
-        if (contact instanceof JabberServiceContact) {
+        if (contact instanceof XmppServiceContact) {
             return;
         }
         // #sijapp cond.end #

@@ -22,6 +22,7 @@ import jimmui.view.menu.*;
 import jimm.util.*;
 import protocol.*;
 import protocol.mrim.Mrim;
+import protocol.xmpp.Xmpp;
 
 /**
  *
@@ -49,7 +50,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
     private Contact contact;
     private int action;
     // #sijapp cond.if protocols_JABBER is "true" #
-    private String jabberGate = null;
+    private String xmppGate = null;
     // #sijapp cond.end #
 
     /** Creates a new instance of ManageContactListForm */
@@ -109,7 +110,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
         if (canAdd) {
             manageCL.addItem("add_user", ADD_CONTACT);
             // #sijapp cond.if protocols_JABBER is "true" #
-            if (!(protocol instanceof protocol.jabber.Jabber)) {
+            if (!(protocol instanceof Xmpp)) {
                 manageCL.addItem("search_user", SEARCH_CONTACT);
             }
             // #sijapp cond.else #
@@ -202,8 +203,8 @@ public final class ManageContactListForm implements SelectListener, FormListener
                     return;
                 }
                 // #sijapp cond.if protocols_JABBER is "true" #
-                if ((null != jabberGate) && !userid.endsWith(jabberGate)) {
-                    userid = userid.replace('@', '%') + '@' + jabberGate;
+                if ((null != xmppGate) && !userid.endsWith(xmppGate)) {
+                    userid = userid.replace('@', '%') + '@' + xmppGate;
                 }
                 // #sijapp cond.end #
 
@@ -306,8 +307,8 @@ public final class ManageContactListForm implements SelectListener, FormListener
     }
 
     // #sijapp cond.if protocols_JABBER is "true" #
-    public void setJabberGate(String gate) {
-        jabberGate = gate;
+    public void setXmppGate(String gate) {
+        xmppGate = gate;
     }
     // #sijapp cond.end #
 
@@ -363,8 +364,8 @@ public final class ManageContactListForm implements SelectListener, FormListener
                 return;
             }
             // #sijapp cond.if protocols_JABBER is "true" #
-            if ((null != jabberGate) && !userId.endsWith(jabberGate)) {
-                userId = userId.replace('@', '%') + '@' + jabberGate;
+            if ((null != xmppGate) && !userId.endsWith(xmppGate)) {
+                userId = userId.replace('@', '%') + '@' + xmppGate;
             }
             // #sijapp cond.end #
             Contact contact = protocol.createTempContact(userId);

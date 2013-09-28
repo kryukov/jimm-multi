@@ -8,7 +8,7 @@
  */
 
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import java.util.Vector;
 
@@ -25,7 +25,7 @@ import protocol.ui.StatusInfo;
  *
  * @author Vladimir Kryukov
  */
-public class JabberServiceContact extends JabberContact {
+public class XmppServiceContact extends XmppContact {
     public static final int GATE_CONNECT = 0;
     public static final int GATE_DISCONNECT = 1;
     public static final int GATE_REGISTER = 2;
@@ -73,7 +73,7 @@ public class JabberServiceContact extends JabberContact {
     }
 
     /** Creates a new instance of JabberContact */
-    public JabberServiceContact(String jid, String name) {
+    public XmppServiceContact(String jid, String name) {
         super(jid, name);
 
         isGate = Jid.isGate(jid);
@@ -129,16 +129,16 @@ public class JabberServiceContact extends JabberContact {
     void doJoining() {
         setStatus(StatusInfo.STATUS_AWAY, "");
     }
-    void nickChainged(Jabber jabber, String oldNick, String newNick) {
+    void nickChainged(Xmpp xmpp, String oldNick, String newNick) {
         if (isConference) {
             if (baseMyNick.equals(oldNick)) {
                 setMyName(newNick);
                 baseMyNick = newNick;
             }
             String jid = Jid.realJidToJimmJid(getUserId() + "/" + oldNick);
-            JabberServiceContact c = (JabberServiceContact)jabber.getItemByUID(jid);
+            XmppServiceContact c = (XmppServiceContact) xmpp.getItemByUID(jid);
             if (null != c) {
-                c.nickChainged(jabber, oldNick, newNick);
+                c.nickChainged(xmpp, oldNick, newNick);
             }
 
         } else if (isPrivate) {
@@ -147,24 +147,24 @@ public class JabberServiceContact extends JabberContact {
             setOfflineStatus();
         }
     }
-    void nickOnline(Jabber jabber, String nick) {
+    void nickOnline(Xmpp xmpp, String nick) {
         if (hasChat()) {
-            jabber.getChatModel(this).setWritable(canWrite());
+            xmpp.getChatModel(this).setWritable(canWrite());
         }
         SubContact sc = getExistSubContact(nick);
         if (null != sc) {
-            Jimm.getJimm().getCL().setContactStatus(jabber, this, nick, sc.status);
+            Jimm.getJimm().getCL().setContactStatus(xmpp, this, nick, sc.status);
         }
         if (myNick.equals(nick)) {
             setStatus(StatusInfo.STATUS_ONLINE, getStatusText());
-            jabber.addRejoin(getUserId());
+            xmpp.addRejoin(getUserId());
         }
     }
-    void nickError(Jabber jabber, String nick, int code, String reasone) {
+    void nickError(Xmpp xmpp, String nick, int code, String reasone) {
         boolean isConnected = (StatusInfo.STATUS_ONLINE == getStatusIndex());
         if (409 == code) {
             if (!StringConvertor.isEmpty(reasone)) {
-                jabber.addMessage(new SystemNotice(jabber,
+                xmpp.addMessage(new SystemNotice(xmpp,
                         SystemNotice.TYPE_NOTICE_ERROR, getUserId(), reasone));
             }
             if (!myNick.equals(baseMyNick)) {
@@ -173,26 +173,26 @@ public class JabberServiceContact extends JabberContact {
             }
 
         } else {
-            jabber.addMessage(new SystemNotice(jabber,
+            xmpp.addMessage(new SystemNotice(xmpp,
                     SystemNotice.TYPE_NOTICE_ERROR, getUserId(), reasone));
         }
 
         if (myNick.equals(nick)) {
             if (isConnected) {
-                jabber.leave(this);
+                xmpp.leave(this);
 
             } else {
-                nickOffline(jabber, nick, 0, null);
+                nickOffline(xmpp, nick, 0, null);
             }
 
         } else {
-            nickOffline(jabber, nick, 0, null);
+            nickOffline(xmpp, nick, 0, null);
         }
     }
-    void nickOffline(Jabber jabber, String nick, int code, String reasone) {
+    void nickOffline(Xmpp xmpp, String nick, int code, String reasone) {
         if (getMyName().equals(nick)) {
             if (isOnline()) {
-                jabber.removeRejoin(getUserId());
+                xmpp.removeRejoin(getUserId());
             }
             String text = null;
             if (301 == code) {
@@ -208,14 +208,14 @@ public class JabberServiceContact extends JabberContact {
                     text += " (" + reasone + ")";
                 }
                 text += '.';
-                jabber.addMessage(new SystemNotice(jabber,
+                xmpp.addMessage(new SystemNotice(xmpp,
                         SystemNotice.TYPE_NOTICE_ERROR, getUserId(), text));
             }
             for (int i = 0; i < subContacts.size(); ++i) {
                 ((SubContact) subContacts.elementAt(i)).status = StatusInfo.STATUS_OFFLINE;
             }
             String startUin = getUserId() + '/';
-            Vector contactList = jabber.getContactItems();
+            Vector contactList = xmpp.getContactItems();
             for (int i = contactList.size() - 1; 0 <= i; --i) {
                 Contact c = (Contact)contactList.elementAt(i);
                 if (c.getUserId().startsWith(startUin)) {
@@ -223,7 +223,7 @@ public class JabberServiceContact extends JabberContact {
                 }
             }
             setOfflineStatus();
-            jabber.ui_changeContactStatus(this);
+            xmpp.ui_changeContactStatus(this);
 
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
         } else {
@@ -235,14 +235,14 @@ public class JabberServiceContact extends JabberContact {
             }
             if (null != event) {
                 event = JLocale.getString(event);
-                jimm.modules.MagicEye.addAction(jabber, getUserId(), nick + " " + event, reasone);
+                jimm.modules.MagicEye.addAction(xmpp, getUserId(), nick + " " + event, reasone);
             }
         // #sijapp cond.end #
         }
         if (hasChat()) {
-            jabber.getChatModel(this).setWritable(canWrite());
+            xmpp.getChatModel(this).setWritable(canWrite());
         }
-        Jimm.getJimm().getCL().setContactStatus(jabber, this, nick, StatusInfo.STATUS_OFFLINE);
+        Jimm.getJimm().getCL().setContactStatus(xmpp, this, nick, StatusInfo.STATUS_OFFLINE);
     }
 
     String getRealJid(String nick) {
@@ -255,10 +255,10 @@ public class JabberServiceContact extends JabberContact {
 
     public final String getDefaultGroupName() {
         if (isConference) {
-            return JLocale.getString(Jabber.CONFERENCE_GROUP);
+            return JLocale.getString(Xmpp.CONFERENCE_GROUP);
         }
         if (isGate) {
-            return JLocale.getString(Jabber.GATE_GROUP);
+            return JLocale.getString(Xmpp.GATE_GROUP);
         }
         return null;
     }
@@ -267,12 +267,12 @@ public class JabberServiceContact extends JabberContact {
             setStatus(StatusInfo.STATUS_ONLINE, subject);
         }
     }
-    JabberContact.SubContact getContact(String nick) {
+    XmppContact.SubContact getContact(String nick) {
         if (StringConvertor.isEmpty(nick)) {
             return null;
         }
         for (int i = 0; i < subContacts.size(); ++i) {
-            JabberContact.SubContact contact = (JabberContact.SubContact) subContacts.elementAt(i);
+            XmppContact.SubContact contact = (XmppContact.SubContact) subContacts.elementAt(i);
             if (nick.equals(contact.resource)) {
                 return contact;
             }
@@ -389,13 +389,13 @@ public class JabberServiceContact extends JabberContact {
         return false;
     }
 
-    public final void setPrivateContactStatus(JabberServiceContact conf) {
+    public final void setPrivateContactStatus(XmppServiceContact conf) {
         String nick = Jid.getResource(getUserId(), "");
         SubContact sc = (null == conf) ? null : conf.getExistSubContact(nick);
         if (null == sc) {
             setOfflineStatus();
             // #sijapp cond.if modules_CLIENTS is "true" #
-            setClient(JabberClient.CLIENT_NONE, null);
+            setClient(XmppClient.CLIENT_NONE, null);
             // #sijapp cond.end #
 
         } else {

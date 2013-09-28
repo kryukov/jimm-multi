@@ -10,8 +10,8 @@
 package protocol;
 
 import java.util.Vector;
-import jimm.Options;
-import protocol.jabber.*;
+
+import protocol.xmpp.*;
 import protocol.mrim.*;
 
 /**
@@ -103,7 +103,7 @@ public class TemporaryRoster {
 
                 g = null;
                 // #sijapp cond.if protocols_JABBER is "true" #
-                if (o instanceof JabberServiceContact) {
+                if (o instanceof XmppServiceContact) {
                     if (o.isSingleUserContact()) {
                         continue;
                     }

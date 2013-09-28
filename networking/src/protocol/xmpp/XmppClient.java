@@ -9,7 +9,7 @@
 
 // #sijapp cond.if protocols_JABBER is "true" #
 // #sijapp cond.if modules_CLIENTS is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import jimmui.view.icons.*;
 import jimm.comm.Config;
@@ -19,7 +19,7 @@ import protocol.ui.ClientInfo;
  *
  * @author Vladimir Krukov
  */
-public final class JabberClient {
+public final class XmppClient {
     private static final ImageList clientIcons = ImageList.createImageList("/jabber-clients.png");
     private static final String[] clientCaps;
     private static final String[] clientNames;

@@ -12,7 +12,7 @@ import jimmui.view.menu.SelectListener;
 import protocol.Protocol;
 import protocol.ui.StatusInfo;
 import protocol.icq.*;
-import protocol.jabber.*;
+import protocol.xmpp.*;
 import protocol.mrim.*;
 import protocol.ui.InfoFactory;
 
@@ -137,8 +137,8 @@ public class ProtocolMenu implements SelectListener {
         // #sijapp cond.end #
         if (protocol.isConnected()) {
             // #sijapp cond.if protocols_JABBER is "true" #
-            if (protocol instanceof Jabber) {
-                if (((Jabber)protocol).hasS2S()) {
+            if (protocol instanceof Xmpp) {
+                if (((Xmpp)protocol).hasS2S()) {
                     menu.addItem("service_discovery", MENU_DISCO);
                 }
             }
@@ -233,7 +233,7 @@ public class ProtocolMenu implements SelectListener {
 
             // #sijapp cond.if protocols_JABBER is "true" #
             case MENU_DISCO:
-                ((Jabber)proto).getServiceDiscovery().showIt();
+                ((Xmpp)proto).getServiceDiscovery().showIt();
                 break;
             // #sijapp cond.end #
 

@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package protocol.jabber;
+package protocol.xmpp;
 
 // #sijapp cond.if protocols_JABBER is "true" #
 // #sijapp cond.if modules_FILES is "true"#
@@ -34,9 +34,9 @@ public class IBBFileTransfer {
         this.fileName = name;
         this.fileDesc = desc;
         this.ft = ft;
-        JabberContact c = (JabberContact)ft.getReceiver();
+        XmppContact c = (XmppContact)ft.getReceiver();
         this.to = c.getUserId();
-        if (!(c instanceof JabberServiceContact)) {
+        if (!(c instanceof XmppServiceContact)) {
             String resource = c.getCurrentSubContact().resource;
             this.to += '/' + resource;
         }

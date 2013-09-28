@@ -8,7 +8,7 @@
  */
 
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import jimm.Jimm;
 import jimm.comm.*;
@@ -20,9 +20,9 @@ import protocol.*;
  *
  * @author Vladimir Krukov
  */
-final class JabberForm implements FormListener {
+final class XmppForm implements FormListener {
     private XForm form;
-    private Jabber jabber;
+    private Xmpp xmpp;
     private String jid;
     private String id;
 
@@ -33,8 +33,8 @@ final class JabberForm implements FormListener {
     private byte type = TYPE_CAPTCHA;
 
     /** Creates a new instance of JabberForm */
-    public JabberForm(byte formType, Jabber protocol, String resourceJid) {
-        jabber = protocol;
+    public XmppForm(byte formType, Xmpp protocol, String resourceJid) {
+        xmpp = protocol;
         jid = resourceJid;
         type = formType;
         id = newId();
@@ -89,7 +89,7 @@ final class JabberForm implements FormListener {
         } else {
             switch (type) {
                 case TYPE_CAPTCHA:
-                    Contact c = jabber.getItemByUID(jid);
+                    Contact c = xmpp.getItemByUID(jid);
                     Jimm.getJimm().getCL().activate(c);
                     return;
             }
@@ -103,7 +103,7 @@ final class JabberForm implements FormListener {
     }
 
     void success() {
-        Jimm.getJimm().getCL().activate(jabber.getItemByUID(jid));
+        Jimm.getJimm().getCL().activate(xmpp.getItemByUID(jid));
     }
 
     private String getCaptchaXml() {
@@ -131,17 +131,17 @@ final class JabberForm implements FormListener {
     private void doAction() {
         switch (type) {
             case TYPE_REGISTER:
-                jabber.getConnection().register2(this, getRegisterXml(), getJid());
+                xmpp.getConnection().register2(this, getRegisterXml(), getJid());
                 break;
 
             case TYPE_CAPTCHA:
-                jabber.getConnection().requestRawXml(getCaptchaXml());
-                Jimm.getJimm().getCL().activate(jabber.getItemByUID(jid));
+                xmpp.getConnection().requestRawXml(getCaptchaXml());
+                Jimm.getJimm().getCL().activate(xmpp.getItemByUID(jid));
                 break;
 
             case TYPE_OWNER:
-                jabber.getConnection().requestRawXml(getOwnerXml());
-                Jimm.getJimm().getCL().activate(jabber.getItemByUID(jid));
+                xmpp.getConnection().requestRawXml(getOwnerXml());
+                Jimm.getJimm().getCL().activate(xmpp.getItemByUID(jid));
                 break;
 
             case TYPE_NONE:

@@ -27,7 +27,7 @@ public class IcqXStatus {
         guids = new byte[keys.length][];
         ids = new short[keys.length];
         for (int i = 0; i < keys.length; ++i) {
-            String[] codes = Util.explode(keys[i], StringConvertor.DELEMITER);
+            String[] codes = Util.explode(keys[i], StringConvertor.DELIMITER);
             ids[i] = -1;
             for (int j = 0; j < codes.length; ++j) {
                 if (codes[j].length() != 32) {

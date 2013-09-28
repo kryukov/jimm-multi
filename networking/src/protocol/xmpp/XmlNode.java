@@ -3,7 +3,7 @@
  *
  */
 // #sijapp cond.if protocols_JABBER is "true" #
-package protocol.jabber;
+package protocol.xmpp;
 
 import java.util.Enumeration;
 import java.util.Hashtable;

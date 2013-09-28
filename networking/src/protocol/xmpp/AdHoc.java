@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package protocol.jabber;
+package protocol.xmpp;
 
 // #sijapp cond.if protocols_JABBER is "true" #
 import jimm.Jimm;
@@ -20,8 +20,8 @@ import jimm.util.JLocale;
  * @author Vladimir Krukov
  */
 public final class AdHoc implements FormListener, ControlStateListener {
-    private JabberContact contact;
-    private Jabber protocol;
+    private XmppContact contact;
+    private Xmpp protocol;
     private String jid;
     private String[] nodes;
     private String[] names;
@@ -30,7 +30,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
     private static final int FORM_RESOURCE = 1;
     private static final int FORM_COMMAND = 2;
 
-    public AdHoc(Jabber protocol, JabberContact contact) {
+    public AdHoc(Xmpp protocol, XmppContact contact) {
         this.protocol = protocol;
         this.contact = contact;
         this.jid = contact.getUserId() + "/" + contact.currentResource;
@@ -58,7 +58,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
     private String[] getResources() {
         String[] resources = new String[contact.subContacts.size()];
         for (int i = resources.length - 1; 0 <= i; --i) {
-            JabberContact.SubContact sub = (JabberContact.SubContact) contact.subContacts.elementAt(i);
+            XmppContact.SubContact sub = (XmppContact.SubContact) contact.subContacts.elementAt(i);
             resources[i] = sub.resource;
         }
         return resources;
@@ -100,7 +100,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
             jid = contact.getUserId() + "/" + resource;
 
         } else if (1 == contact.subContacts.size()) {
-            JabberContact.SubContact sub = (JabberContact.SubContact) contact.subContacts.elementAt(0);
+            XmppContact.SubContact sub = (XmppContact.SubContact) contact.subContacts.elementAt(0);
             if (StringConvertor.isEmpty(sub.resource)) {
                 jid = contact.getUserId();
             } else {

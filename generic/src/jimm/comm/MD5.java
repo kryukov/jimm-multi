@@ -21,7 +21,7 @@
  * This file was obtained from: http://www.mcmanis.com/~cmcmanis/java/src/util/crypt/MD5.java
  * More information can be found here: http://www.mcmanis.com/~cmcmanis/java/
  *  **********************************************************************
- * File: protocol/jabber/MD5.java
+ * File: jimm/comm/MD5.java
  * Version: beta  Date: 2006/05/18
  */
 package jimm.comm;

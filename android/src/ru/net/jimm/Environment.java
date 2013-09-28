@@ -34,9 +34,9 @@ public class Environment {
             @Override
             public void write(int oneByte) throws IOException {
                 if (((char) oneByte) == '\n') {
-                    Logger.debug(line.toString());
                     if (line.length() > 0) {
-                        line.delete(0, line.length() - 1);
+                        Logger.debug(line.toString());
+                        line.setLength(0);
                     }
                 } else {
                     line.append((char) oneByte);
@@ -52,9 +52,9 @@ public class Environment {
             @Override
             public void write(int oneByte) throws IOException {
                 if (((char) oneByte) == '\n') {
-                    Logger.debug(line.toString());
                     if (line.length() > 0) {
-                        line.delete(0, line.length() - 1);
+                        Logger.debug(line.toString());
+                        line.setLength(0);
                     }
                 } else {
                     line.append((char) oneByte);

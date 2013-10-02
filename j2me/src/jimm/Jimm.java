@@ -423,6 +423,7 @@ public class Jimm {
         splash = new SplashCanvas();
         display.updateDisplay();
         if (null != uiUpdater) uiUpdater.stop();
+        initUiPhase2();
         uiUpdater = new UIUpdater();
         uiUpdater.startUIUpdater();
         uiUpdater.refreshClock();

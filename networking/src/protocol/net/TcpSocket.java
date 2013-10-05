@@ -11,6 +11,8 @@ package protocol.net;
 
 import java.io.*;
 import javax.microedition.io.*;
+import javax.microedition.io.Connection;
+
 import jimm.JimmException;
 import jimm.modules.*;
 
@@ -187,5 +189,19 @@ public final class TcpSocket {
             c.close();
         } catch (Exception ignored) {
         }
+    }
+
+    public void startTls(String host) {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        try {
+            jimm.modules.DebugLog.println("startTls start " + sc + os + is);
+            ((org.microemu.cldc.socket.SocketConnection)sc).startTls(host);
+            os = sc.openOutputStream();
+            is = sc.openInputStream();
+            jimm.modules.DebugLog.println("startTls done " + sc + os + is);
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("startTls error", e);
+        }
+        // #sijapp cond.end #
     }
 }

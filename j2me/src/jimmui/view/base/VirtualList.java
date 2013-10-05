@@ -53,7 +53,6 @@ public abstract class VirtualList extends CanvasEx {
 
     // Set of fonts for quick selecting
     private Font[] fontSet;
-    private boolean touchUsed;
 
 
     //! Create new virtual list with default values
@@ -168,6 +167,7 @@ public abstract class VirtualList extends CanvasEx {
         }
     }
     protected boolean touchItemPressed(int item, int x, int y) {
+        touchPressed = true;
         if (getCurrItem() != item) {
             setCurrItem(item);
             onCursorMove();
@@ -189,6 +189,7 @@ public abstract class VirtualList extends CanvasEx {
         touchUsed = true;
         int item = getItemByCoord(state.y);
         if (0 <= item) {
+            currItem = -1;
             state.prevTopY = getTopOffset();
             touchItemPressed(item, state.x, state.y);
             state.isSecondTap = true;
@@ -418,6 +419,9 @@ public abstract class VirtualList extends CanvasEx {
         boolean showCursor = false;
         int currentY = 0;
         int currentIndex = isCurrentItemSelectable() ? getCurrItem() : -1;
+        // #sijapp cond.if modules_TOUCH is "true"#
+        if (touchUsed && !touchPressed) currentIndex = -1;
+        // #sijapp cond.end#
 
         { // background
             int offset = topOffset;

@@ -90,8 +90,11 @@ public class NativeCanvas extends Canvas {
 
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void pointerReleased(int x, int y) {
+        boolean update = canvas.touchPressed;
+        canvas.touchPressed = false;
         Jimm.getJimm().getCL().userActivity();
         touchControl.pointerReleased(x, y);
+        if (update) canvas.invalidate();
     }
     protected void pointerPressed(int x, int y) {
         Jimm.getJimm().getCL().userActivity();
@@ -119,6 +122,8 @@ public class NativeCanvas extends Canvas {
         }
     }
     public void androidPointerTap(TouchState state) {
+        boolean update = canvas.touchPressed;
+        canvas.touchPressed = false;
         try {
             if (null == state.region) {
                 canvas.stylusTap(state);
@@ -128,6 +133,7 @@ public class NativeCanvas extends Canvas {
         } catch (Exception e) {
             jimm.modules.DebugLog.panic("androidPointerTap", e);
         }
+        if (update) canvas.invalidate();
     }
     public void androidPointerMoving(TouchState state, int dx, int dy) {
         try {
@@ -155,6 +161,16 @@ public class NativeCanvas extends Canvas {
             jimm.modules.DebugLog.panic("androidPointerMoved", e);
         }
     }
+    public void androidPointerReleased() {
+        try {
+            boolean update = canvas.touchPressed;
+            canvas.touchPressed = false;
+            if (update) canvas.invalidate();
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("androidPointerMoved", e);
+        }
+    }
+
     // #sijapp cond.end#
 
     public void setCanvas(CanvasEx canvasEx) {

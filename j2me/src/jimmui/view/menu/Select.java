@@ -99,12 +99,15 @@ public final class Select extends CanvasEx {
         if (!checkRegion(state.x, state.y)) {
             return;
         }
+        touchPressed = true;
+        touchUsed = true;
         int posY = state.y - top;
 
         if (isItemsRegion(state.x)) { // menu items
             state.prevTopY = getItemStartY();
             int cur = getItemByCoord(posY);
             if (-1 != cur) {
+                selectedItemIndex = -1;
                 setSelectedItemIndex(cur);
             }
         }
@@ -288,6 +291,9 @@ public final class Select extends CanvasEx {
         int promtY = baseY + itemHeight / 2 - menuFont.getHeight() / 2;
 
         g.setFont(menuFont);
+        // #sijapp cond.if modules_TOUCH is "true"#
+        if (touchUsed && !touchPressed) currentIndex = -1;
+        // #sijapp cond.end#
         for (int i = topItem; count > 0; ++i, --count) {
             g.setClip(baseX, baseY, itemWidth + 1, itemHeight + 1);
             if (currentIndex == i) {

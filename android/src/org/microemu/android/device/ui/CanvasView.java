@@ -240,7 +240,11 @@ public class CanvasView extends View implements DisplayRepaintListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
+        boolean result = gestureDetector.onTouchEvent(event);
+        if (MotionEvent.ACTION_UP == event.getAction()) {
+            getNativeCanvas().androidPointerReleased();
+        }
+        return result;
     }
 
     //

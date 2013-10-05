@@ -107,6 +107,17 @@ abstract public class CanvasEx extends DisplayableEx {
 
     private int _width;
     private int _height;
+    // #sijapp cond.if modules_TOUCH is "true"#
+    public boolean touchUsed;
+    public boolean touchPressed;
+    // #sijapp cond.end#
+    protected CanvasEx() {
+        // #sijapp cond.if modules_ANDROID is "true"#
+        touchUsed = true;
+        // #sijapp cond.elseif modules_TOUCH is "true"#
+        touchUsed = true;
+        // #sijapp cond.end#
+    }
 
     public static void updateUI() {
         scrollerWidth = getScrollWidth();

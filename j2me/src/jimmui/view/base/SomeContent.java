@@ -2,8 +2,6 @@ package jimmui.view.base;
 
 import jimm.Jimm;
 import jimmui.view.base.touch.*;
-import jimmui.view.menu.MenuModel;
-import jimmui.view.menu.Select;
 
 import javax.microedition.lcdui.Graphics;
 
@@ -15,7 +13,7 @@ import javax.microedition.lcdui.Graphics;
  * @author vladimir
  */
 public abstract class SomeContent {
-    private int currItem;
+    protected int currItem;
     protected SomeContentList view;
     protected static final byte MP_ALL = 0;
     protected static final byte MP_SELECTABLE_ONLY = 1;
@@ -112,6 +110,9 @@ public abstract class SomeContent {
         boolean showCursor = false;
         int currentY = 0;
         int currentIndex = isCurrentItemSelectable() ? getCurrItem() : -1;
+        // #sijapp cond.if modules_TOUCH is "true"#
+        if (view.touchUsed && !view.touchPressed) currentIndex = -1;
+        // #sijapp cond.end#
 
         int topItem = get_Top();
         { // background

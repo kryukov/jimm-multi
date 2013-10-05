@@ -177,10 +177,23 @@ public final class XmppXml extends ClientConnection {
         readXmlNode(true); // "stream:stream"
         parseAuth(readXmlNode(true));
     }
+    private void setStreamTls() throws JimmException {
+        setProgress(15);
+        socket.startTls(domain_);
+        write(getOpenStreamXml(domain_));
+
+        // #sijapp cond.if modules_DEBUGLOG is "true" #
+        //jimm.modules.DebugLog.println("tls turn on");
+        // #sijapp cond.end #
+        DebugLog.systemPrintln("wait " + hasInPackets());
+        readXmlNode(true); // "stream:stream"
+        DebugLog.systemPrintln("read " + hasInPackets());
+        parseAuth(readXmlNode(true));
+    }
     // #sijapp cond.end #
 
     public Xmpp getJabber() {
-        return (Xmpp)protocol;
+        return protocol;
     }
 
 
@@ -258,7 +271,7 @@ public final class XmppXml extends ClientConnection {
 
     private void write(String xml) throws JimmException {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
-        //DebugLog.systemPrintln("[OUT]:\n" + xml);
+        DebugLog.systemPrintln("[OUT]:\n" + xml);
         // #sijapp cond.end #
         write(StringConvertor.stringToByteArrayUtf8(xml));
     }
@@ -270,7 +283,7 @@ public final class XmppXml extends ClientConnection {
             XmlNode x = XmlNode.parse(socket);
             if (null != x) {
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
-                //DebugLog.systemPrintln("[IN]:\n" + x.toString());
+                DebugLog.systemPrintln("[IN]:\n" + x.toString());
                 // #sijapp cond.end #
                 return x;
             }
@@ -431,11 +444,17 @@ public final class XmppXml extends ClientConnection {
             parseStreamFeatures(x);
             return;
 
-        // #sijapp cond.if modules_ZLIB is "true" #
+            // #sijapp cond.if modules_ZLIB is "true" #
         } else if (x.is("compressed")) {
             setStreamCompression();
             return;
-        // #sijapp cond.end #
+            // #sijapp cond.end #
+
+            // #sijapp cond.if modules_ZLIB is "true" #
+        } else if (x.is("proceed")) {
+            setStreamTls();
+            return;
+            // #sijapp cond.end #
 
             /* Reply to DIGEST-MD5 challenges */
         } else if (x.is("challenge")) {
@@ -1698,6 +1717,15 @@ public final class XmppXml extends ClientConnection {
             return;
         }
         // #sijapp cond.if modules_ZLIB is "true" #
+//        /* Check for tls */
+//        x2 = x.getFirstNode("starttls");
+//        if (null != x2) {
+//            // #sijapp cond.if modules_DEBUGLOG is "true" #
+//            DebugLog.println("starttls");
+//            // #sijapp cond.end #
+//            sendRequest("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>");
+//            return;
+//        }
         /* Check for stream compression method */
         x2 = x.getFirstNode("compression");
         if ((null != x2) && "zlib".equals(x2.getFirstNodeValue("method"))) {

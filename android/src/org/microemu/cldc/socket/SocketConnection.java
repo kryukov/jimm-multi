@@ -24,12 +24,12 @@
 
 package org.microemu.cldc.socket;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.net.ssl.*;
+import java.io.*;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 public class SocketConnection implements javax.microedition.io.SocketConnection {
 
@@ -181,4 +181,51 @@ public class SocketConnection implements javax.microedition.io.SocketConnection 
 		return new DataOutputStream(openOutputStream());
 	}
 
+    public void startTls(String host) {
+        try {
+            TrustManager trustAllCerts = new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, new TrustManager[]{trustAllCerts}, new SecureRandom());
+            socket = sc.getSocketFactory().createSocket(socket, host, socket.getPort(), true);
+            ((SSLSocket)socket).startHandshake();
+            dump();
+            jimm.modules.DebugLog.println("host1 " + ((SSLSocket) socket).isClosed());
+            jimm.modules.DebugLog.println("host2 " + ((SSLSocket) socket).isBound());
+            jimm.modules.DebugLog.println("host3 " + ((SSLSocket) socket).isInputShutdown());
+            jimm.modules.DebugLog.println("host4 " + ((SSLSocket) socket).isOutputShutdown());
+            jimm.modules.DebugLog.println("host5 " + ((SSLSocket) socket).isConnected());
+            jimm.modules.DebugLog.println("host6 " + ((SSLSocket) socket).getUseClientMode());
+            jimm.modules.DebugLog.println("host7 " + ((SSLSocket) socket).getWantClientAuth());
+            jimm.modules.DebugLog.println("host8 " + ((SSLSocket) socket).getEnableSessionCreation());
+            socket.getOutputStream().write("_eerew".getBytes());
+            socket.getOutputStream().flush();
+            jimm.modules.DebugLog.println("read " + socket.getInputStream().read());
+
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("startTls error", e);
+        }
+    }
+
+    private void dump() throws SSLPeerUnverifiedException {
+        SSLSession session = ((SSLSocket) socket).getSession();
+        java.security.cert.Certificate[] cchain = session.getPeerCertificates();
+        System.out.println("The Certificates used by peer");
+        for (int i = 0; i < cchain.length; i++) {
+            System.out.println(((X509Certificate) cchain[i]).getSubjectDN());
+        }
+        System.out.println("Peer host is " + session.getPeerHost());
+        System.out.println("Cipher is " + session.getCipherSuite());
+        System.out.println("Protocol is " + session.getProtocol());
+        System.out.println("ID is " + session.getId().length);
+        System.out.println("Session created in " + session.getCreationTime());
+        System.out.println("Session accessed in " + session.getLastAccessedTime());
+    }
 }

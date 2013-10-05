@@ -45,6 +45,10 @@ final class Socket {
         DebugLog.println("zlib is working");
         // #sijapp cond.end #
     }
+
+    public void startTls(String host) {
+        socket.startTls(host);
+    }
     // #sijapp cond.end #
 
     public boolean isConnected() {
@@ -95,7 +99,7 @@ final class Socket {
         try {
             zin.close();
             zout.close();
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         // #sijapp cond.end #
         socket.close();
@@ -106,7 +110,7 @@ final class Socket {
     private void sleep(long ms) {
         try {
             Thread.sleep(ms);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
     }
     

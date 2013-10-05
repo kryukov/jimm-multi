@@ -17,7 +17,6 @@ public class SomeContentList extends CanvasEx {
     protected MySoftBar softBar = new MySoftBar();
     private static MyScrollBar scrollBar = new MyScrollBar();
     protected SomeContent content;
-    public boolean touchUsed;
 
     public SomeContentList() {
         // #sijapp cond.if modules_ANDROID isnot "true"#
@@ -79,8 +78,10 @@ public class SomeContentList extends CanvasEx {
             return;
         }
         touchUsed = true;
+        touchPressed = true;
         int item = content.getItemByCoord(state.y - bar.getHeight());
         if (0 <= item) {
+            content.currItem = -1;
             state.prevTopY = content.getTopOffset();
             touchItemPressed(item, state.x, state.y);
             state.isSecondTap = true;

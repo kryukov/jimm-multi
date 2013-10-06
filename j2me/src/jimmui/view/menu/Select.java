@@ -283,7 +283,6 @@ public final class Select extends CanvasEx {
 
     private void paintItems(GraphicsEx g, int baseX, int baseY, int count, int currentIndex) {
         Font menuFont = GraphicsEx.menuFont;
-        final int textWidth = itemWidth - (iconWidth + ICON_INTERVAL);
 
         int iconX  = baseX + iconWidth / 2;
         int iconY  = baseY + itemHeight / 2;
@@ -382,7 +381,9 @@ public final class Select extends CanvasEx {
         if (KEY_RELEASED == type) {
             return;
         }
+        // #sijapp cond.if modules_TOUCH is "true"#
         touchUsed = false;
+        // #sijapp cond.end#
         switch (gameAct) {
             case NativeCanvas.NAVIKEY_DOWN:
             case NativeCanvas.NAVIKEY_UP:

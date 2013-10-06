@@ -84,6 +84,10 @@ public final class ChatMenu implements SelectListener {
     public void select(Select select, MenuModel menu, int cmd) {
         ChatModel chat = Jimm.getJimm().jimmModel.getChatModel(Jimm.getJimm().getCL().getUpdater().getCurrentContact());
         switch (cmd) {
+            case MENU_SELECT:
+                Jimm.getJimm().getChatUpdater().activate(chat);
+                break;
+
             case MENU_DEL_CURRENT_CHAT:
                 removeChat(chat);
                 select.back();

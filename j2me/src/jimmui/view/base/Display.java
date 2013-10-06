@@ -87,6 +87,11 @@ public class Display {
             if (prev instanceof DisplayableEx) {
                 ((DisplayableEx)prev).closed();
             }
+            // #sijapp cond.if modules_TOUCH is "true" #
+            if ((prev instanceof CanvasEx) && (o instanceof CanvasEx)) {
+                ((CanvasEx) o).touchUsed = ((CanvasEx) prev).touchUsed;
+            }
+            // #sijapp cond.end#
             // #sijapp cond.if modules_LIGHT is "true" #
             if (!(prev instanceof CanvasEx)) {
                 CustomLight.setLightMode(CustomLight.ACTION_SYSTEM_OFF);

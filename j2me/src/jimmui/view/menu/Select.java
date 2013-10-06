@@ -382,6 +382,7 @@ public final class Select extends CanvasEx {
         if (KEY_RELEASED == type) {
             return;
         }
+        touchUsed = false;
         switch (gameAct) {
             case NativeCanvas.NAVIKEY_DOWN:
             case NativeCanvas.NAVIKEY_UP:

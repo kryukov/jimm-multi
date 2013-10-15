@@ -255,7 +255,7 @@ final class XForm {
             form.addTextField(num, label, value, size);
 
         } else if (S_TEXT_PRIVATE.equals(type)) {
-            form.addPasswordField(num, label, value, 64);
+            form.addPasswordField(num, label, value, 512);
 
         } else if (S_BOOLEAN.equals(type)) {
             form.addCheckBox(num, label, XmppXml.isTrue(value));

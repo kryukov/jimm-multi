@@ -87,7 +87,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	public void clipRect(int x, int y, int width, int height) {
         //canvas.clipRect(x, y, x + width, y + height);
         int right = Math.min(canvasWidth, x + width);
-        int bottom = Math.min(canvasHeight, y + height - 1);
+        int bottom = Math.min(canvasHeight - 1, y + height - 1);
         canvas.clipRect(x, y, right, bottom);
 		clip = canvas.getClipBounds();
 	}

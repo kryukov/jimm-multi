@@ -43,8 +43,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	private static final DashPathEffect dashPathEffect = new DashPathEffect(new float[] { 5, 5 }, 0);
 	
 	private Canvas canvas;
-	
-	private Rect clip;
+    private int canvasWidth;
+    private int canvasHeight;
+
+    private Rect clip;
 
     protected Rect display = new Rect();
 
@@ -68,13 +70,15 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		fillPaint.setAntiAlias(true);
 		fillPaint.setStyle(Paint.Style.FILL);
 
-        reset(this.canvas);
+        reset(this.canvas, canvas.getWidth(), canvas.getHeight());
     }
 
-	public final void reset(Canvas canvas) {
+	public final void reset(Canvas canvas, int width, int height) {
 	    this.canvas = canvas;
+        this.canvasWidth = width;
+        this.canvasHeight = height;
 
-		Rect tmp = this.canvas.getClipBounds();
+        Rect tmp = this.canvas.getClipBounds();
 		this.canvas.clipRect(tmp, Region.Op.REPLACE);
 		clip = this.canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
@@ -82,7 +86,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public void clipRect(int x, int y, int width, int height) {
         //canvas.clipRect(x, y, x + width, y + height);
-        canvas.clipRect(x, y, Math.min(canvas.getWidth(), x + width), Math.min(canvas.getHeight(), y + height - 1));
+        int right = Math.min(canvasWidth, x + width);
+        int bottom = Math.min(canvasHeight, y + height - 1);
+        canvas.clipRect(x, y, right, bottom);
 		clip = canvas.getClipBounds();
 	}
 

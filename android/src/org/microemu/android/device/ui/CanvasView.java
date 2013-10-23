@@ -214,7 +214,7 @@ public class CanvasView extends View implements DisplayRepaintListener {
             return;
         }
         initGraphics();
-        graphics.reset(androidCanvas);
+        graphics.reset(androidCanvas, getWidth(), getHeight());
         ma.getDisplayAccess().paint(graphics);
     }
 

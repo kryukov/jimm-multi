@@ -43,8 +43,6 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	private static final DashPathEffect dashPathEffect = new DashPathEffect(new float[] { 5, 5 }, 0);
 	
 	private Canvas canvas;
-    private int canvasWidth;
-    private int canvasHeight;
 
     private Rect clip;
 
@@ -70,13 +68,11 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		fillPaint.setAntiAlias(true);
 		fillPaint.setStyle(Paint.Style.FILL);
 
-        reset(this.canvas, canvas.getWidth(), canvas.getHeight());
+        reset(this.canvas);
     }
 
-	public final void reset(Canvas canvas, int width, int height) {
+	public final void reset(Canvas canvas) {
 	    this.canvas = canvas;
-        this.canvasWidth = width;
-        this.canvasHeight = height;
 
         Rect tmp = this.canvas.getClipBounds();
 		this.canvas.clipRect(tmp, Region.Op.REPLACE);
@@ -86,8 +82,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public void clipRect(int x, int y, int width, int height) {
         //canvas.clipRect(x, y, x + width, y + height);
-        int right = Math.min(canvasWidth, x + width);
-        int bottom = Math.min(canvasHeight - 1, y + height - 1);
+        int right = Math.min(display.right - getTranslateX(), x + width);
+        int bottom = Math.min(display.bottom - getTranslateY(), y + height);
         canvas.clipRect(x, y, right, bottom);
 		clip = canvas.getClipBounds();
 	}
@@ -211,16 +207,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void setClip(int x, int y, int width, int height) {
-        width = Math.min(display.right, x + width) - x;
-        height = Math.min(display.bottom, y + height) - y;
-		if (x == clip.left && x + width == clip.right && y == clip.top && y + height == clip.bottom) {
-			return;
-		}
-
         clip.left = x;
         clip.top = y;
-        clip.right = x + width;
-        clip.bottom = y + height;
+        clip.right = Math.min(display.right - getTranslateX(), x + width);
+        clip.bottom = Math.min(display.bottom - getTranslateY(), y + height);
 		canvas.clipRect(clip, Region.Op.REPLACE);
 	}
 

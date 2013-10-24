@@ -31,6 +31,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.microedition.io.ConnectionNotFoundException;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Displayable;
 
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -44,6 +46,7 @@ import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidDisplayableUI;
+import org.microemu.android.device.ui.CanvasView;
 import org.microemu.android.util.ActivityResultListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -127,25 +130,11 @@ public abstract class MicroEmulatorActivity extends Activity {
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		// Query the activity property android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-		TypedArray ta = getTheme().obtainStyledAttributes(new int[] { android.R.attr.windowFullscreen });
-		windowFullscreen = ta.getBoolean(0, false);
-		
-		Drawable phoneCallIcon = getResources().getDrawable(android.R.drawable.stat_sys_phone_call);
-		int statusBarHeight = 0;
-		if (!windowFullscreen) {
-			statusBarHeight = phoneCallIcon.getIntrinsicHeight();
-		}
-		
-        Display display = getWindowManager().getDefaultDisplay();
-        final int width = display.getWidth();
-        final int height = display.getHeight() - statusBarHeight;
-
         emulatorContext = new EmulatorContext() {
 
             private InputMethod inputMethod = new AndroidInputMethod();
 
-            private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(MicroEmulatorActivity.this, this, width, height);
+            private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(MicroEmulatorActivity.this, this, 200, 200);
             
             private FontManager fontManager = new AndroidFontManager(getResources().getDisplayMetrics());
 
@@ -213,24 +202,21 @@ Log.d("AndroidCanvasUI", "set content view: " + view);
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		
-		Drawable phoneCallIcon = getResources().getDrawable(android.R.drawable.stat_sys_phone_call);
-		int statusBarHeight = 0;
-		if (!windowFullscreen) {
-			statusBarHeight = phoneCallIcon.getIntrinsicHeight();
-		}
-		
-        Display display = getWindowManager().getDefaultDisplay();
-		AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-		deviceDisplay.displayRectangleWidth = display.getWidth();
-		deviceDisplay.displayRectangleHeight = display.getHeight() - statusBarHeight;
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;
 		}
 		DisplayAccess da = ma.getDisplayAccess();
-		if (da != null) {
-			da.sizeChanged();
-			deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+        if (da != null) {
+            Displayable d = da.getCurrent();
+            if (d instanceof Canvas) {
+                CanvasView c = ((AndroidCanvasUI)d.getUi()).getCanvasView();
+                AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
+                deviceDisplay.displayRectangleWidth = c.getWidth();
+                deviceDisplay.displayRectangleHeight = c.getHeight();
+                da.sizeChanged();
+                deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+            }
 		}
 	}
 	

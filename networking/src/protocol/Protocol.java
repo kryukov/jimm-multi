@@ -960,9 +960,6 @@ abstract public class Protocol {
                 contact.setTempFlag(true);
                 addLocalContact(contact);
             }
-            if ((0 < chat.size()) || !contact.isSingleUserContact()) {
-                Jimm.getJimm().jimmModel.registerChat(chat);
-            }
         }
         return chat;
     }

@@ -32,10 +32,18 @@ import java.util.Vector;
  */
 public class ChatUpdater {
     public ChatModel createModel(Protocol p, Contact contact) {
-        ChatModel chat = new ChatModel();
-        chat.protocol = p;
-        chat.contact = contact;
-        chat.fontSet = GraphicsEx.chatFontSet;
+        ChatModel chat;
+        synchronized (Jimm.getJimm().jimmModel.chats) {
+            chat = Jimm.getJimm().jimmModel.getChatModel(contact);
+            if (null != chat) {
+                return chat;
+            }
+            chat = new ChatModel();
+            chat.protocol = p;
+            chat.contact = contact;
+            chat.fontSet = GraphicsEx.chatFontSet;
+            Jimm.getJimm().jimmModel.registerChat(chat);
+        }
         // #sijapp cond.if modules_HISTORY is "true" #
         new MessageBuilder().fillFromHistory(chat);
         // #sijapp cond.end #
@@ -43,18 +51,15 @@ public class ChatUpdater {
     }
 
     public void addMessage(ChatModel chat, Message message, boolean toHistory) {
-        Jimm.getJimm().jimmModel.registerChat(chat);
         new MessageBuilder().addMessage(chat, message, toHistory);
     }
 
     public void addMyMessage(ChatModel chat, PlainMessage plainMsg) {
-        Jimm.getJimm().jimmModel.registerChat(chat);
         new MessageBuilder().addMyMessage(chat, plainMsg);
     }
 
     // #sijapp cond.if modules_FILES="true"#
     public MessData addFileProgress(ChatModel chat, String caption, String text) {
-        Jimm.getJimm().jimmModel.registerChat(chat);
         return new MessageBuilder().addFileProgress(chat, caption, text);
     }
 

@@ -128,6 +128,9 @@ public class ChatContent extends SomeContent {
                 return;
 
             case NativeCanvas.JIMM_BACK:
+                if (0 == model.size()) {
+                    Jimm.getJimm().jimmModel.unregisterChat(model);
+                }
                 Jimm.getJimm().getCL().activate(getContact());
                 return;
 

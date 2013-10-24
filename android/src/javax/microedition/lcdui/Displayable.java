@@ -206,7 +206,7 @@ public abstract class Displayable {
         return null;
     }
 
-    final DisplayableUI getUi() {
+    public final DisplayableUI getUi() {
         if (null == ui) {
             ui = lazyLoad();
         }

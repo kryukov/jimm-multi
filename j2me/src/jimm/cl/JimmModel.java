@@ -54,9 +54,11 @@ public class JimmModel {
     }
 
     public ChatModel getChatModel(Contact c) {
-        for (int i = chats.size() - 1; 0 <= i; --i) {
-            if (c == ((ChatModel)chats.elementAt(i)).contact) {
-                return (ChatModel)chats.elementAt(i);
+        synchronized (chats) {
+            for (int i = chats.size() - 1; 0 <= i; --i) {
+                if (c == ((ChatModel)chats.elementAt(i)).contact) {
+                    return (ChatModel)chats.elementAt(i);
+                }
             }
         }
         return null;

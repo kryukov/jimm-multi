@@ -35,10 +35,11 @@ import java.util.TimerTask;
 
 import javax.microedition.midlet.MIDlet;
 
-import android.util.Log;
 import jimmui.view.base.NativeCanvas;
 import jimmui.view.chat.Chat;
+import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.android.device.ui.CanvasView;
 import ru.net.jimm.JimmActivity;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletBridge;

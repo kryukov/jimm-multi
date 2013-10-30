@@ -34,8 +34,8 @@ public final class TcpSocket {
     public void connectTo(String url) throws JimmException {
         try {
             sc = (StreamConnection)Connector.open(url, Connector.READ_WRITE);
-            //SocketConnection socket = (SocketConnection)sc;
-            //socket.setSocketOption(SocketConnection.DELAY, 0);
+            SocketConnection socket = (SocketConnection)sc;
+            socket.setSocketOption(SocketConnection.DELAY, 0);
             //socket.setSocketOption(SocketConnection.KEEPALIVE, 2*60);
             //socket.setSocketOption(SocketConnection.LINGER, 0);
             //socket.setSocketOption(SocketConnection.RCVBUF, 10*1024);
@@ -94,7 +94,9 @@ public final class TcpSocket {
     }
     public int read(byte[] data, int offset, int length) throws JimmException {
         try {
+            // #sijapp cond.if modules_ANDROID is "true" #
             length = Math.min(length, is.available());
+            // #sijapp cond.end #
             if (0 == length) {
                 return 0;
             }
@@ -113,20 +115,23 @@ public final class TcpSocket {
     }
 
     public final int readFully(byte[] data) throws JimmException {
+        return readFully(data, 0, data.length);
+    }
+    public final int readFully(byte[] data, final int offset, final int length) throws JimmException {
         if ((null == data) || (0 == data.length)) {
             return 0;
         }
         try {
             int bReadSum = 0;
             do {
-                int bRead = is.read(data, bReadSum, data.length - bReadSum);
+                int bRead = is.read(data, offset + bReadSum, length - bReadSum);
                 if (-1 == bRead) {
                     throw new IOException("EOF");
                 } else if (0 == bRead) {
                     waitData();
                 }
                 bReadSum += bRead;
-            } while (bReadSum < data.length);
+            } while (bReadSum < length);
             // #sijapp cond.if modules_TRAFFIC is "true" #
             Traffic.getInstance().addInTraffic(bReadSum * 3 / 2);
             // #sijapp cond.end#
@@ -196,8 +201,8 @@ public final class TcpSocket {
         try {
             jimm.modules.DebugLog.println("startTls start " + sc + os + is);
             ((org.microemu.cldc.socket.SocketConnection)sc).startTls(host);
-            os = sc.openOutputStream();
             is = sc.openInputStream();
+            os = sc.openOutputStream();
             jimm.modules.DebugLog.println("startTls done " + sc + os + is);
         } catch (Exception e) {
             jimm.modules.DebugLog.panic("startTls error", e);

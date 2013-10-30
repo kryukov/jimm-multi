@@ -32,7 +32,7 @@ public final class MrimConnection extends ClientConnection {
     private String typingTo = null;
     private MrimPacket pingPacket;
 
-    private final Vector packets = new Vector();
+    private final Vector<MrimPacket> packets = new Vector<MrimPacket>();
     private UserInfo singleUserInfo;
     private Search search = null;
     private MrimContact lastContact = null;
@@ -520,6 +520,7 @@ public final class MrimConnection extends ClientConnection {
 
                     if (null != lastContact) {
                         if (StringConvertor.isEmpty(lastContact.getPhones())) {
+                            // do nothing
 
                         } else if (StringConvertor.isEmpty(userInfo.homePhones)) {
                             userInfo.homePhones = lastContact.getPhones();

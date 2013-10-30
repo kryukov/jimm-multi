@@ -80,13 +80,12 @@ public final class MrimConnection extends ClientConnection {
 
     private String getServer() throws JimmException {
         StringBuffer buffer = new StringBuffer();
-        int size = 0;
         try {
             TcpSocket s = new TcpSocket();
             s.connectForReadingTo("socket://mrim.mail.ru:2042");
             s.waitData();
 
-            int ch = 0;
+            int ch;
             while (true) {
                 ch = s.read();
                 if (-1 == ch) break;

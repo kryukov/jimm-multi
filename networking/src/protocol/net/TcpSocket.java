@@ -84,17 +84,9 @@ public final class TcpSocket {
             throw new JimmException(120, 4);
         }
     }
-    public void waitData() throws JimmException {
-        while (0 == available()) {
-            try {
-                Thread.sleep(100);
-            } catch (Exception ignored) {
-            }
-        }
-    }
     public int read(byte[] data, int offset, int length) throws JimmException {
         try {
-            // #sijapp cond.if modules_ANDROID is "true" #
+            // #sijapp cond.if modules_ANDROID isnot "true" #
             length = Math.min(length, is.available());
             // #sijapp cond.end #
             if (0 == length) {
@@ -128,7 +120,10 @@ public final class TcpSocket {
                 if (-1 == bRead) {
                     throw new IOException("EOF");
                 } else if (0 == bRead) {
-                    waitData();
+                    try {
+                        Thread.sleep(100);
+                    } catch (Exception ignored) {
+                    }
                 }
                 bReadSum += bRead;
             } while (bReadSum < length);

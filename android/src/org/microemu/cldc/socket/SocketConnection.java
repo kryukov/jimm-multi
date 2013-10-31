@@ -24,6 +24,8 @@
 
 package org.microemu.cldc.socket;
 
+import android.net.SSLCertificateSocketFactory;
+
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.Socket;
@@ -34,7 +36,7 @@ import java.security.cert.X509Certificate;
 public class SocketConnection implements javax.microedition.io.SocketConnection {
 
 	protected Socket socket;
-	
+
 	public SocketConnection() {		
 	}
 
@@ -183,31 +185,21 @@ public class SocketConnection implements javax.microedition.io.SocketConnection 
 
     public void startTls(String host) {
         try {
-            TrustManager trustAllCerts = new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                    }
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                    }
-            };
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, new TrustManager[]{trustAllCerts}, new SecureRandom());
-            socket = sc.getSocketFactory().createSocket(socket, host, socket.getPort(), true);
-            ((SSLSocket)socket).startHandshake();
+//            TrustManager trustAllCerts = new X509TrustManager() {
+//                    public X509Certificate[] getAcceptedIssuers() {
+//                        return null;
+//                    }
+//                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+//                    }
+//                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+//                    }
+//            };
+//            SSLContext sc = SSLContext.getInstance("TLS");
+//            sc.init(null, new TrustManager[]{trustAllCerts}, new SecureRandom());
+            SSLSocketFactory sslFactory = SSLCertificateSocketFactory.getInsecure(0, null);
+            socket = sslFactory.createSocket(socket, host, socket.getPort(), true);
+            ((SSLSocket)socket).setUseClientMode(true);
             dump();
-            jimm.modules.DebugLog.println("host1 " + ((SSLSocket) socket).isClosed());
-            jimm.modules.DebugLog.println("host2 " + ((SSLSocket) socket).isBound());
-            jimm.modules.DebugLog.println("host3 " + ((SSLSocket) socket).isInputShutdown());
-            jimm.modules.DebugLog.println("host4 " + ((SSLSocket) socket).isOutputShutdown());
-            jimm.modules.DebugLog.println("host5 " + ((SSLSocket) socket).isConnected());
-            jimm.modules.DebugLog.println("host6 " + ((SSLSocket) socket).getUseClientMode());
-            jimm.modules.DebugLog.println("host7 " + ((SSLSocket) socket).getWantClientAuth());
-            jimm.modules.DebugLog.println("host8 " + ((SSLSocket) socket).getEnableSessionCreation());
-            socket.getOutputStream().write("_eerew".getBytes());
-            socket.getOutputStream().flush();
-            jimm.modules.DebugLog.println("read " + socket.getInputStream().read());
 
         } catch (Exception e) {
             jimm.modules.DebugLog.panic("startTls error", e);
@@ -227,5 +219,6 @@ public class SocketConnection implements javax.microedition.io.SocketConnection 
         System.out.println("ID is " + session.getId().length);
         System.out.println("Session created in " + session.getCreationTime());
         System.out.println("Session accessed in " + session.getLastAccessedTime());
+        System.out.println("Session valid in " + session.isValid());
     }
 }

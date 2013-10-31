@@ -71,11 +71,7 @@ final class Socket {
             return bRead;
         }
         // #sijapp cond.end #
-        int length = Math.min(data.length, socket.available());
-        if (0 == length) {
-            return 0;
-        }
-        int bRead = socket.read(data, 0, length);
+        int bRead = socket.read(data, 0, data.length);
         if (-1 == bRead) {
             throw new JimmException(120, 12);
         }
@@ -113,26 +109,36 @@ final class Socket {
         } catch (Exception ignored) {
         }
     }
-    
+    private void fillBuffer() throws JimmException {
+        inputBufferIndex = 0;
+        inputBufferLength = read(inputBuffer);
+        while (0 == inputBufferLength) {
+            sleep(100);
+            inputBufferLength = read(inputBuffer);
+        }
+    }
+
     private byte readByte() throws JimmException {
+        if (inputBufferIndex >= inputBufferLength) {
+            fillBuffer();
+        }
+        return inputBuffer[inputBufferIndex++];
+    }
+    private int readByteOrNone() throws JimmException {
         if (inputBufferIndex >= inputBufferLength) {
             inputBufferIndex = 0;
             inputBufferLength = read(inputBuffer);
-            while (0 == inputBufferLength) {
-                sleep(100);
-                inputBufferLength = read(inputBuffer);
+            if (0 == inputBufferLength) {
+                return -1;
             }
         }
         return inputBuffer[inputBufferIndex++];
     }
-    public int available() throws JimmException {
-        if (inputBufferIndex < inputBufferLength) {
-            return (inputBufferLength - inputBufferIndex);
-        }
-        return socket.available();
+
+    char readCharOrSpaceForSkip() throws JimmException {
+        int bt = readByteOrNone();
+        return (char)(-1 == bt ? ' ' : bt);
     }
-
-
     char readChar() throws JimmException {
         try {
             byte bt = readByte();
@@ -154,7 +160,7 @@ final class Socket {
                 else if ((bt & 0xFC) == 0xF8) seqLen = 4;
                 else if ((bt & 0xFE) == 0xFC) seqLen = 5;
                 for (; 0 < seqLen; --seqLen) {
-                    bt = readByte();
+                    readByte();
                 }
                 return '?';
             }

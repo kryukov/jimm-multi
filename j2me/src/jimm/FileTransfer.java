@@ -407,7 +407,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             if (-1 == length) {
                 throw new JimmException(120, 13);
             }
-            socket.read(buffer, 0, length);
+            socket.readFully(buffer, 0, length);
             String url = StringConvertor.utf8beByteArrayToString(buffer, 0, length);
 
             if (isCanceled()) {

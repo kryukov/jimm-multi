@@ -75,12 +75,16 @@ public final class ZInputStream {
                 // if buffer is empty and more input is avaiable, refill it
                 buffer.next_in_index = 0;
 
-                int avail = in.available();
-                while (0 == avail) {
-                    try { Thread.sleep(70); } catch (Exception e) {};
-                    avail = in.available();
+                int length = buf.length;
+                // #sijapp cond.if modules_ANDROID isnot "true" #
+                length = Math.min(length, in.available());
+                while (0 == length) {
+                    try { Thread.sleep(70); } catch (Exception ignored) {}
+                    length = Math.min(buf.length, in.available());
                 }
-                buffer.avail_in = in.read(buf, 0, Math.min(avail, buf.length));
+                // #sijapp cond.end #
+                buffer.avail_in = in.read(buf, 0, length);
+                if (0 == buffer.avail_in) return 0;
 
 
                 if (-1 == buffer.avail_in) {
@@ -107,14 +111,6 @@ public final class ZInputStream {
         } while (buffer.avail_out == len && JZlib.Z_OK == err);
 
         return len - buffer.avail_out;
-    }
-
-    /**
-     * We can't count available data size after zlib processing
-     * so available() always returns internal buffer size
-     */
-    public int available() throws JimmException {
-        return (0 < in.available()) ? bufsize : 0;
     }
 
     public void close() {

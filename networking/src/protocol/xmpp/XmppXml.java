@@ -44,7 +44,7 @@ public final class XmppXml extends ClientConnection {
     private String verHash = "";
     private String featureList = "";
 
-    private final Vector packets = new Vector();
+    private final Vector<Object> packets = new Vector<Object>();
 
     private boolean isGTalk_ = false;
     private boolean authorized_ = false;
@@ -183,11 +183,9 @@ public final class XmppXml extends ClientConnection {
         write(getOpenStreamXml(domain_));
 
         // #sijapp cond.if modules_DEBUGLOG is "true" #
-        //jimm.modules.DebugLog.println("tls turn on");
+        jimm.modules.DebugLog.println("tls turn on");
         // #sijapp cond.end #
-        DebugLog.systemPrintln("wait " + hasInPackets());
         readXmlNode(true); // "stream:stream"
-        DebugLog.systemPrintln("read " + hasInPackets());
         parseAuth(readXmlNode(true));
     }
     // #sijapp cond.end #
@@ -244,9 +242,8 @@ public final class XmppXml extends ClientConnection {
             sendPacket();
             return true;
         }
-        if (hasInPackets()) {
+        if (processInPacket()) {
             updateTimeout();
-            processInPacket();
             return true;
         }
         return false;
@@ -265,10 +262,6 @@ public final class XmppXml extends ClientConnection {
         return protocol;
     }
     /////////////////////////////////////////////////////
-    private boolean hasInPackets() throws JimmException {
-        return (0 < socket.available());
-    }
-
     private void write(String xml) throws JimmException {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         DebugLog.systemPrintln("[OUT]:\n" + xml);
@@ -279,7 +272,7 @@ public final class XmppXml extends ClientConnection {
         write(packet);
     }
     private XmlNode readXmlNode(boolean notEmpty) throws JimmException {
-        while (hasInPackets() || notEmpty) {
+        do {
             XmlNode x = XmlNode.parse(socket);
             if (null != x) {
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
@@ -287,7 +280,8 @@ public final class XmppXml extends ClientConnection {
                 // #sijapp cond.end #
                 return x;
             }
-        }
+            DebugLog.systemPrintln("[IN]: wait");
+        } while (notEmpty);
         return null;
     }
 
@@ -389,12 +383,12 @@ public final class XmppXml extends ClientConnection {
         write(GET_ROSTER_XML);
         usePong();
     }
-    private void processInPacket() throws JimmException {
+    private boolean processInPacket() throws JimmException {
         XmlNode x = null;
         try {
             x = readXmlNode(false);
             if (null == x) {
-                return;
+                return false;
             }
             parse(x);
             x = null;
@@ -410,6 +404,7 @@ public final class XmppXml extends ClientConnection {
             }
             // #sijapp cond.end #
         }
+        return true;
     }
     // -----------------------------------------------------------------------
 
@@ -1057,7 +1052,7 @@ public final class XmppXml extends ClientConnection {
         Xmpp xmpp = getJabber();
         Group group = xmpp.getOrCreateGroup(JLocale.getString(Xmpp.CONFERENCE_GROUP));
         int autoJoinCount = xmpp.isReconnect() ? 0 : 7;
-        Vector contacts = xmpp.getContactItems();
+        Vector<Contact> contacts = xmpp.getContactItems();
         while (0 < storage.childrenCount()) {
             XmlNode item = storage.popChildNode();
 
@@ -1717,15 +1712,17 @@ public final class XmppXml extends ClientConnection {
             return;
         }
         // #sijapp cond.if modules_ZLIB is "true" #
-//        /* Check for tls */
-//        x2 = x.getFirstNode("starttls");
-//        if (null != x2) {
-//            // #sijapp cond.if modules_DEBUGLOG is "true" #
-//            DebugLog.println("starttls");
-//            // #sijapp cond.end #
-//            sendRequest("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>");
-//            return;
-//        }
+        // #sijapp cond.if modules_ANDROID is "true" #
+        /* Check for tls */
+        x2 = x.getFirstNode("starttls");
+        if (null != x2) {
+            // #sijapp cond.if modules_DEBUGLOG is "true" #
+            DebugLog.println("starttls");
+            // #sijapp cond.end #
+            sendRequest("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>");
+            return;
+        }
+        // #sijapp cond.end #
         /* Check for stream compression method */
         x2 = x.getFirstNode("compression");
         if ((null != x2) && "zlib".equals(x2.getFirstNodeValue("method"))) {
@@ -1982,8 +1979,8 @@ public final class XmppXml extends ClientConnection {
      * Service routine for google token
      * (From mGTalk project)
      *
-     * @param dis
-     * @return
+     * @param dis stream
+     * @return line from stream
      */
     private String readLine(DataInputStream dis) {
         StringBuffer s = new StringBuffer();
@@ -1994,7 +1991,7 @@ public final class XmppXml extends ClientConnection {
                 }
                 s.append((char)ch);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return s.toString();
     }
@@ -2588,7 +2585,7 @@ public final class XmppXml extends ClientConnection {
         return sb.toString();
     }
     private void initFeatures() {
-        Vector features = new Vector();
+        Vector<String> features = new Vector<String>();
         features.addElement("bugs");
         // #sijapp cond.if modules_XSTATUSES is "true" #
         features.addElement("http://jabber.org/protocol/activity");

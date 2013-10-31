@@ -83,8 +83,6 @@ public final class MrimConnection extends ClientConnection {
         try {
             TcpSocket s = new TcpSocket();
             s.connectForReadingTo("socket://mrim.mail.ru:2042");
-            s.waitData();
-
             int ch;
             while (true) {
                 ch = s.read();

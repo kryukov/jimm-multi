@@ -1769,7 +1769,7 @@ public final class XmppConnection extends ClientConnection {
                 auth += "mechanism='X-GOOGLE-TOKEN'>" + googleToken + "</auth>";
 
                 /* PLAIN authentication */
-            } else if (isMechanism(x2, "PLAIN")) {
+            } else if (socket.isSecured() && isMechanism(x2, "PLAIN")) {
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
                 DebugLog.systemPrintln("[INFO-JABBER] Using PLAIN");
                 // #sijapp cond.end #

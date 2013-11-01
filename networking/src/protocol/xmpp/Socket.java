@@ -28,6 +28,7 @@ final class Socket {
     private ZInputStream zin;
     private ZOutputStream zout;
     private boolean compressed;
+    private boolean secured;
     // #sijapp cond.end #
     
     /**
@@ -48,6 +49,7 @@ final class Socket {
 
     public void startTls(String host) {
         socket.startTls(host);
+        secured = true;
     }
     // #sijapp cond.end #
 
@@ -175,5 +177,9 @@ final class Socket {
             // #sijapp cond.end #
             throw new JimmException(120, 7);
         }
+    }
+
+    boolean isSecured() {
+        return secured;
     }
 }

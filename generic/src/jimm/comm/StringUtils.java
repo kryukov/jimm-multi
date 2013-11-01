@@ -606,7 +606,7 @@ public final class StringUtils {
     }
 
     public static void load() {
-        Vector configs = new Vector();
+        Vector<Config> configs = new Vector<Config>();
         String content = Config.loadResource("/replaces.txt");
         Config.parseIniConfig(content, configs);
         // #sijapp cond.if protocols_MRIM is "true" or protocols_JABBER is "true" #

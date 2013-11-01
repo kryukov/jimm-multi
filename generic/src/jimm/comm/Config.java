@@ -30,11 +30,11 @@ public final class Config {
             byte[] str = new byte[stream.available()];
             stream.read(str);
             res = StringUtils.utf8beByteArrayToString(str, 0, str.length);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         try {
-            stream.close();
-        } catch (Exception e) {
+            if (null != stream) stream.close();
+        } catch (Exception ignored) {
         }
         return res;
     }
@@ -169,7 +169,7 @@ public final class Config {
         return index;
     }
         
-    public static void parseIniConfig(String content, Vector configs) {
+    public static void parseIniConfig(String content, Vector<Config> configs) {
         try {
             Config currentConfig = new Config();
             int index = 0;
@@ -184,7 +184,7 @@ public final class Config {
             if (!currentConfig.isEmpty()) {
                 configs.addElement(currentConfig);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }    
 

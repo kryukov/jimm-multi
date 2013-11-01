@@ -24,23 +24,12 @@
 package jimmui.view.roster;
 
 import jimm.util.JLocale;
-import jimmui.HotKeys;
-import jimmui.model.chat.ChatModel;
 import jimmui.updater.RosterUpdater;
 import jimmui.view.base.touch.*;
-import jimmui.view.icons.Icon;
-import jimmui.view.text.*;
-import java.util.Vector;
-import javax.microedition.lcdui.*;
 
 import jimm.*;
-import jimm.comm.*;
-import jimm.modules.*;
 import jimmui.view.base.*;
 import protocol.*;
-import protocol.ui.InfoFactory;
-import protocol.ui.StatusInfo;
-import protocol.ui.XStatusInfo;
 
 /**
  *
@@ -114,16 +103,6 @@ public final class VirtualContactList extends SomeContentList {
         ((RosterContent)content).update();
     }
 
-    private Protocol getProtocol(Group g) {
-        for (int i = 0; i < getModel().getProtocolCount(); ++i) {
-            Protocol p = getModel().getProtocol(i);
-            if (-1 != Util.getIndex(p.getGroupItems(), g)) {
-                return p;
-            }
-        }
-        return getModel().getProtocol(0);
-    }
-
     public void updateOption() {
         ((RosterContent)content).updateOption();
     }
@@ -135,11 +114,9 @@ public final class VirtualContactList extends SomeContentList {
 
     //Updates the title of the list
     public void updateTitle() {
-        String text = "";
+        String text = "Jimm Multi";
         if (((RosterContent)content).getModel() == getUpdater().getChatModel()) {
             text = JLocale.getString("chats");
-        } else {
-            text = "Jimm Multi";
         }
         bar.setCaption(text);
     }

@@ -66,55 +66,10 @@ public class InfoFactory {
     }
 
     private StatusInfo createStatusInfo(byte protocolType) {
-        int[] statusIconIndex;
-        byte[] applicableStatuses;
-        final ImageList statusIcons = createStatusIcons(protocolType);
-
-        switch (Profile.getEffectiveType(protocolType)) {
-            // #sijapp cond.if protocols_ICQ is "true" #
-            case Profile.PROTOCOL_ICQ:
-                statusIconIndex = new int[]{1, 0, 4, 3, 10, 11, 8, 9, 12, 5, 6, 7, 2, 2, 1};
-                applicableStatuses = icqStatuses;
-                break;
-            // #sijapp cond.end #
-
-            // #sijapp cond.if protocols_MRIM is "true" #
-            case Profile.PROTOCOL_MRIM:
-                statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, -1, 5, -1, 2, -1, 1};
-                applicableStatuses = mrimStatuses;
-                break;
-            // #sijapp cond.end #
-
-            // #sijapp cond.if protocols_JABBER is "true" #
-            case Profile.PROTOCOL_XMPP:
-                statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
-                applicableStatuses = xmppStatuses;
-                break;
-            // #sijapp cond.end #
-
-            // #sijapp cond.if protocols_OBIMP is "true" #
-            case Profile.PROTOCOL_OBIMP:
-                statusIconIndex = new int[]{2, 0, 6, 5, 10, 11, -1, -1, 12, 7, 8, 9, 4, 3, 1};
-                applicableStatuses = obimpStatuses;
-                break;
-            // #sijapp cond.end #
-
-            // #sijapp cond.if protocols_VKAPI is "true" #
-            case Profile.PROTOCOL_VK_API:
-                statusIconIndex = new int[]{1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
-                applicableStatuses = vkApiStatuses;
-                break;
-            // #sijapp cond.end #
-
-            default:
-                return null;
-        }
-        return new StatusInfo(statusIcons, statusIconIndex, applicableStatuses);
-    }
-
-    private ImageList createStatusIcons(int type) {
+        int[] statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
+        byte[] applicableStatuses = xmppStatuses;
         String file = "jabber";
-        switch (type) {
+        switch (protocolType) {
             case Profile.PROTOCOL_GTALK:
                 file = "gtalk";
                 break;
@@ -133,24 +88,38 @@ public class InfoFactory {
             case Profile.PROTOCOL_ODNOKLASSNIKI:
                 file = "o" + "k";
                 break;
+            // #sijapp cond.if protocols_VKAPI is "true" #
             case Profile.PROTOCOL_VK_API:
                 file = "v" + "k";
+                statusIconIndex = new int[]{1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
+                applicableStatuses = vkApiStatuses;
                 break;
+            // #sijapp cond.end #
             case Profile.PROTOCOL_OBIMP:
                 file = "obimp";
+                statusIconIndex = new int[]{2, 0, 6, 5, 10, 11, -1, -1, 12, 7, 8, 9, 4, 3, 1};
+                applicableStatuses = obimpStatuses;
                 break;
+            // #sijapp cond.if protocols_MRIM is "true" #
             case Profile.PROTOCOL_MRIM:
                 file = "mrim";
+                statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, -1, 5, -1, 2, -1, 1};
+                applicableStatuses = mrimStatuses;
                 break;
+            // #sijapp cond.end #
+            // #sijapp cond.if protocols_ICQ is "true" #
             case Profile.PROTOCOL_ICQ:
                 file = "icq";
+                statusIconIndex = new int[]{1, 0, 4, 3, 10, 11, 8, 9, 12, 5, 6, 7, 2, 2, 1};
+                applicableStatuses = icqStatuses;
                 break;
+            // #sijapp cond.end #
         }
-        ImageList icons = ImageList.createImageList("/" + file + "-status.png");
-        if (0 < icons.size()) {
-            return icons;
+        ImageList statusIcons = ImageList.createImageList("/" + file + "-status.png");
+        if (0 == statusIcons.size()) {
+            statusIcons = ImageList.createImageList("/jabber-status.png");
         }
-        return ImageList.createImageList("/jabber-status.png");
+        return new StatusInfo(statusIcons, statusIconIndex, applicableStatuses);
     }
 
     // #sijapp cond.if modules_CLIENTS is "true" #

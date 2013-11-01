@@ -1769,28 +1769,33 @@ public final class XmppConnection extends ClientConnection {
                 auth += "mechanism='X-GOOGLE-TOKEN'>" + googleToken + "</auth>";
 
                 /* PLAIN authentication */
-            } else if (socket.isSecured() && isMechanism(x2, "PLAIN")) {
-                // #sijapp cond.if modules_DEBUGLOG is "true" #
-                DebugLog.systemPrintln("[INFO-JABBER] Using PLAIN");
-                // #sijapp cond.end #
-                auth += "mechanism='PLAIN'>";
-                Util data = new Util();
-                data.writeUtf8String(getJabber().getUserId());
-                data.writeByte(0);
-                data.writeUtf8String(Jid.getNick(getJabber().getUserId()));
-                data.writeByte(0);
-                data.writeUtf8String(getJabber().getPassword());
-                auth += MD5.toBase64(data.toByteArray());
-                auth += "</auth>";
-
-            } else if (isGTalk_) {
-                nonSaslLogin();
-                return;
-
             } else {
-                /* Unknown authentication method */
-                setAuthStatus(false);
-                return;
+                boolean canUsePlain = true;
+                // #sijapp cond.if modules_ANDROID is "true" #
+                canUsePlain = socket.isSecured();
+                // #sijapp cond.end #
+                if (canUsePlain && isMechanism(x2, "PLAIN")) {
+                    // #sijapp cond.if modules_DEBUGLOG is "true" #
+                    DebugLog.systemPrintln("[INFO-JABBER] Using PLAIN");
+                    // #sijapp cond.end #
+                    auth += "mechanism='PLAIN'>";
+                    Util data = new Util();
+                    data.writeUtf8String(getJabber().getUserId());
+                    data.writeByte(0);
+                    data.writeUtf8String(Jid.getNick(getJabber().getUserId()));
+                    data.writeByte(0);
+                    data.writeUtf8String(getJabber().getPassword());
+                    auth += MD5.toBase64(data.toByteArray());
+                    auth += "</auth>";
+
+                } else if (canUsePlain && isGTalk_) {
+                    nonSaslLogin();
+                    return;
+
+                } else {
+                    setAuthStatus(false);
+                    return;
+                }
             }
 
             sendRequest(auth);

@@ -38,7 +38,7 @@ public final class Profile {
             + "|Mail.ru Agent"
             // #sijapp cond.end #
             // #sijapp cond.if protocols_JABBER is "true" #
-            + "|Jabber"
+            + "|XMPP (Jabber)"
             + "|Facebook"
             + "|\u041e\u0434\u043d\u043e\u043a\u043b\u0430\u0441\u0441\u043d\u0438\u043a\u0438"
             + "|LiveJournal"

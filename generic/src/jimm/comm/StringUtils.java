@@ -625,7 +625,7 @@ public final class StringUtils {
         }
     }
 
-    private static StringUtils getConvertor(String scheme) {
+    private static StringUtils getConverter(String scheme) {
         for (int i = 0; i < converters.length; ++i) {
             if (scheme.equals(converters[i].name)) {
                 return converters[i];
@@ -633,16 +633,13 @@ public final class StringUtils {
         }
         return null;
     }
-    public static boolean hasConverter(String scheme) {
-        return null != getConvertor(scheme);
-    }
     public static String convert(String scheme, String str) {
-        StringUtils convertor = getConvertor(scheme);
+        StringUtils convertor = getConverter(scheme);
         return (null == convertor) ? str : convertor.convertText(str);
     }
 
     public static String detransliterate(String str) {
-        StringUtils convertor = getConvertor(DETRANSLITERATE);
+        StringUtils convertor = getConverter(DETRANSLITERATE);
         return (null == convertor) ? str : convertor.convertTextCaseInsensitive(str);
     }
 

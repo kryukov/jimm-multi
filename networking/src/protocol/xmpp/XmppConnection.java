@@ -61,6 +61,8 @@ public final class XmppConnection extends ClientConnection {
 
     private SASL_ScramSha1 scramSHA1;
 
+    private static final String[] supportedEventTypes = Util.explode("mood|activity|tune", '|');
+
     private static final String[] statusCodes = {
             "u" + "navailable",
             "", // online
@@ -1342,7 +1344,7 @@ public final class XmppConnection extends ClientConnection {
         if (null != statusNode) {
             statusNode = statusNode.childAt(0);
         }
-        if (-1 == "|mood|activity|tune".indexOf(eventType)) {
+        if (!StringUtils.contains(supportedEventTypes, eventType)) {
             return;
         }
 

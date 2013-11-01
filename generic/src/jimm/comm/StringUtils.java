@@ -665,6 +665,12 @@ public final class StringUtils {
         }
         return "";
     }
+    public static boolean contains(String[] base, String value) {
+        for (int i = 0; i < base.length; ++i) {
+            if (base[i].equals(value)) return true;
+        }
+        return false;
+    }
 
 
     private static int cutIndex(String str, char ch, int cutIndex, int length) {

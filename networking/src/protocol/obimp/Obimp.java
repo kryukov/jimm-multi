@@ -12,7 +12,7 @@ package protocol.obimp;
 
 import jimm.Jimm;
 import jimm.chat.message.PlainMessage;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 import jimm.search.*;
 import protocol.*;
@@ -32,7 +32,7 @@ public class Obimp extends Protocol {
 
     @Override
     public boolean isEmpty() {
-        return super.isEmpty() || StringConvertor.isEmpty(server);
+        return super.isEmpty() || StringUtils.isEmpty(server);
     }
 
     @Override
@@ -44,9 +44,9 @@ public class Obimp extends Protocol {
     protected String processUin(String uin) {
         String[] userId = Util.explode(uin, '@');
         if (2 == userId.length) {
-            server = StringConvertor.toLowerCase(userId[1]);
+            server = StringUtils.toLowerCase(userId[1]);
         }
-        return StringConvertor.toLowerCase(userId[0]);
+        return StringUtils.toLowerCase(userId[0]);
     }
     String getServer() {
         return server;

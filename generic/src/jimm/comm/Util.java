@@ -114,7 +114,7 @@ public class Util {
     }
 
     public void writeShortLenAndUtf8String(String value) {
-        byte[] raw = StringConvertor.stringToByteArrayUtf8(value);
+        byte[] raw = StringUtils.stringToByteArrayUtf8(value);
         writeByte(raw.length);
         try {
             stream.write(raw, 0, raw.length);
@@ -122,7 +122,7 @@ public class Util {
         }
     }
     public void writeLenAndUtf8String(String value) {
-        byte[] raw = StringConvertor.stringToByteArrayUtf8(value);
+        byte[] raw = StringUtils.stringToByteArrayUtf8(value);
         writeWordBE(raw.length);
         try {
             stream.write(raw, 0, raw.length);
@@ -130,16 +130,16 @@ public class Util {
         }
     }
     public void writeUtf8String(String value) {
-        byte[] raw = StringConvertor.stringToByteArrayUtf8(value);
+        byte[] raw = StringUtils.stringToByteArrayUtf8(value);
         try {
             stream.write(raw, 0, raw.length);
         } catch (Exception ignored) {
         }
     }
     public void writeProfileAsciizTLV(int type, String value) {
-        value = StringConvertor.notNull(value);
+        value = StringUtils.notNull(value);
 
-        byte[] raw = StringConvertor.stringToByteArray1251(value);
+        byte[] raw = StringUtils.stringToByteArray1251(value);
         writeWordLE(type);
         writeWordLE(raw.length + 3);
         writeWordLE(raw.length + 1);
@@ -147,9 +147,9 @@ public class Util {
         writeByte(0);
     }
     public void writeTlvECombo(int type, String value, int code) {
-        value = StringConvertor.notNull(value);
+        value = StringUtils.notNull(value);
         writeWordLE(type);
-        byte[] raw = StringConvertor.stringToByteArray(value);
+        byte[] raw = StringUtils.stringToByteArray(value);
         writeWordLE(raw.length + 4);
         writeWordLE(raw.length + 1);
         try {
@@ -719,7 +719,7 @@ public class Util {
         return url;
     }
     public static String notUrls(String str) {
-        str = StringConvertor.notNull(str);
+        str = StringUtils.notNull(str);
         return (-1 != str.indexOf("http://")) ? "" : str;
     }
     public static boolean hasURL(String msg) {
@@ -804,7 +804,7 @@ public class Util {
 
     /* Divide text to array of parts using serparator charaster */
     static public String[] explode(String text, char separator) {
-        if (StringConvertor.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             return new String[0];
         }
         Vector tmp = new Vector();
@@ -916,7 +916,7 @@ public class Util {
     private static final String[] escapedChars = {"&quot;", "&apos;", "&gt;", "&lt;", "&amp;"};
     private static final String[] unescapedChars = {"\"", "'", ">", "<", "&"};
     public static String xmlEscape(String text) {
-        text = StringConvertor.notNull(text);
+        text = StringUtils.notNull(text);
         return Util.replace(text, unescapedChars, escapedChars, "\"'><&");
     }
 
@@ -964,7 +964,7 @@ public class Util {
     private static int compareNodes(Sortable node1, Sortable node2) {
         int result = node1.getNodeWeight() - node2.getNodeWeight();
         if (0 == result) {
-            result = StringConvertor.stringCompare(node1.getText(), node2.getText());
+            result = StringUtils.stringCompare(node1.getText(), node2.getText());
         }
         return result;
     }

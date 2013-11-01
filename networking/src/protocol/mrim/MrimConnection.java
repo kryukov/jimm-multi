@@ -218,9 +218,9 @@ public final class MrimConnection extends ClientConnection {
     }
 
     private void addMessage(String from, String msg, long flags, String date, boolean offline) {
-        msg = StringConvertor.trim(msg);
+        msg = StringUtils.trim(msg);
         boolean isAuth = (0 != (MrimPacket.MESSAGE_FLAG_AUTHORIZE & flags));
-        if (!isAuth && StringConvertor.isEmpty(msg)) {
+        if (!isAuth && StringUtils.isEmpty(msg)) {
             return;
         }
 
@@ -238,7 +238,7 @@ public final class MrimConnection extends ClientConnection {
         } catch (Exception e) {
             msg = "";
         }
-        msg = StringConvertor.convert(StringConvertor.MRIM2JIMM, msg);
+        msg = StringUtils.convert(StringUtils.MRIM2JIMM, msg);
 
         if (-1 == from.indexOf('@')) {
             MrimContact contact = mrim.getContactByPhone(from);
@@ -307,11 +307,11 @@ public final class MrimConnection extends ClientConnection {
         switch (type) {
             case MULTICHAT_MESSAGE:
                 email = packetData.getString();
-                msg = StringConvertor.trim(msg);
-                if (StringConvertor.isEmpty(msg)) {
+                msg = StringUtils.trim(msg);
+                if (StringUtils.isEmpty(msg)) {
                     return;
                 }
-                msg = StringConvertor.convert(StringConvertor.MRIM2JIMM, msg);
+                msg = StringUtils.convert(StringUtils.MRIM2JIMM, msg);
                 if ((MrimPacket.MESSAGE_FLAG_ALARM & flags) != 0) {
                     msg = PlainMessage.CMD_WAKEUP;
                 }
@@ -517,10 +517,10 @@ public final class MrimConnection extends ClientConnection {
                     }
 
                     if (null != lastContact) {
-                        if (StringConvertor.isEmpty(lastContact.getPhones())) {
+                        if (StringUtils.isEmpty(lastContact.getPhones())) {
                             // do nothing
 
-                        } else if (StringConvertor.isEmpty(userInfo.homePhones)) {
+                        } else if (StringUtils.isEmpty(userInfo.homePhones)) {
                             userInfo.homePhones = lastContact.getPhones();
 
                         } else {
@@ -762,7 +762,7 @@ public final class MrimConnection extends ClientConnection {
 
             MrimContact contact;
             if (MrimPhoneContact.PHONE_UIN.equals(userid)) {
-                if (StringConvertor.isEmpty(phone)) continue;
+                if (StringUtils.isEmpty(phone)) continue;
                 contact = new MrimPhoneContact(phone);
                 groupId = MrimGroup.PHONE_CONTACTS_GROUP;
 
@@ -809,7 +809,7 @@ public final class MrimConnection extends ClientConnection {
 
         String text = message.getText();
         String to = message.getRcvrUin();
-        text = StringConvertor.convert(StringConvertor.JIMM2MRIM, text);
+        text = StringUtils.convert(StringUtils.JIMM2MRIM, text);
         int flags = 0;
 
         if (text.startsWith(PlainMessage.CMD_WAKEUP)) {
@@ -899,7 +899,7 @@ public final class MrimConnection extends ClientConnection {
     }
     public void postToMicroBlog(String text, String reply) {
         MrimBuffer out = new MrimBuffer();
-        if (StringConvertor.isEmpty(reply)) {
+        if (StringUtils.isEmpty(reply)) {
             out.putDWord(0x01);
             out.putUcs2String(text);
         } else {
@@ -963,7 +963,7 @@ public final class MrimConnection extends ClientConnection {
             ""};
     private static byte getStatusIndexBy(long status, String xstatus) {
         for (byte i = 0; i < xstatusCodes.length; ++i) {
-            if (StringConvertor.isEmpty(xstatusCodes[i])) {
+            if (StringUtils.isEmpty(xstatusCodes[i])) {
                 continue;
             }
             if (xstatusCodes[i].equals(xstatus)) {

@@ -14,7 +14,6 @@ import jimmui.Clipboard;
 import jimmui.ContentActionListener;
 import jimmui.view.base.*;
 import jimm.util.JLocale;
-import jimmui.view.smiles.Selector;
 import jimmui.view.smiles.SmilesContent;
 
 /**
@@ -290,13 +289,13 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         return cancelCommand == cmd;
     }
     public String getRawString() {
-        String text = StringConvertor.notNull(textBox.getString());
-        return StringConvertor.removeCr(text);
+        String text = StringUtils.notNull(textBox.getString());
+        return StringUtils.removeCr(text);
     }
     public String getString() {
         String messText = getRawString();
         if (Options.getBoolean(Options.OPTION_DETRANSLITERATE)) {
-            return StringConvertor.detransliterate(messText);
+            return StringUtils.detransliterate(messText);
         }
         return messText;
     }

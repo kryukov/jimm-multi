@@ -12,7 +12,7 @@
 package protocol.mrim;
 
 import jimm.comm.Config;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import protocol.ui.XStatusInfo;
 
 /**
@@ -34,7 +34,7 @@ public class MrimXStatusInfo {
     }
 
     public int createStatus(String nativeStatus) {
-        if (StringConvertor.isEmpty(nativeStatus)) {
+        if (StringUtils.isEmpty(nativeStatus)) {
             return XStatusInfo.XSTATUS_NONE;
         }
         for (byte i = 0; i < statusCodes.length; ++i) {

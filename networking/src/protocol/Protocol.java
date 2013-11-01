@@ -66,7 +66,7 @@ abstract public class Protocol {
     }
 
     public boolean isEmpty() {
-        return StringConvertor.isEmpty(userid);
+        return StringUtils.isEmpty(userid);
     }
 
     public final String getNick() {
@@ -98,16 +98,16 @@ abstract public class Protocol {
     }
     public final void setProfile(Profile account) {
         this.profile = account;
-        String rawUin = StringConvertor.notNull(account.userId);
-        if (!StringConvertor.isEmpty(rawUin)) {
+        String rawUin = StringUtils.notNull(account.userId);
+        if (!StringUtils.isEmpty(rawUin)) {
             byte type = account.protocolType;
             String domain = getDefaultDomain(type);
             if ((null != domain) && (-1 == rawUin.indexOf('@'))) {
                 rawUin += domain;
             }
         }
-        userid = StringConvertor.isEmpty(rawUin) ? "" : processUin(rawUin);
-        if (!StringConvertor.isEmpty(account.password)) {
+        userid = StringUtils.isEmpty(rawUin) ? "" : processUin(rawUin);
+        if (!StringUtils.isEmpty(account.password)) {
             setPassword(null);
         }
 
@@ -440,7 +440,7 @@ abstract public class Protocol {
 
     abstract protected void s_renameContact(Contact contact, String name);
     public final void renameContact(Contact contact, String name) {
-        if (StringConvertor.isEmpty(name)) {
+        if (StringUtils.isEmpty(name)) {
             return;
         }
         if (!roster.hasContact(contact)) {
@@ -907,8 +907,8 @@ abstract public class Protocol {
 
     protected abstract void sendSomeMessage(PlainMessage msg);
     public final void sendMessage(Contact to, String msg, boolean addToChat) {
-        msg = StringConvertor.trim(msg);
-        if (StringConvertor.isEmpty(msg)) {
+        msg = StringUtils.trim(msg);
+        if (StringUtils.isEmpty(msg)) {
             return;
         }
         PlainMessage plainMsg = new PlainMessage(this, to, Jimm.getCurrentGmtTime(), msg);

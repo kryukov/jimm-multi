@@ -38,7 +38,7 @@ public class SystemNotice extends Message {
     public SystemNotice(Protocol protocol, int _sysnotetype, String _uin, String _reason) {
         super(Jimm.getCurrentGmtTime(), protocol, _uin, true);
         sysnotetype = _sysnotetype;
-        reason = StringConvertor.notNull(_reason);
+        reason = StringUtils.notNull(_reason);
         setName(JLocale.getString("sysnotice"));
     }
 
@@ -62,11 +62,11 @@ public class SystemNotice extends Message {
         if (TYPE_NOTICE_AUTHREQ == getMessageType()) {
             text = getSndrUin() + JLocale.getString("wantsyourauth");
         }
-        if (StringConvertor.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             return reason;
         }
         text += ".";
-        if (!StringConvertor.isEmpty(reason)) {
+        if (!StringUtils.isEmpty(reason)) {
             text += "\n" + JLocale.getString("reason") + ": " + reason;
         }
         return text;

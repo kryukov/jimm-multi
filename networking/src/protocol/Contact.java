@@ -60,7 +60,7 @@ abstract public class Contact implements TreeNode, Sortable {
         return name;
     }
     public void setName(String newName) {
-        if (!StringConvertor.isEmpty(newName)) {
+        if (!StringUtils.isEmpty(newName)) {
     	    name = newName;
         }
     }
@@ -97,7 +97,7 @@ abstract public class Contact implements TreeNode, Sortable {
     // #sijapp cond.if modules_CLIENTS is "true" #
     public void setClient(short clientNum, String ver) {
         clientIndex = clientNum;
-        version = StringConvertor.notNull(ver);
+        version = StringUtils.notNull(ver);
     }
     // #sijapp cond.end #
 ///////////////////////////////////////////////////////////////////////////

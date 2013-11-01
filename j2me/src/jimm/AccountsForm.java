@@ -9,12 +9,12 @@
 
 package jimm;
 
+import jimm.comm.StringUtils;
 import jimmui.view.UIBuilder;
 import jimmui.view.form.ControlStateListener;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
 import jimmui.view.text.TextList;
-import jimm.comm.StringConvertor;
 import jimmui.view.menu.*;
 import jimmui.view.text.TextListController;
 import jimmui.view.text.TextListModel;
@@ -229,7 +229,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
                 account.protocolType = Profile.protocolTypes[form.getSelectorValue(protocolTypeField)];
             }
             account.userId = form.getTextFieldValue(uinField).trim();
-            if (StringConvertor.isEmpty(account.userId)) {
+            if (StringUtils.isEmpty(account.userId)) {
                 return;
             }
             account.password = form.getTextFieldValue(passField);

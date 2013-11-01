@@ -4,7 +4,7 @@ package protocol.xmpp;
 import com.ssttr.crypto.HMACSHA1;
 import com.ssttr.crypto.SHA1;
 import com.ssttr.crypto.MessageDigest;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 
 public class SASL_ScramSha1 {
@@ -123,7 +123,7 @@ public class SASL_ScramSha1 {
     }
 
     private byte[] getBytes(String str) {
-        return StringConvertor.stringToByteArrayUtf8(str);
+        return StringUtils.stringToByteArrayUtf8(str);
     }
 }
 // #sijapp cond.end #

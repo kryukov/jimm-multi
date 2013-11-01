@@ -64,7 +64,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
     protected void doJimmAction(int action) {
         doJimmBaseAction(action);
         String jid = getCurrentJid();
-        if (!StringConvertor.isEmpty(jid)) {
+        if (!StringUtils.isEmpty(jid)) {
             switch (action) {
                 case COMMAND_ADD:
                     Contact c = xmpp.createTempContact(jid);
@@ -193,7 +193,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
     }
 
     public void addItem(String name, String jid) {
-        if (StringConvertor.isEmpty(jid)) {
+        if (StringUtils.isEmpty(jid)) {
             return;
         }
         String shortJid = makeShortJid(jid);
@@ -203,7 +203,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
         item.addText(visibleJid, CanvasEx.THEME_TEXT,
                 shortView ?  CanvasEx.FONT_STYLE_PLAIN :  CanvasEx.FONT_STYLE_BOLD);
         if (!shortView) {
-            if (StringConvertor.isEmpty(name)) {
+            if (StringUtils.isEmpty(name)) {
                 name = shortJid;
             }
             item.doCRLF();
@@ -218,7 +218,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
     }
 
     public void showIt() {
-        if (StringConvertor.isEmpty(serverJid)) {
+        if (StringUtils.isEmpty(serverJid)) {
             setServer("");
         }
         screen.setController(this);
@@ -330,7 +330,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
         } else if (searchBox == box) {
             String text = searchBox.getString();
             if (isConferenceList) {
-                text = StringConvertor.toLowerCase(text);
+                text = StringUtils.toLowerCase(text);
             }
             int currentIndex = getJidIndex(screen.getContent().getCurrItem()) + 1;
             for (int i = currentIndex; i < jids.size(); ++i) {

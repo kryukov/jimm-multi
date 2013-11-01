@@ -384,7 +384,7 @@ public class Jimm {
         Emotions.instance.load();
         // #sijapp cond.end#
         //splash.setProgress(25);
-        StringConvertor.load();
+        StringUtils.load();
         //splash.setProgress(35);
         Templates.getInstance().load();
         editor = new MessageEditor();

@@ -11,7 +11,7 @@ package jimmui.view.base;
 import java.util.*;
 import javax.microedition.lcdui.*;
 import jimm.*;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.modules.*;
 import jimmui.view.base.touch.TouchState;
 import jimmui.view.menu.Select;
@@ -619,7 +619,7 @@ public class NativeCanvas extends Canvas {
     public int getMinScreenMetrics() {
         // #sijapp cond.if modules_ANDROID is "true" #
         String supports = System.getProperty("device.accelerometer");
-        if (StringConvertor.isEmpty(supports)) {
+        if (StringUtils.isEmpty(supports)) {
             return getWidth();
         }
         if (true) return minScreenMetrics;

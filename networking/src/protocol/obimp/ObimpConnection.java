@@ -77,7 +77,7 @@ public class ObimpConnection extends ClientConnection {
     }
 
     private String toStr(byte[] data) {
-        return StringConvertor.utf8beByteArrayToString(data, 0, data.length);
+        return StringUtils.utf8beByteArrayToString(data, 0, data.length);
     }
     protected void ping() throws JimmException {
         send(new ObimpPacket(0x0001, 0x0006));
@@ -380,7 +380,7 @@ public class ObimpConnection extends ClientConnection {
             login.writeWtld(0x0002, hash);
 
         } else if (0x0007 == type) {
-            login.writeWtld(0x0003, StringConvertor.stringToByteArrayUtf8(password));
+            login.writeWtld(0x0003, StringUtils.stringToByteArrayUtf8(password));
         }
         send(login);
 
@@ -408,7 +408,7 @@ public class ObimpConnection extends ClientConnection {
         ObimpPacket caps = new ObimpPacket(0x0003, 0x0003);
         caps.writeWtld(0x0001, new byte[] {00, 01});
         caps.writeWtld(0x0002, new byte[] {00, 01});
-        caps.writeWtld(0x0003, StringConvertor.stringToByteArrayUtf8("Bimoid Mobile"));
+        caps.writeWtld(0x0003, StringUtils.stringToByteArrayUtf8("Bimoid Mobile"));
         caps.writeWtld(0x0004, getClientVersion());
         send(caps);
 
@@ -488,10 +488,10 @@ public class ObimpConnection extends ClientConnection {
                 switch (contact.getStldType()) {
                     case 1:
                     case 3:
-                        name = StringConvertor.utf8beByteArrayToString(data, 0, data.length);
+                        name = StringUtils.utf8beByteArrayToString(data, 0, data.length);
                         break;
                     case 2:
-                        userId = StringConvertor.utf8beByteArrayToString(data, 0, data.length);
+                        userId = StringUtils.utf8beByteArrayToString(data, 0, data.length);
                         break;
                     case 4:
                         privacy = data[0];
@@ -568,7 +568,7 @@ public class ObimpConnection extends ClientConnection {
         status.writeWtld_long(0x0001, index2status(obimp.getProfile().statusIndex));
         status.writeWtld_str(0x0002, "");
         status.writeWtld_long(0x0003, obimp.getProfile().xstatusIndex + 1);
-        status.writeWtld_str(0x0004, StringConvertor.notNull(obimp.getProfile().xstatusTitle));
+        status.writeWtld_str(0x0004, StringUtils.notNull(obimp.getProfile().xstatusTitle));
         return status;
     }
     public void removeItem(long id) {
@@ -577,7 +577,7 @@ public class ObimpConnection extends ClientConnection {
         put(packet);
     }
     private byte[] packGroupInfo(Group g) {
-        byte[] name = StringConvertor.stringToByteArrayUtf8(g.getName());
+        byte[] name = StringUtils.stringToByteArrayUtf8(g.getName());
         byte[] result = new byte[4 + name.length];
         Util.putWordBE(result, 0, 0x0001);
         Util.putWordBE(result, 2, name.length);
@@ -585,8 +585,8 @@ public class ObimpConnection extends ClientConnection {
         return result;
     }
     private byte[] packContactInfo(ObimpContact c) {
-        byte[] id = StringConvertor.stringToByteArrayUtf8(c.getUserId());
-        byte[] name = StringConvertor.stringToByteArrayUtf8(c.getName());
+        byte[] id = StringUtils.stringToByteArrayUtf8(c.getUserId());
+        byte[] name = StringUtils.stringToByteArrayUtf8(c.getName());
         int auth = c.isAuth() ? 0 : 4;
         int general = c.isGeneral() ? 4 : 0;
         byte[] result = new byte[4 + id.length + 4 + name.length + 5 + auth + general];

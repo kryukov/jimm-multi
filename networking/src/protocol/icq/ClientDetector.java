@@ -227,7 +227,7 @@ public class ClientDetector {
     }
     private String getGuidVersion(byte[] guids, int guidOffset, int offset, int length, int versionType) {
         if (0 == versionType) {
-            return StringConvertor.byteArrayToString(guids, guidOffset + offset, length).trim();
+            return StringUtils.byteArrayToString(guids, guidOffset + offset, length).trim();
         }
         if (1 == versionType) {
             StringBuffer version = new StringBuffer();

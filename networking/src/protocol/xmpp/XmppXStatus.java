@@ -12,7 +12,7 @@
 package protocol.xmpp;
 
 import jimm.comm.Config;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import protocol.ui.XStatusInfo;
 
 /**
@@ -51,7 +51,7 @@ public class XmppXStatus {
     }
 
     public int createXStatus(String id) {
-        if (StringConvertor.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             return XStatusInfo.XSTATUS_NONE;
         }
         if (XSTATUS_TEXT_NONE.equals(id)) {
@@ -62,7 +62,7 @@ public class XmppXStatus {
             if (-1 != index) {
                 String xstr = xstatusCaps[capsIndex];
                 final int endPos = index + id.length();
-                if ((endPos < xstr.length()) && (StringConvertor.DELIMITER != xstr.charAt(endPos))) {
+                if ((endPos < xstr.length()) && (StringUtils.DELIMITER != xstr.charAt(endPos))) {
                     continue;
                 }
                 return capsIndex | getType(id);
@@ -75,7 +75,7 @@ public class XmppXStatus {
         if (pos < 0) {
             return defval;
         }
-        int strEnd = str.indexOf(StringConvertor.DELIMITER, pos);
+        int strEnd = str.indexOf(StringUtils.DELIMITER, pos);
         if (-1 == strEnd) {
     	    str = str.substring(pos);
         } else {

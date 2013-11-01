@@ -11,9 +11,9 @@
 // #sijapp cond.if modules_CLIENTS is "true" #
 package protocol.mrim;
 
+import jimm.comm.StringUtils;
 import jimmui.view.icons.*;
 import jimm.comm.Config;
-import jimm.comm.StringConvertor;
 import jimm.modules.*;
 import protocol.ui.ClientInfo;
 
@@ -50,7 +50,7 @@ public final class MrimClient {
         return str.substring(valueIndex, endIndex);
     }
     static public void createClient(MrimContact contact, String caps) {
-        if (StringConvertor.isEmpty(caps)) {
+        if (StringUtils.isEmpty(caps)) {
             contact.setClient(ClientInfo.CLI_NONE, null);
             return;
         }

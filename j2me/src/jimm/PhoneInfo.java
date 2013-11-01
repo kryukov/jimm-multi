@@ -1,6 +1,6 @@
 package jimm;
 
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,7 +33,7 @@ public class PhoneInfo {
     }
     // #sijapp cond.if target is "MIDP2"#
     public boolean isS60v5() {
-        String platform = StringConvertor.notNull(Jimm.getJimm().phone.microeditionPlatform);
+        String platform = StringUtils.notNull(Jimm.getJimm().phone.microeditionPlatform);
         return hasSubStr(platform, "sw_platform_version=5.");
     }
     // #sijapp cond.end#
@@ -124,7 +124,7 @@ public class PhoneInfo {
             res = System.getProperty(key);
         } catch (Exception ignored) {
         }
-        return StringConvertor.isEmpty(res) ? defVal : res;
+        return StringUtils.isEmpty(res) ? defVal : res;
     }
 
     public boolean isPhone(final byte phone) {
@@ -202,7 +202,7 @@ public class PhoneInfo {
     }
 
     public boolean isCedar() {
-        return hasSubStr(StringConvertor.notNull(microeditionPlatform), "EricssonJ108i");
+        return hasSubStr(StringUtils.notNull(microeditionPlatform), "EricssonJ108i");
     }
 
     public boolean isCollapsible() {

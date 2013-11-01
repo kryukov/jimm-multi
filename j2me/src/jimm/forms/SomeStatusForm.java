@@ -10,8 +10,7 @@
 package jimm.forms;
 
 import jimm.Jimm;
-import jimm.cl.ContactList;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimmui.view.InputTextBox;
 import jimmui.view.TextBoxListener;
 import jimmui.view.menu.*;
@@ -42,7 +41,7 @@ public final class SomeStatusForm implements SelectListener, TextBoxListener {
     public final void select(Select select, MenuModel model, int status) {
         selectedStatus = status;
         boolean connecting = (StatusInfo.STATUS_OFFLINE != status);
-        if (connecting && StringConvertor.isEmpty(protocol.getPassword())) {
+        if (connecting && StringUtils.isEmpty(protocol.getPassword())) {
             requestPassword();
         } else {
             setStatus();
@@ -53,7 +52,7 @@ public final class SomeStatusForm implements SelectListener, TextBoxListener {
         if (ok && (box == passwordTextBox)) {
             protocol.setPassword(passwordTextBox.getString());
             passwordTextBox.back();
-            if (!StringConvertor.isEmpty(protocol.getPassword())) {
+            if (!StringUtils.isEmpty(protocol.getPassword())) {
                 setStatus();
             }
         }

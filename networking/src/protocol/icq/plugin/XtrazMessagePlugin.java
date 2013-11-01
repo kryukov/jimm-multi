@@ -48,7 +48,7 @@ public class XtrazMessagePlugin {
 
 
     private byte[] getData() {
-        byte[] str = StringConvertor.stringToByteArrayUtf8(msg);
+        byte[] str = StringUtils.stringToByteArrayUtf8(msg);
         Util buffer = new Util();
         buffer.writeDWordLE(str.length);
         buffer.writeByteArray(str);
@@ -70,7 +70,7 @@ public class XtrazMessagePlugin {
     }
     private byte[] initAckMsg() {
         // Get UIN
-        byte[] uinRaw = StringConvertor.stringToByteArray(rcvr.getUserId());
+        byte[] uinRaw = StringUtils.stringToByteArray(rcvr.getUserId());
 
         Util buffer = new Util();
 
@@ -107,7 +107,7 @@ public class XtrazMessagePlugin {
     }
     private byte[] initReqMsg() {
         // Get UIN
-        byte[] uinRaw = StringConvertor.stringToByteArray(rcvr.getUserId());
+        byte[] uinRaw = StringUtils.stringToByteArray(rcvr.getUserId());
 
         // Build the packet
         Util buffer = new Util();
@@ -178,7 +178,7 @@ public class XtrazMessagePlugin {
     }
 
     private byte[] pluginData() {
-        byte[] subType = StringConvertor.stringToByteArray(NAME);
+        byte[] subType = StringUtils.stringToByteArray(NAME);
         byte[] data = getData();
         GUID guid = XTRAZ_GUID;
         int command = MGTYPE_SCRIPT_NOTIFY;

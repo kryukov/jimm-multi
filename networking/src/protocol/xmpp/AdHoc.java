@@ -6,7 +6,7 @@ package protocol.xmpp;
 
 // #sijapp cond.if protocols_JABBER is "true" #
 import jimm.Jimm;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 import jimmui.view.UIBuilder;
 import jimmui.view.form.ControlStateListener;
@@ -101,7 +101,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
 
         } else if (1 == contact.subContacts.size()) {
             XmppContact.SubContact sub = (XmppContact.SubContact) contact.subContacts.elementAt(0);
-            if (StringConvertor.isEmpty(sub.resource)) {
+            if (StringUtils.isEmpty(sub.resource)) {
                 jid = contact.getUserId();
             } else {
                 jid = contact.getUserId() + "/" + sub.resource;
@@ -119,8 +119,8 @@ public final class AdHoc implements FormListener, ControlStateListener {
         names = new String[count];
         for (int i = 0; i < count; ++i) {
             XmlNode item = query.childAt(i);
-            nodes[i] = StringConvertor.notNull(item.getAttribute("n" + "ode"));
-            names[i] = StringConvertor.notNull(item.getAttribute(XmlNode.S_NAME));
+            nodes[i] = StringUtils.notNull(item.getAttribute("n" + "ode"));
+            names[i] = StringUtils.notNull(item.getAttribute(XmlNode.S_NAME));
         }
         updateForm(true);
     }
@@ -185,7 +185,7 @@ public final class AdHoc implements FormListener, ControlStateListener {
             String text = commandXml.getFirstNodeValue("n" + "ote");
             protocol.getConnection().resetAdHoc();
             commandForm = null;
-            if (!StringConvertor.isEmpty(text)) {
+            if (!StringUtils.isEmpty(text)) {
                 new Popup(text).show();
                 showForm = false;
             }

@@ -9,7 +9,7 @@
 // #sijapp cond.if protocols_OBIMP is "true" #
 package protocol.obimp;
 
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 
 /**
@@ -73,16 +73,16 @@ public class ObimpPacket {
         outPacket.writeByte(data);
     }
     public void writeWtld_str(int type, String data) {
-        data = StringConvertor.notNull(data);
-        writeWtld(type, StringConvertor.stringToByteArrayUtf8(data));
+        data = StringUtils.notNull(data);
+        writeWtld(type, StringUtils.stringToByteArrayUtf8(data));
     }
     public void writeWtld_flag(int type) {
         outPacket.writeDWordBE(type);
         outPacket.writeDWordBE(0);
     }
     public void writeWtld_notNullStr(int type, String data) {
-        if (!StringConvertor.isEmpty(data)) {
-            writeWtld(type, StringConvertor.stringToByteArrayUtf8(data));
+        if (!StringUtils.isEmpty(data)) {
+            writeWtld(type, StringUtils.stringToByteArrayUtf8(data));
         }
     }
     public void writeStld(int type, byte[] data) {

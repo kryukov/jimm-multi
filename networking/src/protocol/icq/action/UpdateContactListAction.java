@@ -187,7 +187,7 @@ public class UpdateContactListAction extends IcqAction {
         if (SnacPacket.CLI_ROSTERDELETE_COMMAND == snacPacket.getCommand()) {
             ArrayReader buf = snacPacket.getReader();
             int length = buf.getWordBE();
-            String uin = StringConvertor.byteArrayToAsciiString(
+            String uin = StringUtils.byteArrayToAsciiString(
                     buf.getArray(length), 0, length);
             return (null != contact) && uin.equals(contact.getUserId());
         }

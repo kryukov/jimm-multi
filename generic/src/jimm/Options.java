@@ -35,7 +35,7 @@ import jimm.modules.*;
 import jimm.util.*;
 import java.io.*;
 import java.util.*;
-import jimmui.view.base.NativeCanvas;
+
 import protocol.ui.StatusInfo;
 
 
@@ -331,7 +331,7 @@ public class Options {
     }
 
     private static void saveAccount(int num, Profile account) {
-        if (StringConvertor.isEmpty(account.userId)) {
+        if (StringUtils.isEmpty(account.userId)) {
             return;
         }
         Storage s = new Storage("j-accounts");
@@ -352,7 +352,7 @@ public class Options {
     }
     private static void addProfile(int uinOpt, int passOpt, int nickOpt) {
         String uin = getString(uinOpt);
-        if (!StringConvertor.isEmpty(uin)) {
+        if (!StringUtils.isEmpty(uin)) {
             Profile p = new Profile();
             p.userId = uin;
             p.password = getString(passOpt);
@@ -367,14 +367,14 @@ public class Options {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(baos);
             dos.writeByte(account.protocolType);
-            dos.writeUTF(StringConvertor.notNull(account.userId));
-            dos.writeUTF(StringConvertor.notNull(account.password));
-            dos.writeUTF(StringConvertor.notNull(account.nick));
+            dos.writeUTF(StringUtils.notNull(account.userId));
+            dos.writeUTF(StringUtils.notNull(account.password));
+            dos.writeUTF(StringUtils.notNull(account.nick));
             dos.writeByte(account.statusIndex);
-            dos.writeUTF(StringConvertor.notNull(account.statusMessage));
+            dos.writeUTF(StringUtils.notNull(account.statusMessage));
             dos.writeByte(account.xstatusIndex);
-            dos.writeUTF(StringConvertor.notNull(account.xstatusTitle));
-            dos.writeUTF(StringConvertor.notNull(account.xstatusDescription));
+            dos.writeUTF(StringUtils.notNull(account.xstatusTitle));
+            dos.writeUTF(StringUtils.notNull(account.xstatusDescription));
             dos.writeBoolean(account.isActive);
 
             byte[] hash = Util.decipherPassword(baos.toByteArray());
@@ -572,7 +572,7 @@ public class Options {
                 byte[] optionValue = new byte[dis.readUnsignedShort()];
                 dis.readFully(optionValue);
                 optionValue = Util.decipherPassword(optionValue);
-                setString(optionKey, StringConvertor.utf8beByteArrayToString(optionValue, 0, optionValue.length));
+                setString(optionKey, StringUtils.utf8beByteArrayToString(optionValue, 0, optionValue.length));
             }
         }
     }
@@ -604,7 +604,7 @@ public class Options {
                 dos.writeLong(((Long)options[key]).longValue());
             } else if (key < 256) {  /* 226-255 = Scrambled String */
                 String str = (String)options[key];
-                byte[] optionValue = StringConvertor.stringToByteArrayUtf8(str);
+                byte[] optionValue = StringUtils.stringToByteArrayUtf8(str);
                 optionValue = Util.decipherPassword(optionValue);
                 dos.writeShort(optionValue.length);
                 dos.write(optionValue);

@@ -119,7 +119,7 @@ public final class Templates implements SelectListener, CommandListener {
 
     public void commandAction(Command c, Displayable d) {
         String text = templateTextbox.getString();
-        if (StringConvertor.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             c = cancelCommand;
         }
         if (c == addCommand) {

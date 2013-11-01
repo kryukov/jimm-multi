@@ -50,7 +50,7 @@ public final class PlainMessage extends Message {
     // Constructs an outgoing message
     public PlainMessage(Protocol protocol, Contact rcvr, long date, String text) {
         super(date, protocol, rcvr, false);
-        this.text = StringConvertor.notNull(text);
+        this.text = StringUtils.notNull(text);
         this.offline = false;
     }
 

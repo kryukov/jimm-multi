@@ -110,7 +110,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
     }
     public static boolean isPhotoSupported() {
         String supports = System.getProperty("video.snapshot.encodings");
-        return !StringConvertor.isEmpty(supports);
+        return !StringUtils.isEmpty(supports);
     }
     public void startPhotoTransfer() {
         // #sijapp cond.if modules_ANDROID isnot "true" #
@@ -218,7 +218,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         return (progressInstance == par);
     }
     private String getProgressText() {
-        return filename + " - " + StringConvertor.bytesToSizeString(getFileSize(), false);
+        return filename + " - " + StringUtils.bytesToSizeString(getFileSize(), false);
     }
     private void changeFileProgress(String message) {
         if (cItem.hasChat()) {
@@ -408,19 +408,19 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
                 throw new JimmException(120, 13);
             }
             socket.readFully(buffer, 0, length);
-            String url = StringConvertor.utf8beByteArrayToString(buffer, 0, length);
+            String url = StringUtils.utf8beByteArrayToString(buffer, 0, length);
 
             if (isCanceled()) {
                 throw new JimmException(194, 1);
             }
             // Send info about file
             StringBuffer messText = new StringBuffer();
-            if (!StringConvertor.isEmpty(description)) {
+            if (!StringUtils.isEmpty(description)) {
                 messText.append(description).append("\n");
             }
             messText.append("File: ").append(filename).append("\n");
             messText.append("Size: ")
-                    .append(StringConvertor.bytesToSizeString(fileSize, false))
+                    .append(StringUtils.bytesToSizeString(fileSize, false))
                     .append("\n");
             messText.append("Link: ").append(url);
 
@@ -471,7 +471,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             headers.append("Content-Type: application/octet-stream\r\n");
             headers.append("Content-Transfer-Encoding: binary\r\n");
             headers.append("\r\n");
-            os.write(StringConvertor.stringToByteArrayUtf8(headers.toString()));
+            os.write(StringUtils.stringToByteArrayUtf8(headers.toString()));
 
             // Send file data and show progress
             byte[] buffer = new byte[1024*2];
@@ -490,7 +490,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
 
             // Send end of header
             String end = "\r\n--" + boundary + "--\r\n";
-            os.write(StringConvertor.stringToByteArrayUtf8(end));
+            os.write(StringUtils.stringToByteArrayUtf8(end));
 
             // Read response
             is = sc.openInputStream();
@@ -525,12 +525,12 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
 
             // Send info about file
             StringBuffer messText = new StringBuffer();
-            if (!StringConvertor.isEmpty(description)) {
+            if (!StringUtils.isEmpty(description)) {
                 messText.append(description).append("\n");
             }
             messText.append("File: ").append(filename).append("\n");
             messText.append("Size: ")
-                    .append(StringConvertor.bytesToSizeString(fsize, false))
+                    .append(StringUtils.bytesToSizeString(fsize, false))
                     .append("\n");
             messText.append("Link: ").append(respString);
 

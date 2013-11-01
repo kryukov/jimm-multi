@@ -2,7 +2,7 @@ package jimmui.view.roster;
 
 import jimm.Jimm;
 import jimm.Options;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 import jimm.modules.DebugLog;
 import jimmui.HotKeys;
@@ -260,17 +260,17 @@ public class RosterContent extends SomeContent {
         // #sijapp cond.if modules_XSTATUSES is "true" #
         if (XStatusInfo.XSTATUS_NONE != contact.getXStatusIndex()) {
             message = contact.getXStatusText();
-            if (!StringConvertor.isEmpty(message)) {
+            if (!StringUtils.isEmpty(message)) {
                 return message;
             }
             message = InfoFactory.factory.getXStatusInfo(protocol).getName(contact.getXStatusIndex());
-            if (!StringConvertor.isEmpty(message)) {
+            if (!StringUtils.isEmpty(message)) {
                 return message;
             }
         }
         // #sijapp cond.end #
         message = contact.getStatusText();
-        if (!StringConvertor.isEmpty(message)) {
+        if (!StringUtils.isEmpty(message)) {
             return message;
         }
         return InfoFactory.factory.getStatusInfo(protocol).getName(contact.getStatusIndex());

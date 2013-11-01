@@ -27,11 +27,11 @@ public final class Popup implements Runnable {
     private Par par;
 
     public Popup(CanvasEx forIt, String text) {
-        this.text = StringConvertor.notNull(text);
+        this.text = StringUtils.notNull(text);
         this.canvas = forIt;
     }
     public Popup(String text) {
-        this.text = StringConvertor.notNull(text);
+        this.text = StringUtils.notNull(text);
         this.canvas = Jimm.getJimm().getDisplay().getNativeCanvas().getCanvas();
     }
 

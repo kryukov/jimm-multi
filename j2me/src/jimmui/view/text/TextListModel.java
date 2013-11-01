@@ -5,14 +5,14 @@
 package jimmui.view.text;
 
 import jimm.Jimm;
+import jimm.comm.StringUtils;
 import jimmui.view.icons.Icon;
 
 import java.util.Vector;
 import javax.microedition.lcdui.Font;
-import jimm.comm.StringConvertor;
+
 import jimmui.view.base.CanvasEx;
 import jimmui.view.base.GraphicsEx;
-import jimmui.view.base.NativeCanvas;
 import jimm.util.JLocale;
 
 /**
@@ -117,7 +117,7 @@ public final class TextListModel {
     }
 
     public void addParam(String langStr, String str) {
-        if (!StringConvertor.isEmpty(str)) {
+        if (!StringUtils.isEmpty(str)) {
             addHeader();
             Parser line = createParser(true);
             line.addText(JLocale.getString(langStr) + ": ",
@@ -131,7 +131,7 @@ public final class TextListModel {
         if (null != img) {
             addHeader();
             Parser line = createParser(true);
-            if (!StringConvertor.isEmpty(langStr)) {
+            if (!StringUtils.isEmpty(langStr)) {
                 line.addText(JLocale.getString(langStr) + ": ",
                         CanvasEx.THEME_TEXT, CanvasEx.FONT_STYLE_PLAIN);
             }

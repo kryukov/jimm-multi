@@ -23,7 +23,7 @@
 
 package jimmui;
 
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 
 public final class Clipboard {
     //////////////////////
@@ -53,7 +53,7 @@ public final class Clipboard {
     public static String getClipBoardText() {
         // #sijapp cond.if modules_ANDROID is "true" #
         String androidClipboard = ru.net.jimm.JimmActivity.getInstance().clipboard.get();
-        if (!StringConvertor.isEmpty(androidClipboard) && !androidClipboard.equals(instance.text)) {
+        if (!StringUtils.isEmpty(androidClipboard) && !androidClipboard.equals(instance.text)) {
             instance.set(androidClipboard);
         }
         // #sijapp cond.end #

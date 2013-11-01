@@ -3,8 +3,7 @@ package jimm.history;
 // #sijapp cond.if modules_HISTORY is "true" #
 // #sijapp cond.if modules_FILES="true"#
 import jimm.*;
-import jimm.cl.ContactList;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 import jimm.modules.Notify;
 import jimm.modules.fs.*;
@@ -71,7 +70,7 @@ class HistoryExport implements Runnable, FileBrowserListener {
     }
 
     private void write(OutputStream os, String val) throws IOException {
-        os.write(StringConvertor.stringToByteArrayUtf8(val));
+        os.write(StringUtils.stringToByteArrayUtf8(val));
     }
     private void exportUinToStream(HistoryStorage storage, OutputStream os) throws IOException {
         messageCount = storage.getHistorySize();
@@ -97,7 +96,7 @@ class HistoryExport implements Runnable, FileBrowserListener {
             CachedRecord record = storage.getRecord(i);
             write(os, " " + ((record.type == 0) ? nick : me)
                     + " (" + record.date + "):\r\n");
-            write(os, StringConvertor.restoreCrLf(record.text) + "\r\n");
+            write(os, StringUtils.restoreCrLf(record.text) + "\r\n");
             curStep++;
             if (curStep > guiStep) {
                 os.flush();

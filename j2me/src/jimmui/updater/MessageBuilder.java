@@ -2,14 +2,13 @@ package jimmui.updater;
 
 import jimm.Jimm;
 import jimm.Options;
-import jimm.modules.DebugLog;
+import jimm.comm.StringUtils;
 import jimmui.view.chat.Chat;
 import jimmui.model.chat.ChatModel;
 import jimmui.model.chat.MessData;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
 import jimm.chat.message.SystemNotice;
-import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimm.history.CachedRecord;
 import jimm.history.HistoryStorage;
@@ -86,8 +85,8 @@ public class MessageBuilder {
         boolean incoming = message.isIncoming();
 
         String messageText = message.getProcessedText();
-        messageText = StringConvertor.removeCr(messageText);
-        if (StringConvertor.isEmpty(messageText)) {
+        messageText = StringUtils.removeCr(messageText);
+        if (StringUtils.isEmpty(messageText)) {
             return null;
         }
         boolean isMe = messageText.startsWith(PlainMessage.CMD_ME);

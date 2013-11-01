@@ -173,7 +173,7 @@ public class SearchAction extends IcqAction {
         for (int i = 0; i < 4; ++i) {
             int len = reader.getWordLE();
             byte[] str = reader.getArray(len);
-            strings[i] = StringConvertor.byteArrayToWinString(str, 0, len);
+            strings[i] = StringUtils.byteArrayToWinString(str, 0, len);
         }
         info.nick = strings[0];
         info.firstName = strings[1];

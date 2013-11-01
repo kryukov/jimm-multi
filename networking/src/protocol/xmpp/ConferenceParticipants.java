@@ -124,7 +124,7 @@ public final class ConferenceParticipants extends SomeContent {
                 if (editor.isActive(conference)) {
                     InputTextBox box = editor.getTextBox();
                     String text = box.getRawString();
-                    if (!StringConvertor.isEmpty(text)) {
+                    if (!StringUtils.isEmpty(text)) {
                         String space = box.getSpace();
                         if (text.endsWith(space)) {
                         } else if (1 == space.length()) {

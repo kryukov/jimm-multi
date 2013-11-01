@@ -265,7 +265,7 @@ public final class HistoryStorageList extends VirtualList
         Thread it = Thread.currentThread();
         int size = history.getHistorySize();
         if ((fromIndex < 0) || (fromIndex >= size)) return -1;
-        if (!caseSens) text = StringConvertor.toLowerCase(text);
+        if (!caseSens) text = StringUtils.toLowerCase(text);
 
         int step = back ? -1 : +1;
         int updater = 100;
@@ -274,7 +274,7 @@ public final class HistoryStorageList extends VirtualList
             CachedRecord record = history.getRecord(index);
             String searchText = caseSens
                     ? record.text
-                    : StringConvertor.toLowerCase(record.text);
+                    : StringUtils.toLowerCase(record.text);
             if (searchText.indexOf(text) != -1) {
                 return index;
             }

@@ -13,7 +13,7 @@ package protocol.xmpp;
 import java.util.Vector;
 
 import jimm.Jimm;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.chat.message.*;
 import jimmui.view.menu.*;
 import jimm.util.JLocale;
@@ -114,7 +114,7 @@ public class XmppServiceContact extends XmppContact {
     }
     /////////////////////////////////////////////////////////////////////////
     public final void setMyName(String nick) {
-        if (!StringConvertor.isEmpty(nick)) {
+        if (!StringUtils.isEmpty(nick)) {
             myNick = nick;
             if (!isOnline()) {
                 baseMyNick = myNick;
@@ -163,7 +163,7 @@ public class XmppServiceContact extends XmppContact {
     void nickError(Xmpp xmpp, String nick, int code, String reasone) {
         boolean isConnected = (StatusInfo.STATUS_ONLINE == getStatusIndex());
         if (409 == code) {
-            if (!StringConvertor.isEmpty(reasone)) {
+            if (!StringUtils.isEmpty(reasone)) {
                 xmpp.addMessage(new SystemNotice(xmpp,
                         SystemNotice.TYPE_NOTICE_ERROR, getUserId(), reasone));
             }
@@ -204,7 +204,7 @@ public class XmppServiceContact extends XmppContact {
             }
             if (null != text) {
                 text = JLocale.getString(text);
-                if (!StringConvertor.isEmpty(reasone)) {
+                if (!StringUtils.isEmpty(reasone)) {
                     text += " (" + reasone + ")";
                 }
                 text += '.';
@@ -268,7 +268,7 @@ public class XmppServiceContact extends XmppContact {
         }
     }
     XmppContact.SubContact getContact(String nick) {
-        if (StringConvertor.isEmpty(nick)) {
+        if (StringUtils.isEmpty(nick)) {
             return null;
         }
         for (int i = 0; i < subContacts.size(); ++i) {

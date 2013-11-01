@@ -97,7 +97,7 @@ public class XmppContact extends Contact implements SelectListener {
     /////////////////////////////////////////////////////////////////////////
     String getReciverJid() {
         if (this instanceof XmppServiceContact) {
-        } else if (!StringConvertor.isEmpty(currentResource)) {
+        } else if (!StringUtils.isEmpty(currentResource)) {
             return getUserId() + "/" + currentResource;
         }
         return getUserId();
@@ -160,7 +160,7 @@ public class XmppContact extends Contact implements SelectListener {
     }
     private String getSubContactRealJid(String resource) {
         SubContact c = getExistSubContact(resource);
-        return StringConvertor.notNull((null == c) ? null : c.realJid);
+        return StringUtils.notNull((null == c) ? null : c.realJid);
     }
 
     protected static class SubContact {
@@ -238,7 +238,7 @@ public class XmppContact extends Contact implements SelectListener {
 
     public void __setStatus(String resource, int priority, byte index, String statusText) {
         if (StatusInfo.STATUS_OFFLINE == index) {
-            resource = StringConvertor.notNull(resource);
+            resource = StringUtils.notNull(resource);
             if (resource.equals(currentResource)) {
                 currentResource = null;
             }

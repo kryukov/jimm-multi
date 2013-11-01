@@ -76,8 +76,8 @@ public final class IcqNetDefActions {
         int textLen = reader.getWordLE();
 
         byte[] msgData = reader.getArray(textLen);
-        String text = StringConvertor.byteArrayToString(msgData, 0, msgData.length);
-        if (StringConvertor.isEmpty(text)) {
+        String text = StringUtils.byteArrayToString(msgData, 0, msgData.length);
+        if (StringUtils.isEmpty(text)) {
             return;
         }
 
@@ -161,7 +161,7 @@ public final class IcqNetDefActions {
                     ArrayReader marker = snacPacket.getReader();
                     marker.skip(2);
                     int uinLen = marker.getByte();
-                    String uin = StringConvertor.byteArrayToAsciiString(
+                    String uin = StringUtils.byteArrayToAsciiString(
                             marker.getArray(uinLen), 0, uinLen);
                     marker.skip(2 /* warning level */);
                     int tlvCount = marker.getWordBE();
@@ -179,7 +179,7 @@ public final class IcqNetDefActions {
                     ArrayReader buf = snacPacket.getReader();
                     buf.skip(10);
                     int uin_len = buf.getByte();
-                    String uin = StringConvertor.byteArrayToAsciiString(
+                    String uin = StringUtils.byteArrayToAsciiString(
                             buf.getArray(uin_len), 0, uin_len);
                     int flag = buf.getWordBE();
                     if (Options.getInt(Options.OPTION_TYPING_MODE) > 0) {
@@ -210,7 +210,7 @@ public final class IcqNetDefActions {
 
                     // Get UIN of the contact changing status
                     int length = authMarker.getByte();
-                    String uin = StringConvertor.byteArrayToAsciiString(
+                    String uin = StringUtils.byteArrayToAsciiString(
                             authMarker.getArray(length), 0, length);
 
                     String reason = getReasone(authMarker);
@@ -223,7 +223,7 @@ public final class IcqNetDefActions {
 
                     // Get UIN of the contact changing status
                     int length = authMarker.getByte();
-                    String uin = StringConvertor.byteArrayToAsciiString(
+                    String uin = StringUtils.byteArrayToAsciiString(
                             authMarker.getArray(length), 0, length);
 
                     String reason = getReasone(authMarker);
@@ -236,7 +236,7 @@ public final class IcqNetDefActions {
 
                     // Get UIN of the contact changing status
                     int length = authMarker.getByte();
-                    String uin = StringConvertor.byteArrayToAsciiString(
+                    String uin = StringUtils.byteArrayToAsciiString(
                             authMarker.getArray(length), 0, length);
 
                     // Get granted boolean
@@ -260,7 +260,7 @@ public final class IcqNetDefActions {
                 } else if (SnacPacket.CLI_ROSTERDELETE_COMMAND == command) {
                     ArrayReader buf = snacPacket.getReader();
                     int length = buf.getWordBE();
-                    String uin = StringConvertor.byteArrayToAsciiString(
+                    String uin = StringUtils.byteArrayToAsciiString(
                             buf.getArray(length), 0, length);
 
                     buf.skip(4);
@@ -297,7 +297,7 @@ public final class IcqNetDefActions {
         String reason = null;
         try {
             int length = marker.getWordBE();
-            reason = StringConvertor.byteArrayToString(
+            reason = StringUtils.byteArrayToString(
                     marker.getArray(length), 0, length);
         } catch (Exception e) {
         }
@@ -375,7 +375,7 @@ public final class IcqNetDefActions {
     private void ackMessage(ArrayReader reader) throws JimmException {
         reader.skip(10); // cookie (8), chanel (2)
         int uinLen = reader.getByte() /* userid length */;
-        String uin = StringConvertor.byteArrayToAsciiString(
+        String uin = StringUtils.byteArrayToAsciiString(
                 reader.getArray(uinLen), 0, uinLen);
         reader.skip(2); // reasone (2)
         // Get message type
@@ -426,30 +426,30 @@ public final class IcqNetDefActions {
         return -1 != userId.indexOf('@');
     }
     private void addMessage(String uin, String text) {
-        if (StringConvertor.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             return;
         }
         if (isMrim(uin)) {
             // FIXME: it's hack
             text = Util.xmlUnescape(text);
-            text = StringConvertor.convert(StringConvertor.MRIM2JIMM, text);
+            text = StringUtils.convert(StringUtils.MRIM2JIMM, text);
         }
         text = removeHtml(text);
-        text = StringConvertor.removeCr(text);
-        text = StringConvertor.trim(text);
-        if (StringConvertor.isEmpty(text)) {
+        text = StringUtils.removeCr(text);
+        text = StringUtils.trim(text);
+        if (StringUtils.isEmpty(text)) {
             return;
         }
         getIcq().addMessage(new PlainMessage(uin, getIcq(),
                 Jimm.getCurrentGmtTime(), text, false));
     }
     private void addOfflineMessage(String uin, String text, long date) {
-        if (StringConvertor.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             return;
         }
-        text = StringConvertor.removeCr(text);
-        text = StringConvertor.trim(text);
-        if (StringConvertor.isEmpty(text)) {
+        text = StringUtils.removeCr(text);
+        text = StringUtils.trim(text);
+        if (StringUtils.isEmpty(text)) {
             return;
         }
         getIcq().addMessage(new PlainMessage(uin, getIcq(), date, text, true));
@@ -498,7 +498,7 @@ public final class IcqNetDefActions {
         int uinLen = marker.getByte();
 
         // Get UIN
-        String uin = StringConvertor.byteArrayToAsciiString(
+        String uin = StringUtils.byteArrayToAsciiString(
                 marker.getArray(uinLen), 0, uinLen);
 
         marker.skip(2 /* WARNING */);
@@ -557,9 +557,9 @@ public final class IcqNetDefActions {
                 // Get message text
                 String text = null;
                 if (ucs2) {
-                    text = StringConvertor.ucs2beByteArrayToString(message, 4, message.length - 4);
+                    text = StringUtils.ucs2beByteArrayToString(message, 4, message.length - 4);
                 } else {
-                    text = StringConvertor.byteArrayToWinString(message, 4, message.length - 4);
+                    text = StringUtils.byteArrayToWinString(message, 4, message.length - 4);
                 }
 
                 // Construct object which encapsulates the received
@@ -662,7 +662,7 @@ public final class IcqNetDefActions {
                     int guidLen = (int) msg2Reader.getDWordLE();
                     if (guidLen == 38) {
                         byte[] guidBin = msg2Reader.getArray(guidLen);
-                        String guid = StringConvertor.byteArrayToAsciiString(
+                        String guid = StringUtils.byteArrayToAsciiString(
                                 guidBin, 0, guidBin.length);
                         if ("{0946134E-4C7F-11D1-8222-444553540000}".equals(guid)) {
                             isUtf8 = true;
@@ -674,9 +674,9 @@ public final class IcqNetDefActions {
                 String text = null;
                 // Decode text
                 if (isUtf8) {
-                    text = StringConvertor.utf8beByteArrayToString(rawText, 0, rawText.length);
+                    text = StringUtils.utf8beByteArrayToString(rawText, 0, rawText.length);
                 } else {
-                    text = StringConvertor.byteArrayToWinString(rawText, 0, rawText.length);
+                    text = StringUtils.byteArrayToWinString(rawText, 0, rawText.length);
                 }
                 // Forward message object to contact list
                 addMessage(uin, text);
@@ -715,7 +715,7 @@ public final class IcqNetDefActions {
             int textLen = msgMarker.getWordLE();
 
             // Get text
-            String text = StringConvertor.byteArrayToWinString(
+            String text = StringUtils.byteArrayToWinString(
                     msgMarker.getArray(textLen), 0, textLen);
 
             // Forward message to contact list
@@ -726,7 +726,7 @@ public final class IcqNetDefActions {
     private String getUinByByteLen(ArrayReader reader) {
         int len = reader.getByte();
         byte[] buf = reader.getArray(len);
-        return StringConvertor.byteArrayToAsciiString(buf, 0, buf.length);
+        return StringUtils.byteArrayToAsciiString(buf, 0, buf.length);
     }
 
     private String lastOfflineUin = null;
@@ -788,7 +788,7 @@ public final class IcqNetDefActions {
         ArrayReader marker = snacPacket.getReader();
 
         int uinLen = marker.getByte();
-        String uin = StringConvertor.byteArrayToAsciiString(
+        String uin = StringUtils.byteArrayToAsciiString(
                 marker.getArray(uinLen), 0, uinLen);
         marker.skip(2 /* warning level */);
 
@@ -838,13 +838,13 @@ public final class IcqNetDefActions {
 
                     if (0 == recordLen) continue;
                     if (BART_STATUS_ID == bartType) {
-                        mood = StringConvertor.utf8beByteArrayToString(
+                        mood = StringUtils.utf8beByteArrayToString(
                                 iconMarker.getBuffer(), iconMarker.getOffset(), recordLen);
 
                     } else if (BART_STATUS_STR == bartType) {
                         int len = iconMarker.getWordBE();
                         recordLen -= 2;
-                        statusText = StringConvertor.utf8beByteArrayToString(
+                        statusText = StringUtils.utf8beByteArrayToString(
                                 iconMarker.getBuffer(), iconMarker.getOffset(), len);
                     }
                     iconMarker.skip(recordLen);
@@ -862,8 +862,8 @@ public final class IcqNetDefActions {
             // #sijapp cond.if modules_XSTATUSES is "true" #
             contact.setXStatus(Icq.xstatus.createXStatus(capabilities_old, mood), null);
             // #sijapp cond.end #
-            statusText = StringConvertor.trim(statusText);
-            if (!StringConvertor.isEmpty(statusText)) {
+            statusText = StringUtils.trim(statusText);
+            if (!StringUtils.isEmpty(statusText)) {
                 // #sijapp cond.if modules_XSTATUSES is "true" #
                 if (XStatusInfo.XSTATUS_NONE != contact.getXStatusIndex()) {
                     contact.setXStatusMessage(statusText);
@@ -936,7 +936,7 @@ public final class IcqNetDefActions {
         reader.skip(4);
         int xmlLen = (int)reader.getDWordLE();
         xmlLen = Math.min(xmlLen, reader.getBuffer().length - reader.getOffset());
-        String xml = StringConvertor.utf8beByteArrayToString(
+        String xml = StringUtils.utf8beByteArrayToString(
                 reader.getArray(xmlLen), 0, xmlLen);
 
         // #sijapp cond.if modules_MAGIC_EYE is "true" #
@@ -949,8 +949,8 @@ public final class IcqNetDefActions {
 
         if (xml.startsWith("<NR>")) {
             String res = getTagContent(xml, "RES");
-            String title = StringConvertor.notNull(getTagContent(res, tags[0])).trim();
-            String desc = StringConvertor.notNull(getTagContent(res, tags[1])).trim();
+            String title = StringUtils.notNull(getTagContent(res, tags[0])).trim();
+            String desc = StringUtils.notNull(getTagContent(res, tags[1])).trim();
             String text = (title + ' ' + desc).trim();
             contact.setXStatusMessage(text);
             getIcq().updateStatusView(contact);

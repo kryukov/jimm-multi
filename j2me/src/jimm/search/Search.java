@@ -110,7 +110,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     public void controlStateChanged(Form form, int id) {
         if (PROFILE == id) {
             String userid = searchForm.getTextFieldValue(USERID);
-            if (StringConvertor.isEmpty(userid)) {
+            if (StringUtils.isEmpty(userid)) {
                 return;
             }
             // #sijapp cond.if protocols_JABBER is "true" #
@@ -179,7 +179,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         return searchParams[param];
     }
     public void setSearchParam(int param, String value) {
-        searchParams[param] = StringConvertor.isEmpty(value) ? null : value;
+        searchParams[param] = StringUtils.isEmpty(value) ? null : value;
     }
     public String[] getSearchParams() {
         return searchParams;
@@ -200,7 +200,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     }
 
     private void addUserIdItem() {
-        String userid = StringConvertor.notNull(getSearchParam(UIN));
+        String userid = StringUtils.notNull(getSearchParam(UIN));
         searchForm.addTextField(USERID, protocol.getUserIdName(), userid, 64);
     }
     private void createSearchForm() {
@@ -344,8 +344,8 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
 
             } else if (TYPE_LITE == type) {
                 String userid = searchForm.getTextFieldValue(USERID).trim();
-                userid = StringConvertor.toLowerCase(userid);
-                if (StringConvertor.isEmpty(userid)) {
+                userid = StringUtils.toLowerCase(userid);
+                if (StringUtils.isEmpty(userid)) {
                     return;
                 }
                 // #sijapp cond.if protocols_JABBER is "true" #
@@ -381,7 +381,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         }
     }
     private Contact createContact(UserInfo resultData) {
-        String uin = StringConvertor.toLowerCase(resultData.uin.trim());
+        String uin = StringUtils.toLowerCase(resultData.uin.trim());
         // #sijapp cond.if protocols_JABBER is "true" #
         if ((null != xmppGate) && !uin.endsWith(xmppGate)) {
             uin = uin.replace('@', '%') + '@' + xmppGate;

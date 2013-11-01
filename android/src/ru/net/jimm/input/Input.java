@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import jimm.Jimm;
 import jimm.Options;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimmui.ContentActionListener;
 import jimmui.model.chat.ChatModel;
 import jimmui.view.base.SomeContent;
@@ -163,7 +163,7 @@ public class Input extends LinearLayout implements View.OnClickListener, View.On
         if (!model.getContact().isSingleUserContact() && message.endsWith(", ")) {
             message = "";
         }
-        if (!StringConvertor.isEmpty(message)) {
+        if (!StringUtils.isEmpty(message)) {
             Jimm.getJimm().jimmModel.registerChat(model);
             model.getProtocol().sendMessage(model.getContact(), message, true);
         }

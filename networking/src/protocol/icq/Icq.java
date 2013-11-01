@@ -72,7 +72,7 @@ public class Icq extends Protocol {
     }
 
     public final void setRealUin(String uin) {
-        if (!StringConvertor.isEmpty(uin)) {
+        if (!StringUtils.isEmpty(uin)) {
             setUserId(uin);
         }
     }
@@ -93,14 +93,14 @@ public class Icq extends Protocol {
     protected void sendSomeMessage(PlainMessage msg) {
         msg.setMessageId(Util.uniqueValue());
         // Get UIN
-        byte[] uinRaw = StringConvertor.stringToByteArray(msg.getRcvrUin());
+        byte[] uinRaw = StringUtils.stringToByteArray(msg.getRcvrUin());
 
-        String text = StringConvertor.restoreCrLf(msg.getText());
+        String text = StringUtils.restoreCrLf(msg.getText());
 
         Util buffer = new Util();
 
         if (true) {
-            byte[] textRaw = StringConvertor.stringToUcs2beByteArray(text);
+            byte[] textRaw = StringUtils.stringToUcs2beByteArray(text);
 
             buffer.writeDWordBE(msg.getMessageId()); // CLI_SENDMSG.TIME
             buffer.writeDWordBE(0x00000000);         // CLI_SENDMSG.ID
@@ -117,7 +117,7 @@ public class Icq extends Protocol {
             buffer.writeDWordBE(0x00020000); // MESSAGE.ENCODING
             buffer.writeByteArray(textRaw); // MESSAGE.MESSAGE
         } else {
-            byte[] textRaw = StringConvertor.stringToByteArrayUtf8(text);
+            byte[] textRaw = StringUtils.stringToByteArrayUtf8(text);
             Util tlv1127 = new Util();
 
             // Put 0x1b00
@@ -752,8 +752,8 @@ public class Icq extends Protocol {
         String mood = (moodIndex < 0) ? "" : ("0icqmood" + moodIndex);
         msg = (msg.length() < 250) ? msg : (msg.substring(0, 250 - 3) + "...");
         /* xStatus */
-        byte[] moodArr = StringConvertor.stringToByteArrayUtf8(mood);
-        byte[] xMsgArr = StringConvertor.stringToByteArrayUtf8(msg);
+        byte[] moodArr = StringUtils.stringToByteArrayUtf8(mood);
+        byte[] xMsgArr = StringUtils.stringToByteArrayUtf8(msg);
         int xMsgLen = (0 == xMsgArr.length) ? 0 : (2 + xMsgArr.length + 2);
         int tlvLen = (2 + 1 + 1 + xMsgLen)
                 + (2 + 1 + 1 + moodArr.length);
@@ -787,15 +787,15 @@ public class Icq extends Protocol {
         int index = getProfile().xstatusIndex;
         String title = getProfile().xstatusTitle;
         String desc  = getProfile().xstatusDescription;
-        title = StringConvertor.notNull(title);
-        desc = StringConvertor.notNull(desc);
+        title = StringUtils.notNull(title);
+        desc = StringUtils.notNull(desc);
         String text = (title + " " + desc).trim();
         requestSimpleAction(getNewXStatusPacket(index, text));
     }
     // #sijapp cond.end#
 
     void sendRemoveMePacket(String uin) {
-        byte[] uinRaw = StringConvertor.stringToByteArray(uin);
+        byte[] uinRaw = StringUtils.stringToByteArray(uin);
 
         byte[] buf = new byte[1 + uinRaw.length];
 
@@ -1007,7 +1007,7 @@ public class Icq extends Protocol {
                         JLocale.getString("status_happy_flag"));
             }
             String statusText = contact.getStatusText();
-            if (!StringConvertor.isEmpty(statusText)) {
+            if (!StringUtils.isEmpty(statusText)) {
                 statusView.addStatusText(statusText);
             }
 
@@ -1015,7 +1015,7 @@ public class Icq extends Protocol {
             if (XStatusInfo.XSTATUS_NONE != contact.getXStatusIndex()) {
                 statusView.addXStatus();
                 String xText = contact.getXStatusText();
-                if (!StringConvertor.isEmpty(xText)) {
+                if (!StringUtils.isEmpty(xText)) {
                     statusView.addStatusText(xText);
                 }
             }

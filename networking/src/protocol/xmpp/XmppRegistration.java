@@ -45,7 +45,7 @@ public class XmppRegistration implements Runnable, FormListener {
         protocol.net.SrvResolver r = new protocol.net.SrvResolver();
         String server = r.getXmpp(domain);
         r.close();
-        return StringConvertor.isEmpty(server) ? (domain + ":5222") : server;
+        return StringUtils.isEmpty(server) ? (domain + ":5222") : server;
     }
 
     public void run() {
@@ -130,7 +130,7 @@ public class XmppRegistration implements Runnable, FormListener {
         switch (type) {
             case TYPE_NEW_ACCOUNT_DOMAIN:
                 String jid = form.getForm().getTextFieldValue(FORM_SERVER);
-                if (!StringConvertor.isEmpty(jid)) {
+                if (!StringUtils.isEmpty(jid)) {
                     form.setWainting();
                     requestForm(jid);
                     type = TYPE_NEW_ACCOUNT_CREATE;
@@ -138,8 +138,8 @@ public class XmppRegistration implements Runnable, FormListener {
                 break;
 
             case TYPE_NEW_ACCOUNT_CREATE:
-                username = StringConvertor.notNull(form.getField(XForm.S_USERNAME));
-                password = StringConvertor.notNull(form.getField(XForm.S_PASSWORD));
+                username = StringUtils.notNull(form.getField(XForm.S_USERNAME));
+                password = StringUtils.notNull(form.getField(XForm.S_PASSWORD));
                 register(getRegisterXml());
                 break;
         }

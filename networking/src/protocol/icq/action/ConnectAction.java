@@ -199,7 +199,7 @@ public class ConnectAction extends IcqAction {
                         ArrayReader rbuf = snacPacket.getReader();
                         byte[] authkey = rbuf.getArray(rbuf.getWordBE());
 
-                        byte[] passwordRaw = StringConvertor.stringToByteArray(password);
+                        byte[] passwordRaw = StringUtils.stringToByteArray(password);
 
                         byte[] passkey = new MD5().calculate(passwordRaw);
 
@@ -244,14 +244,14 @@ public class ConnectAction extends IcqAction {
                                 byte[] tlvData = marker.getTlv();
                                 switch (tlvType) {
                                     case 0x0001:
-                                        getIcq().setRealUin(StringConvertor.byteArrayToAsciiString(tlvData));
+                                        getIcq().setRealUin(StringUtils.byteArrayToAsciiString(tlvData));
                                         this.uin = getIcq().getUserId();
                                         break;
                                     case 0x0008:
                                         errcode = Util.getWordBE(tlvData, 0);
                                         break;
                                     case 0x0005:
-                                        this.server = StringConvertor.byteArrayToAsciiString(tlvData);
+                                        this.server = StringUtils.byteArrayToAsciiString(tlvData);
                                         break;
                                     case 0x0006:
                                         this.cookie = tlvData;
@@ -478,8 +478,8 @@ public class ConnectAction extends IcqAction {
         String title = getIcq().getProfile().xstatusTitle;
         String desc = getIcq().getProfile().xstatusDescription;
         //sendPacket(OtherAction.getNew2XStatus(getIcq(), title, desc));
-        title = StringConvertor.notNull(title);
-        desc = StringConvertor.notNull(desc);
+        title = StringUtils.notNull(title);
+        desc = StringUtils.notNull(desc);
         String text = (title + " " + desc).trim();
         sendPacket(getIcq().getNewXStatusPacket(x, text));
         // #sijapp cond.end#
@@ -533,7 +533,7 @@ public class ConnectAction extends IcqAction {
                 // Get userId length
                 int nameLen = marker.getWordBE();
                 // Get userId
-                String userId = StringConvertor.utf8beByteArrayToString(
+                String userId = StringUtils.utf8beByteArrayToString(
                         marker.getArray(nameLen), 0, nameLen);
 
                 // Get groupId, id and type
@@ -555,7 +555,7 @@ public class ConnectAction extends IcqAction {
                         int tlvType = marker.getTlvType();
                         if (0x0131 == tlvType) {
                             byte[] tlvData = marker.getTlv();
-                            nick = StringConvertor.utf8beByteArrayToString(tlvData, 0, tlvData.length);
+                            nick = StringUtils.utf8beByteArrayToString(tlvData, 0, tlvData.length);
                         } else {
                             if (0x0066 == tlvType) {
                                 noAuth = true;
@@ -578,7 +578,7 @@ public class ConnectAction extends IcqAction {
                         //// only icq-contact (ignore aim contacts)
                         //Integer.parseInt(uin);
                         IcqContact item = (IcqContact) roster.makeContact(userId);
-                        if (nick.equals(userId) && !StringConvertor.isEmpty(item.getName())) {
+                        if (nick.equals(userId) && !StringUtils.isEmpty(item.getName())) {
                             nick = item.getName();
                         }
 

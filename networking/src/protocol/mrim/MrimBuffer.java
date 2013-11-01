@@ -42,7 +42,7 @@ class MrimBuffer {
         }
     }
     void putString(String str) {
-        byte[] strBytes  = StringConvertor.stringToByteArray1251(str);
+        byte[] strBytes  = StringUtils.stringToByteArray1251(str);
         putDWord(strBytes.length);
         putBytes(strBytes);
     }
@@ -68,13 +68,13 @@ class MrimBuffer {
         }
     }
     void putSearchParam(int key, String value) {
-        if (!StringConvertor.isEmpty(value)) {
+        if (!StringUtils.isEmpty(value)) {
             putDWord(key);
             putString(value);
         }
     }
     void putUcs2SearchParam(int key, String value) {
-        if (!StringConvertor.isEmpty(value)) {
+        if (!StringUtils.isEmpty(value)) {
             putDWord(key);
             putUcs2String(value);
         }
@@ -88,7 +88,7 @@ class MrimBuffer {
         String xstatus = MrimConnection.getNativeXStatus(statusIndex);
         // #sijapp cond.if modules_XSTATUSES is "true" #
         String x = Mrim.xStatus.getNativeXStatus(mrim.getProfile().xstatusIndex);
-        if (!StringConvertor.isEmpty(x)) {
+        if (!StringUtils.isEmpty(x)) {
             title = mrim.getProfile().xstatusTitle;
             desc = mrim.getProfile().xstatusDescription;
             status = 4;
@@ -150,7 +150,7 @@ class MrimBuffer {
             position++;
             msgLen--;
         }
-        String str = StringConvertor.byteArray1251ToString(data, position, msgLen);
+        String str = StringUtils.byteArray1251ToString(data, position, msgLen);
         position += msgLen;
         return str;
     }
@@ -163,15 +163,15 @@ class MrimBuffer {
                 && ((data[position + 1] & 7) == data[position + 1])) {
             return getUcs2StringZ(msgLen);
         }
-        String str = StringConvertor.byteArray1251ToString(data, position, msgLen);
+        String str = StringUtils.byteArray1251ToString(data, position, msgLen);
         position += msgLen;
-        return StringConvertor.removeCr(str);
+        return StringUtils.removeCr(str);
     }
     public String getUtf8String() {
         int msgLen = (int)getDWord();
-        String str = StringConvertor.utf8beByteArrayToString(data, position, msgLen);
+        String str = StringUtils.utf8beByteArrayToString(data, position, msgLen);
         position += msgLen;
-        return StringConvertor.removeCr(str);
+        return StringUtils.removeCr(str);
     }
     public String getUcs2String() {
         int length = (int)getDWord();

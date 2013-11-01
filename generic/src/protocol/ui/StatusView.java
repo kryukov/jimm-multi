@@ -10,11 +10,11 @@
 package protocol.ui;
 
 import jimm.cl.SysTextList;
+import jimm.comm.StringUtils;
 import jimmui.view.text.TextListModel;
 import jimmui.view.icons.Icon;
 import jimmui.view.text.Parser;
 import jimm.Jimm;
-import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimmui.view.base.CanvasEx;
 import jimmui.view.menu.*;
@@ -117,7 +117,7 @@ public final class StatusView extends TextListController {
         model.addPar(line);
     }
     public void addPlain(Icon img, String str) {
-        if (!StringConvertor.isEmpty(str)) {
+        if (!StringUtils.isEmpty(str)) {
             Parser line = model.createNewParser(true);
             if (null != img) {
                 line.addImage(img);
@@ -127,7 +127,7 @@ public final class StatusView extends TextListController {
         }
     }
     public void addStatusText(String text) {
-        if (!StringConvertor.isEmpty(text)) {
+        if (!StringUtils.isEmpty(text)) {
             Parser line = model.createNewParser(true);
             line.addText(text, CanvasEx.THEME_PARAM_VALUE, CanvasEx.FONT_STYLE_PLAIN);
             model.addPar(line);

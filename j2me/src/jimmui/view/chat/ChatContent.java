@@ -2,7 +2,7 @@ package jimmui.view.chat;
 
 import jimm.*;
 import jimm.cl.SysTextList;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.history.*;
 import jimmui.Clipboard;
 import jimmui.HotKeys;
@@ -456,7 +456,7 @@ public class ChatContent extends SomeContent {
     }
 
     private String getBlogPostId(String text) {
-        if (StringConvertor.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             return null;
         }
         String lastLine = text.substring(text.lastIndexOf('\n') + 1);

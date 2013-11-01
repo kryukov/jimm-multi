@@ -214,7 +214,7 @@ public final class SysTextList extends TextListController {
     private void addTrafficSection(String title, int total, int cost) {
         addPlainText(title, CanvasEx.THEME_TEXT);
         addPlainText(": ", CanvasEx.THEME_TEXT);
-        addPlainText(StringConvertor.bytesToSizeString(total, false), CanvasEx.THEME_PARAM_VALUE);
+        addPlainText(StringUtils.bytesToSizeString(total, false), CanvasEx.THEME_PARAM_VALUE);
         // The cost of the traffic
         if (0 < cost) {
             addPlainText(" (", CanvasEx.THEME_TEXT);

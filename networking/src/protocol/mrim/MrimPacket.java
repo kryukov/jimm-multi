@@ -8,7 +8,7 @@ package protocol.mrim;
 import jimm.Jimm;
 import jimm.comm.Config;
 import jimm.comm.MD5;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 import jimm.search.Search;
 
@@ -211,7 +211,7 @@ final class MrimPacket {
     }
     static MrimPacket getUserSearchRequestPacket(String[] userInfo) {
         MrimBuffer out = new MrimBuffer();
-        if (!StringConvertor.isEmpty(userInfo[Search.UIN])) {
+        if (!StringUtils.isEmpty(userInfo[Search.UIN])) {
             String[] s = Util.explode(userInfo[Search.UIN], '@');
             if ((1 == s.length) && (0 != Util.strToIntDef(s[0], 0))) {
                 s = new String[]{s[0], "uin.icq"};

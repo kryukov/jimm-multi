@@ -11,7 +11,7 @@ package jimm.forms;
 
 // #sijapp cond.if modules_XSTATUSES is "true" #
 import jimm.Jimm;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.io.Storage;
 import jimmui.view.InputTextBox;
 import jimmui.view.UIBuilder;
@@ -107,8 +107,8 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
 
     protected final void setXStatus(String title, String desc) {
         if (0 <= xstatus) {
-            xst_titles[xstatus] = StringConvertor.notNull(title);
-            xst_descs[xstatus]  = StringConvertor.notNull(desc);
+            xst_titles[xstatus] = StringUtils.notNull(title);
+            xst_descs[xstatus]  = StringUtils.notNull(desc);
             try {
                 Storage storage = new Storage(getProtocolId() + "-xstatus");
                 storage.open(true);

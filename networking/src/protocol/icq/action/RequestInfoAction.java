@@ -103,7 +103,7 @@ public class RequestInfoAction extends IcqAction {
         }
         byte[] buffer = stream.getArray(len);
         // TODO: check it
-        return StringConvertor.byteArrayToWinString(buffer, 0, buffer.length).trim();
+        return StringUtils.byteArrayToWinString(buffer, 0, buffer.length).trim();
     }
 
 
@@ -240,7 +240,7 @@ public class RequestInfoAction extends IcqAction {
         strData.homeState = getTvlData(0x0096, 0x0078, stream, offset, len);
         strData.homeCity = getTvlData(0x0096, 0x0064, stream, offset, len);
         strData.homeAddress = getTvlData(0x0096, 0x006e, stream, offset, len);
-        if (StringConvertor.isEmpty(strData.homeCity) && StringConvertor.isEmpty(strData.homeAddress)) {
+        if (StringUtils.isEmpty(strData.homeCity) && StringUtils.isEmpty(strData.homeAddress)) {
             strData.homeCity = getTvlData(0x00a0, 0x0064, stream, offset, len);
             strData.homeAddress = getTvlData(0x00a0, 0x006e, stream, offset, len);
         }
@@ -274,7 +274,7 @@ public class RequestInfoAction extends IcqAction {
     }
     private String str(byte[] data) {
         if (null == data) return null;
-        return StringConvertor.utf8beByteArrayToString(data, 0, data.length).trim();
+        return StringUtils.utf8beByteArrayToString(data, 0, data.length).trim();
     }
 
     // Returns true if the action is completed

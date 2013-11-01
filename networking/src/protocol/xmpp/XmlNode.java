@@ -9,7 +9,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import jimm.JimmException;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 
 /**
@@ -284,7 +284,7 @@ public final class XmlNode {
                 ch = socket.readChar();
             }
         }
-        if (StringConvertor.isEmpty(value)) {
+        if (StringUtils.isEmpty(value)) {
             value = null;
         }
         return true;
@@ -508,7 +508,7 @@ public final class XmlNode {
                 return;
             }
         }
-        if (StringConvertor.isEmpty(value)) {
+        if (StringUtils.isEmpty(value)) {
             return;
         }
 
@@ -560,7 +560,7 @@ public final class XmlNode {
                         .append(Util.xmlEscape(v)).append("'");
             }
         }
-        if ((0 == childrenCount()) && StringConvertor.isEmpty(value)) {
+        if ((0 == childrenCount()) && StringUtils.isEmpty(value)) {
             sb.append("/>");
             return;
         }

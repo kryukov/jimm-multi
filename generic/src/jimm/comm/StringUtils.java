@@ -11,18 +11,17 @@ package jimm.comm;
 
 import java.io.*;
 import java.util.Vector;
-import jimm.*;
 
 /**
  *
  * @author vladiеmir
  */
-public final class StringConvertor {
+public final class StringUtils {
     private final String name;
     private final String[] from;
     private final String[] to;
 
-    private static StringConvertor[] converters = new StringConvertor[0];
+    private static StringUtils[] converters = new StringUtils[0];
 
     public static final String DETRANSLITERATE = "detrans" + "literate";
     public static final String MRIM2JIMM = "mrim2jimm";
@@ -594,7 +593,7 @@ public final class StringConvertor {
     }
 
 
-    private StringConvertor(String name, String[] from, String[] to) {
+    private StringUtils(String name, String[] from, String[] to) {
         this.name = name;
 
         this.from = from;
@@ -618,15 +617,15 @@ public final class StringConvertor {
         String jabberContent = Config.loadResource("/jabber-replaces.txt");
         Config.parseIniConfig(jabberContent, configs);
         // #sijapp cond.end #
-        StringConvertor.converters = new StringConvertor[configs.size()];
+        StringUtils.converters = new StringUtils[configs.size()];
         for (int i = 0; i < configs.size(); ++i) {
             Config config = (Config) configs.elementAt(i);
-            StringConvertor.converters[i] = new StringConvertor(config.getName(),
+            StringUtils.converters[i] = new StringUtils(config.getName(),
                     config.getKeys(), config.getValues());
         }
     }
 
-    private static StringConvertor getConvertor(String scheme) {
+    private static StringUtils getConvertor(String scheme) {
         for (int i = 0; i < converters.length; ++i) {
             if (scheme.equals(converters[i].name)) {
                 return converters[i];
@@ -638,12 +637,12 @@ public final class StringConvertor {
         return null != getConvertor(scheme);
     }
     public static String convert(String scheme, String str) {
-        StringConvertor convertor = getConvertor(scheme);
+        StringUtils convertor = getConvertor(scheme);
         return (null == convertor) ? str : convertor.convertText(str);
     }
 
     public static String detransliterate(String str) {
-        StringConvertor convertor = getConvertor(DETRANSLITERATE);
+        StringUtils convertor = getConvertor(DETRANSLITERATE);
         return (null == convertor) ? str : convertor.convertTextCaseInsensitive(str);
     }
 
@@ -654,7 +653,7 @@ public final class StringConvertor {
         return (null == value) ? "" : value;
     }
     public static String trim(String msg) {
-        if (StringConvertor.isEmpty(msg)) {
+        if (StringUtils.isEmpty(msg)) {
             return "";
         }
         if (-1 == "\n ".indexOf(msg.charAt(msg.length() - 1))) {

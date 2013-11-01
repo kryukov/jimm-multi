@@ -2,12 +2,12 @@ package jimmui.updater;
 
 import jimm.Jimm;
 import jimm.Options;
+import jimm.comm.StringUtils;
 import jimmui.view.chat.Chat;
 import jimmui.model.chat.ChatModel;
 import jimmui.model.chat.MessData;
 import jimm.chat.message.Message;
 import jimm.chat.message.PlainMessage;
-import jimm.comm.StringConvertor;
 import jimm.history.HistoryStorage;
 import jimm.history.HistoryStorageList;
 import jimm.io.Storage;
@@ -206,7 +206,7 @@ public class ChatUpdater {
                     continue;
                 }
                 PlainMessage msg = new PlainMessage(userId, protocol, time, text, true);
-                if (!StringConvertor.isEmpty(nick)) {
+                if (!StringUtils.isEmpty(nick)) {
                     msg.setName(nick);
                 }
                 protocol.addMessage(msg, true);

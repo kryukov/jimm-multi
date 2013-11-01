@@ -29,7 +29,7 @@ public final class Config {
             stream = jimm.Jimm.getResourceAsStream(path);
             byte[] str = new byte[stream.available()];
             stream.read(str);
-            res = StringConvertor.utf8beByteArrayToString(str, 0, str.length);
+            res = StringUtils.utf8beByteArrayToString(str, 0, str.length);
         } catch (Exception e) {
         }
         try {
@@ -209,7 +209,7 @@ public final class Config {
     }
     
     public static String getConfigValue(String key, String path) {
-        if (StringConvertor.isEmpty(key)) {
+        if (StringUtils.isEmpty(key)) {
             return null;
         }
         final int PARSER_LINE    = 0;
@@ -242,7 +242,7 @@ public final class Config {
                     if ('=' == ch) {
                         currentKey = content.substring(beginPos, i).trim();
                         beginPos = i + 1;
-                        if (StringConvertor.stringEquals(key, currentKey)) {
+                        if (StringUtils.stringEquals(key, currentKey)) {
                             state = PARSER_TO;
                         } else {
                             state = PARSER_COMMENT;
@@ -276,7 +276,7 @@ public final class Config {
     public Config() {
     }
     public Config(String content) {
-        parseConfig(StringConvertor.notNull(content), 0);
+        parseConfig(StringUtils.notNull(content), 0);
     }
 
     public final String getName() {

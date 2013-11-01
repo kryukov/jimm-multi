@@ -1,7 +1,7 @@
 package jimm.history;
 
 import jimm.Jimm;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 import ru.net.jimm.config.HomeDirectory;
 
@@ -35,10 +35,10 @@ public class AndroidHistoryStorage {
             try {
                 if (!exist) {
                     String header = "# history with " + historyStorage.getUniqueUserId() + "\n\n";
-                    out.write(StringConvertor.stringToByteArrayUtf8(header));
+                    out.write(StringUtils.stringToByteArrayUtf8(header));
                 }
                 String f = "[" + from + " " + Util.getLocalDateString(gmtTime, false) + "]\n" + text + "\n";
-                out.write(StringConvertor.stringToByteArrayUtf8(f));
+                out.write(StringUtils.stringToByteArrayUtf8(f));
             } finally {
                 out.close();
                 fs.close();
@@ -122,7 +122,7 @@ public class AndroidHistoryStorage {
             if (in[i] == '[') break;
             in[i] = ' ';
         }
-        return StringConvertor.utf8beByteArrayToString(in, 0, in.length).trim();
+        return StringUtils.utf8beByteArrayToString(in, 0, in.length).trim();
     }
 
     private Vector<String> explodeMessages(String str, int limit) {

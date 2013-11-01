@@ -181,9 +181,9 @@ final class XForm {
         final String S_VALUE = "va" + "lue";
         final String S_OPTION = "o" + "ption";
         final String S_LABEL = "la" + "bel";
-        String name = StringConvertor.notNull(field.getAttribute("var"));
-        String label = StringConvertor.notNull(field.getAttribute(S_LABEL));
-        String value = StringConvertor.notNull(field.getFirstNodeValue(S_VALUE));
+        String name = StringUtils.notNull(field.getAttribute("var"));
+        String label = StringUtils.notNull(field.getAttribute(S_LABEL));
+        String value = StringUtils.notNull(field.getFirstNodeValue(S_VALUE));
         if (S_LIST_SINGLE.equals(type)) {
             int selectedIndex = 0;
             int totalCount = 0;
@@ -238,9 +238,9 @@ final class XForm {
     }
     private void addField(String name, String type, String label, String value) {
         int num = fields.size();
-        name = StringConvertor.notNull(name);
-        type = StringConvertor.notNull(type);
-        value = StringConvertor.notNull(value);
+        name = StringUtils.notNull(name);
+        type = StringUtils.notNull(type);
+        value = StringUtils.notNull(value);
         fields.addElement(name);
         types.addElement(type);
         values.addElement(value);

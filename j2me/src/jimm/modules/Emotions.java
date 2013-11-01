@@ -30,7 +30,6 @@ import jimmui.view.icons.*;
 import java.util.*;
 import java.io.*;
 import jimm.comm.*;
-import jimmui.view.*;
 import jimmui.view.smiles.Selector;
 import jimmui.view.smiles.SmilesContent;
 import protocol.net.TcpSocket;
@@ -227,7 +226,7 @@ public final class Emotions {
             emoImages = loadIcons(iconsSize);
             byte[] str = new byte[dos.available()];
             dos.read(str);
-            String content = StringConvertor.utf8beByteArrayToString(str, 0, str.length);
+            String content = StringUtils.utf8beByteArrayToString(str, 0, str.length);
             smileParser(content, textCorr, selEmotions);
             TcpSocket.close(dos);
         } catch (Exception e) {

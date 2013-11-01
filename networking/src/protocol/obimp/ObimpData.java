@@ -9,7 +9,7 @@
 // #sijapp cond.if protocols_OBIMP is "true" #
 package protocol.obimp;
 
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 
 /**
@@ -54,7 +54,7 @@ public class ObimpData {
     }
     public String getWtld_str(int tlvNum) {
         byte[] buf = getWtld(tlvNum);
-        return (null == buf) ? null : StringConvertor.utf8beByteArrayToString(buf, 0, buf.length);
+        return (null == buf) ? null : StringUtils.utf8beByteArrayToString(buf, 0, buf.length);
     }
     public int getWtldType() {
         return (int)Util.getDWordBE(inData, inCursor);

@@ -42,7 +42,7 @@ public class AntiSpam {
             return;
         }
         String message = Options.getString(Options.OPTION_ANTISPAM_MSG);
-        if (protocol.isMeVisible(contact) && !StringConvertor.isEmpty(message)) {
+        if (protocol.isMeVisible(contact) && !StringUtils.isEmpty(message)) {
             protocol.sendMessage(contact, "I don't like spam!\n" + message, false);
             uncheckedUins.addElement(contact.getUserId());
         }
@@ -69,8 +69,8 @@ public class AntiSpam {
         if (5000 < msg.length()) {
             return true;
         }
-        String[] keywords = Util.explode(StringConvertor.toLowerCase(opt), ' ');
-        msg = StringConvertor.toLowerCase(msg);
+        String[] keywords = Util.explode(StringUtils.toLowerCase(opt), ' ');
+        msg = StringUtils.toLowerCase(msg);
         for (int i = 0; i < keywords.length; ++i) {
             if (-1 != msg.indexOf(keywords[i])) {
                 return true;
@@ -104,7 +104,7 @@ public class AntiSpam {
 
         String[] msgs = Util.explode(Options.getString(Options.OPTION_ANTISPAM_ANSWER), '\n');
         for (int i = 0; i < msgs.length; ++i) {
-            if (StringConvertor.stringEquals(msg, msgs[i])) {
+            if (StringUtils.stringEquals(msg, msgs[i])) {
                 sendHelloMessage(protocol, contact);
                 return true;
             }

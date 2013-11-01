@@ -154,10 +154,10 @@ public class DisconnectPacket extends Packet {
         if (this.getType() == DisconnectPacket.TYPE_SRV_COOKIE) {
 
             // DISCONNECT.UIN
-            buf.writeTLV(0x0001, StringConvertor.stringToByteArray(this.uin));
+            buf.writeTLV(0x0001, StringUtils.stringToByteArray(this.uin));
 
             // DISCONNECT.SERVER
-            buf.writeTLV(0x0005, StringConvertor.stringToByteArray(this.server));
+            buf.writeTLV(0x0005, StringUtils.stringToByteArray(this.server));
 
             // DISCONNECT.COOKIE
             buf.writeTLV(0x0006, this.cookie);
@@ -166,10 +166,10 @@ public class DisconnectPacket extends Packet {
         else if (this.getType() == DisconnectPacket.TYPE_SRV_GOODBYE) {
 
             // DISCONNECT.UIN
-            buf.writeTLV(0x0001, StringConvertor.stringToByteArray(this.uin));
+            buf.writeTLV(0x0001, StringUtils.stringToByteArray(this.uin));
 
             // DISCONNECT.DESCRIPTION
-            buf.writeTLV(0x0004, StringConvertor.stringToByteArray(description));
+            buf.writeTLV(0x0004, StringUtils.stringToByteArray(description));
 
             // DISCONNECT.ERROR
             buf.writeTLVWord(0x0008, error);
@@ -205,10 +205,10 @@ public class DisconnectPacket extends Packet {
             // Save value
             switch (tlvType) {
                 case 0x0001:   // uin
-                    uin = StringConvertor.byteArrayToAsciiString(tlvValue);
+                    uin = StringUtils.byteArrayToAsciiString(tlvValue);
                     break;
                 case 0x0005:   // server
-                    server = StringConvertor.byteArrayToAsciiString(tlvValue);
+                    server = StringUtils.byteArrayToAsciiString(tlvValue);
                     break;
                 case 0x0006:   // cookie
                     cookie = tlvValue;
@@ -219,7 +219,7 @@ public class DisconnectPacket extends Packet {
                     break;
                 case 0x0004:   // description
                 case 0x000B:   // description
-                    description = StringConvertor.byteArrayToAsciiString(tlvValue);
+                    description = StringUtils.byteArrayToAsciiString(tlvValue);
                     break;
                 default:
                     // Do nothing on default (ignore all unknown TLVs)

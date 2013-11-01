@@ -38,7 +38,7 @@ public final class XmppConnection extends ClientConnection {
     private String resource;
     private final boolean xep0048 = false;
     private byte[] pingPacket = new byte[]{' '};
-    private byte[] forPongPacket = StringConvertor.stringToByteArrayUtf8(
+    private byte[] forPongPacket = StringUtils.stringToByteArrayUtf8(
             "<iq type='get'><ping xmlns='urn:xmpp:ping'/></iq>");
 
     private String verHash = "";
@@ -124,7 +124,7 @@ public final class XmppConnection extends ClientConnection {
     private static final byte IQ_TYPE_ERROR = 3;
 
     private byte nativeStatus2StatusIndex(String rawStatus) {
-        rawStatus = StringConvertor.notNull(rawStatus);
+        rawStatus = StringUtils.notNull(rawStatus);
         for (byte i = 0; i < statusCodes.length; ++i) {
             if (rawStatus.equals(statusCodes[i])) {
                 return i;
@@ -229,7 +229,7 @@ public final class XmppConnection extends ClientConnection {
         }
     }
     private void sendPacket() throws JimmException {
-        String packet = null;
+        String packet;
         synchronized (packets) {
             packet = (String)packets.elementAt(0);
             packets.removeElementAt(0);
@@ -266,7 +266,7 @@ public final class XmppConnection extends ClientConnection {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         DebugLog.systemPrintln("[OUT]:\n" + xml);
         // #sijapp cond.end #
-        write(StringConvertor.stringToByteArrayUtf8(xml));
+        write(StringUtils.stringToByteArrayUtf8(xml));
     }
     private void writePacket(String packet) throws JimmException {
         write(packet);
@@ -361,10 +361,10 @@ public final class XmppConnection extends ClientConnection {
         protocol.net.SrvResolver resolver = new protocol.net.SrvResolver();
         String server = Config.getConfigValue(domain_, "/jabber-servers.txt");
         String defaultServer = getJabber().getDefaultServer(domain_);
-        if (StringConvertor.isEmpty(server) && (null == defaultServer)) {
+        if (StringUtils.isEmpty(server) && (null == defaultServer)) {
             server = resolver.getXmpp(domain_);
         }
-        if (StringConvertor.isEmpty(server)) {
+        if (StringUtils.isEmpty(server)) {
             server = domain_;
         }
         connectTo(getSocketUrl(server));
@@ -618,7 +618,7 @@ public final class XmppConnection extends ClientConnection {
                 + "</iq>");
     }
     private boolean isMy(String from) {
-        if (StringConvertor.isEmpty(from)) return true;
+        if (StringUtils.isEmpty(from)) return true;
         if (getJabber().getUserId().equals(Jid.getBareJid(from))) return true;
         return false;
     }
@@ -641,10 +641,10 @@ public final class XmppConnection extends ClientConnection {
      * @param iq {@link XmlNode} to parse
      */
     private void parseIq(XmlNode iq) throws JimmException {
-        String from = StringConvertor.notNull(iq.getAttribute(S_FROM));
+        String from = StringUtils.notNull(iq.getAttribute(S_FROM));
         byte iqType = getIqType(iq);
         String id = iq.getId();
-        if (StringConvertor.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             id = generateId();
         }
         // #sijapp cond.if modules_FILES is "true"#
@@ -686,7 +686,7 @@ public final class XmppConnection extends ClientConnection {
                         contact.setName(itemNode.getAttribute(XmlNode.S_NAME));
 
                         String groupName = itemNode.getFirstNodeValue(S_GROUP);
-                        if (StringConvertor.isEmpty(groupName) || Jid.isConference(jid)) {
+                        if (StringUtils.isEmpty(groupName) || Jid.isConference(jid)) {
                             groupName = contact.getDefaultGroupName();
                         }
                         contact.setGroup(roster.getOrCreateGroup(groupName));
@@ -731,7 +731,7 @@ public final class XmppConnection extends ClientConnection {
                             String name = itemNode.getAttribute(XmlNode.S_NAME);
                             Contact contact = xmpp.createTempContact(jid);
                             String group = itemNode.getFirstNodeValue(S_GROUP);
-                            if (StringConvertor.isEmpty(group) || Jid.isConference(contact.getUserId())) {
+                            if (StringUtils.isEmpty(group) || Jid.isConference(contact.getUserId())) {
                                 group = contact.getDefaultGroupName();
                             }
                             contact.setName(name);
@@ -1000,7 +1000,7 @@ public final class XmppConnection extends ClientConnection {
         name[0] = vCard.getFirstNodeValue("N", "GIVEN");
         name[1] = vCard.getFirstNodeValue("N", "MIDDLE");
         name[2] = vCard.getFirstNodeValue("N", "FAMILY");
-        if (StringConvertor.isEmpty(Util.implode(name, ""))) {
+        if (StringUtils.isEmpty(Util.implode(name, ""))) {
             userInfo.firstName = vCard.getFirstNodeValue("FN");
             userInfo.lastName = null;
         } else {
@@ -1245,8 +1245,8 @@ public final class XmppConnection extends ClientConnection {
                     String xtext = null;
                     if (null != id) {
                         xtext = xNode.getFirstNodeValue(S_TITLE);
-                        String s = StringConvertor.notNull(statusString);
-                        if (StringConvertor.isEmpty(xtext)) {
+                        String s = StringUtils.notNull(statusString);
+                        if (StringUtils.isEmpty(xtext)) {
                             xtext = null;
 
                         } else if (s.startsWith(xtext)) {
@@ -1310,7 +1310,7 @@ public final class XmppConnection extends ClientConnection {
             contact.setGroup(g);
             update = true;
         }
-        if (StringConvertor.isEmpty(name)) {
+        if (StringUtils.isEmpty(name)) {
             contact.setName(name);
             update = true;
         }
@@ -1536,7 +1536,7 @@ public final class XmppConnection extends ClientConnection {
         if ((null != subject) && (-1 == text.indexOf(subject))) {
             text = subject + "\n\n" + text;
         }
-        text = StringConvertor.trim(text);
+        text = StringUtils.trim(text);
 
         final XmppContact c = (XmppContact)getJabber().getItemByUID(from);
 
@@ -1580,7 +1580,7 @@ public final class XmppConnection extends ClientConnection {
             if (c instanceof XmppServiceContact) {
                 isConference = c.isConference();
                 if ((null != subject) && isConference && isGroupchat) {
-                    String prevSubject = StringConvertor.notNull(c.getStatusText());
+                    String prevSubject = StringUtils.notNull(c.getStatusText());
                     ((XmppServiceContact)c).setSubject(subject);
                     getJabber().ui_changeContactStatus(c);
                     if (prevSubject.equals(subject)) {
@@ -1588,18 +1588,18 @@ public final class XmppConnection extends ClientConnection {
                     }
                     subject = null;
                     fromRes = null;
-                    if (StringConvertor.isEmpty(prevSubject) && !c.hasUnreadMessage() && !c.hasChat()) {
+                    if (StringUtils.isEmpty(prevSubject) && !c.hasUnreadMessage() && !c.hasChat()) {
                         return;
                     }
                 }
             }
         }
-        if (StringConvertor.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             return;
         }
 
-        text = StringConvertor.convert(Jid.isMrim(from)
-                ? StringConvertor.MRIM2JIMM : StringConvertor.JABBER2JIMM,
+        text = StringUtils.convert(Jid.isMrim(from)
+                ? StringUtils.MRIM2JIMM : StringUtils.JABBER2JIMM,
                 text);
 
         final String date = getDate(msg);
@@ -1637,17 +1637,17 @@ public final class XmppConnection extends ClientConnection {
         getJabber().addMessage(message, S_HEADLINE.equals(type));
     }
     private void parseBlogMessage(String to, XmlNode msg, String text, String botNick) {
-        text = StringConvertor.notNull(text);
+        text = StringUtils.notNull(text);
         String userNick = getNickFromNode(msg);
         if (null == userNick) {
             userNick = msg.getFirstNodeAttribute("juick", "uname");
         }
-        if (StringConvertor.isEmpty(userNick)) {
+        if (StringUtils.isEmpty(userNick)) {
             userNick = null;
         }
         String nick = userNick;
         if (null != botNick) {
-            nick = StringConvertor.notNull(userNick) + "@" + botNick;
+            nick = StringUtils.notNull(userNick) + "@" + botNick;
         }
         if (null != userNick) {
             userNick += ':';
@@ -1657,9 +1657,9 @@ public final class XmppConnection extends ClientConnection {
             }
         }
 
-        text = StringConvertor.convert(StringConvertor.JABBER2JIMM, text);
-        text = StringConvertor.trim(text);
-        if (StringConvertor.isEmpty(text)) {
+        text = StringUtils.convert(StringUtils.JABBER2JIMM, text);
+        text = StringUtils.trim(text);
+        if (StringUtils.isEmpty(text)) {
             return;
         }
 
@@ -1904,15 +1904,15 @@ public final class XmppConnection extends ClientConnection {
         hResp.finish();
 
         String quote = "\"";
-        return MD5.toBase64(StringConvertor.stringToByteArrayUtf8(
+        return MD5.toBase64(StringUtils.stringToByteArrayUtf8(
                 new StringBuffer()
-                .append("username=\"").append(user)
-                .append("\",realm=\"").append(realm)
-                .append("\",nonce=\"").append(nonce)
-                .append("\",cnonce=\"").append(cnonce)
-                .append("\",nc=00000001,digest-uri=\"").append(digestUri)
-                .append("\",qop=auth,response=").append(quote).append(hResp.getDigestHex())
-                .append(quote).append(",charset=utf-8").toString()));
+                        .append("username=\"").append(user)
+                        .append("\",realm=\"").append(realm)
+                        .append("\",nonce=\"").append(nonce)
+                        .append("\",cnonce=\"").append(cnonce)
+                        .append("\",nc=00000001,digest-uri=\"").append(digestUri)
+                        .append("\",qop=auth,response=").append(quote).append(hResp.getDigestHex())
+                        .append(quote).append(",charset=utf-8").toString()));
     }
 
 
@@ -2059,7 +2059,7 @@ public final class XmppConnection extends ClientConnection {
             String group = item.getFirstNodeValue(S_GROUP);
             if (!isDelete) {
                 contact.setName(item.getAttribute(XmlNode.S_NAME));
-                if (StringConvertor.isEmpty(group)) {
+                if (StringUtils.isEmpty(group)) {
                     group = contact.getDefaultGroupName();
                 }
                 contact.setGroup(j.getOrCreateGroup(group));
@@ -2124,7 +2124,7 @@ public final class XmppConnection extends ClientConnection {
             xml.append(Util.xmlEscape(contact.getName()));
             xml.append("' jid='");
             xml.append(Util.xmlEscape(contact.getUserId()));
-            if (!StringConvertor.isEmpty(conf.getPassword())) {
+            if (!StringUtils.isEmpty(conf.getPassword())) {
                 xml.append("' password='");
                 xml.append(Util.xmlEscape(conf.getPassword()));
             }
@@ -2155,7 +2155,7 @@ public final class XmppConnection extends ClientConnection {
         putPacketIntoQueue(xml.toString());
     }
     public void removeGateContacts(String gate) {
-        if (StringConvertor.isEmpty(gate)) {
+        if (StringUtils.isEmpty(gate)) {
             return;
         }
         gate = "@" + gate;
@@ -2253,13 +2253,13 @@ public final class XmppConnection extends ClientConnection {
             notify = false;
             if (!getJabber().isContactOverGate(to)) {
                 msg = msg.substring(PlainMessage.CMD_WAKEUP.length()).trim();
-                if (StringConvertor.isEmpty(msg)) {
+                if (StringUtils.isEmpty(msg)) {
                     msg = "/me " + JLocale.getString("wake_you_up");
                 }
             }
         }
         if (Jid.isMrim(to)) {
-            msg = StringConvertor.convert(StringConvertor.JIMM2MRIM, msg);
+            msg = StringUtils.convert(StringUtils.JIMM2MRIM, msg);
         }
         String chatState = "";
         if ((1 < Options.getInt(Options.OPTION_TYPING_MODE)) && S_CHAT.equals(type)) {
@@ -2325,18 +2325,18 @@ public final class XmppConnection extends ClientConnection {
             to += "/" + conf.getMyName();
             String xNode = "";
             String password = conf.getPassword();
-            if (!StringConvertor.isEmpty(password)) {
+            if (!StringUtils.isEmpty(password)) {
                 xNode += "<password>" + Util.xmlEscape(password) + "</password>";
             }
             long time = conf.hasChat() ? getJabber().getChatModel(conf).getLastMessageTime() : 0;
             time = (0 == time) ? 24*60*60 : (Jimm.getCurrentGmtTime() - time);
             xNode += "<history maxstanzas='20' seconds='" + time + "'/>";
-            if (!StringConvertor.isEmpty(xNode)) {
+            if (!StringUtils.isEmpty(xNode)) {
                 xml += "<x xmlns='http://jabber.org/protocol/muc'>" + xNode + "</x>";
             }
         }
         String status = getNativeStatus(getJabber().getProfile().statusIndex);
-        if (!StringConvertor.isEmpty(status)) {
+        if (!StringUtils.isEmpty(status)) {
             xml += "<show>" + status + "</show>";
         }
 
@@ -2359,14 +2359,14 @@ public final class XmppConnection extends ClientConnection {
         if (0 != xXml.length()) {
             msg = getJabber().getProfile().xstatusTitle;
             String descr = getJabber().getProfile().xstatusDescription;
-            if (!StringConvertor.isEmpty(descr)) {
+            if (!StringUtils.isEmpty(descr)) {
                 msg = msg + " " + descr;
             }
         }
         // #sijapp cond.end #
         String xml = "<presence>"
-                + (StringConvertor.isEmpty(status) ? "" : "<show>" + status + "</show>")
-                + (StringConvertor.isEmpty(msg) ? "" : "<status>" + Util.xmlEscape(msg) + "</status>")
+                + (StringUtils.isEmpty(status) ? "" : "<show>" + status + "</show>")
+                + (StringUtils.isEmpty(msg) ? "" : "<status>" + Util.xmlEscape(msg) + "</status>")
                 + (0 < priority ? "<priority>" + priority + "</priority>" : "")
                 + getCaps()
                 // #sijapp cond.if modules_XSTATUSES is "true" #
@@ -2443,7 +2443,7 @@ public final class XmppConnection extends ClientConnection {
         requestRawXml(rawXml);
     }
     private boolean isAutoGateContact(String jid) {
-        return !StringConvertor.isEmpty(autoSubscribeDomain)
+        return !StringUtils.isEmpty(autoSubscribeDomain)
         && (jid.equals(autoSubscribeDomain) || jid.endsWith('@' + autoSubscribeDomain));
     }
     void register(String jid) {
@@ -2481,7 +2481,7 @@ public final class XmppConnection extends ClientConnection {
             } else {
                 sb.append("><").append(path[2]).append("/></").append(path[1]).append(">");
             }
-            if (!StringConvertor.isEmpty(text)) {
+            if (!StringUtils.isEmpty(text)) {
                 sb.append("<text>").append(Util.xmlEscape(text)).append("</text>");
             }
             sb.append("</").append(path[0]).append(">");
@@ -2541,7 +2541,7 @@ public final class XmppConnection extends ClientConnection {
             return;
         }
         String desc = "None".equals(xstatus) ? null : getJabber().getProfile().xstatusTitle;
-        desc = StringConvertor.notNull(desc);
+        desc = StringUtils.notNull(desc);
         if (gate.isOnline() && Jid.isPyIcqGate(gate.getUserId())) {
             String out = "<iq type='set' id='" + generateId() + "' to='"
                 + Util.xmlEscape(gate.getUserId())
@@ -2574,7 +2574,7 @@ public final class XmppConnection extends ClientConnection {
         for (int i = 0; i < features.size(); ++i) {
             sb.append(features.elementAt(i)).append('<');
         }
-        return MD5.toBase64(new MD5().calculate(StringConvertor.stringToByteArrayUtf8(sb.toString())));
+        return MD5.toBase64(new MD5().calculate(StringUtils.stringToByteArrayUtf8(sb.toString())));
     }
     private String getFeatures(Vector features) {
         StringBuffer sb = new StringBuffer();
@@ -2646,7 +2646,7 @@ public final class XmppConnection extends ClientConnection {
         putPacketIntoQueue(ibb.getRequest());
     }
     private boolean processIbb(XmlNode iq, byte type, String id) {
-        id = StringConvertor.notNull(id);
+        id = StringUtils.notNull(id);
         if (!id.startsWith("jimmibb_")) {
             return false;
         }

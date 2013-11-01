@@ -9,7 +9,7 @@
 
 package protocol;
 
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.comm.Util;
 import protocol.ui.StatusInfo;
 
@@ -131,7 +131,7 @@ public final class Profile {
     }
 
     public boolean isValid() {
-        if (StringConvertor.isEmpty(userId)) return false;
+        if (StringUtils.isEmpty(userId)) return false;
         int exist = -1;
         for (int i = 0; i < protocolTypes.length; ++i) {
             if (protocolType == protocolTypes[i]) exist = i;

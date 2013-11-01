@@ -10,7 +10,7 @@
 // #sijapp cond.if protocols_JABBER is "true" #
 package protocol.xmpp;
 
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 
 /**
  *
@@ -113,9 +113,9 @@ public class Jid {
     public static String getBareJid(String fullJid) {
         int resourceStart = fullJid.indexOf('/');
         if (-1 != resourceStart) {
-            return StringConvertor.toLowerCase(fullJid.substring(0, resourceStart));
+            return StringUtils.toLowerCase(fullJid.substring(0, resourceStart));
         }
-        return StringConvertor.toLowerCase(fullJid);
+        return StringUtils.toLowerCase(fullJid);
     }
     public static String getNick(String jid) {
         return jid.substring(0, jid.indexOf('@'));

@@ -174,7 +174,7 @@ public final class Xmpp extends Protocol implements FormListener {
      * WARNING! This method adds new group to list of group.
      */
     public final Group getOrCreateGroup(String groupName) {
-        if (StringConvertor.isEmpty(groupName)) {
+        if (StringUtils.isEmpty(groupName)) {
             return null;
         }
         Group group = getGroup(groupName);
@@ -212,7 +212,7 @@ public final class Xmpp extends Protocol implements FormListener {
     private String getDefaultName() {
         // FIXME: NullPointer
         String nick = getProfile().nick;
-        if (StringConvertor.isEmpty(nick)) {
+        if (StringUtils.isEmpty(nick)) {
             return Jid.getNick(getUserId());
         }
         return nick;
@@ -467,7 +467,7 @@ public final class Xmpp extends Protocol implements FormListener {
 
         connection.sendPresence(c);
         String password = c.getPassword();
-        if (Jid.isIrcConference(jid) && !StringConvertor.isEmpty(password)) {
+        if (Jid.isIrcConference(jid) && !StringUtils.isEmpty(password)) {
             String nickserv = jid.substring(jid.indexOf('%') + 1) + "/NickServ";
             connection.sendMessage(nickserv, "/quote NickServ IDENTIFY " + password);
             connection.sendMessage(nickserv, "IDENTIFY " + password);
@@ -581,7 +581,7 @@ public final class Xmpp extends Protocol implements FormListener {
         if (Jid.isConference(realJid) && (-1 != realJid.indexOf('/'))) {
             XmppServiceContact conference = (XmppServiceContact) getItemByUID(Jid.getBareJid(realJid));
             String r = conference.getRealJid(Jid.getResource(realJid, ""));
-            if (!StringConvertor.isEmpty(r)) {
+            if (!StringUtils.isEmpty(r)) {
                 realJid = r;
             }
         }
@@ -611,8 +611,8 @@ public final class Xmpp extends Protocol implements FormListener {
         String xstatusMessage = "";
         if (XStatusInfo.XSTATUS_NONE != contact.getXStatusIndex()) {
             xstatusMessage = contact.getXStatusText();
-            String s = StringConvertor.notNull(statusMessage);
-            if (!StringConvertor.isEmpty(xstatusMessage)
+            String s = StringUtils.notNull(statusMessage);
+            if (!StringUtils.isEmpty(xstatusMessage)
                     && s.startsWith(xstatusMessage)) {
                 xstatusMessage = statusMessage;
                 statusMessage = null;

@@ -88,7 +88,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
 
     public boolean addPost(String from, String nick, String post, String postid,
             boolean reply, long gmtTime) {
-        if (StringConvertor.isEmpty(post) || ids.contains(postid)) {
+        if (StringUtils.isEmpty(post) || ids.contains(postid)) {
             return false;
         }
 
@@ -102,7 +102,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
         if (null != contact) {
             nick = contact.getName();
         }
-        if (StringConvertor.isEmpty(nick)) {
+        if (StringUtils.isEmpty(nick)) {
             nick = from;
         }
         par.addText(nick, CanvasEx.THEME_MAGIC_EYE_USER, CanvasEx.FONT_STYLE_PLAIN);
@@ -191,8 +191,8 @@ public final class MicroBlog extends TextListController implements TextBoxListen
         }
     }
     private void write(String to) {
-        replayTo = StringConvertor.notNull(to);
-        postEditor = new InputTextBox().create(StringConvertor.isEmpty(replayTo)
+        replayTo = StringUtils.notNull(to);
+        postEditor = new InputTextBox().create(StringUtils.isEmpty(replayTo)
                 ? "message" : "reply", 250);
         postEditor.setTextBoxListener(this);
         postEditor.show();
@@ -208,7 +208,7 @@ public final class MicroBlog extends TextListController implements TextBoxListen
         MrimConnection c = mrim.getConnection();
         if (ok && mrim.isConnected() && (null != c)) {
             String text = postEditor.getString();
-            if (!StringConvertor.isEmpty(text)) {
+            if (!StringUtils.isEmpty(text)) {
                 c.postToMicroBlog(text, replayTo);
                 list.getTextContent().setAllToBottom();
             }

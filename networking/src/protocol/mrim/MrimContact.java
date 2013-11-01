@@ -9,7 +9,6 @@
 // #sijapp cond.if protocols_MRIM is "true" #
 package protocol.mrim;
 
-import jimmui.view.icons.*;
 import jimm.*;
 import jimm.comm.*;
 import jimm.modules.*;
@@ -86,7 +85,7 @@ public class MrimContact extends Contact {
     @Override
     public void initContextMenu(Protocol protocol, MenuModel contactMenu) {
         addChatItems(contactMenu);
-        if (!StringConvertor.isEmpty(phones)) {
+        if (!StringUtils.isEmpty(phones)) {
             contactMenu.addItem("send_sms", USER_MENU_SEND_SMS);
         }
         addGeneralItems(protocol, contactMenu);
@@ -120,12 +119,12 @@ public class MrimContact extends Contact {
 
     public void setMood(String moodCode, String title, String desc) {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
-        if (!StringConvertor.isEmpty(moodCode)) {
+        if (!StringUtils.isEmpty(moodCode)) {
             DebugLog.println("mrim: mood " + getUserId() + " " + moodCode + " " + title);
         }
         // #sijapp cond.end#
         // #sijapp cond.if modules_XSTATUSES is "true" #
-        String message = StringConvertor.trim(title + " " + desc);
+        String message = StringUtils.trim(title + " " + desc);
         int x = Mrim.xStatus.createStatus(moodCode);
 
         setXStatus(x, message);

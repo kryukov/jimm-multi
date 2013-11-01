@@ -37,7 +37,7 @@ import java.io.*;
 import java.util.Vector;
 import javax.microedition.rms.*;
 import jimm.Jimm;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 
 /**
  * RMS wrapper
@@ -109,7 +109,7 @@ public final class Storage {
         // Add empty records if necessary
         if (rs.getNumRecords() < count) {
             if ((1 < count) && (0 == rs.getNumRecords())) {
-                byte[] version = StringConvertor.stringToByteArrayUtf8(Jimm.getJimm().VERSION);
+                byte[] version = StringUtils.stringToByteArrayUtf8(Jimm.getJimm().VERSION);
                 rs.addRecord(version, 0, version.length);
             }
             while (rs.getNumRecords() < count) {
@@ -145,7 +145,7 @@ public final class Storage {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(baos);
             for (int i = 0; i < strings.size(); ++i) {
-                dos.writeUTF(StringConvertor.notNull((String)strings.elementAt(i)));
+                dos.writeUTF(StringUtils.notNull((String) strings.elementAt(i)));
                 addRecord(baos.toByteArray());
                 baos.reset();
             }
@@ -195,8 +195,8 @@ public final class Storage {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(baos);
             for (int i = 0; i < titles.length; ++i) {
-                dos.writeUTF(StringConvertor.notNull(titles[i]));
-                dos.writeUTF(StringConvertor.notNull(descs[i]));
+                dos.writeUTF(StringUtils.notNull(titles[i]));
+                dos.writeUTF(StringUtils.notNull(descs[i]));
             }
             putRecord(1, baos.toByteArray());
         } catch (Exception ignored) {
@@ -208,8 +208,8 @@ public final class Storage {
             ByteArrayInputStream bais = new ByteArrayInputStream(buf);
             DataInputStream dis = new DataInputStream(bais);
             for (int i = 0; i < titles.length; ++i) {
-                titles[i] = StringConvertor.notNull(dis.readUTF());
-                descs[i]  = StringConvertor.notNull(dis.readUTF());
+                titles[i] = StringUtils.notNull(dis.readUTF());
+                descs[i]  = StringUtils.notNull(dis.readUTF());
             }
         } catch (Exception ignored) {
         }

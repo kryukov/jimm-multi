@@ -230,7 +230,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
     public void addTextField(int controlId, String label, String text, int size, int type) {
         label = (null == label) ? " " : label;
         Control c = create(controlId, CONTROL_INPUT, null, JLocale.getString(label));
-        text = StringConvertor.notNull(text);
+        text = StringUtils.notNull(text);
         text = (text.length() > size) ? text.substring(0, size) : text;
         c.text = text;
         c.inputType = type;
@@ -582,7 +582,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
             String text = (CONTROL_SELECT == c.type) ? c.items[c.current] : c.text;
             x1 += OFFSET;
             w -= 2 * OFFSET;
-            if (!StringConvertor.isEmpty(text)) {
+            if (!StringUtils.isEmpty(text)) {
                 if (TextField.PASSWORD == c.inputType) {
                     text = "******";
                 }

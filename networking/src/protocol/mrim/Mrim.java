@@ -10,13 +10,12 @@
 package protocol.mrim;
 
 import jimm.Jimm;
+import jimm.comm.StringUtils;
 import jimmui.view.text.TextList;
 
 import java.io.*;
 import java.util.Vector;
 import jimm.chat.message.PlainMessage;
-import jimm.cl.ContactList;
-import jimm.comm.StringConvertor;
 import jimm.comm.Util;
 import jimm.search.*;
 import jimmui.view.menu.MenuModel;
@@ -291,7 +290,7 @@ public class Mrim extends Protocol {
         out.writeInt(mrimContact.getContactId());
         out.writeUTF(contact.getUserId());
         out.writeUTF(contact.getName());
-        out.writeUTF(StringConvertor.notNull(mrimContact.getPhones()));
+        out.writeUTF(StringUtils.notNull(mrimContact.getPhones()));
         out.writeInt(contact.getGroupId());
         out.writeByte(contact.getBooleanValues());
         out.writeInt(mrimContact.getFlags());

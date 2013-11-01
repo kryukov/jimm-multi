@@ -12,7 +12,7 @@ package jimm.forms;
 import java.util.Vector;
 
 import jimm.Jimm;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import jimm.search.*;
 import jimmui.view.*;
 import jimmui.view.form.ControlStateListener;
@@ -198,8 +198,8 @@ public final class ManageContactListForm implements SelectListener, FormListener
         switch (action) {
             case ADD_CONTACT: {
                 String userid = form.getTextFieldValue(CONTACT_USER_ID).trim();
-                userid = StringConvertor.toLowerCase(userid);
-                if (StringConvertor.isEmpty(userid)) {
+                userid = StringUtils.toLowerCase(userid);
+                if (StringUtils.isEmpty(userid)) {
                     return;
                 }
                 // #sijapp cond.if protocols_JABBER is "true" #
@@ -277,7 +277,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
                     // invalid group
                     Jimm.getJimm().getCL().activate();
 
-                } else if (StringConvertor.isEmpty(newGroupName)) {
+                } else if (StringUtils.isEmpty(newGroupName)) {
                     Jimm.getJimm().getCL().activate();
 
                 } else if (isMyName) {
@@ -360,7 +360,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
     public void controlStateChanged(Form form, int id) {
         if (PROFILE_LINK == id) {
             String userId = form.getTextFieldValue(CONTACT_USER_ID);
-            if (StringConvertor.isEmpty(userId)) {
+            if (StringUtils.isEmpty(userId)) {
                 return;
             }
             // #sijapp cond.if protocols_JABBER is "true" #

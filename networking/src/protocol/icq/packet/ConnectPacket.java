@@ -173,11 +173,11 @@ public class ConnectPacket extends Packet {
             }
 
             // HELLO.UIN
-            buf.writeTLV(0x0001, StringConvertor.stringToByteArray(this.uin));
+            buf.writeTLV(0x0001, StringUtils.stringToByteArray(this.uin));
 
             // HELLO.PASSWORD
             buf.writeTLV(0x0002, Util.decipherPassword(
-                    StringConvertor.stringToByteArray(this.password)));
+                    StringUtils.stringToByteArray(this.password)));
 
         } else {
             buf.writeTLVDWord(0x8003, 0x00100000);
@@ -228,13 +228,13 @@ public class ConnectPacket extends Packet {
                     cookie = tlvValue;
                     break;
                 case 0x0001:   // uin
-                    uin = StringConvertor.byteArrayToAsciiString(tlvValue);
+                    uin = StringUtils.byteArrayToAsciiString(tlvValue);
                     break;
                 case 0x0002:   // password
-                    password = StringConvertor.byteArrayToAsciiString(Util.decipherPassword(tlvValue));
+                    password = StringUtils.byteArrayToAsciiString(Util.decipherPassword(tlvValue));
                     break;
                 case 0x0003:   // version
-                    version = StringConvertor.byteArrayToAsciiString(tlvValue);
+                    version = StringUtils.byteArrayToAsciiString(tlvValue);
                     break;
                 case 0x0016:   // unknown
                     unknown = tlvValue;

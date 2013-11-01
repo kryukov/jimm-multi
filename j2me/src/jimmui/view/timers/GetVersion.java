@@ -15,7 +15,6 @@ import javax.microedition.lcdui.*;
 import jimm.*;
 import jimm.comm.*;
 import jimm.modules.*;
-import jimmui.view.base.NativeCanvas;
 import protocol.net.TcpSocket;
 
 /**
@@ -73,7 +72,7 @@ public class GetVersion implements Runnable {
         }
         TcpSocket.close(httemp);
         TcpSocket.close(istemp);
-        return StringConvertor.removeCr(content);
+        return StringUtils.removeCr(content);
     }
 
     public static void updateProgram() {

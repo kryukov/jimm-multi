@@ -277,7 +277,7 @@ public final class MD5 {
      * Treat the string as a sequence of utf8 characters.
      */
     public void updateASCII(String input) {
-        update(StringConvertor.stringToByteArrayUtf8(input));
+        update(StringUtils.stringToByteArrayUtf8(input));
     }
 
     public byte[] getDigestBits() {
@@ -337,7 +337,7 @@ public final class MD5 {
      */
     public static String decodeBase64(String src) {
         final byte[] data = Util.base64decode(src);
-        return StringConvertor.utf8beByteArrayToString(data, 0, data.length);
+        return StringUtils.utf8beByteArrayToString(data, 0, data.length);
     }
 
     public static final String toBase64(final byte[] data) {

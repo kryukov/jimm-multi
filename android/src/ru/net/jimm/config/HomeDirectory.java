@@ -1,7 +1,7 @@
 package ru.net.jimm.config;
 
 import jimm.JimmException;
-import jimm.comm.StringConvertor;
+import jimm.comm.StringUtils;
 import protocol.net.TcpSocket;
 
 import java.io.InputStream;
@@ -34,7 +34,7 @@ public class HomeDirectory {
                 stream = fs.openInputStream();
                 byte[] str = new byte[stream.available()];
                 stream.read(str);
-                result = StringConvertor.utf8beByteArrayToString(str, 0, str.length);
+                result = StringUtils.utf8beByteArrayToString(str, 0, str.length);
             } catch (Exception ignored) {
             }
             TcpSocket.close(stream);
@@ -48,7 +48,7 @@ public class HomeDirectory {
         OutputStream stream = null;
         try {
             stream = fs.openOutputStream();
-            stream.write(StringConvertor.stringToByteArrayUtf8(content));
+            stream.write(StringUtils.stringToByteArrayUtf8(content));
         } catch (Exception ignored) {
         }
         try {

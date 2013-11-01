@@ -30,7 +30,6 @@ import java.util.*;
 import javax.microedition.rms.RecordStoreException;
 
 import jimm.*;
-import jimm.cl.ContactList;
 import jimm.io.Storage;
 import jimm.comm.*;
 
@@ -107,7 +106,7 @@ public final class Traffic {
         dos.writeInt(allOutTraffic + sessionOutTraffic);
         dos.writeLong(savedSince.getTime());
         dos.writeLong(0);
-        generateCostSum(0, 0, false);
+        generateCostSum(0, 0);
         dos.writeInt(savedCost);
         traffic.setRecord(2, baos.toByteArray());
 
@@ -117,7 +116,7 @@ public final class Traffic {
     public void safeSave() {
         try {
             save();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -145,7 +144,7 @@ public final class Traffic {
 
     // Returns String value of cost value
     public static String costToString(int value) {
-        String costString = "";
+        String costString;
         try{
             if (value != 0) {
                 costString = Integer.toString(value / 100000);
@@ -175,7 +174,7 @@ public final class Traffic {
         }
         return (int)(packets * costPacketLength * costOf1M / (1024 * 1024));
     }
-    public int generateCostSum(int in, int out, boolean thisSession) {
+    public int generateCostSum(int in, int out) {
         int cost = 0;
         int costOf1M = Options.getInt(Options.OPTION_COST_OF_1M) * 100;
         int costPacketLength = Math.max(Options.getInt(Options.OPTION_COST_PACKET_LENGTH), 1);

@@ -190,7 +190,7 @@ public final class SysTextList extends TextListController {
         int sessionIn  = t.getSessionInTraffic();
         int sessionOut = t.getSessionOutTraffic();
         int session    = sessionIn + sessionOut;
-        int sessionCost = t.generateCostSum(sessionIn, sessionOut, false);
+        int sessionCost = t.generateCostSum(sessionIn, sessionOut);
         addTrafficSection(JLocale.getString("session"),
                 session,
                 sessionCost);
@@ -199,7 +199,7 @@ public final class SysTextList extends TextListController {
         int totalIn  = t.getAllInTraffic();
         int totalOut = t.getAllOutTraffic();
         int total    = totalIn + totalOut;
-        int totalCost = t.generateCostSum(totalIn, totalOut, true);
+        int totalCost = t.generateCostSum(totalIn, totalOut);
         addTrafficSection(JLocale.getString("traffic_since") + " "
                 + t.getTrafficString(),
                 total,

@@ -66,47 +66,50 @@ public class InfoFactory {
     }
 
     private StatusInfo createStatusInfo(byte protocolType) {
-        final int[] statusIconIndex;
-        final ImageList statusIcons;
+        int[] statusIconIndex;
+        byte[] applicableStatuses;
+        final ImageList statusIcons = createStatusIcons(protocolType);
+
         switch (Profile.getEffectiveType(protocolType)) {
             // #sijapp cond.if protocols_ICQ is "true" #
             case Profile.PROTOCOL_ICQ:
                 statusIconIndex = new int[]{1, 0, 4, 3, 10, 11, 8, 9, 12, 5, 6, 7, 2, 2, 1};
-                statusIcons = createStatusIcons(Profile.PROTOCOL_ICQ);
-                return new StatusInfo(statusIcons, statusIconIndex, icqStatuses);
+                applicableStatuses = icqStatuses;
+                break;
             // #sijapp cond.end #
 
             // #sijapp cond.if protocols_MRIM is "true" #
             case Profile.PROTOCOL_MRIM:
-                statusIcons = createStatusIcons(Profile.PROTOCOL_MRIM);
                 statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, -1, 5, -1, 2, -1, 1};
-                return new StatusInfo(statusIcons, statusIconIndex, mrimStatuses);
+                applicableStatuses = mrimStatuses;
+                break;
             // #sijapp cond.end #
 
             // #sijapp cond.if protocols_JABBER is "true" #
             case Profile.PROTOCOL_XMPP:
-                statusIcons = createStatusIcons(protocolType);
                 statusIconIndex = new int[]{1, 0, 3, 4, -1, -1, -1, -1, -1, 6, -1, 5, -1, -1, 1};
-                return new StatusInfo(statusIcons, statusIconIndex, xmppStatuses);
+                applicableStatuses = xmppStatuses;
+                break;
             // #sijapp cond.end #
 
             // #sijapp cond.if protocols_OBIMP is "true" #
             case Profile.PROTOCOL_OBIMP:
-                statusIcons = createStatusIcons(Profile.PROTOCOL_OBIMP);
                 statusIconIndex = new int[]{2, 0, 6, 5, 10, 11, -1, -1, 12, 7, 8, 9, 4, 3, 1};
-                return new StatusInfo(statusIcons, statusIconIndex, obimpStatuses);
+                applicableStatuses = obimpStatuses;
+                break;
             // #sijapp cond.end #
 
             // #sijapp cond.if protocols_VKAPI is "true" #
             case Profile.PROTOCOL_VK_API:
-                ImageList icons = createStatusIcons(Profile.PROTOCOL_VK_API);
                 statusIconIndex = new int[]{1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1};
-                return new StatusInfo(icons, statusIconIndex, vkApiStatuses);
+                applicableStatuses = vkApiStatuses;
+                break;
             // #sijapp cond.end #
 
             default:
+                return null;
         }
-        return null;
+        return new StatusInfo(statusIcons, statusIconIndex, applicableStatuses);
     }
 
     private ImageList createStatusIcons(int type) {

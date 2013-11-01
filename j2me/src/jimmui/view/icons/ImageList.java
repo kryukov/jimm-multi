@@ -84,7 +84,7 @@ public class ImageList {
         width = imgWidth / count;
         height = imgHeight;
 
-        Vector tmpIcons = new Vector();
+        Vector<Icon> tmpIcons = new Vector<Icon>();
         for (int y = 0; y < imgHeight; y += height) {
             for (int x = 0; x < imgWidth; x += width) {
                 Icon icon = new Icon(resImage, x, y, width, height);
@@ -115,7 +115,7 @@ public class ImageList {
         this.width = width;
         this.height = height;
 
-        Vector tmpIcons = new Vector();
+        Vector<Icon> tmpIcons = new Vector<Icon>();
         for (int y = 0; y < imgHeight; y += height) {
             for (int x = 0; x < imgWidth; x += width) {
                 Icon icon = new Icon(resImage, x, y, width, height);

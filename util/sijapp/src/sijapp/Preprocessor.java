@@ -538,9 +538,10 @@ public class Preprocessor {
         // Read until EOF
         try {
             String line;
-            J2mizer j2mizer = new J2mizer();
+
+            J2mizer j2mizer = defines.containsKey("modules_ANDROID") ? null : new J2mizer();
             while ((line = this.reader.readLine()) != null) {
-                if (!startsWith(line, "//")) line = j2mizer.j2mize(line);
+                if ((null != j2mizer) && !startsWith(line, "//")) line = j2mizer.j2mize(line);
                 // Scan read line for s SiJaPP statement
                 Scanner.Token[] tokens = Scanner.scan(line);
 

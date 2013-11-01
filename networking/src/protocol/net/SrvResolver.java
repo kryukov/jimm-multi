@@ -85,7 +85,7 @@ public final class SrvResolver {
             in.readUnsignedShort();
             in.readUnsignedShort();
             int port = in.readUnsignedShort(); // port
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             while (true) {
                 int length = in.readUnsignedByte();
                 if (0 == length) break;

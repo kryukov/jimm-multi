@@ -1,5 +1,7 @@
 package sijapp;
 
+import java.lang.String;
+
 /**
  * Created with IntelliJ IDEA.
  * <p/>
@@ -9,7 +11,11 @@ package sijapp;
  */
 public class J2mizer {
     public String j2mize(String line) {
-        return removeGenerics(removeOverride(line));
+        return replaceClasses(removeGenerics(removeOverride(line)));
+
+    }
+    private String replaceClasses(String line) {
+        return replaceClass(line, "StringBuilder", "StringBuffer");
     }
 
     private String removeOverride(String line) {
@@ -23,6 +29,7 @@ public class J2mizer {
     }
     private String removeGenerics(String line) {
         line = removeGeneric(line, "Vector");
+        line = removeGeneric(line, "Hashtable");
         return line;
     }
     private String removeGeneric(String line, String type) {
@@ -51,6 +58,10 @@ public class J2mizer {
             }
         }
         return line;
+    }
+
+    private String replaceClass(String line, String from, String to) {
+        return line.replaceAll(from, to);
     }
 
     private boolean startsWith(String what, String with) {

@@ -57,7 +57,7 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 
 		boolean isErrorStream;
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		OutputStream2Log(boolean error) {
 			this.isErrorStream = error;
@@ -77,7 +77,7 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 					} else {
 						Logger.info(buffer.toString());
 					}
-					buffer = new StringBuffer();
+					buffer = new StringBuilder();
 				}
 			} else {
 				buffer.append((char) b);

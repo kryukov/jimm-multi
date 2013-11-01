@@ -436,7 +436,7 @@ public class Util {
         if (0 == gmtDate) return "***error***";
         int[] localDate = createDate(gmtTimeToLocalTime(gmtDate));
 
-        StringBuffer sb = new StringBuffer(16);
+        StringBuilder sb = new StringBuilder(16);
 
         if (!onlyTime) {
             sb.append(Util.makeTwo(localDate[TIME_DAY]))
@@ -539,7 +539,7 @@ public class Util {
         seconds %= 3600;
         int minutes = (int)(seconds / 60);
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (days != 0) {
             buf.append(days).append(' ').append( JLocale.getString("days") ).append(' ');
         }
@@ -762,7 +762,7 @@ public class Util {
         int fromSize = from.length();
         int start = 0;
         int pos = 0;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (;;) {
             pos = text.indexOf(from, pos);
             if (-1 == pos) break;
@@ -778,7 +778,7 @@ public class Util {
 
     public static String replace(String text, String[] from, String[] to, String keys) {
         // keys - is first chars of from
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         int pos = 0;
         while (pos < text.length()) {
             char ch = text.charAt(pos);
@@ -821,7 +821,7 @@ public class Util {
         return result;
     }
     static public String implode(String[] text, String separator) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < text.length; ++i) {
             if (null != text[i]) {
                 if (0 != result.length()) {
@@ -987,7 +987,7 @@ public class Util {
     }
 
     //////////////////////////////////////////////////////////////////////////////////
-    private static void putCh(StringBuffer sb, int ch) {
+    private static void putCh(StringBuilder sb, int ch) {
         String s = Integer.toHexString(ch);
         sb.append("%");
         if (1 == s.length()) sb.append('0');
@@ -995,7 +995,7 @@ public class Util {
     }
     public static String urlEscape(String param) {
         String urlOK = "";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < param.length(); ++i) {
             char ch = param.charAt(i);
             char lowerCh = Character.toLowerCase(ch);

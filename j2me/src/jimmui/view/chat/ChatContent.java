@@ -423,7 +423,7 @@ public class ChatContent extends SomeContent {
         }
     }
     private String copySelected() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < model.size(); ++i) {
             MessData md = model.getMessage(i);
             if (md.isMarked()) {

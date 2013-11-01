@@ -20,7 +20,7 @@ import jimm.util.JLocale;
  * @author vladimir
  */
 public final class TextListModel {
-    private final Vector pars = new Vector();
+    private final Vector<Par> pars = new Vector<Par>();
     private Font[] fontSet = GraphicsEx.chatFontSet;
     private String header = null;
 
@@ -53,7 +53,7 @@ public final class TextListModel {
     }
 
     protected final String getAllText() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         // Fills the lines
         int size = getSize();

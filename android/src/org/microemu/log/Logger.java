@@ -32,7 +32,6 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,15 +51,15 @@ public class Logger {
 
 	private static final String FQCN = Logger.class.getName();
 
-	private static final Set fqcnSet = new HashSet();
+	private static final Set<String> fqcnSet = new HashSet<String>();
 
-	private static final Set logFunctionsSet = new HashSet();
+	private static final Set<String> logFunctionsSet = new HashSet<String>();
 
 	private static boolean java13 = false;
 
 	private static boolean locationEnabled = true;
 
-	private static List loggerAppenders = new Vector();
+	private static List<LoggerAppender> loggerAppenders = new Vector<LoggerAppender>();
 
 	static {
 		fqcnSet.add(FQCN);
@@ -208,7 +207,7 @@ public class Logger {
 			return;
 		}
 		Class klass;
-		StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 		buf.append(message).append(" ");
 		if (obj instanceof Class) {
 			klass = (Class) obj;
@@ -217,7 +216,7 @@ public class Logger {
 			klass = obj.getClass();
 			buf.append("instance ");
 		}
-		buf.append(klass.getName() + " loaded by ");
+		buf.append(klass.getName()).append(" loaded by ");
 		if (klass.getClassLoader() != null) {
 			buf.append(klass.getClassLoader().hashCode());
 			buf.append(" ");
@@ -295,11 +294,10 @@ public class Logger {
 	}
 
 	private static void callAppenders(LoggingEvent event) {
-		for (Iterator iter = loggerAppenders.iterator(); iter.hasNext();) {
-			LoggerAppender a = (LoggerAppender) iter.next();
-			a.append(event);
-		}
-		;
+        for (Object loggerAppender : loggerAppenders) {
+            LoggerAppender a = (LoggerAppender) loggerAppender;
+            a.append(event);
+        }
 	}
 
 	/**
@@ -326,23 +324,26 @@ public class Logger {
 
 	public static void threadDumpToConsole() {
 		try {
-			StringBuffer out = new StringBuffer("Full ThreadDump\n");
+            StringBuilder out = new StringBuilder("Full ThreadDump\n");
 			Map traces = Thread.getAllStackTraces();
-			for (Iterator iterator = traces.entrySet().iterator(); iterator.hasNext();) {
-				Map.Entry entry = (Map.Entry) iterator.next();
-				Thread thread = (Thread) entry.getKey();
-				out.append("Thread= " + thread.getName() + " " + (thread.isDaemon() ? "daemon" : "") + " prio="
-						+ thread.getPriority() + "id=" + thread.getId() + " " + thread.getState());
-				out.append("\n");
+            for (Object o : traces.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
+                Thread thread = (Thread) entry.getKey();
+                out.append("Thread= ").append(thread.getName()).append(" ")
+                        .append(thread.isDaemon() ? "daemon" : "")
+                        .append(" prio=").append(thread.getPriority())
+                        .append("id=").append(thread.getId()).append(" ")
+                        .append(thread.getState());
+                out.append("\n");
 
-				StackTraceElement[] ste = (StackTraceElement[]) entry.getValue();
-				for (int i = 0; i < ste.length; i++) {
-					out.append("\t");
-					out.append(ste[i].toString());
-					out.append("\n");
-				}
-				out.append("---------------------------------\n");
-			}
+                StackTraceElement[] ste = (StackTraceElement[]) entry.getValue();
+                for (StackTraceElement aSte : ste) {
+                    out.append("\t");
+                    out.append(aSte.toString());
+                    out.append("\n");
+                }
+                out.append("---------------------------------\n");
+            }
 			Logger.info(out.toString());
 		} catch (Throwable ignore) {
 		}
@@ -355,21 +356,21 @@ public class Logger {
 			File file = new File("ThreadDump-" + fmt.format(new Date()) + ".log");
 			out = new FileWriter(file);
 			Map traces = Thread.getAllStackTraces();
-			for (Iterator iterator = traces.entrySet().iterator(); iterator.hasNext();) {
-				Map.Entry entry = (Map.Entry) iterator.next();
-				Thread thread = (Thread) entry.getKey();
-				out.write("Thread= " + thread.getName() + " " + (thread.isDaemon() ? "daemon" : "") + " prio="
-						+ thread.getPriority() + "id=" + thread.getId() + " " + thread.getState());
-				out.write("\n");
+            for (Object o : traces.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
+                Thread thread = (Thread) entry.getKey();
+                out.write("Thread= " + thread.getName() + " " + (thread.isDaemon() ? "daemon" : "") + " prio="
+                        + thread.getPriority() + "id=" + thread.getId() + " " + thread.getState());
+                out.write("\n");
 
-				StackTraceElement[] ste = (StackTraceElement[]) entry.getValue();
-				for (int i = 0; i < ste.length; i++) {
-					out.write("\t");
-					out.write(ste[i].toString());
-					out.write("\n");
-				}
-				out.write("---------------------------------\n");
-			}
+                StackTraceElement[] ste = (StackTraceElement[]) entry.getValue();
+                for (StackTraceElement aSte : ste) {
+                    out.write("\t");
+                    out.write(aSte.toString());
+                    out.write("\n");
+                }
+                out.write("---------------------------------\n");
+            }
 			out.close();
 			out = null;
 			Logger.info("Full ThreadDump created " + file.getAbsolutePath());

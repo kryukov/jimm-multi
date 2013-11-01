@@ -21,8 +21,8 @@ import jimm.comm.Util;
 public final class XmlNode {
     public String name;
     public String value;
-    private Hashtable attribs = new Hashtable();
-    private Vector children = new Vector();
+    private Hashtable<String, String> attribs = new Hashtable<String, String>();
+    private Vector<XmlNode> children = new Vector<XmlNode>();
 
     private static final int MAX_BIN_VALUE_SIZE = 54 * 1024;
     private static final int MAX_VALUE_SIZE = 10 * 1024;
@@ -115,7 +115,7 @@ public final class XmlNode {
         return MAX_VALUE_SIZE;
     }
     private String readCdata(Socket socket) throws JimmException {
-        StringBuffer out = new StringBuffer();
+        StringBuilder out = new StringBuilder();
         char ch = socket.readChar();
         int maxSize = getMaxDataSize(name);
         int size = 0;
@@ -139,8 +139,8 @@ public final class XmlNode {
         return out.toString();
     }
 
-    private void readEscapedChar(StringBuffer out, Socket socket) throws JimmException {
-        StringBuffer buffer = new StringBuffer(6);
+    private void readEscapedChar(StringBuilder out, Socket socket) throws JimmException {
+        StringBuilder buffer = new StringBuilder(6);
         int limit = 6;
         char ch = socket.readChar();
         while (';' != ch) {
@@ -188,7 +188,7 @@ public final class XmlNode {
         if (endCh == ch) {
             return null;
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (endCh != ch) {
             if (sb.length() < limit) {
                 if ('\t' == ch) {
@@ -218,7 +218,7 @@ public final class XmlNode {
             }
             return false;
         }
-        StringBuffer tagName = new StringBuffer();
+        StringBuilder tagName = new StringBuilder();
         while (' ' != ch && '>' != ch) {
             tagName.append((char)ch);
             ch = socket.readChar();
@@ -243,7 +243,7 @@ public final class XmlNode {
             if ('>' == ch) {
                 break;
             }
-            StringBuffer attrName = new StringBuffer();
+            StringBuilder attrName = new StringBuilder();
             while ('=' != ch) {
                 attrName.append((char)ch);
                 ch = socket.readChar();
@@ -426,7 +426,7 @@ public final class XmlNode {
     }
 
     // #sijapp cond.if modules_DEBUGLOG is "true" #
-    private String _toString(StringBuffer sb, String spaces) {
+    private String _toString(StringBuilder sb, String spaces) {
         sb.append(spaces).append("<").append(name);
         if (0 != attribs.size()) {
             Enumeration e = attribs.keys();
@@ -453,7 +453,7 @@ public final class XmlNode {
         return sb.toString();
     }
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         _toString(sb, "");
         return sb.toString();
     }
@@ -549,7 +549,7 @@ public final class XmlNode {
         }
     }
 
-    public void toString(StringBuffer sb) {
+    public void toString(StringBuilder sb) {
         sb.append('<').append(name);
         if (0 != attribs.size()) {
             Enumeration e = attribs.keys();

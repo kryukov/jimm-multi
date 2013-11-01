@@ -214,7 +214,7 @@ public class Par {
             return null;
         }
 
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String str;
         int ip = 2;
         while (ip < lines.length) {

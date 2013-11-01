@@ -82,10 +82,10 @@ public class ThreadUtils {
 			Method m = t.getClass().getMethod("getStackTrace", (Class) null);
 			
 			StackTraceElement[] trace = (StackTraceElement[])m.invoke(t, (Object []) null);
-			StringBuffer b = new StringBuffer();  
-			for (int i=0; i < trace.length; i++) {
-			    b.append("\n\tat ").append(trace[i]);
-			}
+            StringBuilder b = new StringBuilder();
+            for (StackTraceElement aTrace : trace) {
+                b.append("\n\tat ").append(aTrace);
+            }
 			return b.toString();
 		} catch (Throwable e) {
 			java14 = true;

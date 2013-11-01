@@ -198,7 +198,7 @@ public class AndroidInputMethod extends InputMethod {
 		}
 
 		if (inputMethodListener.getText().length() < maxSize) {
-			StringBuffer editText = new StringBuffer(inputMethodListener.getText());
+			StringBuilder editText = new StringBuilder(inputMethodListener.getText());
 			synchronized (this) {
 				lastButtonCharIndex++;
 				char[] buttonChars = filterConstraints(filterInputMode(button.getChars(getInputMode())));

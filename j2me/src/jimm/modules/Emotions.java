@@ -252,7 +252,7 @@ public final class Emotions {
         textCorrWords   = new String[size];
         textCorrIndexes = new int[size];
 //        smileListItems = new Glyphs[size];
-        StringBuffer fisrtChars = new StringBuffer(textCorr.size());
+        StringBuilder fisrtChars = new StringBuilder(textCorr.size());
         for (int i = 0; i < size; ++i) {
             Object[] data = (Object[])textCorr.elementAt(i);
             textCorrWords[i]   = (String)data[0];

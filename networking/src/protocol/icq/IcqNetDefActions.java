@@ -399,7 +399,7 @@ public final class IcqNetDefActions {
         if (!text.startsWith("<HTML>")) {
             return text;
         }
-        StringBuffer escapedText = new StringBuffer();
+        StringBuilder escapedText = new StringBuilder();
         boolean inTag = false;
         for (int i = 0; i < text.length(); ++i) {
             char ch = text.charAt(i);

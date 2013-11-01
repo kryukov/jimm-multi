@@ -187,7 +187,7 @@ public abstract class MessageDigest {
 
     public String getDigestHex() {
         if (!digestValid) return null;
-        StringBuffer out = new StringBuffer();
+        StringBuilder out = new StringBuilder();
         int len = digestBits.length;
         for (int i = 0; i < len; i++) {
             String hex = Integer.toHexString(((int)digestBits[i]) & 0xFF);

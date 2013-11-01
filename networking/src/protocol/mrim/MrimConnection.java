@@ -79,7 +79,7 @@ public final class MrimConnection extends ClientConnection {
     }
 
     private String getServer() throws JimmException {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         try {
             TcpSocket s = new TcpSocket();
             s.connectForReadingTo("socket://mrim.mail.ru:2042");

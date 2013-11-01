@@ -29,7 +29,7 @@ public class Environment {
 
         System.setOut(new PrintStream(new OutputStream() {
 
-            StringBuffer line = new StringBuffer();
+            StringBuilder line = new StringBuilder();
 
             @Override
             public void write(int oneByte) throws IOException {
@@ -47,7 +47,7 @@ public class Environment {
 
         System.setErr(new PrintStream(new OutputStream() {
 
-            StringBuffer line = new StringBuffer();
+            StringBuilder line = new StringBuilder();
 
             @Override
             public void write(int oneByte) throws IOException {

@@ -414,7 +414,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
                 throw new JimmException(194, 1);
             }
             // Send info about file
-            StringBuffer messText = new StringBuffer();
+            StringBuilder messText = new StringBuilder();
             if (!StringUtils.isEmpty(description)) {
                 messText.append(description).append("\n");
             }
@@ -459,7 +459,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             os = sc.openOutputStream();
 
             // Send post header
-            StringBuffer headers = new StringBuffer();
+            StringBuilder headers = new StringBuilder();
             headers.append("--").append(boundary).append("\r\n");
             headers.append("Content-Disposition: form-data; name=\"filedesc\"\r\n");
             headers.append("\r\n");
@@ -500,7 +500,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
                 throw new JimmException(194, respCode);
             }
 
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             for (;;) {
                 int read = is.read();
                 if (read == -1) break;
@@ -524,7 +524,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             respString = Util.replace(respString, "\n", "");
 
             // Send info about file
-            StringBuffer messText = new StringBuffer();
+            StringBuilder messText = new StringBuilder();
             if (!StringUtils.isEmpty(description)) {
                 messText.append(description).append("\n");
             }

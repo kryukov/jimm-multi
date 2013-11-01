@@ -753,7 +753,7 @@ public final class XmppConnection extends ClientConnection {
 
             } else if ("http://jabber.org/protocol/disco#info".equals(xmlns)) {
                 if (IQ_TYPE_GET == iqType) {
-                    StringBuffer sb = new StringBuffer();
+                    StringBuilder sb = new StringBuilder();
                     sb.append("<iq type='result' to='")
                     .append(Util.xmlEscape(from))
                     .append("' id='").append(Util.xmlEscape(id)).append("'>");
@@ -968,7 +968,7 @@ public final class XmppConnection extends ClientConnection {
         userInfo.vCard.setValue("DESC", userInfo.about);
         userInfo.vCard.cleanXmlTree();
 
-        StringBuffer packet = new StringBuffer();
+        StringBuilder packet = new StringBuilder();
         packet.append("<iq type='set' id='").append(generateId()).append("'>");
         userInfo.vCard.toString(packet);
         packet.append("</iq>");
@@ -1357,7 +1357,7 @@ public final class XmppConnection extends ClientConnection {
         }
         String text = statusNode.getFirstNodeValue(S_TEXT);
         statusNode.removeNode(S_TEXT);
-        StringBuffer status = new StringBuffer();
+        StringBuilder status = new StringBuilder();
         while (null != statusNode) {
             status.append(':').append(statusNode.name);
             statusNode = statusNode.childAt(0);
@@ -1912,7 +1912,7 @@ public final class XmppConnection extends ClientConnection {
 
         String quote = "\"";
         return MD5.toBase64(StringUtils.stringToByteArrayUtf8(
-                new StringBuffer()
+                new StringBuilder()
                         .append("username=\"").append(user)
                         .append("\",realm=\"").append(realm)
                         .append("\",nonce=\"").append(nonce)
@@ -1990,7 +1990,7 @@ public final class XmppConnection extends ClientConnection {
      * @return line from stream
      */
     private String readLine(DataInputStream dis) {
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         try {
             for (byte ch = dis.readByte(); ch != -1; ch = dis.readByte()) {
                 if (ch == '\n') {
@@ -2013,7 +2013,7 @@ public final class XmppConnection extends ClientConnection {
     }
 
     public void updateContacts(Vector<Contact> contacts) {
-        StringBuffer xml = new StringBuffer();
+        StringBuilder xml = new StringBuilder();
 
         int itemCount = 0;
         xml.append("<iq type='set' id='").append(generateId())
@@ -2043,7 +2043,7 @@ public final class XmppConnection extends ClientConnection {
         }
     }
     private void parseRosterExchange(XmlNode x, String domain) {
-        StringBuffer xml = new StringBuffer();
+        StringBuilder xml = new StringBuilder();
         Xmpp j = (Xmpp)protocol;
         Vector subscribes = new Vector();
         for (int i = 0; i < x.childrenCount(); ++i) {
@@ -2100,7 +2100,7 @@ public final class XmppConnection extends ClientConnection {
             putPacketIntoQueue("<iq type='set' id='" + generateId()
                     + "'><query xmlns='jabber:iq:roster'>"
                     + xml.toString() + "</query></iq>");
-            xml = new StringBuffer();
+            xml = new StringBuilder();
             for (int i = 0; i < subscribes.size(); ++i) {
                 xml.append("<presence type='subscribe' to='")
                         .append(Util.xmlEscape(((Contact)subscribes.elementAt(i)).getUserId()))
@@ -2114,7 +2114,7 @@ public final class XmppConnection extends ClientConnection {
 
 
     public String getConferenceStorage() {
-        StringBuffer xml = new StringBuffer();
+        StringBuilder xml = new StringBuilder();
         Vector contacts = getJabber().getContactItems();
         xml.append("<storage xmlns='storage:bookmarks'>");
         for (int i = 0; i < contacts.size(); ++i) {
@@ -2143,7 +2143,7 @@ public final class XmppConnection extends ClientConnection {
         return xml.toString();
     }
     public void saveConferences() {
-        StringBuffer xml = new StringBuffer();
+        StringBuilder xml = new StringBuilder();
 
         String storage = getConferenceStorage();
         xml.append("<iq type='set'><query xmlns='jabber:iq:private'>");
@@ -2167,7 +2167,7 @@ public final class XmppConnection extends ClientConnection {
         }
         gate = "@" + gate;
         Vector contacts = getJabber().getContactItems();
-        StringBuffer xml = new StringBuffer();
+        StringBuilder xml = new StringBuilder();
 
         xml.append("<iq type='set' id='").append(generateId())
             .append("'><query xmlns='jabber:iq:roster'>");
@@ -2472,7 +2472,7 @@ public final class XmppConnection extends ClientConnection {
     // #sijapp cond.if modules_XSTATUSES is "true" #
     private void sendXStatus(String xstatus, String text) {
         String[] path = Util.explode(Util.xmlEscape(xstatus), ':');
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String typeUrl = "http://jabber.org/protocol/" + path[0];
 
         sb.append("<iq type='set' id='").append(generateId());
@@ -2576,7 +2576,7 @@ public final class XmppConnection extends ClientConnection {
     // #sijapp cond.end #
 
     private String getVerHash(Vector features) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("client/phone/" + "/Jimm<");
         for (int i = 0; i < features.size(); ++i) {
             sb.append(features.elementAt(i)).append('<');
@@ -2584,7 +2584,7 @@ public final class XmppConnection extends ClientConnection {
         return MD5.toBase64(new MD5().calculate(StringUtils.stringToByteArrayUtf8(sb.toString())));
     }
     private String getFeatures(Vector features) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<identity category='client' type='phone' name='Jimm'/>");
         for (int i = 0; i < features.size(); ++i) {
             sb.append("<feature var='").append(features.elementAt(i)).append("'/>");

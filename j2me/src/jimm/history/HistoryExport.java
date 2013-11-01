@@ -111,7 +111,7 @@ class HistoryExport implements Runnable, FileBrowserListener {
     private JSR75FileSystem openFile(String userId) throws JimmException {
         String timemark = Util.getDate("_%y%m", Util.createCurrentLocalTime());
         for (int counter = 0; counter < 1000; ++counter) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(directory).append("hist_").append(userId).append(timemark);
             if (0 < counter) {
                 sb.append("_").append(counter);

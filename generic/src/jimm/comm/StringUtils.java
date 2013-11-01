@@ -48,7 +48,7 @@ public final class StringUtils {
 
     // Converts a byte array to a hex string
     public static String byteArrayToHexString(byte[] buf) {
-        StringBuffer hexString = new StringBuffer(buf.length * 2);
+        StringBuilder hexString = new StringBuilder(buf.length * 2);
         for (int i = 0; i < buf.length; ++i) {
             String hex = Integer.toHexString(buf[i] & 0x00FF);
             if (hex.length() < 2) {
@@ -194,57 +194,57 @@ public final class StringUtils {
             }
         }
         int end = pos + len;
-        StringBuffer stringbuffer = new StringBuffer(len);
+        StringBuilder StringBuilder = new StringBuilder(len);
         for(int i = pos; i < end; ++i) {
             int ch = buf[i] & 0xff;
             switch (ch) {
                 case 168:
-                    stringbuffer.append('\u0401');
+                    StringBuilder.append('\u0401');
                     break;
                 case 184:
-                    stringbuffer.append('\u0451');
+                    StringBuilder.append('\u0451');
                     break;
 
                     /* Ukrainian CP1251 chars section */
                 case 165:
-                    stringbuffer.append('\u0490');
+                    StringBuilder.append('\u0490');
                     break;
                 case 170:
-                    stringbuffer.append('\u0404');
+                    StringBuilder.append('\u0404');
                     break;
                 case 175:
-                    stringbuffer.append('\u0407');
+                    StringBuilder.append('\u0407');
                     break;
                 case 178:
-                    stringbuffer.append('\u0406');
+                    StringBuilder.append('\u0406');
                     break;
                 case 179:
-                    stringbuffer.append('\u0456');
+                    StringBuilder.append('\u0456');
                     break;
                 case 180:
-                    stringbuffer.append('\u0491');
+                    StringBuilder.append('\u0491');
                     break;
                 case 186:
-                    stringbuffer.append('\u0454');
+                    StringBuilder.append('\u0454');
                     break;
                 case 191:
-                    stringbuffer.append('\u0457');
+                    StringBuilder.append('\u0457');
                     break;
                     /* end of section */
 
                 default:
                     try {
                         if (ch >= 192 && ch <= 255) {
-                            stringbuffer.append((char) ((1040 + ch) - 192));
+                            StringBuilder.append((char) ((1040 + ch) - 192));
                         } else {
-                            stringbuffer.append((char)ch);
+                            StringBuilder.append((char)ch);
                         }
                     } catch (Exception e) {
                     }
                     break;
             }
         }
-        return removeCr(stringbuffer.toString());
+        return removeCr(StringBuilder.toString());
     }
 
     public static String utf8beByteArrayToString(byte[] buf, int off, int len) {
@@ -292,7 +292,7 @@ public final class StringUtils {
         }
 
         // Convert
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int end = off + len;
         for (int i = off; i < end; i += 2) {
             sb.append((char)Util.getWordBE(buf, i));
@@ -310,7 +310,7 @@ public final class StringUtils {
             return val.replace('\r', '\n');
         }
 
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         int size = val.length();
         for (int i = 0; i < size; ++i) {
             char chr = val.charAt(i);
@@ -322,7 +322,7 @@ public final class StringUtils {
 
     // Restores CRLF sequense from LF
     public static String restoreCrLf(String val) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         int size = val.length();
         for (int i = 0; i < size; ++i) {
             char chr = val.charAt(i);
@@ -535,7 +535,7 @@ public final class StringUtils {
     }
 
     private String convertTextCaseInsensitive(String str) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int pos = 0;
         int skipLength = -1;
         if (str.startsWith("/")) {

@@ -35,7 +35,7 @@ public final class Clipboard {
 
     private String text;
 
-    private static void insertQuotingChars(StringBuffer out, String text, char qChars) {
+    private static void insertQuotingChars(StringBuilder out, String text, char qChars) {
         int size = text.length();
         boolean wasNewLine = true;
         for (int i = 0; i < size; ++i) {
@@ -61,7 +61,7 @@ public final class Clipboard {
     }
 
     public static String serialize(boolean incoming, String header, String text) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append('[').append(header).append(']').append('\n');
         insertQuotingChars(sb, text, incoming ? '\u00bb' : '\u00ab');//'»' : '«');
         return sb.toString();

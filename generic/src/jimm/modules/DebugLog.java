@@ -272,7 +272,7 @@ public final class DebugLog implements SelectListener {
 
 
     public static void dump(String comment, byte[] data) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("dump: ").append(comment).append(":\n");
         for (int i = 0; i < data.length; ++i) {
             String hex = Integer.toHexString(((int)data[i]) & 0xFF);

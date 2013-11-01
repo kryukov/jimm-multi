@@ -29,7 +29,7 @@ import protocol.ui.XStatusInfo;
  *
  * @author Vladimir Krukov
  */
-public final class XmppXml extends ClientConnection {
+public final class XmppConnection extends ClientConnection {
     private Socket socket;
     private Xmpp protocol;
 
@@ -152,7 +152,7 @@ public final class XmppXml extends ClientConnection {
                 + "' hash='md5'/>";
     }
 
-    public XmppXml() {
+    public XmppConnection() {
     }
 
     public void setJabber(Xmpp xmpp) {

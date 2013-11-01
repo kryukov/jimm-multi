@@ -135,7 +135,7 @@ public class XmppContact extends Contact implements SelectListener {
             return false;
         }
 
-        XmppXml xmppXml = ((Xmpp)protocol).getConnection();
+        XmppConnection xmppXml = ((Xmpp)protocol).getConnection();
 
         String jid = Jid.jimmJidToRealJid(getUserId());
         String fullJid = jid;

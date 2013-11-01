@@ -13,7 +13,7 @@ import protocol.Profile;
  */
 public class XmppRegistration implements Runnable, FormListener {
     private XForm form;
-    private XmppXml connection;
+    private XmppConnection connection;
     private AccountsForm opts;
     private byte type;
     private String id;
@@ -51,7 +51,7 @@ public class XmppRegistration implements Runnable, FormListener {
     public void run() {
         String error = null;
         try {
-            connection = new XmppXml();
+            connection = new XmppConnection();
             XmlNode xform = connection.newAccountConnect(domain, "socket://" + getServer(domain));
             id = "reg1";
             form.loadFromXml(xform.childAt(0), xform);

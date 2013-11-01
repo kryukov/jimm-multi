@@ -258,7 +258,7 @@ final class XForm {
             form.addPasswordField(num, label, value, 512);
 
         } else if (S_BOOLEAN.equals(type)) {
-            form.addCheckBox(num, label, XmppXml.isTrue(value));
+            form.addCheckBox(num, label, XmppConnection.isTrue(value));
 
         } else if (S_JID_SINGLE.equals(type)) {
             form.addTextField(num, label, value, 512);

@@ -35,7 +35,7 @@ import protocol.ui.XStatusInfo;
  */
 public final class Xmpp extends Protocol implements FormListener {
 
-    private XmppXml connection;
+    private XmppConnection connection;
     private Vector<String> rejoinList = new Vector<String>();
     private String resource;
     private ServiceDiscovery disco = null;
@@ -88,12 +88,12 @@ public final class Xmpp extends Protocol implements FormListener {
 
     @Override
     protected void startConnection() {
-        connection = new XmppXml();
+        connection = new XmppConnection();
         connection.setJabber(this);
         connection.start();
     }
 
-    XmppXml getConnection() {
+    XmppConnection getConnection() {
         return connection;
     }
 
@@ -124,7 +124,7 @@ public final class Xmpp extends Protocol implements FormListener {
 
     @Override
     protected final void closeConnection() {
-        XmppXml c = connection;
+        XmppConnection c = connection;
         connection = null;
         if (null != c) {
             c.disconnect();

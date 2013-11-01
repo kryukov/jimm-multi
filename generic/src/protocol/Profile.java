@@ -19,17 +19,17 @@ import protocol.ui.StatusInfo;
  */
 public final class Profile {
 
-    public static final int PROTOCOL_ICQ = 0;
-    public static final int PROTOCOL_MRIM = 1;
-    public static final int PROTOCOL_XMPP = 2;
-    public static final int PROTOCOL_OBIMP = 9;
-    public static final int PROTOCOL_FACEBOOK = 10;
-    public static final int PROTOCOL_LJ = 11;
-    public static final int PROTOCOL_YANDEX = 12;
-    public static final int PROTOCOL_GTALK = 14;
-    public static final int PROTOCOL_QIP = 15;
-    public static final int PROTOCOL_ODNOKLASSNIKI = 16;
-    public static final int PROTOCOL_VK_API = 20;
+    public static final byte PROTOCOL_ICQ = 0;
+    public static final byte PROTOCOL_MRIM = 1;
+    public static final byte PROTOCOL_XMPP = 2;
+    public static final byte PROTOCOL_OBIMP = 9;
+    public static final byte PROTOCOL_FACEBOOK = 10;
+    public static final byte PROTOCOL_LJ = 11;
+    public static final byte PROTOCOL_YANDEX = 12;
+    public static final byte PROTOCOL_GTALK = 14;
+    public static final byte PROTOCOL_QIP = 15;
+    public static final byte PROTOCOL_ODNOKLASSNIKI = 16;
+    public static final byte PROTOCOL_VK_API = 20;
     public static final String[] protocolNames = Util.explode((""
             // #sijapp cond.if protocols_ICQ is "true"#
             + "|ICQ"
@@ -122,18 +122,7 @@ public final class Profile {
     }
 
     public byte getEffectiveType() {
-        // #sijapp cond.if protocols_JABBER is "true" #
-        switch (protocolType) {
-            case Profile.PROTOCOL_GTALK:
-            case Profile.PROTOCOL_FACEBOOK:
-            case Profile.PROTOCOL_LJ:
-            case Profile.PROTOCOL_YANDEX:
-            case Profile.PROTOCOL_QIP:
-            case Profile.PROTOCOL_ODNOKLASSNIKI:
-                return Profile.PROTOCOL_XMPP;
-        }
-        // #sijapp cond.end #
-        return protocolType;
+        return getEffectiveType(protocolType);
     }
 
     public boolean equalsTo(Profile profile) {
@@ -148,5 +137,20 @@ public final class Profile {
             if (protocolType == protocolTypes[i]) exist = i;
         }
         return -1 < exist;
+    }
+
+    public static byte getEffectiveType(byte protocolType) {
+        // #sijapp cond.if protocols_JABBER is "true" #
+        switch (protocolType) {
+            case Profile.PROTOCOL_GTALK:
+            case Profile.PROTOCOL_FACEBOOK:
+            case Profile.PROTOCOL_LJ:
+            case Profile.PROTOCOL_YANDEX:
+            case Profile.PROTOCOL_QIP:
+            case Profile.PROTOCOL_ODNOKLASSNIKI:
+                return Profile.PROTOCOL_XMPP;
+        }
+        // #sijapp cond.end #
+        return protocolType;
     }
 }

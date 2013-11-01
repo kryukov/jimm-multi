@@ -51,24 +51,24 @@ public class InfoFactory {
     // #sijapp cond.end #
 
     public StatusInfo getStatusInfo(Protocol protocol) {
-        int protocolType = protocol.getProfile().protocolType;
+        byte protocolType = protocol.getProfile().protocolType;
         if (null == info[protocolType]) {
             info[protocolType] = createStatusInfo(protocolType);
         }
         return info[protocolType];
     }
 
-    public StatusInfo getStatusInfo(int protocolType) {
+    public StatusInfo getStatusInfo(byte protocolType) {
         if (null == info[protocolType]) {
             info[protocolType] = createStatusInfo(protocolType);
         }
         return info[protocolType];
     }
 
-    private StatusInfo createStatusInfo(int protocolType) {
+    private StatusInfo createStatusInfo(byte protocolType) {
         final int[] statusIconIndex;
         final ImageList statusIcons;
-        switch (protocolType) {
+        switch (Profile.getEffectiveType(protocolType)) {
             // #sijapp cond.if protocols_ICQ is "true" #
             case Profile.PROTOCOL_ICQ:
                 statusIconIndex = new int[]{1, 0, 4, 3, 10, 11, 8, 9, 12, 5, 6, 7, 2, 2, 1};
@@ -200,7 +200,7 @@ public class InfoFactory {
 
     private XStatusInfo createXStatusInfo(int protocolType) {
         String[] names;
-        ImageList icons = null;
+        ImageList icons;
         Config config;
         switch (protocolType) {
                 // #sijapp cond.if protocols_ICQ is "true" #

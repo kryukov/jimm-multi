@@ -274,7 +274,7 @@ public final class XmppConnection extends ClientConnection {
         write(packet);
     }
     private XmlNode readXmlNode(boolean notEmpty) throws JimmException {
-        do {
+        for (;;) {
             XmlNode x = XmlNode.parse(socket);
             if (null != x) {
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
@@ -282,9 +282,12 @@ public final class XmppConnection extends ClientConnection {
                 // #sijapp cond.end #
                 return x;
             }
-            DebugLog.systemPrintln("[IN]: wait");
-        } while (notEmpty);
-        return null;
+            if (notEmpty) {
+                socket.sleep(100);
+            } else {
+                return null;
+            }
+        }
     }
 
     // -----------------------------------------------------------------------

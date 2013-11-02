@@ -337,7 +337,7 @@ public class Mrim extends Protocol {
         }
         if (MrimChatContact.USER_MENU_USERS_LIST == action) {
             TextListModel list = new TextListModel();
-            Vector members = ((MrimChatContact)c).getMembers();
+            Vector<String> members = ((MrimChatContact)c).getMembers();
             for (int i = 0; i < members.size(); ++i) {
                 list.addItem((String)members.elementAt(i), false);
             }

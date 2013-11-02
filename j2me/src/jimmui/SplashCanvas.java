@@ -40,7 +40,6 @@ public final class SplashCanvas extends CanvasEx {
 
     // True if keylock has been enabled
     static private final short KEY_LOCK_MSG_TIME = 2000 / NativeCanvas.UIUPDATE_TIME;
-    private final Image splash = ImageList.loadImage("/logo.png");
     // Font used to display the logo (if image is not available)
     private final Font logoFont = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_LARGE);
     // Font used to display informational messages
@@ -254,14 +253,10 @@ public final class SplashCanvas extends CanvasEx {
             g.fillRect(0, 0, width, height);
 
             // Display splash image (or text)
-            if (null != splash) {
-                g.drawImage(splash, width / 2, height / 2, Graphics.HCENTER | Graphics.VCENTER);
-            } else {
-                g.setThemeColor(THEME_SPLASH_LOGO_TEXT);
-                g.setFont(logoFont);
-                g.drawString("jimm", width / 2, height / 2 + 5, Graphics.HCENTER | Graphics.BASELINE);
-                g.setFont(font);
-            }
+            g.setThemeColor(THEME_SPLASH_LOGO_TEXT);
+            g.setFont(logoFont);
+            g.drawString("Jimm Multi", width / 2, height / 2 + 5, Graphics.HCENTER | Graphics.BASELINE);
+            g.setFont(font);
 
             // Draw the date
             g.setThemeColor(THEME_SPLASH_DATE);

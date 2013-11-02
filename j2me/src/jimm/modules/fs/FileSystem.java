@@ -1,9 +1,7 @@
 // #sijapp cond.if modules_FILES="true"#
 package jimm.modules.fs;
 
-import java.util.*;
 import java.io.*;
-import jimm.*;
 import protocol.net.TcpSocket;
 
 public abstract class FileSystem {
@@ -17,7 +15,7 @@ public abstract class FileSystem {
     static private boolean supportJSR75() {
         try {
             return Class.forName("javax.microedition.io.file.FileConnection") != null;
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException ignored) {
         }
         return false;
     }
@@ -36,7 +34,7 @@ public abstract class FileSystem {
 
     public static InputStream openJimmFile(String file) {
         JSR75FileSystem fs = FileSystem.getInstance();
-        byte[] buffer = null;
+        byte[] buffer;
         try {
             fs.openFile(getJimmHome() + RES + "/" + file);
             InputStream in = fs.openInputStream();
@@ -48,10 +46,7 @@ public abstract class FileSystem {
         }
 
         fs.close();
-        if (null != buffer) {
-            return new ByteArrayInputStream(buffer);
-        }
-        return null;
+        return null != buffer ? new ByteArrayInputStream(buffer) : null;
     }
 
 }

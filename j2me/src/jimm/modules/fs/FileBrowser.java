@@ -6,7 +6,6 @@ import jimmui.view.icons.Icon;
 import jimmui.view.icons.ImageList;
 import java.util.*;
 import jimm.*;
-import jimm.cl.*;
 import jimm.comm.*;
 import jimmui.view.base.*;
 
@@ -16,8 +15,6 @@ public final class FileBrowser extends VirtualList implements Runnable {
     private final ImageList fsIcons = ImageList.createImageList("/fs.png");
     private static final int TYPE_FILE        = 1;
     private static final int TYPE_DIR         = 0;
-    private static final int TYPE_PARENT_DIR  = 0;
-    private static final int TYPE_DISK        = 0;
 
     private FileBrowserListener listener;
     private boolean needToSelectDirectory;
@@ -74,7 +71,7 @@ public final class FileBrowser extends VirtualList implements Runnable {
             JSR75FileSystem fs = FileSystem.getInstance();
             Vector newRoot = fs.getDirectoryContents(currentPath, needToSelectDirectory);
 
-            Vector files = new Vector();
+            Vector<FileNode> files = new Vector<FileNode>();
             for (int i = 0; i < newRoot.size(); ++i) {
                 FileNode file = (FileNode)newRoot.elementAt(i);
                 if (!FileSystem.PARENT_DIRECTORY.equals(file.getText())) {
@@ -138,7 +135,7 @@ public final class FileBrowser extends VirtualList implements Runnable {
         switch (keyCode) {
             case NativeCanvas.JIMM_SELECT:
                 fileNodeSelected();
-                return;
+                break;
 
             case NativeCanvas.JIMM_BACK:
                 if ((null != errorMessage) || FileSystem.ROOT_DIRECTORY.equals(currDir)) {
@@ -148,7 +145,7 @@ public final class FileBrowser extends VirtualList implements Runnable {
                     int d = currDir.lastIndexOf('/', currDir.length() - 2);
                     rebuildTree(currDir.substring(0, d + 1));
                 }
-                return;
+                break;
         }
     }
     protected boolean hasMenu() {

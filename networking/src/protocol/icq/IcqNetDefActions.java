@@ -36,7 +36,7 @@ import protocol.ui.XStatusInfo;
 
 public final class IcqNetDefActions {
     public static final int FLAG_HAPPY    = 0x0008;
-    public static final int FLAG_WEBAWARE = 0x0001;
+//    public static final int FLAG_WEBAWARE = 0x0001;
 
     private IcqNetWorking connection;
     public IcqNetDefActions(IcqNetWorking net) {
@@ -153,7 +153,7 @@ public final class IcqNetDefActions {
                 } else if (SnacPacket.SRV_RECVMSG_COMMAND == command) {
                     try {
                         readMessage(snacPacket.getReader());
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
 
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
@@ -299,7 +299,7 @@ public final class IcqNetDefActions {
             int length = marker.getWordBE();
             reason = StringUtils.byteArrayToString(
                     marker.getArray(length), 0, length);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return reason;
     }
@@ -998,19 +998,19 @@ public final class IcqNetDefActions {
     }
 
     // Static variables for message type;
-    public static final int MESSAGE_TYPE_AUTO     = 0x0000;
-    public static final int MESSAGE_TYPE_NORM     = 0x0001;
+//    public static final int MESSAGE_TYPE_AUTO     = 0x0000;
+//    public static final int MESSAGE_TYPE_NORM     = 0x0001;
     public static final int MESSAGE_TYPE_EXTENDED = 0x001a;
-    public static final int MESSAGE_TYPE_AWAY     = 0x03e8;
-    public static final int MESSAGE_TYPE_OCC      = 0x03e9;
-    public static final int MESSAGE_TYPE_NA       = 0x03ea;
-    public static final int MESSAGE_TYPE_DND      = 0x03eb;
-    public static final int MESSAGE_TYPE_FFC      = 0x03ec;
+//    public static final int MESSAGE_TYPE_AWAY     = 0x03e8;
+//    public static final int MESSAGE_TYPE_OCC      = 0x03e9;
+//    public static final int MESSAGE_TYPE_NA       = 0x03ea;
+//    public static final int MESSAGE_TYPE_DND      = 0x03eb;
+//    public static final int MESSAGE_TYPE_FFC      = 0x03ec;
 
 //    public static final int MESSAGE_TYPE_UNKNOWN  = 0x0000; // Unknown message, only used internally by this plugin
     public static final int MESSAGE_TYPE_PLAIN    = 0x0001; // Plain text (simple) message
 //    public static final int MESSAGE_TYPE_CHAT     = 0x0002; // Chat request message
-    public static final int MESSAGE_TYPE_FILEREQ  = 0x0003; // File request / file ok message
+//    public static final int MESSAGE_TYPE_FILEREQ  = 0x0003; // File request / file ok message
     public static final int MESSAGE_TYPE_URL      = 0x0004; // URL message (0xFE formatted)
 //    public static final int MESSAGE_TYPE_AUTHREQ  = 0x0006; // Authorization request message (0xFE formatted)
 //    public static final int MESSAGE_TYPE_AUTHDENY = 0x0007; // Authorization denied message (0xFE formatted)

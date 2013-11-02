@@ -225,12 +225,6 @@ public class SnacPacket extends Packet {
     }
 
 
-    // Returns the reference number
-    public final long getReference() {
-        return reference;
-    }
-
-
     // Returns a copy of the data
     public final ArrayReader getReader() {
         return new ArrayReader(data, 0);

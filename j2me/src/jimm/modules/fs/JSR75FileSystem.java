@@ -16,12 +16,12 @@ public class JSR75FileSystem {
     public Vector getDirectoryContents(String currDir, boolean onlyDirs)
             throws JimmException {
 
-        Vector filelist = new Vector();
+        Vector<FileNode> files = new Vector<FileNode>();
         try {
             if (currDir.equals(FileSystem.ROOT_DIRECTORY)) {
                 Enumeration roots = FileSystemRegistry.listRoots();
                 while (roots.hasMoreElements()) {
-                    filelist.addElement(new FileNode(currDir, (String) roots.nextElement()));
+                    files.addElement(new FileNode(currDir, (String) roots.nextElement()));
                 }
 
             } else {
@@ -29,13 +29,13 @@ public class JSR75FileSystem {
                         "file://" + currDir, Connector.READ);
 
                 Enumeration list = fileconn.list();
-                filelist.addElement(new FileNode(currDir, FileSystem.PARENT_DIRECTORY));
+                files.addElement(new FileNode(currDir, FileSystem.PARENT_DIRECTORY));
                 while (list.hasMoreElements()) {
                     String filename = (String) list.nextElement();
                     if (onlyDirs && !filename.endsWith("/")) {
                         continue;
                     }
-                    filelist.addElement(new FileNode(currDir, filename));
+                    files.addElement(new FileNode(currDir, filename));
                 }
                 fileconn.close();
             }
@@ -44,7 +44,7 @@ public class JSR75FileSystem {
         } catch (Exception e) {
             throw new JimmException(191, 0);
         }
-        return filelist;
+        return files;
     }
 
     public long totalSize() throws Exception {
@@ -108,7 +108,7 @@ public class JSR75FileSystem {
                 fileConnection.close();
             }
             fileConnection = null;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -121,7 +121,7 @@ public class JSR75FileSystem {
     }
 
     public byte[] getFileContent(String path) {
-        byte[] content = null;
+        byte[] content;
         InputStream in = null;
         try {
             openFile(path);

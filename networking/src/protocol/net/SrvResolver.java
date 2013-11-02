@@ -45,8 +45,8 @@ public final class SrvResolver {
         out.write(0); out.write(0); // resources count
         out.write(0); out.write(0); // answers count
         out.write(0); out.write(0); // additions count
-        for (int i = 0; i < domain.length; ++i) {
-            byte[] l = domain[i].getBytes();
+        for (String domainPart : domain) {
+            byte[] l = domainPart.getBytes();
             out.write(l.length);
             out.write(l);
         }
@@ -130,7 +130,7 @@ public final class SrvResolver {
             byte[] data = new byte[Util.getWordBE(header, 0)];
             socket.readFully(data);
             return read(data);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return null;
     }

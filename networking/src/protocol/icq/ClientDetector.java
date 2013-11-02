@@ -382,7 +382,7 @@ public class ClientDetector {
                 if (execVMProc(contact, guids, fps, protocol, ip + 1)) break;
                 ip = ip + (code[ip] & 0xFF) + 1;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

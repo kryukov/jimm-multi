@@ -33,7 +33,7 @@ public final class ToIcqSrvPacket extends SnacPacket {
     public static final int CLI_ACKOFFLINEMSGS_SUBCMD = 0x003E;
     // CLI_META packet subcommand and types
     public static final int CLI_META_SUBCMD = 0x07D0;
-    public static final int CLI_META_REQINFO_TYPE = 0x04D0;   // doesn't work
+//    public static final int CLI_META_REQINFO_TYPE = 0x04D0;   // doesn't work
     public static final int CLI_META_REQMOREINFO_TYPE = 0x04B2;
     public static final int CLI_META_REQUEST_FULL_INFO = 0x0FA0;
     public static final int CLI_SET_FULLINFO = 0x0C3A;
@@ -65,19 +65,9 @@ public final class ToIcqSrvPacket extends SnacPacket {
         this(reference, 0, -1, uin, subcommand, extData, data);
     }
 
-    // Returns the ICQ sequence number
-    public final int getIcqSequence() {
-        return this.icqSequence;
-    }
-
     // Sets the ICQ sequence number
     public final void setIcqSequence(int icqSequence) {
         this.icqSequence = icqSequence;
-    }
-
-    // Returns the subcommand
-    public final int getSubcommand() {
-        return this.subcommand;
     }
 
     // Returns the package as byte array

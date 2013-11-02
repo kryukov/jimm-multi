@@ -44,16 +44,14 @@ public class RequestInfoAction extends IcqAction {
 
     // Date of init
     private int packetCounter;
-    private IcqContact contact;
     private boolean done = false;
 
     // Constructor
     public RequestInfoAction(UserInfo data, IcqContact item) {
         super();
         packetCounter = 0;
-        contact = item;
         strData = data;
-        strData.uin = contact.getUserId();
+        strData.uin = item.getUserId();
     }
     public UserInfo getUserInfo() {
         return strData;

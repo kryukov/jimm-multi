@@ -324,7 +324,7 @@ public final class MrimConnection extends ClientConnection {
             case MULTICHAT_MEMBERS:
                 packetData.getDWord();//len
                 int count = (int)packetData.getDWord();//count
-                Vector inChat = new Vector();
+                Vector<String> inChat = new Vector<String>();
                 for (; 0 < count; --count) {
                     inChat.addElement(packetData.getString());
                 }
@@ -397,7 +397,7 @@ public final class MrimConnection extends ClientConnection {
             long msgId = packetData.getDWord();
             long flags = packetData.getDWord();
             String from = packetData.getString();
-            String msg = null;
+            String msg;
             if ((0 != (MrimPacket.MESSAGE_FLAG_OLD & flags))
                     || (0 != (MrimPacket.MESSAGE_FLAG_AUTHORIZE & flags))) {
                 msg = packetData.getString();
@@ -436,7 +436,7 @@ public final class MrimConnection extends ClientConnection {
             long flags = 0;
             try {
                 flags = Integer.parseInt(getMailValue(mail[0], "X-MRIM-Flags"), 16);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             addMessage(from, msg, flags, date, true);
             putPacketIntoQueue(MrimPacket.getDeleteOfflineMessagePacket(uidl));
@@ -622,8 +622,7 @@ public final class MrimConnection extends ClientConnection {
     private void setUserInfo(UserInfo userInfo, String[] fields, MrimBuffer in) {
         String username = null;
         String domain = null;
-        for (int i = 0; i < fields.length; ++i) {
-            String field = fields[i];
+        for (String field : fields) {
             if (field.equals("n" + "ickname")) {
                 userInfo.nick = in.getUcs2String();
 

@@ -58,7 +58,7 @@ public class XmppRegistration implements Runnable, FormListener {
             while (null == xml) {
                 try {
                     Thread.sleep(1000);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             if (0 == xml.length()) {
@@ -78,12 +78,12 @@ public class XmppRegistration implements Runnable, FormListener {
                 error = connection.getError(n.getFirstNode("e" + "rror"));
             }
 
-        } catch (JimmException ex) {
-        } catch (Exception ex) {
+        } catch (JimmException ignored) {
+        } catch (Exception ignored) {
         }
         try {
             connection.disconnect();
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
 
         if (null == error) {

@@ -27,11 +27,11 @@ public final class MrimChatContact extends MrimContact {
         setStatus(StatusInfo.STATUS_ONLINE, null);
     }
 
-    private Vector members = new Vector();
-    void setMembers(Vector inChat) {
+    private Vector<String> members = new Vector<String>();
+    void setMembers(Vector<String> inChat) {
         members = inChat;
     }
-    Vector getMembers() {
+    Vector<String> getMembers() {
         return members;
     }
     public boolean hasHistory() {

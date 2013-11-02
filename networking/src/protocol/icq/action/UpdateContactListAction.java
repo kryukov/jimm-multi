@@ -107,7 +107,7 @@ public class UpdateContactListAction extends IcqAction {
     }
 
     private void addItem() throws JimmException {
-        byte[] buf = null;
+        byte[] buf;
         if (null == contact) {
             buf = packGroup(gItem);
             state = STATE_ADD_GROUP;
@@ -126,7 +126,7 @@ public class UpdateContactListAction extends IcqAction {
     }
 
     public void init() throws JimmException {
-        byte[] buf = null;
+        byte[] buf;
 
         if (ACTION_RENAME != action) {
             /* Send a CLI_ADDSTART packet */
@@ -174,7 +174,7 @@ public class UpdateContactListAction extends IcqAction {
 
     private boolean processPaket(Packet packet) throws JimmException {
         /* Watch out for SRV_UPDATEACK packet type */
-        SnacPacket snacPacket = null;
+        SnacPacket snacPacket;
         if (packet instanceof SnacPacket) {
             snacPacket = (SnacPacket) packet;
         } else {

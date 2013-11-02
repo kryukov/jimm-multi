@@ -22,8 +22,8 @@ import jimm.modules.*;
  */
 class IcqNetState {
 
-    private final Vector actActions = new Vector();
-    private final Vector reqAction = new Vector();
+    private final Vector<IcqAction> actActions = new Vector<IcqAction>();
+    private final Vector<IcqAction> reqAction = new Vector<IcqAction>();
     private IcqNetDefActions defActionListener;
     private IcqNetWorking connection;
 

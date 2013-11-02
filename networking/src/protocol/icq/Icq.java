@@ -55,9 +55,9 @@ public class Icq extends Protocol {
     public static final byte PSTATUS_NOT_INVISIBLE = 0x04;
     public static final byte PSTATUS_CL_ONLY       = 0x05;
     // #sijapp cond.if modules_SERVERLISTS is "true" #
-    private Vector ignoreList    = new Vector();
-    private Vector invisibleList = new Vector();
-    private Vector visibleList   = new Vector();
+    private Vector<PrivacyItem> ignoreList    = new Vector<PrivacyItem>();
+    private Vector<PrivacyItem> invisibleList = new Vector<PrivacyItem>();
+    private Vector<PrivacyItem> visibleList   = new Vector<PrivacyItem>();
     // #sijapp cond.end #
 
     public Icq() {
@@ -384,15 +384,6 @@ public class Icq extends Protocol {
         return Icq.PSTATUS_NOT_INVISIBLE;
     }
 
-    // #sijapp cond.if modules_CLIENTS is "true" #
-    public void updateClientMask() {
-        if (isConnected()) {
-            requestSimpleAction(getStatusPacket());
-            sendCaps();
-        }
-    }
-    // #sijapp cond.end #
-
     public int privateStatusId = 0;
 
     private int ssiListLastChangeTime = -1;
@@ -654,7 +645,7 @@ public class Icq extends Protocol {
         return new SnacPacket(SnacPacket.SERVICE_FAMILY, SnacPacket.CLI_SETSTATUS_COMMAND, data);
     }
     public SnacPacket getCapsPacket() {
-        Vector guids = new Vector();
+        Vector<GUID> guids = new Vector<GUID>();
 
         guids.addElement(GUID.CAP_AIM_ISICQ);
         guids.addElement(GUID.CAP_AIM_SERVERRELAY);
@@ -875,7 +866,7 @@ public class Icq extends Protocol {
         }
         ui_updateContact(item);
     }
-    public void setPrivacyLists(Vector ignore, Vector invisible, Vector visible) {
+    public void setPrivacyLists(Vector<PrivacyItem> ignore, Vector<PrivacyItem> invisible, Vector<PrivacyItem> visible) {
         ignoreList = ignore;
         invisibleList = invisible;
         visibleList = visible;
@@ -891,7 +882,7 @@ public class Icq extends Protocol {
     private void setInvisibleId(IcqContact c, int id) {
         setPrivacy(invisibleList, c, Contact.SL_INVISIBLE, id);
     }
-    private void setPrivacy(Vector list, Contact c, byte l, int id) {
+    private void setPrivacy(Vector<PrivacyItem> list, Contact c, byte l, int id) {
         PrivacyItem item = getListItem(list, c);
         if (0 == id) {
             invisibleList.removeElement(item);

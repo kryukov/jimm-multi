@@ -353,8 +353,8 @@ public class ConnectAction extends IcqAction {
             } else if (STATE_CLI_COOKIE_SENT == state) {
                 Util stream = new Util();
 
-                for (int i = 0; i < FAMILIES_AND_VER_LIST.length; ++i) {
-                    stream.writeWordBE(FAMILIES_AND_VER_LIST[i]);
+                for (short familyOrVersion : FAMILIES_AND_VER_LIST) {
+                    stream.writeWordBE(familyOrVersion);
                 }
 
                 sendPacket(new SnacPacket(SnacPacket.SERVICE_FAMILY, SnacPacket.CLI_FAMILIES_COMMAND, SnacPacket.CLI_FAMILIES_COMMAND, stream.toByteArray()));
@@ -374,7 +374,7 @@ public class ConnectAction extends IcqAction {
 
             } else if (STATE_CLI_WANT_CAPS_SENT2 == state) {
 
-                Util udata = null;
+                Util udata;
                 udata = new Util();
                 udata.writeWordBE(0x0001);
                 udata.writeWordBE(0x0002);

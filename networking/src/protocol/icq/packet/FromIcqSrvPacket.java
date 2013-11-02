@@ -35,34 +35,18 @@ public final class FromIcqSrvPacket extends SnacPacket {
     // SRV_META packet subcommand and types
     public static final int SRV_META_SUBCMD = 0x07DA;
     public static final int SRV_META_GENERAL_TYPE = 0x00C8;
-    public static final int META_SET_FULLINFO_ACK = 0x0C3F;
+//    public static final int META_SET_FULLINFO_ACK = 0x0C3F;
     public static final int SRV_META_FULL_INFO = 0x0fb4;
     /****************************************************************************/
     /****************************************************************************/
     /****************************************************************************/
-    // ICQ sequence number
-    private int icqSequence;
-    // UIN
-    private String uin;
     // Subcommand
     private int subcommand;
 
     // Constructor
-    public FromIcqSrvPacket(long reference, int snacFlags, int icqSequence, String uin, int subcommand, byte[] extData, byte[] data) {
+    public FromIcqSrvPacket(long reference, int snacFlags, int subcommand, byte[] extData, byte[] data) {
         super(SnacPacket.OLD_ICQ_FAMILY, SnacPacket.SRV_FROMICQSRV_COMMAND, snacFlags, reference, extData, data);
-        this.icqSequence = icqSequence;
-        this.uin = uin;
         this.subcommand = subcommand;
-    }
-
-    // Returns the ICQ sequence number
-    public final int getIcqSequence() {
-        return this.icqSequence;
-    }
-
-    // Sets the ICQ sequence number
-    public final void setIcqSequence(int icqSequence) {
-        this.icqSequence = icqSequence;
     }
 
     // Returns the subcommand
@@ -89,9 +73,7 @@ public final class FromIcqSrvPacket extends SnacPacket {
 
         // Get data and extra data (if available)
         byte[] extData;
-        String uin;
-        int subcommand;
-        int icqSequence;
+        int subCommand;
         if (snacFlags == 0x8000) {
             // Get length of extra data
             int extDataLength = reader.getWordBE();
@@ -106,15 +88,15 @@ public final class FromIcqSrvPacket extends SnacPacket {
         reader.skip(4); // type, length
         int dataLength = reader.getWordLE() - (4 + 2 + 2);
         // Get uin, subcommand and icq sequence number
-        uin = String.valueOf(reader.getDWordLE());
-        subcommand = reader.getWordLE();
-        icqSequence = reader.getWordLE();
+        reader.getDWordLE();
+        subCommand = reader.getWordLE();
+        reader.getWordLE();
 
         // Get data
         byte[] data = reader.getArray(dataLength);
 
         // Instantiate FromIcqSrvPacket
-        return new FromIcqSrvPacket(snacReference, snacFlags, icqSequence, uin, subcommand, extData, data);
+        return new FromIcqSrvPacket(snacReference, snacFlags, subCommand, extData, data);
     }
 }
 // #sijapp cond.end #

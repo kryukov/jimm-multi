@@ -159,7 +159,6 @@ abstract public class CanvasEx extends DisplayableEx {
         if (this instanceof jimmui.view.roster.VirtualContactList) {
             return true;
         }
-        if (true) return false;
         // #sijapp cond.end#
         if (this instanceof SplashCanvas) return false;
         // #sijapp cond.if modules_TOUCH isnot "true"#

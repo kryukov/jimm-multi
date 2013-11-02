@@ -1,7 +1,6 @@
 package jimmui.view.smiles;
 
 import jimmui.ContentActionListener;
-import jimmui.view.ActionListener;
 import jimmui.view.base.touch.*;
 import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
@@ -127,7 +126,7 @@ public class SmilesContent extends SomeContent {
     private void setCurrentItemToCaption() {
         int selIdx = getCurrentRow() * cols + getCurrentCol();
         if (names.length <= selIdx) return;
-        ((Selector)view).setCaption(names[selIdx]);
+        ((SmileSelector)view).setCaption(names[selIdx]);
     }
 
     protected final int getItemHeight(int itemIndex) {

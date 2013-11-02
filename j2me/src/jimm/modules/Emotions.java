@@ -30,7 +30,7 @@ import jimmui.view.icons.*;
 import java.util.*;
 import java.io.*;
 import jimm.comm.*;
-import jimmui.view.smiles.Selector;
+import jimmui.view.smiles.SmileSelector;
 import jimmui.view.smiles.SmilesContent;
 import protocol.net.TcpSocket;
 
@@ -320,14 +320,14 @@ public final class Emotions {
     //                               //
     ///////////////////////////////////
 
-    static private Selector sl;
+    static private SmileSelector sl;
 
     static public void selectEmotion(ContentActionListener listener) {
         if (!isSupported()) {
             return;
         }
         if (null == sl) {
-            sl = new Selector(instance.images, instance.selEmotionsSmileNames,
+            sl = new SmileSelector(instance.images, instance.selEmotionsSmileNames,
                     instance.selEmotionsWord);
         }
         ((SmilesContent)sl.getContent()).setSelectionListener(listener);

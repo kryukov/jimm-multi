@@ -15,6 +15,7 @@ import jimmui.view.base.touch.*;
 import jimmui.view.form.Form;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
+import jimmui.view.smiles.SmileSelector;
 
 /**
  * Basic class for UI-controls.
@@ -152,8 +153,11 @@ abstract public class CanvasEx extends DisplayableEx {
         // #sijapp cond.if modules_ANDROID is "true"#
         if (this instanceof jimm.modules.fs.FileBrowser) return true;
         if (this instanceof Form) return true;
+        if (this instanceof Select) return false;
+        if (this instanceof SmileSelector) return false;
+        if (this instanceof SomeContentList) return true;
         if (this instanceof jimmui.view.roster.VirtualContactList) {
-            return true;//!Options.getBoolean(Options.OPTION_USER_ACCOUNTS);
+            return true;
         }
         if (true) return false;
         // #sijapp cond.end#

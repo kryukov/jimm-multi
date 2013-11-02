@@ -6,8 +6,8 @@ import javax.microedition.lcdui.*;
 import jimmui.view.base.*;
 
 
-public final class Selector extends SomeContentList {
-    public Selector(ImageList icons, String[] names, String[] codes) {
+public final class SmileSelector extends SomeContentList {
+    public SmileSelector(ImageList icons, String[] names, String[] codes) {
         super(null);
         content = new SmilesContent(this, icons, names, codes);
         softBar.setSoftBarLabels("select", "select", "cancel", false);

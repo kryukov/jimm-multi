@@ -1,6 +1,7 @@
 package sijapp;
 
 import java.lang.String;
+import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +12,7 @@ import java.lang.String;
  */
 public class J2mizer {
     public String j2mize(String line) {
-        return replaceClasses(removeGenerics(removeOverride(line)));
+        return replaceForeach(replaceClasses(removeGenerics(removeOverride(line))));
 
     }
     private String replaceClasses(String line) {
@@ -69,5 +70,16 @@ public class J2mizer {
             if (!Character.isSpaceChar(what.charAt(i))) return what.startsWith(with, i);
         }
         return false;
+    }
+
+    private String ARRAY_FOREACH_TEMPLATE = "for\\s*\\(\\s*(\\w+)\\s+(\\w+)\\s*:\\s*(\\w+)\\s*\\)\\s*\\{\\s*";
+    private String J2ME_ARRAY_FOREACH_TEMPLATE = "for (int i_$2 = 0; i_$2 < $3.length; ++i_$2) { $1 $2 = $3[i_$2];";
+
+    private String LIST_FOREACH_TEMPLATE = "for\\s*\\(\\s*(\\w+)\\s+(\\w+)\\s*:\\s*(\\w+)\\s*\\)\\s*\\{\\s*";
+    private String J2ME_LIST_FOREACH_TEMPLATE = "for (int i_$2 = 0; i_$2 < $3.size(); ++i_$2) { $1 $2 = $3.get(i_$2);";
+
+    private Pattern ARRAY_FOREACH = Pattern.compile(FOREACH_TEMPLATE);
+    private String replaceForeach(String line) {
+        return ARRAY_FOREACH.matcher(line).replaceAll(J2ME_ARRAY_FOREACH_TEMPLATE);
     }
 }

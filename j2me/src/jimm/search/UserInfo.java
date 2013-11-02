@@ -322,7 +322,7 @@ public class UserInfo implements
     // #sijapp cond.if protocols_ICQ is "true" #
     private Icon getStatusAsIcon() {
         if (protocol instanceof Icq) {
-            byte statusIndex = StatusInfo.STATUS_NA;
+            byte statusIndex;
             switch (Util.strToIntDef(status, -1)) {
                 case 0: statusIndex = StatusInfo.STATUS_OFFLINE;   break;
                 case 1: statusIndex = StatusInfo.STATUS_ONLINE;    break;

@@ -393,13 +393,11 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
                 int read = fis.read(buffer);
                 socket.write(buffer, 0, read);
                 counter -= read;
-                if (fileSize != 0) {
-                    if (isCanceled()) {
-                        throw new JimmException(194, 1);
-                    }
-                    socket.flush();
-                    setProgress((100 - 2) * (fileSize - counter) / fileSize);
+                if (isCanceled()) {
+                    throw new JimmException(194, 1);
                 }
+                socket.flush();
+                setProgress((100 - 2) * (fileSize - counter) / fileSize);
             }
             socket.flush();
 
@@ -444,8 +442,8 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
         }
     }
     private void sendFileThroughWeb(String host, InputStream fis, int fsize) throws JimmException {
-        InputStream is = null;
-        OutputStream os = null;
+        InputStream is;
+        OutputStream os;
         HttpConnection sc = null;
 
         final String url = "http://" + host + "/__receive_file.php";
@@ -480,12 +478,10 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
                 int read = fis.read(buffer);
                 os.write(buffer, 0, read);
                 counter -= read;
-                if (fsize != 0) {
-                    if (isCanceled()) {
-                        throw new JimmException(194, 1);
-                    }
-                    setProgress((100 - 2) * (fsize - counter) / fsize);
+                if (isCanceled()) {
+                    throw new JimmException(194, 1);
                 }
+                setProgress((100 - 2) * (fsize - counter) / fsize);
             }
 
             // Send end of header

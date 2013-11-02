@@ -72,7 +72,7 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
     private boolean waitResults = false;
     private String preferredNick;
 
-    private Vector results = new Vector();
+    private Vector<UserInfo> results = new Vector<UserInfo>();
 
     private Protocol protocol;
     private boolean icqFields;
@@ -146,8 +146,8 @@ public final class Search implements FormListener, TextListExCommands, ActionLis
         this.group = group;
     }
     private Vector getGroups() {
-        Vector all = protocol.getGroupItems();
-        Vector groups = new Vector();
+        Vector<Group> all = protocol.getGroupItems();
+        Vector<Group> groups = new Vector<Group>();
         for (int i = 0; i < all.size(); ++i) {
             Group g = (Group)all.elementAt(i);
             if (g.hasMode(Group.MODE_NEW_CONTACTS)) {

@@ -264,10 +264,6 @@ abstract public class CanvasEx extends DisplayableEx {
         invalidate();
     }
 
-    protected final boolean isLocked() {
-        return repaintLocked;
-    }
-
     public final void execJimmAction(int keyCode) {
         doJimmAction(keyCode);
     }

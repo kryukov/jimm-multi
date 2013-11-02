@@ -14,7 +14,6 @@ import jimm.Jimm;
 import jimm.comm.StringUtils;
 import jimm.io.Storage;
 import jimmui.view.InputTextBox;
-import jimmui.view.UIBuilder;
 import jimmui.view.TextBoxListener;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
@@ -35,7 +34,6 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
     private Protocol protocol;
     private int xstatus;
     private InputTextBox message;
-    private Form form;
     private static final int OPTION_XTRAZ_TITLE = 10;
     private static final int OPTION_XTRAZ_DESC  = 11;
 
@@ -138,33 +136,22 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
 
     protected void onStatusSelected() {
         int title = 512;
-        int descr = 0;
         // #sijapp cond.if protocols_MRIM is "true" #
         if (protocol instanceof Mrim) {
             title = 32;
-            descr = 0; // 64
         }
         // #sijapp cond.end #
         // #sijapp cond.if protocols_ICQ is "true" #
         if (protocol instanceof Icq) {
             title = 128;
-            descr = 0;
         }
         // #sijapp cond.end #
 
         int id = xstatus;
-        if (0 == descr) {
-            message = new InputTextBox().create("status_message", title);
-            message.setString(xst_titles[id]);
-            message.setTextBoxListener(this);
-            message.show();
-
-        } else {
-            form = UIBuilder.createForm("set_xstatus", "save", "back", this);
-            form.addTextField(OPTION_XTRAZ_TITLE, "xtraz_title", xst_titles[id], title);
-            form.addTextField(OPTION_XTRAZ_DESC, "xtraz_desc", xst_descs[id], descr);
-            form.show();
-        }
+        message = new InputTextBox().create("status_message", title);
+        message.setString(xst_titles[id]);
+        message.setTextBoxListener(this);
+        message.show();
     }
 }
 // #sijapp cond.end #

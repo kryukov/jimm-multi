@@ -214,8 +214,7 @@ public class HistoryStorage {
         String exceptRMS = (except ? storageName : null);
         String[] stores = Storage.getList();
 
-        for (int i = 0; i < stores.length; ++i) {
-            String store = stores[i];
+        for (String store : stores) {
             if (!store.startsWith(PREFIX)) {
                 continue;
             }

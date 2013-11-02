@@ -29,8 +29,8 @@ public class GlobalStatusForm implements SelectListener {
         byte[] statuses = info.applicableStatuses;
         final byte offline = StatusInfo.STATUS_OFFLINE;
         menu.addItem(info.getName(offline), info.getIcon(offline), offline);
-        for (byte statuse : statuses) {
-            menu.addItem(info.getName(statuse), info.getIcon(statuse), statuse);
+        for (byte status : statuses) {
+            menu.addItem(info.getName(status), info.getIcon(status), status);
         }
         menu.setDefaultItemCode(Jimm.getJimm().jimmModel.getGlobalStatus());
         menu.setActionListener(this);

@@ -44,7 +44,7 @@ public final class Templates implements SelectListener, CommandListener {
     private final Command cancelCommand = new Command(JLocale.getString("back"), Command.BACK, 2);
 
     private ContentActionListener selectionListener;
-    private Vector templates = new Vector();
+    private Vector<String> templates = new Vector<String>();
     private String selectedTemplate;
     private TextBox templateTextbox;
     private TextList list = new TextList(JLocale.getString("templates"));
@@ -77,7 +77,7 @@ public final class Templates implements SelectListener, CommandListener {
         switch (action) {
             case MENU_SELECT:
                 if (null != selectionListener) {
-                    selectedTemplate = getTemlate();
+                    selectedTemplate = getTemplate();
                     list.back();
                     selectionListener.action(list.getTextContent(), 0);
                 }
@@ -93,7 +93,7 @@ public final class Templates implements SelectListener, CommandListener {
                 break;
 
             case MENU_EDIT:
-                templateTextbox = new TextBox(JLocale.getString("new_template"), getTemlate(), 1000, TextField.ANY);
+                templateTextbox = new TextBox(JLocale.getString("new_template"), getTemplate(), 1000, TextField.ANY);
                 templateTextbox.addCommand(editCommand);
                 templateTextbox.addCommand(cancelCommand);
                 templateTextbox.setCommandListener(this);
@@ -172,7 +172,7 @@ public final class Templates implements SelectListener, CommandListener {
             storage.open(false);
             templates = storage.loadListOfString();
         } catch (Exception e) {
-            templates = new Vector();
+            templates = new Vector<String>();
         }
         storage.close();
         // #sijapp cond.if modules_ANDROID is "true" #
@@ -200,7 +200,7 @@ public final class Templates implements SelectListener, CommandListener {
         // #sijapp cond.end#
     }
 
-    private String getTemlate() {
+    private String getTemplate() {
         return (list.getTextContent().getSize() == 0)
                 ? ""
                 : (String)templates.elementAt(list.getTextContent().getCurrItem());

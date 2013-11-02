@@ -80,8 +80,8 @@ public final class Xmpp extends Protocol implements FormListener {
 
     @Override
     public final boolean isBlogBot(String jid) {
-        for (int i = 0; i < bots.length; ++i) {
-            if (bots[i].equals(jid)) return true;
+        for (String bot : bots) {
+            if (bot.equals(jid)) return true;
         }
         return false;
     }
@@ -348,7 +348,7 @@ public final class Xmpp extends Protocol implements FormListener {
         }
         return (String) defaultDomains.get(domain);
     }
-    private static final Hashtable defaultDomains = new Hashtable();
+    private static final Hashtable<String, String> defaultDomains = new Hashtable<String, String>();
     static {
         defaultDomains.put("livejournal.com", "livejournal.com");
         defaultDomains.put("chat.facebook.com", "chat.facebook.com");

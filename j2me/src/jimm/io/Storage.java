@@ -63,8 +63,8 @@ public final class Storage {
     }
     public boolean exist() {
         String[] recordStores = Storage.getList();
-        for (int i = 0; i < recordStores.length; ++i) {
-            if (name.equals(recordStores[i])) {
+        for (String recordStore : recordStores) {
+            if (name.equals(recordStore)) {
                 return true;
             }
         }
@@ -80,7 +80,7 @@ public final class Storage {
         } catch (Exception ignored) {
         }
     }
-    public boolean isOppened() {
+    public boolean isOpened() {
         return null != rs;
     }
     public void open(boolean create) throws IOException, RecordStoreException {
@@ -153,8 +153,8 @@ public final class Storage {
         } catch (Exception ignored) {
         }
     }
-    public Vector loadListOfString() {
-        Vector strings = new Vector();
+    public Vector<String> loadListOfString() {
+        Vector<String> strings = new Vector<String>();
         try {
             for (int i = 0; i < getNumRecords(); ++i) {
                 byte[] data = getRecord(i + 1);

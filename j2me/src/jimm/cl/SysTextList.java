@@ -43,7 +43,7 @@ public final class SysTextList extends TextListController {
             list.restore();
             String str = getCurrText();
             if (null != str) {
-                if (-1 != str.indexOf("http://")) {
+                if (str.startsWith("http://")) {
                     Jimm.getJimm().openUrl(str, false);
                 } else {
                     GetVersion.updateProgram();

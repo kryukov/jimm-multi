@@ -18,7 +18,6 @@ import java.util.Vector;
 import jimm.chat.message.PlainMessage;
 import jimm.comm.Util;
 import jimm.search.*;
-import jimmui.view.menu.MenuModel;
 import jimmui.view.text.TextListController;
 import jimmui.view.text.TextListModel;
 import jimm.util.JLocale;
@@ -185,9 +184,7 @@ public class Mrim extends Protocol {
 
             UserInfo userInfo = new UserInfo(this);
             userInfo.uin = uin;
-            if (null != userInfo.uin) {
-                cont.addResult(userInfo);
-            }
+            cont.addResult(userInfo);
             cont.putToGroup(getPhoneGroup());
             cont.finished();
             return;
@@ -359,7 +356,7 @@ public class Mrim extends Protocol {
 
     @Override
     public void showUserInfo(Contact contact) {
-        UserInfo data = null;
+        UserInfo data;
         if (contact instanceof MrimPhoneContact) {
             data = new UserInfo(this);
             data.nick = contact.getName();
@@ -389,7 +386,6 @@ public class Mrim extends Protocol {
             return;
         }
         StatusView statusView = Jimm.getJimm().getStatusView();
-        MenuModel menu = new MenuModel();
 
         statusView.init(this, contact);
         statusView.initUI();

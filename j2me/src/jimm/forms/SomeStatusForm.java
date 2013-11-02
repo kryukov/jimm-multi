@@ -62,8 +62,8 @@ public final class SomeStatusForm implements SelectListener, TextBoxListener {
         byte[] statuses = info.applicableStatuses;
         final byte offline = StatusInfo.STATUS_OFFLINE;
         menu.addItem(info.getName(offline), info.getIcon(offline), offline);
-        for (int i = 0; i < statuses.length; ++i) {
-            menu.addItem(info.getName(statuses[i]), info.getIcon(statuses[i]), statuses[i]);
+        for (byte status : statuses) {
+            menu.addItem(info.getName(status), info.getIcon(status), status);
         }
         menu.setDefaultItemCode(current);
     }

@@ -213,8 +213,7 @@ public class JimmModel {
             profile.isActive = true;
             newProtocols.addElement(createProtocol(profile));
         }
-        for (int i = 0; i < oldProtocols.length; ++i) {
-            Protocol protocol = oldProtocols[i];
+        for (Protocol protocol : oldProtocols) {
             if (null != protocol) {
                 protocol.disconnect(true);
                 protocol.safeSave();

@@ -1128,6 +1128,7 @@ public final class XmppConnection extends ClientConnection {
                 return;
             }
             c.setOfflineStatus();
+            c.setBooleanValue(Contact.CONTACT_NO_AUTH, true);
             return;
         }
 

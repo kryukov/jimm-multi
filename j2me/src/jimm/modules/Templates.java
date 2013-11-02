@@ -43,6 +43,8 @@ public final class Templates implements SelectListener, CommandListener {
     private final Command editCommand   = new Command(JLocale.getString("ok"), Command.OK, 1);
     private final Command cancelCommand = new Command(JLocale.getString("back"), Command.BACK, 2);
 
+    public static final String TEMPLATE_STORAGE = "rms-templates";
+
     private ContentActionListener selectionListener;
     private Vector<String> templates = new Vector<String>();
     private String selectedTemplate;
@@ -167,37 +169,11 @@ public final class Templates implements SelectListener, CommandListener {
     }
 
     public void load() {
-        Storage storage = new Storage("rms-templates");
-        try {
-            storage.open(false);
-            templates = storage.loadListOfString();
-        } catch (Exception e) {
-            templates = new Vector<String>();
-        }
-        storage.close();
-        // #sijapp cond.if modules_ANDROID is "true" #
-        templates = new ru.net.jimm.config.Templates().load(templates);
-        // #sijapp cond.end#
+        templates = Storage.loadListOfString(TEMPLATE_STORAGE);
     }
 
     private void save() {
-        Storage storage = new Storage("rms-templates");
-        try {
-            storage.delete();
-            if (0 == templates.size()) {
-                return;
-            }
-            storage.open(true);
-            storage.saveListOfString(templates);
-        } catch (Exception e) {
-            // #sijapp cond.if modules_DEBUGLOG is "true" #
-            DebugLog.panic("template save", e);
-            // #sijapp cond.end#
-        }
-        storage.close();
-        // #sijapp cond.if modules_ANDROID is "true" #
-        new ru.net.jimm.config.Templates().store(templates);
-        // #sijapp cond.end#
+        Storage.saveListOfString(TEMPLATE_STORAGE, templates);
     }
 
     private String getTemplate() {

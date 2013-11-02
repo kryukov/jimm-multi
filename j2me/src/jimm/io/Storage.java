@@ -80,9 +80,6 @@ public final class Storage {
         } catch (Exception ignored) {
         }
     }
-    public boolean isOpened() {
-        return null != rs;
-    }
     public void open(boolean create) throws IOException, RecordStoreException {
         if (null == rs) {
             rs = RecordStore.openRecordStore(name, create);
@@ -140,24 +137,38 @@ public final class Storage {
         return rs;
     }
 
-    public void saveListOfString(Vector strings) {
+    public static void saveListOfString(String storageName, Vector<String> strings) {
+        Storage storage = new Storage(storageName);
         try {
+            storage.delete();
+            if (0 == strings.size()) {
+                return;
+            }
+            storage.open(true);
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(baos);
             for (int i = 0; i < strings.size(); ++i) {
                 dos.writeUTF(StringUtils.notNull((String) strings.elementAt(i)));
-                addRecord(baos.toByteArray());
+                storage.addRecord(baos.toByteArray());
                 baos.reset();
             }
             baos.close();
         } catch (Exception ignored) {
         }
+        storage.close();
+        // #sijapp cond.if modules_ANDROID is "true" #
+        new ru.net.jimm.config.Templates().store(storageName, strings);
+        // #sijapp cond.end#
     }
-    public Vector<String> loadListOfString() {
+
+    public static Vector<String> loadListOfString(String storageName) {
+        Storage storage = new Storage(storageName);
         Vector<String> strings = new Vector<String>();
         try {
-            for (int i = 0; i < getNumRecords(); ++i) {
-                byte[] data = getRecord(i + 1);
+            storage.open(false);
+            for (int i = 0; i < storage.getNumRecords(); ++i) {
+                byte[] data = storage.getRecord(i + 1);
                 ByteArrayInputStream bais = new ByteArrayInputStream(data);
                 DataInputStream dis = new DataInputStream(bais);
                 strings.addElement(dis.readUTF());
@@ -165,6 +176,10 @@ public final class Storage {
             }
         } catch (Exception ignored) {
         }
+        storage.close();
+        // #sijapp cond.if modules_ANDROID is "true" #
+        strings = new ru.net.jimm.config.Templates().load(storageName, strings);
+        // #sijapp cond.end#
         return strings;
     }
 

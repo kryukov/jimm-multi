@@ -28,7 +28,6 @@ import protocol.xmpp.XmppRegistration;
  */
 public class AccountsForm implements FormListener, SelectListener, ControlStateListener {
     private Form form;
-    private MenuModel accountMenu = null;
     private int editAccountNum;
     private TextList accountList = new TextList(JLocale.getString("options_account"));
 
@@ -81,7 +80,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
         }
         accountList.setModel(accountListModel, curItem);
 
-        accountMenu = new MenuModel();
+        MenuModel accountMenu = new MenuModel();
         int defCount = MENU_ACCOUNT_EDIT;
         if (0 < accountCount) {
             accountMenu.addItem("set_active", MENU_ACCOUNT_SET_ACTIVE);
@@ -234,11 +233,7 @@ public class AccountsForm implements FormListener, SelectListener, ControlStateL
             }
             account.password = form.getTextFieldValue(passField);
             account.nick = form.getTextFieldValue(nickField);
-            if (Options.getAccountCount() <= editAccountNum) {
-                account.isActive = true;
-            } else {
-                account.isActive = Options.getAccount(editAccountNum).isActive;
-            }
+            account.isActive = Options.getAccountCount() <= editAccountNum || Options.getAccount(editAccountNum).isActive;
             addAccount(editAccountNum, account);
         }
         form.back();

@@ -40,8 +40,8 @@ public final class MagicEye implements SelectListener {
     private static final MagicEye instance = new MagicEye();
     private TextListModel model = new TextListModel();
     private TextList list = new TextList(JLocale.getString("magic eye"));
-    private Vector uins = new Vector();
-    private Vector protocols = new Vector();
+    private Vector<String> uins = new Vector<String>();
+    private Vector<Protocol> protocols = new Vector<Protocol>();
 
     private MagicEye() {
         list.setModel(model);
@@ -141,7 +141,7 @@ public final class MagicEye implements SelectListener {
                 } catch (Exception e) {
                     list.restore();
                 }
-                return;
+                break;
         }
     }
 }

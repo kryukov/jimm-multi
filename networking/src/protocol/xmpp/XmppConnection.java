@@ -1575,8 +1575,6 @@ public final class XmppConnection extends ClientConnection {
                 }
             }
 
-            jimm.modules.DebugLog.println("sent " + msg.getId() + " "
-                + (!isGroupchat && msg.contains("reques" + "t") && (null != msg.getId())));
             if (!isGroupchat && msg.contains("reques" + "t") && (null != msg.getId())) {
                 putPacketIntoQueue("<message to='" + Util.xmlEscape(fullJid)
                     + "' id='" + Util.xmlEscape(msg.getId())
@@ -1640,7 +1638,6 @@ public final class XmppConnection extends ClientConnection {
                 c.setActiveResource(fromRes);
             }
         }
-        jimm.modules.DebugLog.println("xmpp jabber " + fromRes);
         getJabber().addMessage(message, S_HEADLINE.equals(type));
     }
     private void parseBlogMessage(String to, XmlNode msg, String text, String botNick) {

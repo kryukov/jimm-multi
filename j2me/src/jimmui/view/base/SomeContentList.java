@@ -144,7 +144,9 @@ public class SomeContentList extends CanvasEx {
                 g.setClip(0, 0, getWidth(), bottom - captionHeight);
                 content.paintContent(g, 0, getWidth(), bottom - captionHeight);
             } catch (Exception e) {
+                // #sijapp cond.if modules_DEBUGLOG is "true" #
                 jimm.modules.DebugLog.panic("content", e);
+                // #sijapp cond.end #
             }
             g.getGraphics().translate(0, -captionHeight);
 

@@ -4,7 +4,7 @@ import jimm.Jimm;
 import jimm.Options;
 import jimm.comm.StringUtils;
 import jimm.comm.Util;
-import jimm.modules.DebugLog;
+import jimm.modules.*;
 import jimmui.HotKeys;
 import jimmui.model.chat.ChatModel;
 import jimmui.updater.RosterUpdater;
@@ -43,7 +43,7 @@ public class RosterContent extends SomeContent {
     private RosterUpdater updater = new RosterUpdater();
     private boolean rebuildList;
     private TreeNode currentNode = null;
-    private Vector[] listOfContactList = new Vector[]{new Vector(), new Vector()};
+    private Vector<TreeNode>[] listOfContactList = new Vector[]{new Vector<TreeNode>(), new Vector<TreeNode>()};
     private int visibleListIndex = 0;
 
     public RosterContent(SomeContentList view) {
@@ -65,11 +65,11 @@ public class RosterContent extends SomeContent {
         switch (keyCode) {
             case NativeCanvas.JIMM_SELECT:
                 itemSelected(getCurrentNode());
-                return;
+                break;
 
             case NativeCanvas.JIMM_MENU:
                 clListener.activateMainMenu();
-                return;
+                break;
 
             case NativeCanvas.JIMM_BACK:
                 if (getModel() == getUpdater().getChatModel()) {
@@ -79,7 +79,7 @@ public class RosterContent extends SomeContent {
                 } else {
                     showContextMenu(getCurrentNode());
                 }
-                return;
+                break;
         }
     }
 
@@ -100,29 +100,26 @@ public class RosterContent extends SomeContent {
         }
 
         Protocol p = getProtocol(item);
-        if (HotKeys.execHotKey(p, current, keyCode, type)) {
-            return true;
-        }
-        return super.doKeyReaction(keyCode, actionCode, type);
+        return HotKeys.execHotKey(p, current, keyCode, type)
+                || super.doKeyReaction(keyCode, actionCode, type);
     }
 
 
     @Override
-    public void drawItemBack(GraphicsEx g, int index, int current, int x1, int y1, int w, int h, int skip, int to) {
+    public void drawItemBack(GraphicsEx g, int index, int current, int x, int y, int w, int h, int skip, int to) {
         TreeNode node = getDrawItem(index);
         if (node instanceof ProtocolBranch) {
-            final int x = x1;
             if (current == index) {
                 g.setThemeColor(CanvasEx.THEME_SELECTION_BACK, CanvasEx.THEME_PROTOCOL_BACK, 0xA0);
             } else {
                 g.setThemeColor(CanvasEx.THEME_PROTOCOL_BACK);
             }
             byte progress = ((ProtocolBranch)node).getProtocol().getConnectingProgress();
-            int width = w + x - x1 + 4;
+            int width = w + x - x + 4;
             if (progress < 100) {
                 width = width * progress / 100;
             }
-            g.fillRect(x - 2, y1, width, h);
+            g.fillRect(x - 2, y, width, h);
         }
     }
 
@@ -409,7 +406,7 @@ public class RosterContent extends SomeContent {
             current = getSafeNode(prevIndex);
         }
         visibleListIndex ^= 1;
-        Vector items = listOfContactList[visibleListIndex];
+        Vector<TreeNode> items = listOfContactList[visibleListIndex];
         items.removeAllElements();
         model.buildFlatItems(items);
         drawItems = items;

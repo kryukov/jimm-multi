@@ -48,7 +48,7 @@ public final class Templates implements SelectListener, CommandListener {
     private ContentActionListener selectionListener;
     private Vector<String> templates = new Vector<String>();
     private String selectedTemplate;
-    private TextBox templateTextbox;
+    private TextBox templateTextBox;
     private TextList list = new TextList(JLocale.getString("templates"));
 
     private static final int MENU_SELECT = 0;
@@ -87,19 +87,19 @@ public final class Templates implements SelectListener, CommandListener {
                 break;
 
             case MENU_ADD:
-                templateTextbox = new TextBox(JLocale.getString("new_template"), null, 1000, TextField.ANY);
-                templateTextbox.addCommand(addCommand);
-                templateTextbox.addCommand(cancelCommand);
-                templateTextbox.setCommandListener(this);
-                Jimm.getJimm().getDisplay().show(templateTextbox);
+                templateTextBox = new TextBox(JLocale.getString("new_template"), null, 1000, TextField.ANY);
+                templateTextBox.addCommand(addCommand);
+                templateTextBox.addCommand(cancelCommand);
+                templateTextBox.setCommandListener(this);
+                Jimm.getJimm().getDisplay().show(templateTextBox);
                 break;
 
             case MENU_EDIT:
-                templateTextbox = new TextBox(JLocale.getString("new_template"), getTemplate(), 1000, TextField.ANY);
-                templateTextbox.addCommand(editCommand);
-                templateTextbox.addCommand(cancelCommand);
-                templateTextbox.setCommandListener(this);
-                Jimm.getJimm().getDisplay().show(templateTextbox);
+                templateTextBox = new TextBox(JLocale.getString("new_template"), getTemplate(), 1000, TextField.ANY);
+                templateTextBox.addCommand(editCommand);
+                templateTextBox.addCommand(cancelCommand);
+                templateTextBox.setCommandListener(this);
+                Jimm.getJimm().getDisplay().show(templateTextBox);
                 break;
 
             case MENU_PASTE:
@@ -120,7 +120,7 @@ public final class Templates implements SelectListener, CommandListener {
     }
 
     public void commandAction(Command c, Displayable d) {
-        String text = templateTextbox.getString();
+        String text = templateTextBox.getString();
         if (StringUtils.isEmpty(text)) {
             c = cancelCommand;
         }
@@ -137,7 +137,7 @@ public final class Templates implements SelectListener, CommandListener {
         //} else if (c == cancelCommand) {
         }
         list.restore();
-        templateTextbox = null;
+        templateTextBox = null;
     }
 
     private MenuModel getMenu() {

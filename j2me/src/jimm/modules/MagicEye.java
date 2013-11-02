@@ -122,7 +122,7 @@ public final class MagicEye implements SelectListener {
                 break;
 
             case MENU_CLEAN:
-                synchronized (instance) {
+                synchronized (this) {
                     uins.removeAllElements();
                     protocols.removeAllElements();
                     model.clear();

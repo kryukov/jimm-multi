@@ -12,7 +12,6 @@ package jimm.modules;
 
 import jimm.Jimm;
 import jimm.Options;
-import jimm.cl.ContactList;
 import protocol.*;
 import protocol.ui.StatusInfo;
 import protocol.ui.XStatusInfo;
@@ -67,10 +66,7 @@ public final class AutoAbsence {
         absence = true;
     }
     private boolean isSupported(Protocol p) {
-        if ((null == p) || !p.isConnected() || p.isAway(p.getProfile().statusIndex)) {
-            return false;
-        }
-        return true;
+        return !((null == p) || !p.isConnected() || p.isAway(p.getProfile().statusIndex));
     }
     private void doRestore() {
         if (!absence || (null == protos)) {

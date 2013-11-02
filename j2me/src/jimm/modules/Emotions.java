@@ -57,7 +57,7 @@ public final class Emotions {
     private static final int PARSER_FIRST_SMILE = 5;
     private static final int PARSER_SMILE       = 6;
 
-    private void smileParser(String content, Vector textCorr, Vector selEmotions) {
+    private void smileParser(String content, Vector<Object[]> textCorr, Vector<Object[]> selEmotions) {
         Integer curIndex = new Integer(0);
         String smileName = "";
         String word = "";
@@ -199,8 +199,8 @@ public final class Emotions {
     }
     private boolean loadAll() {
         images = null;
-        Vector textCorr = new Vector();
-        Vector selEmotions = new Vector();
+        Vector<Object[]> textCorr = new Vector<Object[]>();
+        Vector<Object[]> selEmotions = new Vector<Object[]>();
 
         // #sijapp cond.if modules_DEBUGLOG is "true"#
         jimm.Jimm.gc();
@@ -229,10 +229,10 @@ public final class Emotions {
             String content = StringUtils.utf8beByteArrayToString(str, 0, str.length);
             smileParser(content, textCorr, selEmotions);
             TcpSocket.close(dos);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         TcpSocket.close(stream);
-        if (0 == emoImages.size()) {
+        if ((null == emoImages) || (0 == emoImages.size())) {
             return false;
         }
 

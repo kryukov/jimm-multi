@@ -596,8 +596,8 @@ public final class XmppConnection extends ClientConnection {
                 jabberForm.error(getError(errorNode));
                 jabberForm = null;
 
-            } else if ("jabber:iq:roster".equals(query.name)) {
-                //FIXME: stop loading if roster service was down.
+//            } else if ("jabber:iq:roster".equals(xmlns)) {
+//                //FIXME: stop loading if roster service was down.
             } else if ("http://jabber.org/protocol/disco#items".equals(xmlns)) {
                 ServiceDiscovery disco = serviceDiscovery;
                 if (null != disco) {
@@ -728,6 +728,7 @@ public final class XmppConnection extends ClientConnection {
                         String jid = itemNode.getAttribute(XmlNode.S_JID);
 
                         if (Jid.isConference(jid)) {
+                            // do nothing
 
                         } else if ((S_REMOVE).equals(subscription)) {
                             xmpp.removeLocalContact(xmpp.getItemByUID(jid));

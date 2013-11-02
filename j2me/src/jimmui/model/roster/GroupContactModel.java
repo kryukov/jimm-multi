@@ -6,6 +6,7 @@ import jimmui.view.roster.items.ProtocolBranch;
 import jimmui.updater.RosterUpdater;
 import jimm.comm.Util;
 import jimm.util.JLocale;
+import jimmui.view.roster.items.TreeNode;
 import protocol.Group;
 import protocol.Protocol;
 import protocol.Roster;
@@ -29,7 +30,7 @@ public class GroupContactModel extends ContactListModel {
         notInListGroup.setMode(Group.MODE_NONE);
     }
 
-    public void buildFlatItems(Vector items) {
+    public void buildFlatItems(Vector<TreeNode> items) {
         // build
         Vector groups = this.groups;
         for (int groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {

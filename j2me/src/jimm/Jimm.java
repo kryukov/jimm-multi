@@ -35,9 +35,6 @@ import jimm.modules.*;
 import jimm.search.Search;
 import jimmui.view.*;
 import jimmui.view.base.*;
-// #sijapp cond.if modules_ACTIVITYUI is "true"#
-import jimmui.view.notify.*;
-// #sijapp cond.end#
 import jimm.util.JLocale;
 import protocol.Protocol;
 import protocol.ui.MessageEditor;
@@ -57,10 +54,6 @@ public class Jimm {
     public UIUpdater uiUpdater;
 
     private ChatUpdater chatUpdater = new ChatUpdater();
-
-    // #sijapp cond.if modules_ACTIVITYUI is "true"#
-    private ActivityUI activity;
-    // #sijapp cond.end#
 
     public PhoneInfo phone = new PhoneInfo();
 
@@ -273,7 +266,7 @@ public class Jimm {
     }
 
     public static java.io.InputStream getResourceAsStream(String name) {
-        InputStream in = null;
+        InputStream in;
         // #sijapp cond.if modules_ANDROID is "true" #
         in = jimm.modules.fs.FileSystem.openJimmFile(name);
         if (null == in) {
@@ -283,7 +276,7 @@ public class Jimm {
             }
         }
         // #sijapp cond.else #
-        in = new Object().getClass().getResourceAsStream(name);
+        //# in = name.getClass().getResourceAsStream(name);
         // #sijapp cond.end #
 
         return in;
@@ -404,11 +397,6 @@ public class Jimm {
         if (null != uiUpdater) uiUpdater.stop();
         uiUpdater = new UIUpdater();
         uiUpdater.startUIUpdater();
-        // #sijapp cond.if modules_ACTIVITYUI is "true"#
-        if (phone.isPhone(PhoneInfo.PHONE_SE) && (750 <= phone.getSeVersion())) {
-            activity = new ActivityUI();
-        }
-        // #sijapp cond.end#
         // #sijapp cond.if modules_ANDROID is "true" #
         ru.net.jimm.JimmActivity.getInstance().service.started();
         // #sijapp cond.end #

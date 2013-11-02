@@ -73,10 +73,10 @@ public class J2mizer {
         return false;
     }
 
-    private String ARRAY_FOREACH_TEMPLATE = "for\\s*\\(\\s*(\\w+)\\s+(\\w+)\\s*:\\s*(\\w+)\\s*\\)\\s*\\{\\s*";
+    private String ARRAY_FOREACH_TEMPLATE = "for\\s*\\(\\s*(\\w+)\\s+(\\w+)\\s*:\\s*((?:\\w+\\.)*\\w+)\\s*\\)\\s*\\{\\s*";
     private String J2ME_ARRAY_FOREACH_TEMPLATE = "for (int i_$2 = 0; i_$2 < $3.length; ++i_$2) { $1 $2 = $3[i_$2];";
 
-    private String LIST_FOREACH_TEMPLATE = "for\\s*\\(\\s*(\\w+)\\s+(\\w+)\\s*:\\s*(\\w+)\\s*\\)\\s*\\{\\s*";
+    private String LIST_FOREACH_TEMPLATE = "for\\s*\\(\\s*(\\w+)\\s+(\\w+)\\s*:\\s*((?:\\w+\\.)*\\w+)\\s*\\)\\s*\\{\\s*";
     private String J2ME_LIST_FOREACH_TEMPLATE = "for (int i_$2 = 0; i_$2 < $3.size(); ++i_$2) { $1 $2 = $3.get(i_$2);";
 
     private Pattern ARRAY_FOREACH = Pattern.compile(ARRAY_FOREACH_TEMPLATE);

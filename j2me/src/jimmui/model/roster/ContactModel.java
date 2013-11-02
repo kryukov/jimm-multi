@@ -5,6 +5,7 @@ import jimmui.view.roster.items.GroupBranch;
 import jimmui.view.roster.items.ProtocolBranch;
 import jimmui.updater.RosterUpdater;
 import jimm.comm.Util;
+import jimmui.view.roster.items.TreeNode;
 import protocol.Contact;
 import protocol.Protocol;
 import protocol.Roster;
@@ -24,7 +25,7 @@ public class ContactModel extends ContactListModel {
     public ContactModel() {
     }
 
-    public void buildFlatItems(Vector items) {
+    public void buildFlatItems(Vector<TreeNode> items) {
         // build
         rebuildContacts(contacts, items);
     }

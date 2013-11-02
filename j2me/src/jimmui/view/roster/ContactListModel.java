@@ -42,8 +42,8 @@ public abstract class ContactListModel {
     public void addProtocols(Vector<Protocol> protocols) {
         this.protocols = new Protocol[protocols.size()];
         protocols.copyInto(this.protocols);
-        for (int i = 0; i < this.protocols.length; ++i) {
-            updateProtocol(this.protocols[i], null);
+        for (Protocol protocol : this.protocols) {
+            updateProtocol(protocol, null);
         }
     }
     public final void setAlwaysVisibleNode(TreeNode node) {
@@ -71,7 +71,7 @@ public abstract class ContactListModel {
         return null;
     }
 
-    public abstract void buildFlatItems(Vector items);
+    public abstract void buildFlatItems(Vector<TreeNode> items);
 
     public abstract void updateOrder(RosterUpdater.Update u);
 
@@ -94,7 +94,7 @@ public abstract class ContactListModel {
         group.setMode(g.getMode());
         return group;
     }
-    protected final void rebuildGroup(GroupBranch g, boolean show, Vector drawItems) {
+    protected final void rebuildGroup(GroupBranch g, boolean show, Vector<TreeNode> drawItems) {
         if (show || isNotEmpty(g.getContacts())) {
             drawItems.addElement(g);
             if (g.isExpanded()) {
@@ -112,7 +112,7 @@ public abstract class ContactListModel {
         }
         return false;
     }
-    protected final void rebuildContacts(Vector contacts, Vector drawItems) {
+    protected final void rebuildContacts(Vector contacts, Vector<TreeNode> drawItems) {
         Contact c;
         for (int contactIndex = 0; contactIndex < contacts.size(); ++contactIndex) {
             c = (Contact)contacts.elementAt(contactIndex);
@@ -131,8 +131,8 @@ public abstract class ContactListModel {
     public abstract ProtocolBranch getProtocolNode(RosterUpdater.Update u);
 
     public boolean hasProtocol(Protocol p) {
-        for (int i = 0; i < this.protocols.length; ++i) {
-            if (p == this.protocols[i]) return true;
+        for (Protocol protocol : this.protocols) {
+            if (p == protocol) return true;
         }
         return false;
     }

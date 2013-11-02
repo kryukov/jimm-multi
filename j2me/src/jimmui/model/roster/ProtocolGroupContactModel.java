@@ -5,6 +5,7 @@ import jimmui.view.roster.ContactListModel;
 import jimmui.view.roster.items.GroupBranch;
 import jimmui.view.roster.items.ProtocolBranch;
 import jimmui.updater.RosterUpdater;
+import jimmui.view.roster.items.TreeNode;
 import protocol.Group;
 import protocol.Protocol;
 import protocol.Roster;
@@ -20,9 +21,9 @@ import java.util.Vector;
  * @author vladimir
  */
 public class ProtocolGroupContactModel extends ContactListModel {
-    private Hashtable protos = new Hashtable();
+    private Hashtable<Protocol, ProtocolBranch> protos = new Hashtable<Protocol, ProtocolBranch>();
 
-    public void buildFlatItems(Vector items) {
+    public void buildFlatItems(Vector<TreeNode> items) {
         final int count = getProtocolCount();
         for (int i = 0; i < count; ++i) {
             Protocol p = getProtocol(i);

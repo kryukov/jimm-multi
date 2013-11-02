@@ -12,6 +12,7 @@ import jimm.*;
 import jimm.modules.*;
 import jimmui.SplashCanvas;
 import jimmui.view.base.touch.*;
+import jimmui.view.chat.Chat;
 import jimmui.view.form.Form;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
@@ -155,6 +156,7 @@ abstract public class CanvasEx extends DisplayableEx {
         if (this instanceof Form) return true;
         if (this instanceof Select) return false;
         if (this instanceof SmileSelector) return false;
+        if (this instanceof Chat) return false;
         if (this instanceof SomeContentList) return true;
         if (this instanceof jimmui.view.roster.VirtualContactList) {
             return true;

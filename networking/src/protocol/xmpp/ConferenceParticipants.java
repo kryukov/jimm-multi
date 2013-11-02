@@ -184,7 +184,7 @@ public final class ConferenceParticipants extends SomeContent {
     }
     @Override
     protected boolean doKeyReaction(int keyCode, int actionCode, int type) {
-        if (HotKeys.isHotKey(keyCode, type)) {
+        if (HotKeys.isHotKey(keyCode)) {
             String nick = getCurrentContact();
             Contact c = (null == nick) ? null : getPrivateContact(nick);
             if (HotKeys.execHotKey(protocol, c, keyCode, type)) {

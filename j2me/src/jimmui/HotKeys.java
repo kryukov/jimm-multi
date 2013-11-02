@@ -1,7 +1,6 @@
 package jimmui;
 
 import javax.microedition.lcdui.*;
-import jimm.chat.*;
 import jimm.modules.*;
 import jimmui.view.base.*;
 import jimm.cl.*;
@@ -23,7 +22,7 @@ public class HotKeys {
     //               //
     ///////////////////
 
-    private static int getHotKeyOpCode(int keyCode, int type) {
+    private static int getHotKeyOpCode(int keyCode) {
         int action = Options.HOTKEY_NONE;
         // #sijapp cond.if modules_ANDROID isnot "true" #
         switch (keyCode) {
@@ -54,11 +53,11 @@ public class HotKeys {
         // #sijapp cond.end #
         return action;
     }
-    public static boolean isHotKey(int keyCode, int type) {
-        return (Options.HOTKEY_NONE != getHotKeyOpCode(keyCode, type));
+    public static boolean isHotKey(int keyCode) {
+        return (Options.HOTKEY_NONE != getHotKeyOpCode(keyCode));
     }
     public static boolean execHotKey(Protocol p, Contact contact, int keyCode, int type) {
-        int action = getHotKeyOpCode(keyCode, type);
+        int action = getHotKeyOpCode(keyCode);
         return (Options.HOTKEY_NONE != action) && execHotKeyAction(p, contact, action, type);
     }
 

@@ -159,10 +159,8 @@ public class ProtocolMenu implements SelectListener {
     }
     // #sijapp cond.if modules_XSTATUSES is "true" #
     private boolean hasXStatus(Protocol protocol) {
-        if (null != InfoFactory.factory.getXStatusInfo(protocol)) {
-            return 0 < InfoFactory.factory.getXStatusInfo(protocol).getXStatusCount();
-        }
-        return false;
+        return null != InfoFactory.factory.getXStatusInfo(protocol)
+                && 0 < InfoFactory.factory.getXStatusInfo(protocol).getXStatusCount();
     }
     // #sijapp cond.end #
 

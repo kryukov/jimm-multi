@@ -47,7 +47,7 @@ public final class HistoryStorageList extends VirtualList
     private static final int NOT_FOUND = 1;
 
     private static final int CACHE_SIZE = 50;
-    private Hashtable cachedRecords = new Hashtable();
+    private Hashtable<Integer, CachedRecord> cachedRecords = new Hashtable<Integer, CachedRecord>();
     private Thread searching = null;
 
     private MenuModel msgMenu = new MenuModel();
@@ -285,7 +285,7 @@ public final class HistoryStorageList extends VirtualList
                 updater = 100;
                 try {
                     Thread.sleep(100);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 if (it != searching) {
                     return -1;

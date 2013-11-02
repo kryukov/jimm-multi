@@ -38,7 +38,7 @@ public final class ConferenceParticipants extends SomeContent {
 
     private Xmpp protocol;
     private XmppServiceContact conference;
-    private Vector contacts = new Vector();
+    private Vector<Object> contacts = new Vector<Object>();
 
     private final Icon[] leftIcons = new Icon[2];
     private final Icon[] rightIcons = new Icon[1];
@@ -127,6 +127,7 @@ public final class ConferenceParticipants extends SomeContent {
                     if (!StringUtils.isEmpty(text)) {
                         String space = box.getSpace();
                         if (text.endsWith(space)) {
+                            // do nothing
                         } else if (1 == space.length()) {
                             text += space;
                         } else {
@@ -203,10 +204,8 @@ public final class ConferenceParticipants extends SomeContent {
             return menu;
         }
 
-        int defaultCode = -1;
         if (conference.canWrite()) {
             menu.addItem("reply", COMMAND_REPLY);
-            defaultCode = COMMAND_REPLY;
         }
         menu.addItem("private_chat", COMMAND_PRIVATE);
         menu.addItem("info", COMMAND_INFO);
@@ -260,7 +259,6 @@ public final class ConferenceParticipants extends SomeContent {
         }
         if (!hasLayer) {
             contacts.removeElementAt(contacts.size() - 1);
-            return;
         }
     }
     protected int getItemHeight(int itemIndex) {

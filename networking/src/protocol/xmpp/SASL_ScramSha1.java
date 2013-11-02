@@ -8,7 +8,6 @@ import jimm.comm.StringUtils;
 import jimm.comm.Util;
 
 public class SASL_ScramSha1 {
-    private String jid;
     String pass;
     String cnonce;
     String clientFirstMessageBare;
@@ -16,7 +15,6 @@ public class SASL_ScramSha1 {
     HMACSHA1 hmac;
 
     public String init(String jid, String password) {
-        this.jid = jid;
         this.pass = password;
         cnonce = "jimm" + Util.nextRandInt();
         clientFirstMessageBare = "n=" + Jid.getNick(jid) + ",r=" + cnonce;
@@ -44,8 +42,8 @@ public class SASL_ScramSha1 {
     }
 
     private String getAttribute(String[] attrs, char id) {
-        for (int i = 0; i < attrs.length; i++) {
-            if (attrs[i].charAt(0) == id) return attrs[i].substring(2);
+        for (String attr : attrs) {
+            if (attr.charAt(0) == id) return attr.substring(2);
         }
         return null;
     }

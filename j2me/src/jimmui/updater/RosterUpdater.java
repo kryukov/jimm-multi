@@ -21,7 +21,7 @@ import java.util.Vector;
  * @author vladimir
  */
 public class RosterUpdater {
-    private Vector updateQueue = new Vector();
+    private Vector<Update> updateQueue = new Vector<Update>();
 
     private ContactListModel chatModel = new ChatsModel();
     private ContactListModel model;

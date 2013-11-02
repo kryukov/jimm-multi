@@ -86,8 +86,8 @@ public class Jid {
         if (!isGate(jid)) {
             return false;
         }
-        for (int i = 0; i < icqTransports.length; ++i) {
-            if (jid.startsWith(icqTransports[i])) {
+        for (String icqTransport : icqTransports) {
+            if (jid.startsWith(icqTransport)) {
                 return true;
             }
         }
@@ -101,8 +101,8 @@ public class Jid {
     }
     public static boolean isKnownGate(String jid) {
         if (Jid.isGate(jid)) {
-            for (int i = 0; i < transports.length; ++i) {
-                if (jid.startsWith(transports[i])) {
+            for (String transport : transports) {
+                if (jid.startsWith(transport)) {
                     return true;
                 }
             }

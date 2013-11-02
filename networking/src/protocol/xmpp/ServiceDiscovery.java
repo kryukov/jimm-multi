@@ -37,7 +37,7 @@ public final class ServiceDiscovery extends TextListController implements TextBo
     private InputTextBox serverBox;
     private InputTextBox searchBox;
     private boolean shortView;
-    private Vector jids = new Vector();
+    private Vector<String> jids = new Vector<String>();
 
     private TextList screen = new TextList(JLocale.getString("service_discovery"));
     private TextListModel model = new TextListModel();

@@ -96,7 +96,7 @@ public final class XmlNode {
     }
 
     private void setName(String tagName) {
-        if (-1 == tagName.indexOf(':') || -1 != tagName.indexOf("stream:")) {
+        if (-1 == tagName.indexOf(':') || tagName.startsWith("stream:")) {
             name = tagName;
             return;
         }
@@ -479,12 +479,12 @@ public final class XmlNode {
     }
 
 
-    private boolean isContains(String[] subtags) {
-        if (null == subtags) {
+    private boolean isContains(String[] subTags) {
+        if (null == subTags) {
             return true;
         }
-        for (int subtagIndex = 0; subtagIndex < subtags.length; ++subtagIndex) {
-            if (!contains(subtags[subtagIndex])) {
+        for (String subTag : subTags) {
+            if (!contains(subTag)) {
                 return false;
             }
         }
@@ -500,10 +500,10 @@ public final class XmlNode {
         content.value = value;
     }
 
-    public void setValue(String tag, String[] subtags, String subtag, String value) {
+    public void setValue(String tag, String[] subTags, String subtag, String value) {
         for (int i = 0; i < childrenCount(); ++i) {
             XmlNode node = unsafeChildAt(i);
-            if (node.is(tag) && node.isContains(subtags)) {
+            if (node.is(tag) && node.isContains(subTags)) {
                 node.setValue(subtag, value);
                 return;
             }
@@ -514,9 +514,9 @@ public final class XmlNode {
 
         XmlNode node = new XmlNode(tag);
         children.addElement(node);
-        if (null != subtags) {
-            for (int i = 0; i < subtags.length; ++i) {
-                node.children.addElement(new XmlNode(subtags[i]));
+        if (null != subTags) {
+            for (String subTag : subTags) {
+                node.children.addElement(new XmlNode(subTag));
             }
         }
         node.setValue(subtag, value);

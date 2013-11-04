@@ -49,8 +49,8 @@ public final class StringUtils {
     // Converts a byte array to a hex string
     public static String byteArrayToHexString(byte[] buf) {
         StringBuilder hexString = new StringBuilder(buf.length * 2);
-        for (int i = 0; i < buf.length; ++i) {
-            String hex = Integer.toHexString(buf[i] & 0x00FF);
+        for (byte b : buf) {
+            String hex = Integer.toHexString(b & 0x00FF);
             if (hex.length() < 2) {
                 hexString.append('0');
             }
@@ -239,7 +239,7 @@ public final class StringUtils {
                         } else {
                             StringBuilder.append((char)ch);
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     break;
             }
@@ -439,7 +439,7 @@ public final class StringUtils {
 
     public static int stringCompare(String s1, String s2) {
         int size = Math.min(s1.length(), s2.length());
-        int result = 0;
+        int result;
         for (int i = 0; i < size; ++i) {
             result = toLowerCase(s1.charAt(i)) - toLowerCase(s2.charAt(i));
             if (result != 0) {
@@ -626,9 +626,9 @@ public final class StringUtils {
     }
 
     private static StringUtils getConverter(String scheme) {
-        for (int i = 0; i < converters.length; ++i) {
-            if (scheme.equals(converters[i].name)) {
-                return converters[i];
+        for (StringUtils converter : converters) {
+            if (scheme.equals(converter.name)) {
+                return converter;
             }
         }
         return null;
@@ -666,8 +666,8 @@ public final class StringUtils {
         return "";
     }
     public static boolean contains(String[] base, String value) {
-        for (int i = 0; i < base.length; ++i) {
-            if (base[i].equals(value)) return true;
+        for (String baseValue : base) {
+            if (baseValue.equals(value)) return true;
         }
         return false;
     }
@@ -686,8 +686,8 @@ public final class StringUtils {
         }
         int cutIndex = 0;
         final char[] cutChars = {' ', '\n'};
-        for (int i = 0; i < cutChars.length; ++i) {
-            cutIndex = cutIndex(str, cutChars[i], cutIndex, length);
+        for (char cutChar : cutChars) {
+            cutIndex = cutIndex(str, cutChar, cutIndex, length);
         }
         if (0 == cutIndex) {
             cutIndex = length;

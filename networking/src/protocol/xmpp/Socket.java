@@ -37,7 +37,7 @@ final class Socket {
     public Socket() {
     }
     // #sijapp cond.if modules_ZLIB is "true" #
-    public void activateStreamCompression() {
+    public void startCompression() {
         zIn = new ZInputStream(socket);
         zOut = new ZOutputStream(socket, JZlib.Z_DEFAULT_COMPRESSION);
         zOut.setFlushMode(JZlib.Z_SYNC_FLUSH);

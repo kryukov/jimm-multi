@@ -170,7 +170,7 @@ public final class XmppConnection extends ClientConnection {
     // #sijapp cond.if modules_ZLIB is "true" #
     private void setStreamCompression() throws JimmException {
         setProgress(20);
-        socket.activateStreamCompression();
+        socket.startCompression();
         write(getOpenStreamXml(domain_));
 
         // #sijapp cond.if modules_DEBUGLOG is "true" #

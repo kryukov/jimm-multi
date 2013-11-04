@@ -68,9 +68,9 @@ public class AniIcon extends Icon {
         if (sleepTime <= 0) {
             currentFrame = (currentFrame + 1) % frames.length;
             sleepTime = delays[currentFrame];
-            boolean needReepaint = painted;
+            boolean needRepaint = painted;
             painted = false;
-            return needReepaint;
+            return needRepaint;
         }
         return false;
     }

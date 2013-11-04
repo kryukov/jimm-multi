@@ -72,7 +72,7 @@ public final class ToIcqSrvPacket extends SnacPacket {
 
     // Returns the package as byte array
     public byte[] toByteArray() {
-        Util buf = new Util();
+        OutStream buf = new OutStream();
         buf.writeZeroes(16);
         // Assemlbe SNAC.DATA
         if (extData.length > 0) {

@@ -146,7 +146,7 @@ public class DisconnectPacket extends Packet {
     // Returns the package as byte array
     public byte[] toByteArray() {
 
-        Util buf = new Util();
+        OutStream buf = new OutStream();
 
         buf.writeZeroes(6);
 

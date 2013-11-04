@@ -83,7 +83,7 @@ public class ConnectPacket extends Packet {
         }
     }
 
-    public static void putVersion(Util stream, boolean first) {
+    public static void putVersion(OutStream stream, boolean first) {
         if (first) {
             stream.writeTLV(0x4C, null);
         }
@@ -117,7 +117,7 @@ public class ConnectPacket extends Packet {
         }
     }
 
-    public static void putLiteVersion(Util stream, boolean first) {
+    public static void putLiteVersion(OutStream stream, boolean first) {
         if (first) {
             stream.writeTLV(0x4C, null);
         }
@@ -153,7 +153,7 @@ public class ConnectPacket extends Packet {
 
     // Returns the package as byte array
     public byte[] toByteArray() {
-        Util buf = new Util();
+        OutStream buf = new OutStream();
         // header
         buf.writeZeroes(6);
 

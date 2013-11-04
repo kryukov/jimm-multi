@@ -1781,7 +1781,7 @@ public final class XmppConnection extends ClientConnection {
                     DebugLog.systemPrintln("[INFO-JABBER] Using PLAIN");
                     // #sijapp cond.end #
                     auth += "mechanism='PLAIN'>";
-                    Util data = new Util();
+                    OutStream data = new OutStream();
                     data.writeUtf8String(getJabber().getUserId());
                     data.writeByte(0);
                     data.writeUtf8String(Jid.getNick(getJabber().getUserId()));
@@ -1965,7 +1965,7 @@ public final class XmppConnection extends ClientConnection {
                 dis = c.openDataInputStream();
                 str = readLine(dis);
 
-                Util data = new Util();
+                OutStream data = new OutStream();
                 data.writeByte(0);
                 data.writeUtf8String(Jid.getNick(jid));
                 data.writeByte(0);

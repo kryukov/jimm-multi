@@ -457,7 +457,7 @@ public final class IcqNetDefActions {
 
     void sendRecivedFlag(byte[] buf, String uin, boolean msg2Buf) throws JimmException {
         // Acknowledge message
-        Util packet = new Util();
+        OutStream packet = new OutStream();
         packet.writeByteArray(buf, 0, 8);
         packet.writeWordBE(0x0002);
         packet.writeShortLenAndUtf8String(uin);

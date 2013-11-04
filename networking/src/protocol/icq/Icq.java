@@ -97,7 +97,7 @@ public class Icq extends Protocol {
 
         String text = StringUtils.restoreCrLf(msg.getText());
 
-        Util buffer = new Util();
+        OutStream buffer = new OutStream();
 
         if (true) {
             byte[] textRaw = StringUtils.stringToUcs2beByteArray(text);
@@ -118,7 +118,7 @@ public class Icq extends Protocol {
             buffer.writeByteArray(textRaw); // MESSAGE.MESSAGE
         } else {
             byte[] textRaw = StringUtils.stringToByteArrayUtf8(text);
-            Util tlv1127 = new Util();
+            OutStream tlv1127 = new OutStream();
 
             // Put 0x1b00
             tlv1127.writeWordLE(0x001B); // length
@@ -169,7 +169,7 @@ public class Icq extends Protocol {
             tlv1127.writeDWordLE(utf8.length);
             tlv1127.writeByteArray(utf8);
 
-            Util tlv5 = new Util();
+            OutStream tlv5 = new OutStream();
             tlv5.writeWordBE(0x0000);
             tlv5.writeDWordBE(msg.getMessageId());
             tlv5.writeDWordBE(0x00000000);
@@ -563,7 +563,7 @@ public class Icq extends Protocol {
         requestSimpleAction(makeSaveInfoPacket(userInfo));
     }
     private ToIcqSrvPacket makeSaveInfoPacket(UserInfo userInfo) {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
 
         /* 0x0C3A */
         stream.writeWordLE(ToIcqSrvPacket.CLI_SET_FULLINFO);
@@ -697,7 +697,7 @@ public class Icq extends Protocol {
             cmd = SnacPacket.CLI_ROSTERADD_COMMAND;
             privateStatusId = id;
         }
-        Util stream = new Util();
+        OutStream stream = new OutStream();
         stream.writeWordBE(0);    // name (null)
         stream.writeWordBE(0);    // GroupID
         stream.writeWordBE(id);   // EntryID
@@ -712,7 +712,7 @@ public class Icq extends Protocol {
     }
     private void sendStatus() {
         long status = 0x10000000 | IcqStatusInfo.getNativeStatus(getProfile().statusIndex);
-        Util data = new Util();
+        OutStream data = new OutStream();
         data.writeTLVDWord(0x0006, status);
 
         SnacPacket p = new SnacPacket(SnacPacket.SERVICE_FAMILY, SnacPacket.CLI_SETSTATUS_COMMAND, data.toByteArray());
@@ -729,7 +729,7 @@ public class Icq extends Protocol {
     };
 
     private void sendBeginTyping(Contact contact, boolean isTyping) {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
         stream.writeByteArray(MTN_PACKET_BEGIN);
         stream.writeShortLenAndUtf8String(contact.getUserId());
         stream.writeWordBE(isTyping ? 0x0002 : 0x0000);
@@ -738,7 +738,7 @@ public class Icq extends Protocol {
     }
 
     // #sijapp cond.if modules_XSTATUSES is "true" #
-    private void addMoodToStatus(Util out, int xStatus, String msg) {
+    private void addMoodToStatus(OutStream out, int xStatus, String msg) {
         int moodIndex = Icq.xstatus.getIcqMood(xStatus);
         String mood = (moodIndex < 0) ? "" : ("0icqmood" + moodIndex);
         msg = (msg.length() < 250) ? msg : (msg.substring(0, 250 - 3) + "...");
@@ -769,7 +769,7 @@ public class Icq extends Protocol {
         }
     }
     public SnacPacket getNewXStatusPacket(int xStatus, String msg) {
-        Util mood = new Util();
+        OutStream mood = new OutStream();
         addMoodToStatus(mood, xStatus, msg.trim());
         return new SnacPacket(SnacPacket.SERVICE_FAMILY,
                 SnacPacket.CLI_SETSTATUS_COMMAND, mood.toByteArray());
@@ -830,7 +830,7 @@ public class Icq extends Protocol {
             subaction = REMOVE_FROM_LIST;
         }
 
-        Util stream = new Util();
+        OutStream stream = new OutStream();
 
         stream.writeLenAndUtf8String(item.getUserId());
         stream.writeWordBE(0);
@@ -921,7 +921,7 @@ public class Icq extends Protocol {
     // #sijapp cond.end #
     /** ************************************************************************* */
     private void sendAuthResult(String userId, boolean confirm) {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
         stream.writeShortLenAndUtf8String(userId);
         stream.writeByte(confirm ? 0x01 : 0x00);
         stream.writeLenAndUtf8String("" /* reason */);
@@ -932,7 +932,7 @@ public class Icq extends Protocol {
     }
     protected void requestAuth(String userId) {
         final String reason = "";
-        Util stream = new Util();
+        OutStream stream = new OutStream();
         stream.writeShortLenAndUtf8String(userId);
         stream.writeLenAndUtf8String(reason);
         stream.writeWordBE(0x0000);

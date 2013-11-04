@@ -345,7 +345,7 @@ public class UpdateContactListAction extends IcqAction {
     }
 
     private byte[] packContact(Contact cItem, int contactId, int groupId, boolean auth) {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
 
         stream.writeLenAndUtf8String(cItem.getUserId());
         stream.writeWordBE(groupId);
@@ -353,7 +353,7 @@ public class UpdateContactListAction extends IcqAction {
         stream.writeWordBE(0); // Type (Buddy record)
 
         /* Additional data */
-        Util addData = new Util();
+        OutStream addData = new OutStream();
 
         /* TLV(0x0131) - name */
         if ((ACTION_DEL != action) && (ACTION_MOVE_FROM_NIL != action)) {
@@ -381,7 +381,7 @@ public class UpdateContactListAction extends IcqAction {
     }
 
     private byte[] packGroup(Group gItem) {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
 
         stream.writeLenAndUtf8String(gItem.getName());
         stream.writeWordBE(gItem.getId()); // Group Id
@@ -410,7 +410,7 @@ public class UpdateContactListAction extends IcqAction {
     }
 
     private byte[] packGroups() {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
 
         Vector gItems = getIcq().getGroupItems();
         int size = gItems.size();

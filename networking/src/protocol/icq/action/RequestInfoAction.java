@@ -61,7 +61,7 @@ public class RequestInfoAction extends IcqAction {
     public void init() throws JimmException {
 
         // Send a CLI_METAREQINFO packet
-        Util stream = new Util();
+        OutStream stream = new OutStream();
         try {
             stream.writeWordLE(ToIcqSrvPacket.CLI_META_REQMOREINFO_TYPE);
             stream.writeDWordLE(Long.parseLong(strData.uin));
@@ -74,7 +74,7 @@ public class RequestInfoAction extends IcqAction {
         active();
     }
     private void requestNew() throws JimmException {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
         byte[] uin = strData.uin.getBytes();
 
         stream.writeWordLE(ToIcqSrvPacket.CLI_META_REQUEST_FULL_INFO);

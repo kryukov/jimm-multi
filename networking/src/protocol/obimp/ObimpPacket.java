@@ -9,6 +9,7 @@
 // #sijapp cond.if protocols_OBIMP is "true" #
 package protocol.obimp;
 
+import jimm.comm.OutStream;
 import jimm.comm.StringUtils;
 import jimm.comm.Util;
 
@@ -17,7 +18,7 @@ import jimm.comm.Util;
  * @author Vladimir Kryukov
  */
 public class ObimpPacket {
-    private Util outPacket = new Util();
+    private OutStream outPacket = new OutStream();
     private int type;
     private int subtype;
     private ObimpData data;
@@ -49,7 +50,7 @@ public class ObimpPacket {
         outPacket.writeDWordBE(0);
     }
     
-    public Util raw() {
+    public OutStream raw() {
         return outPacket;
     }
     public void writeWtld(int type, byte[] data) {

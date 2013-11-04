@@ -378,7 +378,7 @@ public final class FileTransfer implements FormListener, FileBrowserListener,
             socket.connectTo(server, port);
 
             final int version = 1;
-            Util header = new Util();
+            OutStream header = new OutStream();
             header.writeWordBE(version);
             header.writeLenAndUtf8String(filename);
             header.writeLenAndUtf8String(description);

@@ -72,20 +72,20 @@ public class SearchAction extends IcqAction {
         return searchId != cont.getSearchId();
     }
 
-    private void addStr(Util buffer, int type, int param) {
+    private void addStr(OutStream buffer, int type, int param) {
         String str = cont.getSearchParam(param);
         if (null != str) {
             buffer.writeProfileAsciizTLV(type, str);
         }
     }
-    private void addByte(Util buffer, int type, int value) {
+    private void addByte(OutStream buffer, int type, int value) {
         buffer.writeWordLE(type);
         buffer.writeWordLE(1);
         buffer.writeByte(value);
     }
     // Init action
     public void init() throws JimmException {
-        Util buffer = new Util();
+        OutStream buffer = new OutStream();
 
         buffer.writeWordLE(0x055f);
 

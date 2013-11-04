@@ -49,7 +49,7 @@ public class XtrazMessagePlugin {
 
     private byte[] getData() {
         byte[] str = StringUtils.stringToByteArrayUtf8(msg);
-        Util buffer = new Util();
+        OutStream buffer = new OutStream();
         buffer.writeDWordLE(str.length);
         buffer.writeByteArray(str);
         return buffer.toByteArray();
@@ -72,7 +72,7 @@ public class XtrazMessagePlugin {
         // Get UIN
         byte[] uinRaw = StringUtils.stringToByteArray(rcvr.getUserId());
 
-        Util buffer = new Util();
+        OutStream buffer = new OutStream();
 
         buffer.writeDWordBE(cookie1); // CLI_SENDMSG.TIME
         buffer.writeDWordBE(cookie2); // CLI_SENDMSG.ID
@@ -88,7 +88,7 @@ public class XtrazMessagePlugin {
 
 
     private byte[] makeTlv5() {
-        Util tlv5 = new Util();
+        OutStream tlv5 = new OutStream();
         tlv5.writeWordBE(0x0000);
         tlv5.writeDWordBE(time);
         tlv5.writeDWordBE(0x00000000);
@@ -110,7 +110,7 @@ public class XtrazMessagePlugin {
         byte[] uinRaw = StringUtils.stringToByteArray(rcvr.getUserId());
 
         // Build the packet
-        Util buffer = new Util();
+        OutStream buffer = new OutStream();
 
         buffer.writeDWordBE(time); // CLI_SENDMSG.TIME
         buffer.writeDWordBE(0x00000000); // CLI_SENDMSG.ID
@@ -127,7 +127,7 @@ public class XtrazMessagePlugin {
     private byte[] makeTlv1127() {
         byte[] textRaw = new byte[0];
         byte[] pluginData = pluginData();
-        Util tlv1127 = new Util();
+        OutStream tlv1127 = new OutStream();
 
         // Put 0x1b00
         tlv1127.writeWordLE(0x001B); // length
@@ -185,7 +185,7 @@ public class XtrazMessagePlugin {
         int flag2 = 0x00000000;
 
         int headerLen = 16 + 2 +  4 + subType.length  + 4 + 4 + 4 + 2 + 1;
-        Util buffer = new Util();
+        OutStream buffer = new OutStream();
 
         buffer.writeWordLE(headerLen);
 

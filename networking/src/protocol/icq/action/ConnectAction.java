@@ -172,7 +172,7 @@ public class ConnectAction extends IcqAction {
                     if (ConnectPacket.SRV_CLI_HELLO == connectPacket.getType()) {
                         if (md5login) {
                             sendPacket(new ConnectPacket());
-                            Util stream = new Util();
+                            OutStream stream = new OutStream();
                             stream.writeWordBE(0x0001);
                             stream.writeLenAndUtf8String(uin);
                             stream.writeTLV(0x4b, new byte[0]);
@@ -193,7 +193,7 @@ public class ConnectAction extends IcqAction {
                     SnacPacket snacPacket = (SnacPacket) packet;
                     if ((0x0017 == snacPacket.getFamily())
                             && (0x0007 == snacPacket.getCommand())) {
-                        Util stream = new Util();
+                        OutStream stream = new OutStream();
                         stream.writeTLV(0x0001, uin.getBytes());
 
                         ArrayReader rbuf = snacPacket.getReader();
@@ -351,7 +351,7 @@ public class ConnectAction extends IcqAction {
 
                 // Watch out for STATE_CLI_COOKIE_SENT
             } else if (STATE_CLI_COOKIE_SENT == state) {
-                Util stream = new Util();
+                OutStream stream = new OutStream();
 
                 for (short familyOrVersion : FAMILIES_AND_VER_LIST) {
                     stream.writeWordBE(familyOrVersion);
@@ -374,8 +374,8 @@ public class ConnectAction extends IcqAction {
 
             } else if (STATE_CLI_WANT_CAPS_SENT2 == state) {
 
-                Util udata;
-                udata = new Util();
+                OutStream udata;
+                udata = new OutStream();
                 udata.writeWordBE(0x0001);
                 udata.writeWordBE(0x0002);
                 udata.writeWordBE(0x0003);
@@ -386,7 +386,7 @@ public class ConnectAction extends IcqAction {
                 // Request own status
                 sendPacket(new SnacPacket(SnacPacket.SERVICE_FAMILY, SnacPacket.CLI_REQINFO_COMMAND, 0x2BDD0000));
 
-                udata = new Util();
+                udata = new OutStream();
                 udata.writeTLVWord(0x000B, 0x00FF);
                 sendPacket(new SnacPacket(SnacPacket.SSI_FAMILY, SnacPacket.CLI_REQLISTS_COMMAND, SnacPacket.CLI_REQLISTS_COMMAND, udata.toByteArray()));
 
@@ -396,7 +396,7 @@ public class ConnectAction extends IcqAction {
                 if ((-1 == timestamp) || (0 == count) || (0 == getIcq().getContactItems().size())) {
                     reply2 = new SnacPacket(SnacPacket.SSI_FAMILY, SnacPacket.CLI_REQROSTER_COMMAND, 0x07630000);
                 } else {
-                    Util data = new Util();
+                    OutStream data = new OutStream();
                     data.writeDWordBE(timestamp);
                     data.writeWordBE(count);
                     reply2 = new SnacPacket(SnacPacket.SSI_FAMILY, SnacPacket.CLI_CHECKROSTER_COMMAND, data.toByteArray());
@@ -411,7 +411,7 @@ public class ConnectAction extends IcqAction {
                 //sendPacket(new SnacPacket(SnacPacket.LOCATION_FAMILY, SnacPacket.CLI_REQLOCATION_COMMAND, SnacPacket.CLI_REQLOCATION_COMMAND));
 
                 // Request roster limits
-                //udata = new Util();
+                //udata = new OutStream();
                 //udata.writeTLVWord(0x0005, 0x000B);
                 //sendPacket(new SnacPacket(SnacPacket.CONTACT_FAMILY, SnacPacket.CLI_REQBUDDY_COMMAND, SnacPacket.CLI_REQBUDDY_COMMAND, udata.toByteArray()));
 
@@ -462,7 +462,7 @@ public class ConnectAction extends IcqAction {
     }
 
     private void requestOtherContacts() throws JimmException {
-        Util stream = new Util();
+        OutStream stream = new OutStream();
         stream.writeTLVByte(0x08, 1);
         sendPacket(new SnacPacket(SnacPacket.CONTACT_FAMILY, SnacPacket.CLI_REQBUDDY_COMMAND, stream.toByteArray()));
     }
@@ -702,7 +702,7 @@ public class ConnectAction extends IcqAction {
         // ICQ6
         // flags = 0x3FDB
 
-        Util icbm = new Util();
+        OutStream icbm = new OutStream();
         icbm.writeWordBE(0x0000);
         icbm.writeDWordBE(flags); // message flags
         icbm.writeWordBE(8000); // Maximum message size

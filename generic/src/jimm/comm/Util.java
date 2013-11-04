@@ -25,7 +25,6 @@
 
 package jimm.comm;
 
-import java.io.*;
 import java.util.*;
 import javax.microedition.lcdui.*;
 
@@ -34,158 +33,6 @@ import jimm.util.JLocale;
 
 
 public class Util {
-    private ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    public Util() {
-    }
-    public byte[] toByteArray() {
-        return stream.toByteArray();
-    }
-    public int size() {
-        return stream.size();
-    }
-    public void reset() {
-        try {
-    	    stream.reset();
-        } catch (Exception ignored) {
-        }
-    }
-
-
-    public void writeZeroes(int count) {
-        for (int i = 0; i < count; ++i) {
-            writeByte(0);
-        }
-    }
-    public void writeWordBE(int value) {
-        try {
-            stream.write(((value & 0xFF00) >> 8) & 0xFF);
-            stream.write(value & 0xFF);
-        } catch (Exception ignored) {
-        }
-    }
-    public void writeWordLE(int value) {
-        try {
-            stream.write(value & 0xFF);
-            stream.write(((value & 0xFF00) >> 8) & 0xFF);
-        } catch (Exception ignored) {
-        }
-    }
-
-    public void writeByteArray(byte[] array) {
-        try {
-            stream.write(array);
-        } catch (Exception ignored) {
-        }
-    }
-
-    public void writeByteArray(byte[] array, int offset, int length) {
-        try {
-            stream.write(array, offset, length);
-        } catch (Exception ignored) {
-        }
-    }
-
-    public void writeDWordBE(long longValue) {
-        try {
-            int value = (int)longValue;
-            stream.write(((value & 0xFF000000) >> 24) & 0xFF);
-            stream.write(((value & 0x00FF0000) >> 16) & 0xFF);
-            stream.write(((value & 0x0000FF00) >> 8)  & 0xFF);
-            stream.write(  value & 0x000000FF);
-        } catch (Exception ignored) {
-        }
-    }
-    public void writeDWordLE(long longValue) {
-        try {
-            int value = (int)longValue;
-            stream.write(  value & 0x000000FF);
-            stream.write(((value & 0x0000FF00) >> 8)  & 0xFF);
-            stream.write(((value & 0x00FF0000) >> 16) & 0xFF);
-            stream.write(((value & 0xFF000000) >> 24) & 0xFF);
-        } catch (Exception ignored) {
-        }
-    }
-
-    public void writeByte(int value) {
-        try {
-            stream.write(value);
-        } catch (Exception ignored) {
-        }
-    }
-
-    public void writeShortLenAndUtf8String(String value) {
-        byte[] raw = StringUtils.stringToByteArrayUtf8(value);
-        writeByte(raw.length);
-        try {
-            stream.write(raw, 0, raw.length);
-        } catch (Exception ignored) {
-        }
-    }
-    public void writeLenAndUtf8String(String value) {
-        byte[] raw = StringUtils.stringToByteArrayUtf8(value);
-        writeWordBE(raw.length);
-        try {
-            stream.write(raw, 0, raw.length);
-        } catch (Exception ignored) {
-        }
-    }
-    public void writeUtf8String(String value) {
-        byte[] raw = StringUtils.stringToByteArrayUtf8(value);
-        try {
-            stream.write(raw, 0, raw.length);
-        } catch (Exception ignored) {
-        }
-    }
-    public void writeProfileAsciizTLV(int type, String value) {
-        value = StringUtils.notNull(value);
-
-        byte[] raw = StringUtils.stringToByteArray1251(value);
-        writeWordLE(type);
-        writeWordLE(raw.length + 3);
-        writeWordLE(raw.length + 1);
-        writeByteArray(raw);
-        writeByte(0);
-    }
-    public void writeTlvECombo(int type, String value, int code) {
-        value = StringUtils.notNull(value);
-        writeWordLE(type);
-        byte[] raw = StringUtils.stringToByteArray(value);
-        writeWordLE(raw.length + 4);
-        writeWordLE(raw.length + 1);
-        try {
-            stream.write(raw, 0, raw.length);
-            stream.write(0);
-            stream.write(code);
-        } catch (Exception ignored) {
-        }
-    }
-    public void writeTLV(int type, byte[] data) {
-        writeWordBE(type);
-        int length = (null == data) ? 0 : data.length;
-        writeWordBE(length);
-        if (length > 0) {
-            try {
-                stream.write(data, 0, data.length);
-            } catch (Exception ignored) {
-            }
-        }
-    }
-    public void writeTLVWord(int type, int wordValue) {
-        writeWordBE(type);
-        writeWordBE(2);
-        writeWordBE(wordValue);
-    }
-    public void writeTLVDWord(int type, long wordValue) {
-        writeWordBE(type);
-        writeWordBE(4);
-        writeDWordBE(wordValue);
-    }
-    public void writeTLVByte(int type, int wordValue) {
-        writeWordBE(type);
-        writeWordBE(1);
-        writeByte(wordValue);
-    }
-
     // Password encryption key
     private static final byte[] PASSENC_KEY = {(byte)0xF3, (byte)0x26, (byte)0x81, (byte)0xC4,
                                               (byte)0x39, (byte)0x86, (byte)0xDB, (byte)0x92,
@@ -582,11 +429,10 @@ public class Util {
         if (URL_CHAR_DIGIT == mode) return Character.isDigit(chr);
         if (URL_CHAR_NONE == mode) return (' ' == chr) || ('\n' == chr);
 
-        if ((chr <= ' ') || (chr == '\n')) return false;
-        return true;
+        return !((chr <= ' ') || (chr == '\n'));
     }
 
-    private static void putUrl(Vector urls, String url) {
+    private static void putUrl(Vector<String> urls, String url) {
         final String skip = "?!;:,.";
         final String openDelemiters = "{[(«";
         final String delemiters = "}])»";
@@ -659,7 +505,7 @@ public class Util {
             urls.addElement(url);
         }
     }
-    private static void parseForUrl(Vector result, String msg, char ch, int before, int after, int limit) {
+    private static void parseForUrl(Vector<String> result, String msg, char ch, int before, int after, int limit) {
         if (limit <= result.size()) {
             return;
         }
@@ -724,7 +570,7 @@ public class Util {
     }
     public static boolean hasURL(String msg) {
         if (null == msg) return false;
-        Vector result = new Vector();
+        Vector<String> result = new Vector<String>();
         parseForUrl(result, msg, '.', URL_CHAR_PREV, URL_CHAR_OTHER, 1);
         parseForUrl(result, msg, ':', URL_CHAR_PROTOCOL, URL_CHAR_OTHER, 1);
         parseForUrl(result, msg, '+', URL_CHAR_NONE, URL_CHAR_DIGIT, 1);
@@ -735,7 +581,7 @@ public class Util {
         if (null == msg) return null;
         // we are parsing 100 links only
         final int MAX_LINK_COUNT = 100;
-        Vector result = new Vector();
+        Vector<String> result = new Vector<String>();
         parseForUrl(result, msg, '.', URL_CHAR_PREV, URL_CHAR_OTHER, MAX_LINK_COUNT);
         parseForUrl(result, msg, ':', URL_CHAR_PROTOCOL, URL_CHAR_OTHER, MAX_LINK_COUNT);
         parseForUrl(result, msg, '+', URL_CHAR_NONE, URL_CHAR_DIGIT, MAX_LINK_COUNT);
@@ -807,7 +653,7 @@ public class Util {
         if (StringUtils.isEmpty(text)) {
             return new String[0];
         }
-        Vector tmp = new Vector();
+        Vector<String> tmp = new Vector<String>();
         int start = 0;
         int end = text.indexOf(separator, start);
         while (end >= start) {
@@ -822,12 +668,12 @@ public class Util {
     }
     static public String implode(String[] text, String separator) {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < text.length; ++i) {
-            if (null != text[i]) {
+        for (String item : text) {
+            if (null != item) {
                 if (0 != result.length()) {
                     result.append(separator);
                 }
-                result.append(text[i]);
+                result.append(item);
             }
         }
         return result.toString();
@@ -858,7 +704,7 @@ public class Util {
 
     public static byte[] base64decode(String str) {
         if (null == str) str = "";
-        Util out = new Util();
+        OutStream out = new OutStream();
         for (int strIndex = 0; strIndex < str.length(); ++strIndex) {
     	    strIndex = base64GetNextIndex(str, strIndex);
             if (-1 == strIndex) break;

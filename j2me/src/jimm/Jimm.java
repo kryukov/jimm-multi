@@ -79,7 +79,7 @@ public class Jimm {
             url = "http://jimm.net.ru/go.xhtml?act=update&lang="
                     + JLocale.getCurrUiLanguage()
                     + "&protocols=###PROTOCOLS###&cdata="
-                    + Config.loadResource("build.dat");
+                    + Tokenizer.loadResource("build.dat");
         }
         JimmMidlet.getMidlet().platformRequest(url.trim());
     }

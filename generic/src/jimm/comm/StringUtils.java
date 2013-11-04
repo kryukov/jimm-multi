@@ -607,15 +607,12 @@ public final class StringUtils {
 
     public static void load() {
         Vector<Config> configs = new Vector<Config>();
-        String content = Config.loadResource("/replaces.txt");
-        Config.parseIniConfig(content, configs);
+        Config.parseIniConfig("/replaces.txt", configs);
         // #sijapp cond.if protocols_MRIM is "true" or protocols_JABBER is "true" #
-        String mrimContent = Config.loadResource("/mrim-replaces.txt");
-        Config.parseIniConfig(mrimContent, configs);
+        Config.parseIniConfig("/mrim-replaces.txt", configs);
         // #sijapp cond.end #
         // #sijapp cond.if protocols_JABBER is "true" #
-        String jabberContent = Config.loadResource("/jabber-replaces.txt");
-        Config.parseIniConfig(jabberContent, configs);
+        Config.parseIniConfig("/jabber-replaces.txt", configs);
         // #sijapp cond.end #
         StringUtils.converters = new StringUtils[configs.size()];
         for (int i = 0; i < configs.size(); ++i) {

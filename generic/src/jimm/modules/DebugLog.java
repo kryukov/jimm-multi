@@ -137,7 +137,10 @@ public final class DebugLog implements SelectListener {
     }
     public static void println(String text) {
         System.out.println(text);
-        instance.print(text);
+        try {
+            instance.print(text);
+        } catch (Exception ignored) {
+        }
     }
 
     public static void panic(String str) {

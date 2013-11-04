@@ -52,10 +52,9 @@ public class Scheme {
     public static void load() {
         setColorScheme(baseTheme);
 
-        Vector themes = new Vector();
+        Vector<Config> themes = new Vector<Config>();
         try {
-            String content = Config.loadResource("/themes.txt");
-            Config.parseIniConfig(content, themes);
+            Config.parseIniConfig("/themes.txt", themes);
         } catch (Exception ignored) {
         }
         themeNames  = new String[themes.size() + 1];

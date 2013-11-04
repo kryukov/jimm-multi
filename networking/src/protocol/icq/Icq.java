@@ -594,7 +594,7 @@ public class Icq extends Protocol {
                     stream.writeWordLE(month);
                     stream.writeWordLE(day);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
 

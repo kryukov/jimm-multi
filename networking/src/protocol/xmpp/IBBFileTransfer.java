@@ -13,6 +13,7 @@ package protocol.xmpp;
 // #sijapp cond.if modules_FILES is "true"#
 import jimm.*;
 import jimm.comm.*;
+import protocol.net.TcpSocket;
 
 
 /**
@@ -67,7 +68,7 @@ public class IBBFileTransfer {
         }
         try {
             byte[] data = new byte[size];
-            ft.getFileIS().read(data);
+            TcpSocket.readFully(ft.getFileIS(), data, 0, data.length);
             return data;
         } catch (Exception ex) {
             return null;

@@ -33,7 +33,7 @@ public class HomeDirectory {
             try {
                 stream = fs.openInputStream();
                 byte[] str = new byte[stream.available()];
-                stream.read(str);
+                TcpSocket.readFully(stream, str, 0, str.length);
                 result = StringUtils.utf8beByteArrayToString(str, 0, str.length);
             } catch (Exception ignored) {
             }
@@ -51,10 +51,7 @@ public class HomeDirectory {
             stream.write(StringUtils.stringToByteArrayUtf8(content));
         } catch (Exception ignored) {
         }
-        try {
-            stream.close();
-        } catch (Exception ignored) {
-        }
+        TcpSocket.close(stream);
         fs.close();
     }
     public static boolean exist(String file) {

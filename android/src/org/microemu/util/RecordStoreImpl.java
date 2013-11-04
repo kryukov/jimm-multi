@@ -42,6 +42,7 @@ import javax.microedition.rms.RecordStoreFullException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
 import org.microemu.RecordStoreManager;
+import protocol.net.TcpSocket;
 
 
 public class RecordStoreImpl extends RecordStore
@@ -56,7 +57,7 @@ public class RecordStoreImpl extends RecordStore
 	
 	private int size = 0;
 	
-	private Hashtable records = new Hashtable();
+	private Hashtable<Integer, byte[]> records = new Hashtable<Integer, byte[]>();
 	
 	private String recordStoreName;
 
@@ -68,7 +69,7 @@ public class RecordStoreImpl extends RecordStore
 
 	private transient RecordStoreManager recordStoreManager;
 
-	private transient Vector recordListeners = new Vector();
+	private transient Vector<RecordListener> recordListeners = new Vector<RecordListener>();
 
 
 	public RecordStoreImpl(RecordStoreManager recordStoreManager, String recordStoreName) 
@@ -122,7 +123,7 @@ public class RecordStoreImpl extends RecordStore
 		}
 		dis.readInt(); // TODO Tag
 		byte[] data = new byte[dis.readInt()];
-		dis.read(data, 0, data.length);
+        TcpSocket.readFully(dis, data, 0, data.length);
 		this.records.put(new Integer(recordId), data);
 	}
 	

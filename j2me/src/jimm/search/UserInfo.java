@@ -408,12 +408,7 @@ public class UserInfo implements
             int size = (int)file.fileSize();
             if (size <= 30*1024*1024) {
                 byte[] binAvatar = new byte[size];
-                int readed = 0;
-                while (readed < binAvatar.length) {
-                    int read = fis.read(binAvatar, readed, binAvatar.length - readed);
-                    if (-1 == read) break;
-                    readed += read;
-                }
+                TcpSocket.readFully(fis, binAvatar, 0, binAvatar.length);
                 setBinAvatar(binAvatar);
                 binAvatar = null;
             }

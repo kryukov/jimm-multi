@@ -10,6 +10,7 @@ import jimm.FileTransfer;
 import jimm.history.HistoryStorage;
 import jimm.modules.photo.PhotoListener;
 import org.microemu.android.util.ActivityResultListener;
+import protocol.net.TcpSocket;
 import ru.net.jimm.photo.CameraActivity;
 
 import java.io.File;
@@ -106,7 +107,7 @@ public class ExternalApi implements ActivityResultListener {
                 jimm.modules.DebugLog.println("pickFile " + uriImage);
                 InputStream in = activity.getContentResolver().openInputStream(uriImage);
                 byte[] img = new byte[in.available()];
-                in.read(img);
+                TcpSocket.readFully(in, img, 0, img.length);
                 photoListener.processPhoto(img);
 
                 imageUrl = null;

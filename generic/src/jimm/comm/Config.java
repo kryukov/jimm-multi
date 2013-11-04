@@ -12,6 +12,7 @@ package jimm.comm;
 import java.io.InputStream;
 import java.util.Vector;
 import jimm.util.JLocale;
+import protocol.net.TcpSocket;
 
 /**
  *
@@ -28,14 +29,11 @@ public final class Config {
         try {
             stream = jimm.Jimm.getResourceAsStream(path);
             byte[] str = new byte[stream.available()];
-            stream.read(str);
+            TcpSocket.readFully(stream, str,0, str.length);
             res = StringUtils.utf8beByteArrayToString(str, 0, str.length);
         } catch (Exception ignored) {
         }
-        try {
-            if (null != stream) stream.close();
-        } catch (Exception ignored) {
-        }
+        TcpSocket.close(stream);
         return res;
     }
     private String loadLocateResource(String path) {
@@ -105,8 +103,8 @@ public final class Config {
         final int PARSER_TO      = 4;
         final int PARSER_COMMENT = 5;
 
-        Vector _keys = new Vector();
-        Vector _values = new Vector();
+        Vector<String> _keys = new Vector<String>();
+        Vector<String> _values = new Vector<String>();
 
         int state = PARSER_LINE;
         int beginPos = index;
@@ -223,9 +221,9 @@ public final class Config {
         String currentKey = null;
         
         String content = loadResource(path);
-        final int contentLenght = content.length();
-        for (int i = 0; i <= contentLenght; ++i) {
-            char ch = (i < contentLenght) ? content.charAt(i) : '\n';
+        final int contentLength = content.length();
+        for (int i = 0; i <= contentLength; ++i) {
+            char ch = (i < contentLength) ? content.charAt(i) : '\n';
             switch (state) {
                 case PARSER_LINE:
                     if (';' == ch) {

@@ -39,7 +39,7 @@ public abstract class FileSystem {
             fs.openFile(getJimmHome() + RES + "/" + file);
             InputStream in = fs.openInputStream();
             buffer = new byte[in.available()];
-            in.read(buffer);
+            TcpSocket.readFully(in, buffer, 0, buffer.length);
             TcpSocket.close(in);
         } catch (Exception e) {
             buffer = null;

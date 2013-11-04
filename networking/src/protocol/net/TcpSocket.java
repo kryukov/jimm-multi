@@ -167,6 +167,20 @@ public final class TcpSocket {
         }
     }
 
+    public void startTls(String host) {
+        // #sijapp cond.if modules_ANDROID is "true" #
+        try {
+            jimm.modules.DebugLog.println("startTls start " + sc + os + is);
+            ((org.microemu.cldc.socket.SocketConnection)sc).startTls(host);
+            is = sc.openInputStream();
+            os = sc.openOutputStream();
+            jimm.modules.DebugLog.println("startTls done " + sc + os + is);
+        } catch (Exception e) {
+            jimm.modules.DebugLog.panic("startTls error", e);
+        }
+        // #sijapp cond.end #
+    }
+
     public void close() {
         close(is);
         close(os);
@@ -191,17 +205,23 @@ public final class TcpSocket {
         }
     }
 
-    public void startTls(String host) {
-        // #sijapp cond.if modules_ANDROID is "true" #
-        try {
-            jimm.modules.DebugLog.println("startTls start " + sc + os + is);
-            ((org.microemu.cldc.socket.SocketConnection)sc).startTls(host);
-            is = sc.openInputStream();
-            os = sc.openOutputStream();
-            jimm.modules.DebugLog.println("startTls done " + sc + os + is);
-        } catch (Exception e) {
-            jimm.modules.DebugLog.panic("startTls error", e);
+    public static int readFully(InputStream in, byte[] data, final int offset, final int length) throws IOException {
+        if ((null == data) || (0 == data.length)) {
+            return 0;
         }
-        // #sijapp cond.end #
+        int bReadSum = 0;
+        do {
+            int bRead = in.read(data, offset + bReadSum, length - bReadSum);
+            if (-1 == bRead) {
+                throw new IOException("EOF");
+            } else if (0 == bRead) {
+                try {
+                    Thread.sleep(100);
+                } catch (Exception ignored) {
+                }
+            }
+            bReadSum += bRead;
+        } while (bReadSum < length);
+        return bReadSum;
     }
 }

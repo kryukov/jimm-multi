@@ -53,7 +53,7 @@ public class GetVersion implements Runnable {
             int length = (int) httemp.getLength();
             if (-1 != length) {
                 byte[] bytes = new byte[length];
-                istemp.read(bytes);
+                TcpSocket.readFully(istemp, bytes, 0, bytes.length);
                 content = new String(bytes);
 
             } else {
@@ -201,10 +201,9 @@ public class GetVersion implements Runnable {
     private void exec() {
         if (TYPE_SHADOW == type) {
             shadowConnection();
-            return;
-        }
+
         // #sijapp cond.if (protocols_MRIM is "true") or (protocols_ICQ is "true") #
-        if (TYPE_AVATAR == type) {
+        } else if (TYPE_AVATAR == type) {
             try {
                 userInfo.setAvatar(getAvatar());
                 if (null != userInfo.avatar) {
@@ -213,12 +212,10 @@ public class GetVersion implements Runnable {
             } catch (OutOfMemoryError e) {
                 userInfo.setAvatar(null);
             }
-            return;
-        }
+
         // #sijapp cond.end#
-        if (TYPE_URL == type) {
+        } else if (TYPE_URL == type) {
             getContent(url);
-            return;
         }
     }
 

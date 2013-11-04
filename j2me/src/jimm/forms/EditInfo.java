@@ -143,9 +143,9 @@ public class EditInfo implements FormListener {
             destroy();
 
         } else {
-            boolean isJabber = false;
+            boolean isXmpp = false;
             // #sijapp cond.if protocols_JABBER is "true"#
-            isJabber = (protocol instanceof Xmpp);
+            isXmpp = (protocol instanceof Xmpp);
             // #sijapp cond.end#
             // #sijapp cond.if protocols_OBIMP is "true"#
             final boolean isObimp = (protocol instanceof protocol.obimp.Obimp);
@@ -157,7 +157,7 @@ public class EditInfo implements FormListener {
             userInfo.birthDay = form.getTextFieldValue(_BdayItem);
             // #sijapp cond.end#
             // #sijapp cond.if protocols_JABBER is "true"#
-            if (isJabber) {
+            if (isXmpp) {
                 userInfo.email = form.getTextFieldValue(_EmailItem);
                 userInfo.cellPhone = form.getTextFieldValue(_CellPhoneItem);
             }
@@ -170,13 +170,13 @@ public class EditInfo implements FormListener {
             // #sijapp cond.end#
             userInfo.firstName = form.getTextFieldValue(_FirstNameItem);
             userInfo.lastName = form.getTextFieldValue(_LastNameItem);
-            if (!isJabber) {
+            if (!isXmpp) {
                 userInfo.gender = (byte) form.getSelectorValue(_SexItem);
             }
             userInfo.homePage = form.getTextFieldValue(_HomePageItem);
 
             // #sijapp cond.if protocols_JABBER is "true"#
-            if (isJabber) {
+            if (isXmpp) {
                 userInfo.homeAddress = form.getTextFieldValue(_AddrItem);
             }
             // #sijapp cond.end#
@@ -192,7 +192,7 @@ public class EditInfo implements FormListener {
             userInfo.workDepartment = form.getTextFieldValue(_WorkDepartmentItem);
             userInfo.workPosition = form.getTextFieldValue(_WorkPositionItem);
             // #sijapp cond.if protocols_JABBER is "true"#
-            if (isJabber) {
+            if (isXmpp) {
                 userInfo.workPhone = form.getTextFieldValue(_WorkPhoneItem);
                 userInfo.about = form.getTextFieldValue(_AboutItem);
             }

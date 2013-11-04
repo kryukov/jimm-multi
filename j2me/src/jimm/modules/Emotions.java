@@ -184,15 +184,14 @@ public final class Emotions {
         }
     }
     private ImageList loadIcons(int iconsSize) throws IOException {
-        ImageList emoImages = null;
         // #sijapp cond.if modules_ANISMILES is "true" #
-        emoImages = new AniImageList();
-        emoImages.load("/smiles", iconsSize, iconsSize);
-        if (0 < emoImages.size()) {
-            return emoImages;
+        ImageList aniEmoImages = new AniImageList();
+        aniEmoImages.load("/smiles", iconsSize, iconsSize);
+        if (0 < aniEmoImages.size()) {
+            return aniEmoImages;
         }
         // #sijapp cond.end #
-        emoImages = new ImageList();
+        ImageList emoImages = new ImageList();
         emoImages.load("/smiles.png", iconsSize, iconsSize);
         return emoImages;
     }
@@ -224,7 +223,7 @@ public final class Emotions {
             int iconsSize = readIntFromStream(dos);
             emoImages = loadIcons(iconsSize);
             byte[] str = new byte[dos.available()];
-            TcpSocket.readFully(dos,str,0,str.length);
+            TcpSocket.readFully(dos, str, 0, str.length);
             String content = StringUtils.utf8beByteArrayToString(str, 0, str.length);
             smileParser(content, textCorr, selEmotions);
             TcpSocket.close(dos);

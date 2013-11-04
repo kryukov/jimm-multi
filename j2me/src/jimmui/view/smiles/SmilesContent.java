@@ -75,7 +75,6 @@ public class SmilesContent extends SomeContent {
         boolean isSelected = (getCurrentRow() == index);
         for (int i = 0; i < cols; ++i, ++startIdx) {
             if (startIdx >= names.length) break;
-            int smileIdx = startIdx;
 
             xb = xa + itemHeight;
 
@@ -85,12 +84,12 @@ public class SmilesContent extends SomeContent {
                 g.getGraphics().fillRoundRect(xa, y1, itemHeight - 1, h - 1, 4, 4);
             }
 
-            if (smileIdx < imagesCount) {
+            if (startIdx < imagesCount) {
                 int centerX = xa + itemHeight / 2;
                 int centerY = y1 + h / 2;
                 try {
-                    g.drawInCenter(icons.iconAt(smileIdx), centerX, centerY);
-                } catch (Exception e) {
+                    g.drawInCenter(icons.iconAt(startIdx), centerX, centerY);
+                } catch (Exception ignored) {
                 }
             }
 
@@ -141,16 +140,14 @@ public class SmilesContent extends SomeContent {
         switch (keyCode) {
             case NativeCanvas.JIMM_SELECT:
                 select();
-                return;
+                break;
 
             case NativeCanvas.JIMM_BACK:
                 view.back();
-                return;
+                break;
         }
     }
-    protected boolean hasMenu() {
-        return false;
-    }
+
     protected boolean doKeyReaction(int keyCode, int actionCode, int type) {
         if (CanvasEx.KEY_RELEASED == type) {
             return true;

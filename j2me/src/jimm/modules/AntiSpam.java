@@ -23,34 +23,34 @@ import protocol.*;
 public class AntiSpam {
     private static AntiSpam antiSpam = new AntiSpam();
 
-    private Vector validUins = new Vector();
-    private Vector uncheckedUins = new Vector();
+    private Vector<String> validUserIds = new Vector<String>();
+    private Vector<String> uncheckedUserIds = new Vector<String>();
     private AntiSpam() {
     }
     
     private void sendHelloMessage(Protocol protocol, Contact contact) {
-        validUins.addElement(contact.getUserId());
-        uncheckedUins.removeElement(contact.getUserId());
+        validUserIds.addElement(contact.getUserId());
+        uncheckedUserIds.removeElement(contact.getUserId());
         if (protocol.isMeVisible(contact)) {
             protocol.sendMessage(contact, Options.getString(Options.OPTION_ANTISPAM_HELLO), false);
         }
     }
 
     private void sendQuestion(Protocol protocol, Contact contact) {
-        if (uncheckedUins.contains(contact.getUserId())) {
-            uncheckedUins.removeElement(contact.getUserId());
+        if (uncheckedUserIds.contains(contact.getUserId())) {
+            uncheckedUserIds.removeElement(contact.getUserId());
             return;
         }
         String message = Options.getString(Options.OPTION_ANTISPAM_MSG);
         if (protocol.isMeVisible(contact) && !StringUtils.isEmpty(message)) {
             protocol.sendMessage(contact, "I don't like spam!\n" + message, false);
-            uncheckedUins.addElement(contact.getUserId());
+            uncheckedUserIds.addElement(contact.getUserId());
         }
     }
 
     private boolean isChecked(String uin) {
-        if (validUins.contains(uin)) {
-            validUins.removeElement(uin);
+        if (validUserIds.contains(uin)) {
+            validUserIds.removeElement(uin);
             return true;
         }
         return false;
@@ -66,13 +66,13 @@ public class AntiSpam {
     private boolean containsKeywords(String msg) {
         String opt = Options.getString(Options.OPTION_ANTISPAM_KEYWORDS);
         if (0 == opt.length()) return false;
-        if (5000 < msg.length()) {
+        if (1000 < msg.length()) {
             return true;
         }
         String[] keywords = Util.explode(StringUtils.toLowerCase(opt), ' ');
         msg = StringUtils.toLowerCase(msg);
-        for (int i = 0; i < keywords.length; ++i) {
-            if (-1 != msg.indexOf(keywords[i])) {
+        for (String keyword : keywords) {
+            if (-1< msg.indexOf(keyword)) {
                 return true;
             }
         }
@@ -102,9 +102,9 @@ public class AntiSpam {
         }
         Contact contact = protocol.createTempContact(uin);
 
-        String[] msgs = Util.explode(Options.getString(Options.OPTION_ANTISPAM_ANSWER), '\n');
-        for (int i = 0; i < msgs.length; ++i) {
-            if (StringUtils.stringEquals(msg, msgs[i])) {
+        String[] answers = Util.explode(Options.getString(Options.OPTION_ANTISPAM_ANSWER), '\n');
+        for (String answer : answers) {
+            if (StringUtils.stringEquals(msg, answer)) {
                 sendHelloMessage(protocol, contact);
                 return true;
             }

@@ -35,8 +35,8 @@ public final class Parser {
     private Par par;
     private short maxWidth;
     private int minHeight = 0;
-    private Vector objects = new Vector();
-    private Vector items = new Vector();
+    private Vector<Object> objects = new Vector<Object>();
+    private Vector<short[]> items = new Vector<short[]>();
     private int lineWidth = 0;
     private Font[] fontSet;
 
@@ -321,7 +321,6 @@ public final class Parser {
                     lineStart = wordStart;
                     width = fullWidth - wordWidth;
                     curLineWidth = wordWidth;
-                    continue;
 
                 } else if (wordWidth < fullWidth) {
                     if (0 < getLastLineWidth()) {
@@ -329,7 +328,6 @@ public final class Parser {
                     }
                     width = fullWidth - wordWidth;
                     curLineWidth = wordWidth;
-                    continue;
 
                 } else {
                     addText(textIndex, lineStart, i, colorType, fontStyle, curLineWidth);
@@ -339,7 +337,6 @@ public final class Parser {
                     wordStart = i;
                     wordWidth = charWidth;
                     curLineWidth = charWidth;
-                    continue;
                 }
             }
         }

@@ -25,8 +25,8 @@ final class Socket {
     private int inputBufferLength = 0;
     public int inputBufferIndex = 0;
     // #sijapp cond.if modules_ZLIB is "true" #
-    private ZInputStream zin;
-    private ZOutputStream zout;
+    private ZInputStream zIn;
+    private ZOutputStream zOut;
     private boolean compressed;
     private boolean secured;
     // #sijapp cond.end #
@@ -38,9 +38,9 @@ final class Socket {
     }
     // #sijapp cond.if modules_ZLIB is "true" #
     public void activateStreamCompression() {
-        zin = new ZInputStream(socket);
-        zout = new ZOutputStream(socket, JZlib.Z_DEFAULT_COMPRESSION);
-        zout.setFlushMode(JZlib.Z_SYNC_FLUSH);
+        zIn = new ZInputStream(socket);
+        zOut = new ZOutputStream(socket, JZlib.Z_DEFAULT_COMPRESSION);
+        zOut.setFlushMode(JZlib.Z_SYNC_FLUSH);
         compressed = true;
         // #sijapp cond.if modules_DEBUGLOG is "true" #
         DebugLog.println("zlib is working");
@@ -66,7 +66,7 @@ final class Socket {
     private int read(byte[] data) throws JimmException {
         // #sijapp cond.if modules_ZLIB is "true" #
         if (compressed) {
-            int bRead = zin.read(data);
+            int bRead = zIn.read(data);
             if (-1 == bRead) {
                 throw new JimmException(120, 13);
             }
@@ -83,8 +83,8 @@ final class Socket {
     public void write(byte[] data) throws JimmException {
         // #sijapp cond.if modules_ZLIB is "true" #
         if (compressed) {
-            zout.write(data);
-            zout.flush();
+            zOut.write(data);
+            zOut.flush();
             return;
         }
         // #sijapp cond.end #
@@ -95,8 +95,8 @@ final class Socket {
         connected = false;
         // #sijapp cond.if modules_ZLIB is "true" #
         try {
-            zin.close();
-            zout.close();
+            zIn.close();
+            zOut.close();
         } catch (Exception ignored) {
         }
         // #sijapp cond.end #

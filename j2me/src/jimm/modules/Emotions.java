@@ -44,7 +44,6 @@ public final class Emotions {
     private String smileChars;
     private int[] textCorrIndexes;
     private String[] textCorrWords;
-//    private Glyphs[] smileListItems;
 
     private Emotions() {}
     public static final Emotions instance = new Emotions();
@@ -251,16 +250,15 @@ public final class Emotions {
         size = textCorr.size();
         textCorrWords   = new String[size];
         textCorrIndexes = new int[size];
-//        smileListItems = new Glyphs[size];
-        StringBuilder fisrtChars = new StringBuilder(textCorr.size());
+        StringBuilder firstChars = new StringBuilder(textCorr.size());
         for (int i = 0; i < size; ++i) {
             Object[] data = (Object[])textCorr.elementAt(i);
             textCorrWords[i]   = (String)data[0];
             textCorrIndexes[i] = ((Integer)data[1]).intValue();
 
-            fisrtChars.append(textCorrWords[i].charAt(0));
+            firstChars.append(textCorrWords[i].charAt(0));
         }
-        this.smileChars = fisrtChars.toString();
+        this.smileChars = firstChars.toString();
 
         // #sijapp cond.if modules_DEBUGLOG is "true"#
         DebugLog.println("Emotions used (full): "+(mem - Runtime.getRuntime().freeMemory()));

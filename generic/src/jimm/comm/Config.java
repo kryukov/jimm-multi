@@ -68,6 +68,25 @@ public final class Config {
         return null;
     }
 
+    public static String getConfigValue(String key, String path) {
+        if (StringUtils.isEmpty(key)) {
+            return null;
+        }
+        Tokenizer t = new Tokenizer(path, false);
+        char ch = t.nextChat();
+        while (!t.isNotEof()) {
+            if (';' == ch) {
+                skipLine(t, ch);
+            } else {
+                if (key.equals(readKey(t, ch, '='))) {
+                    return readKey(t, ch, '\n');
+                }
+                skipLine(t, t.nextChat());
+            }
+            ch = t.nextChat();
+        }
+        return null;
+    }
 
     public static Vector<Config> parseIni(Tokenizer t, Vector<Config> configs) {
         char ch = t.nextChat();

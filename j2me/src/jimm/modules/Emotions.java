@@ -225,7 +225,7 @@ public final class Emotions {
             int iconsSize = readIntFromStream(dos);
             emoImages = loadIcons(iconsSize);
             byte[] str = new byte[dos.available()];
-            dos.read(str);
+            TcpSocket.readFully(dos,str,0,str.length);
             String content = StringUtils.utf8beByteArrayToString(str, 0, str.length);
             smileParser(content, textCorr, selEmotions);
             TcpSocket.close(dos);

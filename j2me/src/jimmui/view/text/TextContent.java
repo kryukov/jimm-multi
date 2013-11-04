@@ -1,6 +1,5 @@
 package jimmui.view.text;
 
-import jimm.Jimm;
 import jimmui.view.TextListExCommands;
 import jimmui.view.base.*;
 import jimmui.view.base.touch.*;
@@ -107,9 +106,9 @@ public class TextContent extends SomeContent {
         }
     }
 
-    protected void stylusXMoved(int fromX, int fromY, int toX, int toY) {
-        if (view.getWidth() / 2 < Math.abs(fromX - toX)) {
-            vlCommands.onContentMove(pars, (fromX > toX) ? -1 : +1);
+    protected void stylusXMoved(TouchState state) {
+        if (view.getWidth() / 2 < Math.abs(state.fromX - state.x)) {
+            vlCommands.onContentMove(pars, (state.fromX > state.x) ? -1 : +1);
         }
     }
     // #sijapp cond.end#

@@ -64,6 +64,9 @@ public class SomeContentList extends CanvasEx {
     protected final void touchItemTaped(int item, int x, TouchState state) {
         content.touchItemTaped(item, x, state);
     }
+    protected final void stylusXMoved(TouchState state) {
+        content.stylusXMoved(state);
+    }
     protected final boolean touchItemPressed(int item, int x, int y) {
         return content.touchItemPressed(item, x, y);
     }

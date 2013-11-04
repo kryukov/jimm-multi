@@ -55,6 +55,8 @@ public abstract class SomeContent {
     // #sijapp cond.if modules_TOUCH is "true"#
     protected void touchItemTaped(int item, int x, TouchState state) {
     }
+    protected void stylusXMoved(TouchState state) {
+    }
 
     protected boolean touchItemPressed(int item, int x, int y) {
         if (getCurrItem() != item) {

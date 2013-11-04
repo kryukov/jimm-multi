@@ -57,7 +57,7 @@ public final class ZInputStream {
         buffers.avail_in = 0;
     }
 
-    private boolean nomoreinput = false;
+    private boolean noMoreInput = false;
 
     public int read(byte[] b) throws JimmException {
         int off = 0;
@@ -71,7 +71,7 @@ public final class ZInputStream {
         buffer.next_out_index = off;
         buffer.avail_out = len;
         do {
-            if ((0 == buffer.avail_in) && !nomoreinput) {
+            if ((0 == buffer.avail_in) && !noMoreInput) {
                 // if buffer is empty and more input is avaiable, refill it
                 buffer.next_in_index = 0;
 
@@ -89,7 +89,7 @@ public final class ZInputStream {
 
                 if (-1 == buffer.avail_in) {
                     buffer.avail_in = 0;
-                    nomoreinput = true;
+                    noMoreInput = true;
                 }
             }
             try {
@@ -100,12 +100,12 @@ public final class ZInputStream {
             err = inflate.getErrCode();
 
             if (JZlib.Z_BUF_ERROR == err) {
-                if (nomoreinput) {
+                if (noMoreInput) {
                     return -1;
                 }
                 throw new JimmException(120, 8);
             }
-            if ((nomoreinput || JZlib.Z_STREAM_END == err) && (buffer.avail_out == len)) {
+            if ((noMoreInput || JZlib.Z_STREAM_END == err) && (buffer.avail_out == len)) {
                 return -1;
             }
         } while (buffer.avail_out == len && JZlib.Z_OK == err);

@@ -60,15 +60,15 @@ public class TextListController implements SelectListener {
                 if ((-1 != defaultCode) && (null != m)) {
                     m.exec(null, defaultCode);
                 }
-                return;
+                break;
 
             case NativeCanvas.JIMM_BACK:
                 list.back();
-                return;
+                break;
 
             case NativeCanvas.JIMM_MENU:
                 list.showMenu(getMenu());
-                return;
+                break;
         }
     }
     public final void select(Select select, MenuModel menu, int action) {

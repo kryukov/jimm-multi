@@ -174,8 +174,8 @@ public final class ManageContactListForm implements SelectListener, FormListener
     }
 
     private Vector getGroups(byte mode) {
-        Vector all = protocol.getGroupItems();
-        Vector groups = new Vector();
+        Vector<Group> all = protocol.getGroupItems();
+        Vector<Group> groups = new Vector<Group>();
         for (int i = 0; i < all.size(); ++i) {
             Group g = (Group)all.elementAt(i);
             if (g.hasMode(mode)) {

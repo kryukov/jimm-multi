@@ -40,7 +40,7 @@ public final class MagicEye implements SelectListener {
     private static final MagicEye instance = new MagicEye();
     private TextListModel model = new TextListModel();
     private TextList list = new TextList(JLocale.getString("magic eye"));
-    private Vector<String> uins = new Vector<String>();
+    private Vector<String> userIds = new Vector<String>();
     private Vector<Protocol> protocols = new Vector<Protocol>();
 
     private MagicEye() {
@@ -63,7 +63,7 @@ public final class MagicEye implements SelectListener {
 
     private synchronized void registerAction(Protocol protocol, String userId,
             String action, String msg) {
-        uins.addElement(userId);
+        userIds.addElement(userId);
         protocols.addElement(protocol);
 
         String date = Util.getLocalDateString(Jimm.getCurrentGmtTime(), true);
@@ -95,7 +95,7 @@ public final class MagicEye implements SelectListener {
         final int maxRecordCount = 50;
         while (maxRecordCount < model.getSize()) {
             protocols.removeElementAt(0);
-            uins.removeElementAt(0);
+            userIds.removeElementAt(0);
             list.getTextContent().removeFirstText();
         }
     }
@@ -123,7 +123,7 @@ public final class MagicEye implements SelectListener {
 
             case MENU_CLEAN:
                 synchronized (this) {
-                    uins.removeAllElements();
+                    userIds.removeAllElements();
                     protocols.removeAllElements();
                     model.clear();
                     list.updateModel();
@@ -134,7 +134,7 @@ public final class MagicEye implements SelectListener {
             case MENU_USER_MENU:
                 try {
                     int item = list.getTextContent().getCurrItem();
-                    String userId = (String)uins.elementAt(item);
+                    String userId = (String) userIds.elementAt(item);
                     Protocol protocol = (Protocol)protocols.elementAt(item);
                     list.showMenu(Jimm.getJimm().getCL().getContextMenu(protocol,
                             protocol.createTempContact(userId)));

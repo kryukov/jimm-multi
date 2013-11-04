@@ -22,6 +22,11 @@ public final class Config {
     private String name;
     private String[] keys;
     private String[] values;
+    public Config(String name, Vector<String> keys, Vector<String> values) {
+        this.name = name;
+        this.keys = vectorToArray(keys);
+        this.values = vectorToArray(values);
+    }
 
     public static String loadResource(String path) {
         String res = "";
@@ -43,7 +48,7 @@ public final class Config {
             index = path.length();
         }
         String localPath = path.substring(0, index)
-        + "." + lang + path.substring(index);
+                + "." + lang + path.substring(index);
         String config = Config.loadResource(localPath).trim();
         if (0 == config.length()) {
             return Config.loadResource(path).trim();
@@ -84,7 +89,6 @@ public final class Config {
 
             } else if (';' == ch) {
                 index = parseComment(content, index) - 1;
-                continue;
             }
         }
         for (; index <= content.length(); ++index) {

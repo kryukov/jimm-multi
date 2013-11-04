@@ -91,7 +91,7 @@ public class AniImageList extends ImageList {
                     height = Math.max(height, icon.getHeight());
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         if (size() > 0) {
             timer = new Timer();

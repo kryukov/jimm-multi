@@ -82,14 +82,6 @@ public final class Parser {
         return (short) (objects.size() - 1);
     }
 
-    private Icon getIcon(short index) {
-        return (Icon) objects.elementAt(index);
-    }
-
-    private String getText(short index) {
-        return (String) objects.elementAt(index);
-    }
-
     private int getGlyphHeight(short[] item) {
         if (Par.TEXT == item[0]) {
             return fontSet[item[4]].getHeight();
@@ -98,7 +90,7 @@ public final class Parser {
             return Emotions.instance.getSmileIcon(item[1]).getHeight();
         }
         if (Par.IMAGE == item[0]) {
-            return getIcon(item[1]).getHeight();
+            return ((Icon) objects.elementAt(item[1])).getHeight();
         }
         return fontSet[CanvasEx.FONT_STYLE_PLAIN].getHeight();
     }

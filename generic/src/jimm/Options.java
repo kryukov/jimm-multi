@@ -135,7 +135,7 @@ public class Options {
     //public static final int OPTION_CLASSIC_CHAT        = 143;   /* boolean */
     public static final int OPTION_COLOR_SCHEME        =  73;   /* int     */
     public static final int OPTION_FONT_SCHEME         = 107;   /* int     */
-    public static final int OPTION_STATUS_MESSAGE      =   7;   /* String  */
+//    public static final int OPTION_STATUS_MESSAGE      =   7;   /* String  */
     public static final int OPTION_KEYBOARD            = 109;   /* int     */
     public static final int OPTION_MIN_ITEM_SIZE       = 110;   /* int     */
 

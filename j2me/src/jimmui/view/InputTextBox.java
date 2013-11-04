@@ -58,7 +58,7 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         return Jimm.getJimm().phone.isPhone(jimm.PhoneInfo.PHONE_NOKIA) ? Command.SCREEN : Command.ITEM;
     }
     private TextBox createTextBox() {
-        TextBox box = null;
+        TextBox box;
         final int MAX_CHAR_PER_PAGE = Jimm.getJimm().phone.isPhone(PhoneInfo.PHONE_SE) ? 9000 : 3000;
         final int MIN_CHAR_PER_PAGE = 1000;
         try {
@@ -192,14 +192,14 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         boolean hasCaps = Options.getBoolean(Options.OPTION_TF_FLAGS);
 
         try {
-            if ((0 != (realMode & caps)) != hasCaps) {
+            if ((0 == (realMode & caps)) == hasCaps) {
                 int mode = inputType;
                 if (hasCaps) {
                     mode |= caps;
                 }
                 textBox.setConstraints(mode);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
     protected void closed() {
@@ -285,9 +285,6 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
         return Options.getBoolean(Options.OPTION_DETRANSLITERATE) ? "  " : " ";
     }
 
-    public boolean isCancelCommand(Command cmd) {
-        return cancelCommand == cmd;
-    }
     public String getRawString() {
         String text = StringUtils.notNull(textBox.getString());
         return StringUtils.removeCr(text);
@@ -335,9 +332,6 @@ public final class InputTextBox extends DisplayableEx implements CommandListener
                 textBox.setString(boxText);
             }
         }
-    }
-    private String getCaption() {
-        return caption;
     }
 
     private void setTextToBox(String text) {

@@ -10,6 +10,7 @@
 // #sijapp cond.if modules_SERVERLISTS is "true" #
 package jimm.forms;
 
+import jimmui.view.UIBuilder;
 import jimmui.view.icons.Icon;
 import jimmui.view.icons.ImageList;
 import jimm.*;
@@ -72,7 +73,7 @@ public final class PrivateStatusForm implements SelectListener {
         MenuModel menu = new MenuModel();
         addStatuses(menu);
         menu.setActionListener(this);
-        new Select(menu).show();
+        UIBuilder.createMenu(menu).show();
     }
 }
 // #sijapp cond.end #

@@ -14,6 +14,7 @@ import jimm.chat.message.PlainMessage;
 import jimm.forms.ManageContactListForm;
 import jimm.history.*;
 import jimmui.Clipboard;
+import jimmui.view.UIBuilder;
 import jimmui.view.menu.*;
 import protocol.Contact;
 import protocol.Protocol;
@@ -109,7 +110,7 @@ public class ContactMenu implements SelectListener {
                 contact.initManageContactMenu(protocol, manageContact);
                 manageContact.setActionListener(this);
                 if (0 < manageContact.count()) {
-                    new Select(manageContact).show();
+                    UIBuilder.createMenu(manageContact).show();
                 }
                 break;
 

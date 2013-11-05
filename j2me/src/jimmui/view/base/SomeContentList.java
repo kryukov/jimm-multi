@@ -1,9 +1,9 @@
 package jimmui.view.base;
 
 import jimm.Jimm;
+import jimmui.view.UIBuilder;
 import jimmui.view.base.touch.*;
 import jimmui.view.menu.MenuModel;
-import jimmui.view.menu.Select;
 
 /**
  * Created with IntelliJ IDEA.
@@ -165,7 +165,7 @@ public class SomeContentList extends CanvasEx {
 
     public final void showMenu(MenuModel m) {
         if ((null != m) && (0 < m.count())) {
-            new Select(m).show();
+            UIBuilder.createMenu(m).show();
         }
     }
 

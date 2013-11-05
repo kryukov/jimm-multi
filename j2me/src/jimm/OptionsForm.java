@@ -166,7 +166,7 @@ public class OptionsForm implements FormListener, ControlStateListener, SelectLi
     /* Activate options menu */
     public void show() {
         initOptionsList();
-        new Select(optionsMenu).show();
+        UIBuilder.createMenu(optionsMenu).show();
     }
 
     private void setChecked(String lngStr, int optValue) {

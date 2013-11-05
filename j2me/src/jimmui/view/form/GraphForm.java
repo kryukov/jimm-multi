@@ -449,7 +449,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
                 }
                 list.setDefaultItemCode(c.current);
                 list.setActionListener(this);
-                new Select(list).show();
+                UIBuilder.createMenu(list).show();
                 break;
 
             case CONTROL_LINK:

@@ -187,7 +187,7 @@ public final class ManageContactListForm implements SelectListener, FormListener
     }
 
     public void show() {
-        new Select(getMenu()).show();
+        UIBuilder.createMenu(getMenu()).show();
     }
 
     public void formAction(Form form, boolean apply) {

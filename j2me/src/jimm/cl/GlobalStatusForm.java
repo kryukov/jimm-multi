@@ -1,6 +1,7 @@
 package jimm.cl;
 
 import jimm.Jimm;
+import jimmui.view.UIBuilder;
 import jimmui.view.icons.Icon;
 import jimmui.view.menu.MenuModel;
 import jimmui.view.menu.Select;
@@ -34,7 +35,7 @@ public class GlobalStatusForm implements SelectListener {
         }
         menu.setDefaultItemCode(Jimm.getJimm().jimmModel.getGlobalStatus());
         menu.setActionListener(this);
-        new Select(menu).show();
+        UIBuilder.createMenu(menu).show();
     }
 
     public void select(Select select, MenuModel menu, int cmd) {

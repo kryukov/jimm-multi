@@ -11,6 +11,7 @@ package jimmui.view.menu;
 
 import jimm.Jimm;
 import jimmui.view.base.touch.*;
+import jimmui.view.form.Menu;
 import jimmui.view.icons.*;
 import javax.microedition.lcdui.*;
 import jimmui.view.base.*;
@@ -20,7 +21,7 @@ import java.util.Vector;
 /**
  * @author vladimir
  */
-public final class Select extends CanvasEx {
+public final class Select extends CanvasEx implements Menu {
     private static final int ICON_INTERVAL = 2;
     private static final int WIDTH_SPACE = 6;
 

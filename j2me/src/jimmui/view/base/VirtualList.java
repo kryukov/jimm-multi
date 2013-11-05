@@ -25,6 +25,7 @@ package jimmui.view.base;
 import javax.microedition.lcdui.*;
 
 import jimm.Jimm;
+import jimmui.view.UIBuilder;
 import jimmui.view.base.touch.*;
 import jimmui.view.menu.*;
 
@@ -357,7 +358,7 @@ public abstract class VirtualList extends CanvasEx {
     }
     public final void showMenu(MenuModel m) {
         if ((null != m) && (0 < m.count())) {
-            new Select(m).show();
+            UIBuilder.createMenu(m).show();
         }
     }
 

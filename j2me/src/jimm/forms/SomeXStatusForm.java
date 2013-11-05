@@ -15,6 +15,7 @@ import jimm.comm.StringUtils;
 import jimm.io.Storage;
 import jimmui.view.InputTextBox;
 import jimmui.view.TextBoxListener;
+import jimmui.view.UIBuilder;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
 import jimmui.view.menu.*;
@@ -96,7 +97,7 @@ public final class SomeXStatusForm implements SelectListener, TextBoxListener, F
         }
         menu.setDefaultItemCode(protocol.getProfile().xstatusIndex);
         menu.setActionListener(this);
-        new Select(menu).show();
+        UIBuilder.createMenu(menu).show();
     }
     public final void back() {
         Jimm.getJimm().getCL().activate();

@@ -21,7 +21,6 @@ import jimmui.view.base.SomeContentList;
 import jimmui.view.form.Form;
 import jimmui.view.form.FormListener;
 import jimmui.view.menu.MenuModel;
-import jimmui.view.menu.Select;
 import jimm.util.JLocale;
 import protocol.*;
 import protocol.ui.InfoFactory;
@@ -567,7 +566,7 @@ public final class Xmpp extends Protocol implements FormListener {
         }
         sublist.setDefaultItemCode(selected);
         sublist.setActionListener(c);
-        new Select(sublist).show();
+        UIBuilder.createMenu(sublist).show();
     }
 
     @Override

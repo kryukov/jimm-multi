@@ -13,6 +13,7 @@ import jimm.Jimm;
 import jimm.comm.StringUtils;
 import jimmui.view.InputTextBox;
 import jimmui.view.TextBoxListener;
+import jimmui.view.UIBuilder;
 import jimmui.view.menu.*;
 import protocol.Protocol;
 import protocol.ui.InfoFactory;
@@ -35,7 +36,7 @@ public final class SomeStatusForm implements SelectListener, TextBoxListener {
         MenuModel menu = new MenuModel();
         addStatuses(menu, InfoFactory.factory.getStatusInfo(protocol), protocol.getProfile().statusIndex);
         menu.setActionListener(this);
-        new Select(menu).show();
+        UIBuilder.createMenu(menu).show();
     }
 
     public final void select(Select select, MenuModel model, int status) {

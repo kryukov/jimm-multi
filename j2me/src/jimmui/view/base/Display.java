@@ -16,6 +16,7 @@ import jimmui.view.chat.Chat;
 import jimm.comm.Util;
 import jimm.modules.*;
 import jimmui.view.*;
+import jimmui.view.form.Menu;
 
 /**
  *
@@ -183,6 +184,9 @@ public class Display {
         setCurrentDisplay(o);
     }
 
+    public synchronized void pushWindow(Menu c) {
+        pushWindow((CanvasEx) c);
+    }
     public synchronized void pushWindow(CanvasEx c) {
         Object old = currentScreen;
         if (null != old) {

@@ -295,11 +295,7 @@ public final class ContactList implements ContactListListener {
     }
 
     public void updateMainMenu() {
-        int currentCommand = mainMenu.getSelectedItemCode();
         mainMenu.updateMenu();
-        Select menuView = mainMenu.getView();
-        mainMenu.setDefaultItemCode(currentCommand);
-        menuView.update();
     }
 
     public final MenuModel getContextMenu(Protocol p, TreeNode node) {

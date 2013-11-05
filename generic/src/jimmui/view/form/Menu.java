@@ -8,5 +8,7 @@ package jimmui.view.form;
  * @author vladimir
  */
 public interface Menu {
-    public void show();
+    void show();
+    void update();
+    int getSelectedItemCode();
 }

@@ -1,5 +1,7 @@
 package jimm.cl;
 
+import jimmui.view.UIBuilder;
+import jimmui.view.form.Menu;
 import jimmui.view.icons.Icon;
 import jimm.Jimm;
 import jimm.Options;
@@ -46,22 +48,25 @@ public class ProtocolMenu implements SelectListener {
     private static final int MENU_FIRST_ACCOUNT = 100;
     private Protocol activeProtocol;
     private boolean isMain;
-    private MenuModel menu = new MenuModel();
-    private Select menuView = new Select(null);
+    private final MenuModel menu = new MenuModel();
+    private final Menu menuView;
 
     public ProtocolMenu(Protocol p, boolean main) {
         activeProtocol = p;
-        menuView.setModel(menu);
+        menuView = (Select) UIBuilder.createMenu(menu);
         this.isMain = main;
     }
 
     public void updateMenu() {
+        int currentCommand = menuView.getSelectedItemCode();
         if (isMain) {
             updateMainMenu();
         } else {
             menu.clean();
             protocolMenu();
         }
+        menu.setDefaultItemCode(currentCommand);
+        menuView.update();
     }
     private MenuModel updateMainMenu() {
         Protocol p = activeProtocol;
@@ -287,17 +292,13 @@ public class ProtocolMenu implements SelectListener {
         menu.setDefaultItemCode(item);
     }
 
-    public Select getView() {
+    public Menu getView() {
         menu.setActionListener(this);
         return menuView;
     }
     public MenuModel getModel() {
         menu.setActionListener(this);
         return menu;
-    }
-
-    public int getSelectedItemCode() {
-        return menuView.getSelectedItemCode();
     }
 
     public void setProtocol(Protocol p) {

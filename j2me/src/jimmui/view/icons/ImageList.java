@@ -45,7 +45,7 @@ Image img1 = images.iconAt(1);
  */
 public class ImageList {
 
-    private Icon[] icons;
+    protected Icon[] icons;
     protected int width = 0;
     protected int height = 0;
     private static Hashtable<String, ImageList> files = new Hashtable<String, ImageList>();

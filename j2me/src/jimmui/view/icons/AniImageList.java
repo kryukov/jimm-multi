@@ -32,10 +32,6 @@
 package jimmui.view.icons;
 
 import java.io.InputStream;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
-import jimmui.view.base.*;
 // #sijapp cond.if modules_ANISMILES is "true" #
 
 /**
@@ -44,45 +40,31 @@ import jimmui.view.base.*;
  */
 public class AniImageList extends ImageList {
 
-    private AniIcon[] icons;
-    private Timer timer;
-
-    //! Return image by index
-    public Icon iconAt(int index) { //!< Index of requested image in the list
-        if (index < size() && index >= 0) {
-            return icons[index];
-        }
-        return null;
-    }
-    public int size() {
-        return icons != null ? icons.length : 0;
-    }
-
     public AniImageList() {
     }
+
     private String getAnimationFile(String resName, int i) {
         return resName + "/" + (i + 1) + ".png";
     }
 
     public void load(String resName, int w, int h) {
-        Vector tmpIcons = new Vector();
         try {
             InputStream is = jimm.Jimm.getResourceAsStream(resName + "/animate.bin");
             int smileCount = is.read() + 1;
 
-            icons = new AniIcon[smileCount];
-            ImageList imgs = new ImageList();
+            AniIcon[] icons = new AniIcon[smileCount];
+            ImageList image = new ImageList();
             for (int smileNum = 0; smileNum < smileCount; ++smileNum) {
                 int imageCount = is.read();
                 int frameCount = is.read();
-                imgs.load(getAnimationFile(resName, smileNum), imageCount);
-                boolean loaded = (0 < imgs.size());
-                AniIcon icon = loaded ? new AniIcon(imgs.iconAt(0), frameCount) : null;
+                image.load(getAnimationFile(resName, smileNum), imageCount);
+                boolean loaded = (0 < image.size());
+                AniIcon icon = loaded ? new AniIcon(image.iconAt(0), frameCount) : null;
                 for (int frameNum = 0; frameNum < frameCount; ++frameNum) {
                     int iconIndex = is.read();
-                    int delay = is.read() * WAIT_TIME;
+                    int delay = is.read() * Animation.WAIT_TIME;
                     if (loaded) {
-                        icon.addFrame(frameNum, imgs.iconAt(iconIndex), delay);
+                        icon.addFrame(frameNum, image.iconAt(iconIndex), delay);
                     }
                 }
                 icons[smileNum] = icon;
@@ -91,32 +73,13 @@ public class AniImageList extends ImageList {
                     height = Math.max(height, icon.getHeight());
                 }
             }
+            this.icons = icons;
+            if (size() > 0) {
+                new Animation(icons).start();
+            }
         } catch (Exception ignored) {
-        }
-        if (size() > 0) {
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    iteration();
-                }
-            }, WAIT_TIME, WAIT_TIME);
         }
     }
 
-    private static final int WAIT_TIME = 100;
-    private void iteration() {
-        boolean update = false;
-        for (int i = 0; i < size(); ++i) {
-            if (null != icons[i]) {
-                update |= icons[i].nextFrame(WAIT_TIME);
-            }
-        }
-        if (update) {
-            Object screen = jimm.Jimm.getJimm().getDisplay().getCurrentDisplay();
-            if (screen instanceof CanvasEx) {
-                ((CanvasEx) screen).invalidate();
-            }
-        }
-    }
 }
 // #sijapp cond.end #

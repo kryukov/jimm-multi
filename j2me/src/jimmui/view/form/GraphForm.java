@@ -26,9 +26,8 @@ import jimm.util.JLocale;
  */
 public final class GraphForm extends VirtualList implements TextBoxListener, SelectListener, Form {
 
-    private Vector controls = new Vector();
+    private Vector<Control> controls = new Vector<Control>();
     private InputTextBox box;
-    private MenuModel list;
     private Font boldFont;
     private Font normalFont;
     private Font[] fontSet;
@@ -64,22 +63,22 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
         switch (keyCode) {
             case NativeCanvas.JIMM_SELECT:
                 onControlSelected();
-                return;
+                break;
 
             case NativeCanvas.JIMM_MENU:
                 if (null == formListener) {
                     back();
-                    return;
+                    break;
                 }
                 formListener.formAction(this, true);
-                return;
+                break;
             case NativeCanvas.JIMM_BACK:
                 if (null == formListener) {
                     back();
-                    return;
+                    break;
                 }
                 formListener.formAction(this, false);
-                return;
+                break;
         }
     }
     protected void doKeyReaction(int keyCode, int actionCode, int type) {
@@ -416,10 +415,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
             return false;
         }
         byte type = ((Control)controls.elementAt(index)).type;
-        if (CONTROL_TEXT == type) {
-            return false;
-        }
-        return true;
+        return CONTROL_TEXT != type;
     }
 
     protected boolean isCurrentItemSelectable() {
@@ -447,7 +443,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
                 break;
 
             case CONTROL_SELECT:
-                list = new MenuModel();
+                MenuModel list = new MenuModel();
                 for (int i = 0; i < c.items.length; ++i) {
                     list.addRawItem(c.items[i], null, i);
                 }
@@ -520,7 +516,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
     }
 
 
-    private void drawCheckIcon(GraphicsEx g, int x, int y, int width, int height, boolean checked) {
+    private void drawCheckIcon(GraphicsEx g, int x, int y, boolean checked) {
         int size = calcIconSize() - 4 & ~1;
         x += 2;
         y += 2;
@@ -545,7 +541,7 @@ public final class GraphForm extends VirtualList implements TextBoxListener, Sel
 
         if (CONTROL_CHECKBOX == c.type) {
             int iconSize = calcIconSize();
-            drawCheckIcon(g, x1, y1, w, h, c.selected);
+            drawCheckIcon(g, x1, y1, c.selected);
             x1 += iconSize + OFFSET;
 
         } else if (CONTROL_GAUGE == c.type) {

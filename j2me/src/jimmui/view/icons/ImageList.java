@@ -48,7 +48,7 @@ public class ImageList {
     private Icon[] icons;
     protected int width = 0;
     protected int height = 0;
-    private static Hashtable files = new Hashtable();
+    private static Hashtable<String, ImageList> files = new Hashtable<String, ImageList>();
 
     //! Return image by index
     public Icon iconAt(int index) { //!< Index of requested image in the list

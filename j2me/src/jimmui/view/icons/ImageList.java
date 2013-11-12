@@ -127,9 +127,9 @@ public class ImageList {
     }
 
     static public ImageList createImageList(String resName) {
-        ImageList imgs = (ImageList) files.get(resName);
-        if (null != imgs) {
-            return imgs;
+        ImageList images = (ImageList) files.get(resName);
+        if (null != images) {
+            return images;
         }
         ImageList icons = new ImageList();
         try {

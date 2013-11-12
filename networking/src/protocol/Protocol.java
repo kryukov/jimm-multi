@@ -234,9 +234,6 @@ abstract public class Protocol {
                 load();
             }
         } catch (Exception e) {
-            // #sijapp cond.if modules_DEBUGLOG is "true" #
-            DebugLog.panic("roster load", e);
-            // #sijapp cond.end #
             setContactList(new Roster(), false);
         }
     }

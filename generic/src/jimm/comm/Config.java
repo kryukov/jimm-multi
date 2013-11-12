@@ -98,20 +98,31 @@ public final class Config {
             ch = skipSpace(t, ch);
             if ('[' == ch) {
                 if (0 < keys.size()) {
+                    System.out.println("section " + section + keys.size());
                     configs.addElement(new Config(section, keys, values));
+                    keys = new Vector<String>();
+                    values = new Vector<String>();
                 }
                 section = readHeader(t);
+
             } else if (';' == ch) {
                 skipLine(t, ch);
+
+            } else if ('\n' == ch) {
+                // skip
+                skipSpace(t, ch);
+
             } else {
                 String key = readKey(t, ch, '=');
                 ch = skipSpace(t, t.nextChat());
                 String value = readKey(t, ch, '\n');
                 keys.addElement(key);
                 values.addElement(value);
+                System.out.println("key " + key + " " + value);
             }
             ch = t.nextChat();
         }
+        System.out.println("section " + section + keys.size());
         configs.addElement(new Config(section, keys, values));
         return  configs;
     }

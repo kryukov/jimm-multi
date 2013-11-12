@@ -868,10 +868,12 @@ public class Util {
     }
     //////////////////////////////////////////////////////////////////////////////////
     public static int getIndex(Vector v, Object o) {
-        int size = v.size();
-        for (int i = 0; i < size; ++i) {
-            if (v.elementAt(i) == o) {
-                return i;
+        synchronized (v) {
+            int size = v.size();
+            for (int i = 0; i < size; ++i) {
+                if (v.elementAt(i) == o) {
+                    return i;
+                }
             }
         }
         return -1;

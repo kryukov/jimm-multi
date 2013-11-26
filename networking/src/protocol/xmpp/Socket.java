@@ -129,21 +129,7 @@ final class Socket implements Runnable {
         }
         return inputBuffer[inputBufferIndex++];
     }
-    private int readByteOrNone() throws JimmException {
-        if (inputBufferIndex >= inputBufferLength) {
-            inputBufferIndex = 0;
-            inputBufferLength = read(inputBuffer);
-            if (0 == inputBufferLength) {
-                return -1;
-            }
-        }
-        return inputBuffer[inputBufferIndex++];
-    }
 
-    char readCharOrSpaceForSkip() throws JimmException {
-        int bt = readByteOrNone();
-        return (char)(-1 == bt ? ' ' : bt);
-    }
     char readChar() throws JimmException {
         try {
             byte bt = readByte();

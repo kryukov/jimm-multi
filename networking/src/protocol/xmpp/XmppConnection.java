@@ -267,7 +267,7 @@ public final class XmppConnection extends ClientConnection {
     /////////////////////////////////////////////////////
     private void write(String xml) throws JimmException {
         // #sijapp cond.if modules_DEBUGLOG is "true" #
-        DebugLog.systemPrintln("[OUT]:\n" + xml);
+        //DebugLog.systemPrintln("[OUT]:\n" + xml);
         // #sijapp cond.end #
         write(StringUtils.stringToByteArrayUtf8(xml));
     }
@@ -279,7 +279,7 @@ public final class XmppConnection extends ClientConnection {
             XmlNode x = socket.readNode(notEmpty);
             if (null != x) {
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
-                DebugLog.systemPrintln("[IN]:\n" + x.toString());
+                //DebugLog.systemPrintln("[IN]:\n" + x.toString());
                 // #sijapp cond.end #
                 return x;
             }

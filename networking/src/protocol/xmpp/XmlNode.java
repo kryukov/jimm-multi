@@ -82,7 +82,7 @@ public final class XmlNode {
 
 
     public static XmlNode parse(Socket socket) throws JimmException {
-        char ch = socket.readCharOrSpaceForSkip();
+        char ch = socket.readChar();
         if ('<' != ch) {
             return null;
         }

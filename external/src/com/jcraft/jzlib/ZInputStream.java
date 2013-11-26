@@ -41,8 +41,8 @@ public final class ZInputStream {
     private TcpSocket in;
     private ZBuffers buffers = new ZBuffers();
     private Inflate inflate;
-    private static final int bufsize = 512;
-    private byte[] buf = new byte[bufsize];
+    private static final int BUF_SIZE = 512;
+    private byte[] buf = new byte[BUF_SIZE];
 
     private int inflateInit(int w, boolean nowrap) {
         inflate = new Inflate();

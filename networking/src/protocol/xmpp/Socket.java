@@ -14,11 +14,13 @@ import jimm.JimmException;
 import jimm.modules.*;
 import protocol.net.TcpSocket;
 
+import java.util.Vector;
+
 /**
  *
  * @author Vladimir Krukov
  */
-final class Socket {
+final class Socket implements Runnable {
     private TcpSocket socket = new TcpSocket();
     private boolean connected;
     private byte[] inputBuffer = new byte[1024];
@@ -30,6 +32,7 @@ final class Socket {
     private boolean compressed;
     private boolean secured;
     // #sijapp cond.end #
+    private final Vector<Object> read = new Vector<Object>();
     
     /**
      * Creates a new instance of Socket
@@ -181,5 +184,48 @@ final class Socket {
 
     boolean isSecured() {
         return secured;
+    }
+
+    @Override
+    public void run() {
+        while (connected) {
+            Object readObject;
+            try {
+                readObject = XmlNode.parse(this);
+                if (null == readObject) continue;
+            } catch (JimmException e) {
+                readObject = e;
+            }
+            synchronized (read) {
+                read.addElement(readObject);
+                read.notify();
+            }
+        }
+        synchronized (read) {
+            read.notifyAll();
+        }
+    }
+    public XmlNode readNode(boolean wait) throws JimmException {
+        Object readObject = null;
+        synchronized (read) {
+            do {
+                if (0 < read.size()) {
+                    readObject = read.elementAt(0);
+                    read.removeElementAt(0);
+                    wait = false;
+                } else if (wait) {
+                    try {
+                        read.wait();
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            } while (wait);
+        }
+        if (readObject instanceof JimmException) throw (JimmException) readObject;
+        return (XmlNode) readObject;
+    }
+
+    public void start() {
+        new Thread(this).start();
     }
 }

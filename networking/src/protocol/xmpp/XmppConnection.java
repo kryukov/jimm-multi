@@ -206,6 +206,7 @@ public final class XmppConnection extends ClientConnection {
     private void connectTo(String url) throws JimmException {
         socket = new Socket();
         socket.connectTo(url);
+        socket.start();
     }
 
     public final void disconnect() {
@@ -275,7 +276,7 @@ public final class XmppConnection extends ClientConnection {
     }
     private XmlNode readXmlNode(boolean notEmpty) throws JimmException {
         for (;;) {
-            XmlNode x = XmlNode.parse(socket);
+            XmlNode x = socket.readNode(notEmpty);
             if (null != x) {
                 // #sijapp cond.if modules_DEBUGLOG is "true" #
                 DebugLog.systemPrintln("[IN]:\n" + x.toString());

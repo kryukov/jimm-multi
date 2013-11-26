@@ -98,7 +98,6 @@ public final class Config {
             ch = skipSpace(t, ch);
             if ('[' == ch) {
                 if (0 < keys.size()) {
-                    System.out.println("section " + section + keys.size());
                     configs.addElement(new Config(section, keys, values));
                     keys = new Vector<String>();
                     values = new Vector<String>();
@@ -118,11 +117,9 @@ public final class Config {
                 String value = readKey(t, ch, '\n');
                 keys.addElement(key);
                 values.addElement(value);
-                System.out.println("key " + key + " " + value);
             }
             ch = t.nextChat();
         }
-        System.out.println("section " + section + keys.size());
         configs.addElement(new Config(section, keys, values));
         return  configs;
     }

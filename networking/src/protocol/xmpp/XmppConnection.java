@@ -1914,14 +1914,13 @@ public final class XmppConnection extends ClientConnection {
 
         String quote = "\"";
         return MD5.toBase64(StringUtils.stringToByteArrayUtf8(
-                new StringBuilder()
-                        .append("username=\"").append(user)
-                        .append("\",realm=\"").append(realm)
-                        .append("\",nonce=\"").append(nonce)
-                        .append("\",cnonce=\"").append(cnonce)
-                        .append("\",nc=00000001,digest-uri=\"").append(digestUri)
-                        .append("\",qop=auth,response=").append(quote).append(hResp.getDigestHex())
-                        .append(quote).append(",charset=utf-8").toString()));
+                "username=\"" + user +
+                        "\",realm=\"" + realm +
+                        "\",nonce=\"" + nonce +
+                        "\",cnonce=\"" + cnonce +
+                        "\",nc=00000001,digest-uri=\"" + digestUri +
+                        "\",qop=auth,response=" + quote + hResp.getDigestHex() + quote +
+                        ",charset=utf-8"));
     }
 
 
@@ -1930,15 +1929,15 @@ public final class XmppConnection extends ClientConnection {
      * http://www.google.com
      * (From mGTalk project)
      *
-     * @param jid
-     * @param passwd
-     * @return
+     * @param jid jid
+     * @param password password
+     * @return google token
      */
-    private String getGoogleToken(String jid, String passwd) {
+    private String getGoogleToken(String jid, String password) {
         try {
             String escapedJid = Util.urlEscape(jid);
             String first = "Email=" + escapedJid
-                    + "&Passwd=" + Util.urlEscape(passwd)
+                    + "&Passwd=" + Util.urlEscape(password)
                     + "&PersistentCookie=false&source=googletalk";
 
             HttpsConnection c = (HttpsConnection) Connector
@@ -2047,7 +2046,7 @@ public final class XmppConnection extends ClientConnection {
     private void parseRosterExchange(XmlNode x, String domain) {
         StringBuilder xml = new StringBuilder();
         Xmpp j = (Xmpp)protocol;
-        Vector subscribes = new Vector();
+        Vector<XmppContact> subscribes = new Vector<XmppContact>();
         for (int i = 0; i < x.childrenCount(); ++i) {
             XmlNode item = x.childAt(i);
             String jid = item.getAttribute(XmlNode.S_JID);

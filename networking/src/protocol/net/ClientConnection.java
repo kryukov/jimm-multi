@@ -21,7 +21,7 @@ import protocol.Protocol;
  * @author Vladimir Kryukov
  */
 public abstract class ClientConnection implements Runnable {
-    private long keepAliveInterv;
+    private long keepAliveInterval;
     private boolean usePong;
     protected boolean connect;
     private Vector<PlainMessage> messages = new Vector<PlainMessage>();
@@ -35,11 +35,11 @@ public abstract class ClientConnection implements Runnable {
 
 
     protected final void setPingInterval(long interval) {
-        keepAliveInterv = Math.min(keepAliveInterv, interval);
-        nextPingTime = Jimm.getCurrentGmtTime() + keepAliveInterv;
+        keepAliveInterval = Math.min(keepAliveInterval, interval);
+        nextPingTime = Jimm.getCurrentGmtTime() + keepAliveInterval;
     }
     protected final long getPingInterval() {
-        return keepAliveInterv;
+        return keepAliveInterval;
     }
     protected final void usePong() {
         if (Jimm.getJimm().phone.isCedar()) {
@@ -51,8 +51,8 @@ public abstract class ClientConnection implements Runnable {
 
     private void initPingValues() {
         usePong = false;
-        keepAliveInterv = PING_INTERVAL;
-        nextPingTime = Jimm.getCurrentGmtTime() + keepAliveInterv;
+        keepAliveInterval = PING_INTERVAL;
+        nextPingTime = Jimm.getCurrentGmtTime() + keepAliveInterval;
     }
     public final void start() {
         new Thread(this).start();
@@ -136,7 +136,7 @@ public abstract class ClientConnection implements Runnable {
             } else {
                 ping();
             }
-            nextPingTime = now + keepAliveInterv;
+            nextPingTime = now + keepAliveInterval;
         }
     }
     protected final void updateTimeout() {

@@ -22,7 +22,7 @@ import java.util.Vector;
  */
 final class Socket implements Runnable {
     private TcpSocket socket = new TcpSocket();
-    private boolean connected;
+    private volatile boolean connected;
     private byte[] inputBuffer = new byte[1024];
     private int inputBufferLength = 0;
     public int inputBufferIndex = 0;
@@ -33,7 +33,8 @@ final class Socket implements Runnable {
     private boolean secured;
     // #sijapp cond.end #
     private final Vector<Object> read = new Vector<Object>();
-    
+    private final Object readLock = new Object();
+
     /**
      * Creates a new instance of Socket
      */
@@ -175,6 +176,12 @@ final class Socket implements Runnable {
     @Override
     public void run() {
         while (connected) {
+            synchronized (readLock) {
+                try {
+                    readLock.wait();
+                } catch (InterruptedException ignored) {
+                }
+            }
             Object readObject;
             try {
                 readObject = XmlNode.parse(this);
@@ -184,7 +191,7 @@ final class Socket implements Runnable {
             }
             synchronized (read) {
                 read.addElement(readObject);
-                read.notify();
+                read.notifyAll();
             }
         }
         synchronized (read) {
@@ -193,6 +200,9 @@ final class Socket implements Runnable {
     }
     public XmlNode readNode(boolean wait) throws JimmException {
         Object readObject = null;
+        synchronized (readLock) {
+            readLock.notify();
+        }
         synchronized (read) {
             do {
                 if (0 < read.size()) {

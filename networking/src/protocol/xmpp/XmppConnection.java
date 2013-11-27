@@ -206,7 +206,6 @@ public final class XmppConnection extends ClientConnection {
     private void connectTo(String url) throws JimmException {
         socket = new Socket();
         socket.connectTo(url);
-        socket.start();
     }
 
     public final void disconnect() {
@@ -275,20 +274,10 @@ public final class XmppConnection extends ClientConnection {
         write(packet);
     }
     private XmlNode readXmlNode(boolean notEmpty) throws JimmException {
-        for (;;) {
-            XmlNode x = socket.readNode(notEmpty);
-            if (null != x) {
-                // #sijapp cond.if modules_DEBUGLOG is "true" #
-                //DebugLog.systemPrintln("[IN]:\n" + x.toString());
-                // #sijapp cond.end #
-                return x;
-            }
-            if (notEmpty) {
-                socket.sleep(100);
-            } else {
-                return null;
-            }
-        }
+        // #sijapp cond.if modules_DEBUGLOG is "true" #
+        //DebugLog.systemPrintln("[IN]:\n" + x.toString());
+        // #sijapp cond.end #
+        return socket.readNode(notEmpty);
     }
 
     // -----------------------------------------------------------------------
@@ -386,6 +375,7 @@ public final class XmppConnection extends ClientConnection {
         }
 
         setProgress(50);
+        socket.start();
         write(GET_ROSTER_XML);
         usePong();
     }
@@ -624,9 +614,7 @@ public final class XmppConnection extends ClientConnection {
                 + "</iq>");
     }
     private boolean isMy(String from) {
-        if (StringUtils.isEmpty(from)) return true;
-        if (getJabber().getUserId().equals(Jid.getBareJid(from))) return true;
-        return false;
+        return StringUtils.isEmpty(from) || getJabber().getUserId().equals(Jid.getBareJid(from));
     }
 
     private void processEmptyId(String id, byte iqType, String from) {

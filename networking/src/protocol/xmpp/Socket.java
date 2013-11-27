@@ -33,7 +33,6 @@ final class Socket implements Runnable {
     private boolean secured;
     // #sijapp cond.end #
     private final Vector<Object> read = new Vector<Object>();
-    private final Object readLock = new Object();
 
     /**
      * Creates a new instance of Socket
@@ -173,49 +172,43 @@ final class Socket implements Runnable {
         return secured;
     }
 
+    private Object readObject() throws JimmException {
+        Object readObject = null;
+        while (connected && null == readObject) {
+            readObject = XmlNode.parse(this);
+            if (null == readObject) sleep(100);
+        }
+        return readObject;
+    }
+
     @Override
     public void run() {
+        Object readObject;
         while (connected) {
-            synchronized (readLock) {
-                try {
-                    readLock.wait();
-                } catch (InterruptedException ignored) {
-                }
-            }
-            Object readObject;
             try {
-                readObject = XmlNode.parse(this);
-                if (null == readObject) continue;
+                readObject = readObject();
             } catch (JimmException e) {
                 readObject = e;
             }
-            synchronized (read) {
-                read.addElement(readObject);
-                read.notifyAll();
+            if (null != readObject) {
+                synchronized (read) {
+                    read.addElement(readObject);
+                }
             }
         }
-        synchronized (read) {
-            read.notifyAll();
-        }
     }
+
     public XmlNode readNode(boolean wait) throws JimmException {
         Object readObject = null;
-        synchronized (readLock) {
-            readLock.notify();
-        }
-        synchronized (read) {
-            do {
+        if (wait) {
+            readObject = readObject();
+        } else {
+            synchronized (read) {
                 if (0 < read.size()) {
                     readObject = read.elementAt(0);
                     read.removeElementAt(0);
-                    wait = false;
-                } else if (wait) {
-                    try {
-                        read.wait();
-                    } catch (InterruptedException ignored) {
-                    }
                 }
-            } while (wait);
+            }
         }
         if (readObject instanceof JimmException) throw (JimmException) readObject;
         return (XmlNode) readObject;

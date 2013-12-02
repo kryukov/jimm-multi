@@ -387,7 +387,7 @@ public final class ContactList implements ContactListListener {
         Jimm.getJimm().getDisplay().back(getManager());
     }
 
-    // shows next or previos chat
+    // shows next or previous chat
     public void showNextPrevChat(ChatModel item, boolean next) {
         int chatNum = Jimm.getJimm().jimmModel.chats.indexOf(item);
         if (-1 == chatNum) {

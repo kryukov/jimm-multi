@@ -56,6 +56,7 @@ public final class VirtualContactList extends SomeContentList {
     }
 
     public void setModel(ContactListModel model) {
+        ((RosterContent)content).setAllToTop();
         ((RosterContent)content).setModel(model);
         updateTitle();
         invalidate();

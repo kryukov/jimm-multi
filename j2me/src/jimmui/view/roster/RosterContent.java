@@ -62,6 +62,8 @@ public class RosterContent extends SomeContent {
 
     @Override
     public void doJimmAction(int keyCode) {
+        TreeNode item = getCurrentNode();
+        updater.setCurrentContact((item instanceof Contact) ? (Contact)item : null);
         switch (keyCode) {
             case NativeCanvas.JIMM_SELECT:
                 itemSelected(getCurrentNode());
